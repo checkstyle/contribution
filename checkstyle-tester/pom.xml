@@ -1,0 +1,80 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.github.sevntu.checkstyle</groupId>
+	<artifactId>sample</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<checkstyle-plugin.version>2.14</checkstyle-plugin.version>
+		<jxr-plugin.version>2.5</jxr-plugin.version>
+		<google_checks>https://raw.githubusercontent.com/checkstyle/checkstyle/master/src/main/resources/google_checks.xml</google_checks>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+	          <groupId>org.apache.maven.plugins</groupId>
+	          <artifactId>maven-checkstyle-plugin</artifactId>
+	          <version>${checkstyle-plugin.version}</version>
+				<dependencies>
+					<dependency>
+					  <groupId>com.puppycrawl.tools</groupId>
+					  <artifactId>checkstyle</artifactId>
+					  <version>LATEST</version>
+					</dependency>
+					<dependency>
+						<groupId>com.github.sevntu.checkstyle</groupId>
+						<artifactId>sevntu-checkstyle-maven-plugin</artifactId>
+						<version>LATEST</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-jxr-plugin</artifactId>
+						<version>${jxr-plugin.version}</version>
+					</dependency>
+				</dependencies>
+	          <configuration>
+	            <configLocation>${google_checks}</configLocation>
+	          </configuration>
+	        </plugin>
+			
+		</plugins>
+	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>${checkstyle-plugin.version}</version>
+				<!-- 	Specifying configuration here will take effect on the execution of "mvn site",
+					 but will not take effect on the execution of "mvn checkstyle:checkstyle"  -->
+				<configuration>
+					<configLocation>${google_checks}</configLocation>
+                    <failOnViolation>false</failOnViolation>
+				</configuration>
+			</plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jxr-plugin</artifactId>
+            <version>${jxr-plugin.version}</version>
+          </plugin>
+
+		</plugins>
+	</reporting>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>sevntu-maven</id>
+			<name>sevntu-maven</name>
+			<url>http://sevntu-checkstyle.github.com/sevntu.checkstyle/maven2</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+</project>
