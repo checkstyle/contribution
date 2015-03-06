@@ -57,6 +57,7 @@
 					 but will not take effect on the execution of "mvn checkstyle:checkstyle"  -->
 				<configuration>
 					<configLocation>${google_checks}</configLocation>
+					<enableFilesSummary>false</enableFilesSummary>
                     <failOnViolation>false</failOnViolation>
 				</configuration>
 			</plugin>

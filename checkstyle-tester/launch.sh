@@ -39,3 +39,9 @@ time mvn --batch-mode site "$@" # > target/console_log.txt
 echo "Running Checkstyle on $SOURCES_DIR - finished"
 
 echo "Testing Checkstyle finished"
+
+echo "linking report to index.html"
+mv target/site/index.html target/site/index_.html
+ln -s checkstyle.html target/site/index.html 
+
+echo "Done."
