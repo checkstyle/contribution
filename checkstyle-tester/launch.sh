@@ -4,7 +4,8 @@ echo "Testing Checkstyle started"
 
 cat projects-to-test-on.properties | while read line; do 
 
-    [[ "$line" =~ ^#.*$ ]] && continue # Skip lines with comments
+    [[ "$line" == \#* ]] && continue # Skip lines with comments
+    [[ -z "$line" ]] && continue     # Skip empty lines
     
     REPO_NAME=`echo $line | cut -d '=' -f 1`
     REPO_URL=`echo $line | cut -d '=' -f 2`
@@ -16,11 +17,11 @@ cat projects-to-test-on.properties | while read line; do
 	  cd $REPO_SOURCES_DIR
 	  git pull
 	  cd -
-	  echo "Pulling repository '$REPO_NAME' - successful"
+	  echo -e "Pulling repository '$REPO_NAME' - successful\n"
 	else
 	  echo "Cloning repository '$REPO_NAME' ..."
       git clone $REPO_URL $REPO_SOURCES_DIR
-      echo "Cloning repository '$REPO_NAME' - successful"
+      echo -e "Cloning repository '$REPO_NAME' - successful\n"
 	fi
 
 done
