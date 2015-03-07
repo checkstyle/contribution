@@ -13,7 +13,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<checkstyle-plugin.version>2.14</checkstyle-plugin.version>
 		<jxr-plugin.version>2.5</jxr-plugin.version>
-		<google_checks>https://raw.githubusercontent.com/checkstyle/checkstyle/master/src/main/resources/google_checks.xml</google_checks>
+		<checkstyle.config.location>https://raw.githubusercontent.com/checkstyle/checkstyle/master/src/main/resources/google_checks.xml</checkstyle.config.location>
 	</properties>
 
 	<build>
@@ -39,9 +39,6 @@
 						<version>${jxr-plugin.version}</version>
 					</dependency>
 				</dependencies>
-	          <configuration>
-	            <configLocation>${google_checks}</configLocation>
-	          </configuration>
 	        </plugin>
 			
 		</plugins>
@@ -56,7 +53,6 @@
 				<!-- 	Specifying configuration here will take effect on the execution of "mvn site",
 					 but will not take effect on the execution of "mvn checkstyle:checkstyle"  -->
 				<configuration>
-					<configLocation>${google_checks}</configLocation>
 					<enableFilesSummary>false</enableFilesSummary>
                     <failOnViolation>false</failOnViolation>
 				</configuration>
