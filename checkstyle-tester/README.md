@@ -10,6 +10,9 @@ Launch command for testing against your custom config:
 
 If you want to validate new check from `sevntu.checkstyle` project first you need to execute 
 ```
+cd sevntu-checkstyle/
+mvn clean install
+cd ../
 ./deploy-all.sh
 ```
 
