@@ -1,0 +1,1 @@
+There are code examples for web site - checkstyle/checkstyle/src/xdocs
