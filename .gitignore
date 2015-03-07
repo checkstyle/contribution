@@ -2,3 +2,4 @@ target
 .settings
 .checkstyle
 *~
+/checkstyle-tester/src/main/java/
