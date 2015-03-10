@@ -21,3 +21,13 @@ before you use ".launch.sh" you need to clone it and deploy to your local maven 
 ```
 [yourname@local sevntu.checkstyle]$ ./deploy.sh --maven
 ```
+
+DEPLOY: to github pages repo (https://pages.github.com/) to share your report with other:
+
+1) please follow instruction from https://pages.github.com/ to create your static web site on github
+
+2) please copy whole "target/site" folder to newly created repo , do push.
+
+3) please make sure that report is available as http://YOURUSER.github.io/.
+
+4) please make sure that at web site source links to violations are working as it is main part of report, just list of violations is not enough.
