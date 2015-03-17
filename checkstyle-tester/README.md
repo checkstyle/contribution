@@ -22,6 +22,9 @@ before you use ".launch.sh" you need to clone it and deploy to your local maven 
 [yourname@local sevntu.checkstyle]$ ./deploy.sh --maven
 ```
 
+ATTENTION: you can specify at projects-to-test-on.properties path to local file system if you have some repositories on your local, example: "checkstyle=/home/username/java/git-repos/checkstyle/checkstyle".
+
+
 DEPLOY: to github pages repo (https://pages.github.com/) to share your report with other:
 
 1) please follow instruction from https://pages.github.com/ to create your static web site on github
