@@ -16,6 +16,11 @@ but expect it to print very and very much lines of terminal logs in this case. L
 ./launch.sh -Dcheckstyle.config.location=my_check.xml -Dcheckstyle.consoleOutput=true
 ```
 
+ATTENTION: to quickly install Checkstyle's binaries to local maven please do
+```
+mvn install -DskipTests -Dcobertura.skip=true
+```
+
 ATTENTION: If you want to validate new check from `sevntu.checkstyle`(https://github.com/sevntu-checkstyle/sevntu.checkstyle) project, 
 before you use ".launch.sh" you need to clone it and deploy to your local maven repo by following command
 ```
