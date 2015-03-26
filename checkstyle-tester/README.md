@@ -8,6 +8,11 @@ Launch command for testing against your custom config:
 ./launch.sh -Dcheckstyle.config.location=my_check.xml
 ```
 
+If you want to validate new check from `sevntu.checkstyle` project first you need to execute 
+```
+./deploy.sh --maven
+```
+
 Result Checkstyle report will appear at target folder (target/site/index.html). First run should be executed with all rules enabled to make sure that new check does not fail. You may see failure of `TreeWalker` but as long as it is applied for no-compilable sources (test, resources) you don't need to worry about it. Second run shall be done to prove that check is working correctly and for this one select the most accurate repositories.
 
 Please use `-Dcheckstyle.consoleOutput=true` option if you need to see all Checkstyle errors in console, 
