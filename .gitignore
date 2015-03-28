@@ -1,5 +1,6 @@
 target
 .settings
 .checkstyle
+bin
 *~
 /checkstyle-tester/src/main/java/
