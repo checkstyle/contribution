@@ -2,7 +2,7 @@
 class NotesBuilder {
 
     static main(args) {
-       def path = "/home/rivanov/workspace-checkstyle/NotesBuilder/src/input.txt"
+       def path = "input.txt"
        if (args.length != 0) {
            path = args[0] 
        }
