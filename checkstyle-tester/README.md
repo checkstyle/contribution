@@ -8,7 +8,16 @@ Launch command for testing against your custom config:
 ./launch.sh -Dcheckstyle.config.location=my_check.xml
 ```
 
-If you want to validate new check from `sevntu.checkstyle` project first you need to execute 
+Attention: this project by deafult use released version of Checkstyle and sevntu.checkstyle
+If you you need to use custom(snapshot) versons please update pom.xml to reference that versions, and please make sure that
+custom versions are located in your local maven repo 
+```
+ls  ~/.m2/repository/com/puppycrawl/tools/checkstyle/
+ls  ~/.m2/repository/com/github/sevntu/checkstyle/sevntu-checkstyle-maven-plugin
+
+```
+
+If you want to validate new check from `sevntu.checkstyle` project first you need to execute at that project
 ```
 ./deploy.sh --maven
 ```
