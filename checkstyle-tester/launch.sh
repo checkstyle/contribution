@@ -29,13 +29,21 @@ cat projects-to-test-on.properties | while read line; do
 
 done
 
+echo "Running 'mvn clean' on $SOURCES_DIR ..."
 mvn --batch-mode clean
+
+#export MAVEN_OPTS="-Xmx3000m"
 
 echo "Running Checkstyle on $SOURCES_DIR ..."
 mvn --batch-mode site "$@"
-echo "Running Checkstyle on $SOURCES_DIR - finished"
+if [ "$?" != "0" ]
+then
+	echo "Checkstyle is failed on $SOURCES_DIR"
+	exit 1
+else
+    echo "Running Checkstyle on $SOURCES_DIR - finished"
+fi
 
-echo "Testing Checkstyle finished"
 
 echo "linking report to index.html"
 mv target/site/index.html target/site/index_.html
