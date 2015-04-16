@@ -7,6 +7,7 @@
 <module name = "Checker">
     <property name="charset" value="UTF-8"/>
     
+    <!-- do not change severity to 'error', as that will hide errors caused by exceptions -->
     <property name="severity" value="warning"/>
     
     <module name="TreeWalker">
