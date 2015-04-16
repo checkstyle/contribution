@@ -1,16 +1,22 @@
+#!/bin/bash
+
 SOURCES_DIR=src/main/java
 
 echo "Testing Checkstyle started"
 
-cat projects-to-test-on.properties | while read line; do 
+export EXCLUDES_ACCUM=""
 
+while read line ; do
     [[ "$line" == \#* ]] && continue # Skip lines with comments
     [[ -z "$line" ]] && continue     # Skip empty lines
     
     REPO_NAME=`echo $line | cut -d '|' -f 1`
     REPO_URL=` echo $line | cut -d '|' -f 2`
     COMMIT_ID=`echo $line | cut -d '|' -f 3`
+    EXCLUDES=`echo $line | cut -d '|' -f 4`
     
+    EXCLUDES_ACCUM+=",$EXCLUDES"
+
     REPO_SOURCES_DIR=$SOURCES_DIR/$REPO_NAME
     
     if [ ! -d "$REPO_SOURCES_DIR" ]; then
@@ -27,15 +33,15 @@ cat projects-to-test-on.properties | while read line; do
 	    fi
     echo -e "$REPO_NAME is synchronized\n"
 
-done
+done < projects-to-test-on.properties
 
 echo "Running 'mvn clean' on $SOURCES_DIR ..."
 mvn --batch-mode clean
 
 #export MAVEN_OPTS="-Xmx3000m"
 
-echo "Running Checkstyle on $SOURCES_DIR ..."
-mvn --batch-mode site "$@"
+echo "Running Checkstyle on $SOURCES_DIR ... with excludes $EXCLUDES_ACCUM"
+mvn --batch-mode site -Dcheckstyle.excludes=$EXCLUDES_ACCUM "$@"
 if [ "$?" != "0" ]
 then
 	echo "Checkstyle is failed on $SOURCES_DIR"
