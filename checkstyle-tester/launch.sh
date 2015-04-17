@@ -38,6 +38,7 @@ done < projects-to-test-on.properties
 echo "Running 'mvn clean' on $SOURCES_DIR ..."
 mvn --batch-mode clean
 
+# If you run into OutOfMemoryError please use MAVEN_OPTS
 #export MAVEN_OPTS="-Xmx3000m"
 
 echo "Running Checkstyle on $SOURCES_DIR ... with excludes $EXCLUDES_ACCUM"
