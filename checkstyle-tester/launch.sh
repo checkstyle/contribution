@@ -44,7 +44,7 @@ while read line ; do
 		if [ "$COMMIT_ID" != "" ]; then
 			echo "Reseting $REPO_TYPE sources to commit '$COMMIT_ID'"
 			cd $REPO_SOURCES_DIR
-			hg update --clean
+			hg up $COMMIT_ID
 			cd -
 			fi 
     
