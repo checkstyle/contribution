@@ -9,18 +9,26 @@ Launch command for testing against your custom config:
 ```
 
 Attention: this project by deafult use released version of Checkstyle and sevntu.checkstyle
-If you you need to use custom(snapshot) versons please update pom.xml to reference that versions, and please make sure that
-custom versions are located in your local maven repo 
+If you you need to use custom(snapshot) versons please update pom.xml to reference that versions ([checkstyle version](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/pom.xml#L29), [sevntu.checkstyle version](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/pom.xml#L34)), 
+and please make sure that
+custom(newly generated) versions are located in your local maven repo 
 ```
 ls  ~/.m2/repository/com/puppycrawl/tools/checkstyle/
 ls  ~/.m2/repository/com/github/sevntu/checkstyle/sevntu-checkstyle-maven-plugin
 
 ```
 
+to build SNAPSHOT version of `checkstyle` please run in his repo
+```
+mvn clean install
+```
+
 If you want to validate new check from `sevntu.checkstyle` project first you need to execute at that project
 ```
 ./deploy.sh --maven
 ```
+
+=============================================
 
 Result Checkstyle report will appear at target folder (target/site/index.html). First run should be executed with all rules enabled to make sure that new check does not fail. You may see failure of `TreeWalker` but as long as it is applied for no-compilable sources (test, resources) you don't need to worry about it. Second run shall be done to prove that check is working correctly and for this one select the most accurate repositories.
 
