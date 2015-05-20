@@ -1,4 +1,4 @@
-Launch command for testing against google_checks.xml: 
+Launch command for testing against google_checks.xml and very [basic set of java projects](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.properties): 
 ```
 ./launch.sh
 ```
