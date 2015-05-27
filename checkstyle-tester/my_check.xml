@@ -17,4 +17,10 @@
          <!-- Example of checkstyle Check usage -->
          <module name="AbstractClassName"/>
     </module>
+<!--
+    <module name="SeverityMatchFilter">
+        <property name="severity" value="warning"/>
+        <property name="acceptOnMatch" value="false"/>
+    </module>
+-->
 </module>
