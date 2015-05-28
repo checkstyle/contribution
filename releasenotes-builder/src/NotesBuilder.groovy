@@ -14,9 +14,13 @@ class NotesBuilder {
         def f = new File(filePath)
         f.eachLine() { line ->
             //println "LINE:"+line
-
+            if (line == "")
+              return // continue
                         
             def index = line.indexOf(". Author")
+            if (index == -1)
+              return // continue as it some weird line
+
             def author = line.substring(index + 8 + 1, line.size())
           
             def message = line.substring(0, index)
