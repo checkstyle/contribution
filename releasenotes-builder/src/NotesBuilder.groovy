@@ -24,7 +24,16 @@ class NotesBuilder {
             def author = line.substring(index + 8 + 1, line.size())
           
             def message = line.substring(0, index)
-            def issueIndex = message.indexOf(", issue")
+            def issueIndex = message.indexOf(", issue #")
+            if (issueIndex != -1) {
+                throw new RuntimeException("old format was detected: $message");
+            }
+            issueIndex = message.indexOf(", Issue #")
+            if (issueIndex != -1) {
+                throw new RuntimeException("old format was detected: $message");
+            }
+
+            issueIndex = message.indexOf(". #")
             def messageContent = message
             if (issueIndex != -1) {
                 messageContent = message.substring(0, issueIndex)
