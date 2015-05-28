@@ -55,5 +55,6 @@ class NotesBuilder {
             }
         
         }
+        print """\n"""
     }
 }
