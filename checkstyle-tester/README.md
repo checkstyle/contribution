@@ -8,6 +8,11 @@ Launch command for testing against your custom config (one or few Checks):
 ./launch.sh -Dcheckstyle.config.location=my_check.xml
 ```
 
+Launch command for testing against all Checks to validate that there is no Exceptions (all validation warnings are ignored) : 
+```
+./launch.sh -Dcheckstyle.config.location=all-checks-test-for-exceptions.xml
+```
+
 Attention: this project by deafult use released version of Checkstyle and sevntu.checkstyle
 If you you need to use custom(snapshot) versons please update pom.xml to reference that versions
 ([checkstyle version](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/pom.xml#L29),
