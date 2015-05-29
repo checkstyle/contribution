@@ -1,2 +1,2 @@
-CustomImportOrder checks import sorting according to ASCII order, issue #847. Author Michal Kordas
-Token WILDCARD_TYPE was added to WhitespaceAround check, issue #853. Author Danil Lopatin
+CustomImportOrder checks import sorting according to ASCII order. #847. Author Michal Kordas
+Token WILDCARD_TYPE was added to WhitespaceAround check. #853. Author Danil Lopatin
