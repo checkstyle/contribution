@@ -10,7 +10,7 @@ Launch command for testing against your custom config (one or few Checks):
 
 Launch command for testing against all Checks to validate that there is no Exceptions (all validation warnings are ignored) : 
 ```
-./launch.sh -Dcheckstyle.config.location=all-checks-test-for-exceptions.xml
+./launch.sh -Dcheckstyle.config.location=checks-nonjavadoc-error.xml
 ```
 
 Attention: this project by deafult use released version of Checkstyle and sevntu.checkstyle
