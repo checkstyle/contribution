@@ -27,7 +27,7 @@ while read line ; do
             TARNAME=$(echo $REPO_URL | sed -r 's/\//-/')
             TARPATH=$SOURCES_DIR/$TARNAME".tar.gz"
             if [ ! -f "$TARPATH" ]; then
-                echo "Requesting a tar from $REPO_TYPE repository '${REPO_NAME}' ... to $TARPATH"
+                echo "Requesting a tar: 'wget https://api.github.com/repos/$REPO_URL/tarball/$COMMIT_ID -O $TARPATH'"
                 wget https://api.github.com/repos/$REPO_URL/tarball/$COMMIT_ID -O $TARPATH
                 fi
 
