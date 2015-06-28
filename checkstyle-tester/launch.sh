@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 SOURCES_DIR=src/main/java
 
