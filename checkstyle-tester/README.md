@@ -63,7 +63,7 @@ to github pages repo (https://pages.github.com/) to share your report with other
 
 1) please follow instruction from https://pages.github.com/ to create your static web site on github
 
-2) please copy whole "target/site" folder to newly created repo, do push the second run with the most proper repositories.
+2) please copy whole "target/site" folder to newly created repo.
 
 3) please make sure that report is available as http://YOURUSER.github.io/.
 
