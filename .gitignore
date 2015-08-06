@@ -4,3 +4,4 @@ target
 bin
 *~
 /checkstyle-tester/src/main/java/
+/qulice/src/main/java/
