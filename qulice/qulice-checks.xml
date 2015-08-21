@@ -88,10 +88,11 @@
     <!--
     C++ style inline comment is not allowed.
     -->
-    <module name="RegexpSingleline">
+    <!-- Single line javadoc is ok: http://google.github.io/styleguide/javaguide.html#s7.1.1-javadoc-multi-line -->
+    <!-- <module name="RegexpSingleline">
         <property name="format" value="/\*.*\*/"/>
         <property name="message" value="This kind of comment is not allowed."/>
-    </module>
+    </module> -->
 
     <!--
     Windows line endings are not allowed.
@@ -114,7 +115,8 @@
     <!--
     JavaDoc regexp checks
     -->
-    <module name="RegexpSingleline">
+    <!-- Parameter names are lowercase by convention. The data type starts with a lowercase letter to indicate an object rather than a class. The description begins with a lowercase letter if it is a phrase (contains no verb), or an uppercase letter if it is a sentence. End the phrase with a period only if another phrase or sentence follows it. -->
+    <!-- <module name="RegexpSingleline">
         <property name="format" value="\* +@return +[^A-Z]"/>
         <property name="fileExtensions" value="java"/>
         <property name="message" value="@return tag description should start with capital letter"/>
@@ -123,7 +125,7 @@
         <property name="format" value="\* +@param +\w+ +[^A-Z]"/>
         <property name="fileExtensions" value="java"/>
         <property name="message" value="@param tag description should start with capital letter"/>
-    </module>
+    </module> -->
     <module name="RegexpSingleline">
         <property name="format" value="/\*\* +[^A-Z\{]"/>
         <property name="fileExtensions" value="java"/>
@@ -205,7 +207,8 @@
         <module name="FinalClass"/>
         <module name="InterfaceIsType"/>
         <module name="HideUtilityClassConstructor"/>
-        <module name="DesignForExtension"/>
+        <!-- We have to investigate this check before fixing violations -->
+        <!-- <module name="DesignForExtension"/> -->
         <module name="MutableException"/>
         <module name="ThrowsCount" />
         <module name="InnerTypeLast"/>
@@ -218,20 +221,28 @@
         <module name="EqualsAvoidNull"/>
         <module name="EqualsHashCode"/>
         <module name="FinalLocalVariable"/>
-        <module name="HiddenField"/>
+        <module name="HiddenField">
+            <property name="ignoreConstructorParameter" value="true"/>
+            <property name="ignoreSetter" value="true"/>
+            <property name="setterCanReturnItsClass" value="true"/>
+        </module>
         <module name="IllegalInstantiation"/>
         <!-- I don't agree with Qulice config for this check -->
         <module name="IllegalToken"/>
         <module name="IllegalTokenText" />
         <module name="InnerAssignment"/>
-        <module name="MagicNumber"/>
+        <!-- We have violations in gui package only. This check is suppressed for gui package -->
+        <!-- <module name="MagicNumber"/> -->
         <module name="MissingSwitchDefault"/>
         <module name="ModifiedControlVariable"/>
         <module name="SimplifyBooleanExpression"/>
         <module name="SimplifyBooleanReturn"/>
         <module name="StringLiteralEquality"/>
         <module name="NestedForDepth"/>
-        <module name="NestedIfDepth"/>
+        <!-- Default depth is '1' which is too small. Our own configuration is used -->
+        <module name="NestedIfDepth">
+            <property name="max" value="3"/>
+        </module>
         <module name="NestedTryDepth"/>
         <module name="NoClone"/>
         <module name="NoFinalizer"/>
@@ -241,8 +252,10 @@
         <module name="IllegalThrows"/>
         <module name="PackageDeclaration"/>
         <module name="ReturnCount" />
-        <module name="IllegalType"/>
-        <module name="DeclarationOrder"/>
+        <!-- All the current violations were suppressed until https://github.com/checkstyle/checkstyle/issues/1805 will be fixed -->
+        <!-- <module name="IllegalType"/> -->
+        <!-- All the current violations are from JavadocTokenTypes.java which is suppressed on our side due to inability to fix it -->
+        <!-- <module name="DeclarationOrder"/> -->
         <module name="ParameterAssignment"/>
         <module name="ExplicitInitialization"/>
         <module name="DefaultComesLast"/>
@@ -259,8 +272,17 @@
         <module name="AvoidStaticImport" />
         <module name="IllegalImport"/>
         <module name="RedundantImport"/>
-        <module name="UnusedImports"/>
-        <module name="ImportOrder"/>
+        <module name="UnusedImports">
+            <property name="processJavadoc" value="true"/>
+        </module>
+        <!-- We have our own configuration for import ordering -->
+        <module name="ImportOrder">
+            <property name="groups" value="/^javax?\./,org"/>
+            <property name="ordered" value="true"/>
+            <property name="separated" value="true"/>
+            <property name="option" value="top"/>
+            <property name="sortStaticImportsAlphabetically" value="true"/>
+        </module>
 
         <!-- Checks for Javadoc comments. -->
 
@@ -292,7 +314,8 @@
         <module name="JavaNCSS"/>
 
         <!-- Miscellaneous other checks. -->
-        <module name="TodoComment"/>
+        <!-- We have only one violation in TodoCommentCheck.java which is suppressed -->
+        <!-- <module name="TodoComment"/> -->
         <module name="UpperEll"/>
         <module name="ArrayTypeStyle"/>
         <!-- I don't see any good reason to use this check with such a configuration -->
