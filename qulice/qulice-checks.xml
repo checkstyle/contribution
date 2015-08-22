@@ -146,11 +146,13 @@
         <property name="fileExtensions" value="java"/>
         <property name="message" value="Using class as a lock is a bad practice (use class variable instead)"/>
     </module>
+    <!-- All of its violations are false-positives.
     <module name="RegexpSingleline">
         <property name="format" value="^(?! *(/\*\*|\*|//)).*[\.\-\+%/\*&lt;&gt;] *$"/>
         <property name="fileExtensions" value="java"/>
         <property name="message" value="Line cannot end with this symbol, move it to the next line"/>
     </module>
+    -->
     <module name="RegexpSingleline">
         <property name="format" value="^ *="/>
         <property name="fileExtensions" value="java"/>
