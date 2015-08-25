@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+    "-//Puppy Crawl//DTD Suppressions 1.1//EN"
+    "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+
+<suppressions>
+    <suppress checks="FileLength"
+              files="TokenTypes.java"
+              lines="1"/>
+
+    <!--Classes FileDrop, Main, ParseTreeInfoPanel from gui-package contain Magic Numbers.
+    The Check generates too many violations, fixing them will make code unmanageable.-->
+    <suppress checks="MagicNumber" files=".*[\\/]checkstyle[\\/]gui[\\/]"/>
+
+    <!-- Illegal words are part of Javadoc -->
+    <suppress checks="TodoComment" files=".*TodoCommentCheck\.java"/>
+
+    <!-- We unable to fix this case -->
+    <suppress checks="DeclarationOrder" files="JavadocTokenTypes\.java"/>
+
+    <!-- Illegal words are part of Javadoc -->
+    <suppress checks="MissingDeprecated" files="JavadocTokenTypes\.java"/>
+</suppressions>

@@ -64,12 +64,10 @@
     <!--
     Maximum number of lines in any .java file is limited.
     -->
-    <!-- There are only two violations (TokenTypes and JavadocTokenTypes) which are suppressed by our configuration
     <module name="FileLength">
         <property name="max" value="1000"/>
         <property name="fileExtensions" value="java"/>
     </module>
-    -->
 
     <!--
     TAB chars are not allowed anywhere.
@@ -148,7 +146,8 @@
         <property name="fileExtensions" value="java"/>
         <property name="message" value="Using class as a lock is a bad practice (use class variable instead)"/>
     </module>
-    <!-- All of its violations are false-positives.
+    <!-- All of its violations are false-positives. -->
+    <!--
     <module name="RegexpSingleline">
         <property name="format" value="^(?! *(/\*\*|\*|//)).*[\.\-\+%/\*&lt;&gt;] *$"/>
         <property name="fileExtensions" value="java"/>
@@ -231,12 +230,10 @@
             <property name="setterCanReturnItsClass" value="true"/>
         </module>
         <module name="IllegalInstantiation"/>
-        <!-- I don't agree with Qulice config for this check -->
         <module name="IllegalToken"/>
         <module name="IllegalTokenText" />
         <module name="InnerAssignment"/>
-        <!-- We have violations in gui package only. This check is suppressed for gui package -->
-        <!-- <module name="MagicNumber"/> -->
+        <module name="MagicNumber"/>
         <module name="MissingSwitchDefault"/>
         <module name="ModifiedControlVariable"/>
         <module name="SimplifyBooleanExpression"/>
@@ -256,10 +253,9 @@
         <module name="IllegalThrows"/>
         <module name="PackageDeclaration"/>
         <module name="ReturnCount" />
-        <!-- All the current violations were suppressed until https://github.com/checkstyle/checkstyle/issues/1805 will be fixed -->
+        <!-- Turned off until https://github.com/checkstyle/checkstyle/issues/1805 will be fixed -->
         <!-- <module name="IllegalType"/> -->
-        <!-- All the current violations are from JavadocTokenTypes.java which is suppressed on our side due to inability to fix it -->
-        <!-- <module name="DeclarationOrder"/> -->
+        <module name="DeclarationOrder"/>
         <module name="ParameterAssignment"/>
         <module name="ExplicitInitialization"/>
         <module name="DefaultComesLast"/>
@@ -318,8 +314,7 @@
         <module name="JavaNCSS"/>
 
         <!-- Miscellaneous other checks. -->
-        <!-- We have only one violation in TodoCommentCheck.java which is suppressed -->
-        <!-- <module name="TodoComment"/> -->
+        <module name="TodoComment"/>
         <module name="UpperEll"/>
         <module name="ArrayTypeStyle"/>
         <!-- I don't see any good reason to use this check with such a configuration -->
@@ -441,4 +436,7 @@
         <property name="fileExtensions" value="java"/>
     </module>
 
+    <module name="SuppressionFilter">
+        <property name="file" value="suppressions.xml"/>
+    </module>
 </module>
