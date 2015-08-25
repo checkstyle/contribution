@@ -127,12 +127,12 @@
         <property name="message" value="@param tag description should start with capital letter"/>
     </module> -->
     <module name="RegexpSingleline">
-        <property name="format" value="/\*\* +[^A-Z\{]"/>
+        <property name="format" value="/\*\* +\p{javaLowerCase}"/>
         <property name="fileExtensions" value="java"/>
         <property name="message" value="First sentence in a comment should start with a capital letter"/>
     </module>
     <module name="RegexpMultiline">
-        <property name="format" value="/\*\*\W+\* +[^A-Z\{]"/>
+        <property name="format" value="/\*\*\W+\* +\p{javaLowerCase}"/>
         <property name="fileExtensions" value="java"/>
         <property name="message" value="First sentence in a comment should start with a capital letter"/>
     </module>
