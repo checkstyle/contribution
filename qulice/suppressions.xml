@@ -20,4 +20,14 @@
 
     <!-- Illegal words are part of Javadoc -->
     <suppress checks="MissingDeprecated" files="JavadocTokenTypes\.java"/>
+
+    <!-- Can not change API -->
+    <suppress checks="AbstractClassName" files="Check\.java"/>
+
+    <!-- 'Abstract' pattern is used to show it is checking for abstract class name -->
+    <suppress checks="AbstractClassName" files="AbstractClassNameCheck\.java"/>
+
+    <!-- Fixing these cases will decrease code readability -->
+    <suppress checks="MultipleStringLiterals" files="JavadocStyleCheck\.java|AbstractTypeAwareCheck\.java|XMLLogger\.java"/>
+    <suppress checks="MultipleStringLiterals" files=".*[\\/]src[\\/]test[\\/]"/>
 </suppressions>
