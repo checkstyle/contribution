@@ -64,10 +64,12 @@
     <!--
     Maximum number of lines in any .java file is limited.
     -->
+    <!-- There are only two violations (TokenTypes and JavadocTokenTypes) which are suppressed by our configuration
     <module name="FileLength">
         <property name="max" value="1000"/>
         <property name="fileExtensions" value="java"/>
     </module>
+    -->
 
     <!--
     TAB chars are not allowed anywhere.
