@@ -33,4 +33,7 @@
 
     <!-- Till https://github.com/checkstyle/checkstyle/issues/1854 -->
     <suppress checks="TrailingComment" files="(InnerAssignmentCheck\.java|OperatorWrapCheck\.java|XMLLoggerTest\.java|AbbreviationAsWordInNameCheckTest\.java)"/>
+
+    <!-- Should be fixed after moving https://github.com/sevntu-checkstyle/sevntu.checkstyle/blob/master/sevntu-checks/src/main/java/com/github/sevntu/checkstyle/checks/coding/ReturnCountExtendedCheck.java into the main repo -->
+    <suppress checks="ReturnCount" files="(ConfigurationLoader|FileContents|DetailAST|UncommentedMainCheck|ClassResolver|CheckUtils|LeftCurlyCheck|UnnecessaryParenthesesCheck|SimplifyBooleanReturnCheck|RequireThisCheck|MagicNumberCheck|IllegalInstantiationCheck|FallThroughCheck|ExplicitInitializationCheck|AbstractSuperCheck|DesignForExtensionCheck|AbstractExpressionHandler|JavadocStyleCheck|AbstractJavadocCheck|ModifierOrderCheck|WhitespaceAroundCheck|SuppressionCommentFilter|SuppressWithNearbyCommentFilter|ParseTreeModel|IndentationCheckTest)\.java"/>
 </suppressions>
