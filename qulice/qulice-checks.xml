@@ -350,7 +350,7 @@
 
         <!-- Checks for Size Violations. -->
         <module name="ExecutableStatementCount">
-            <property name="max" value="20"/>
+            <property name="max" value="30"/>
         </module>
         <!-- We use different from Qulice formatting rules -->
         <module name="LineLength">
