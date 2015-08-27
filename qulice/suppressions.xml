@@ -33,4 +33,7 @@
 
     <!-- Till https://github.com/checkstyle/checkstyle/issues/1854 -->
     <suppress checks="TrailingComment" files="(InnerAssignmentCheck\.java|OperatorWrapCheck\.java|XMLLoggerTest\.java|AbbreviationAsWordInNameCheckTest\.java)"/>
+
+    <!-- getDetails() method - huge Switch, it has to be monolithic -->
+    <suppress checks="ExecutableStatementCount" files="RightCurlyCheck\.java" lines="280"/>
 </suppressions>
