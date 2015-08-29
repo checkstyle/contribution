@@ -303,7 +303,7 @@
         </module>
 
         <!-- Metrics. -->
-        <module name="BooleanExpressionComplexity"/>
+        <module name="BooleanExpressionComplexity">
             <!-- we are validation library , we have a lot of conditions -->
             <property name="max" value="7"/>
         </module>
