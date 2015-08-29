@@ -154,12 +154,16 @@
         <property name="message" value="Line cannot end with this symbol, move it to the next line"/>
     </module>
     -->
+    <!--
+        Conflicting with
+        [checkstyle] src/main/java/com/puppycrawl/tools/checkstyle/checks/blocks/LeftCurlyCheck.java:258:79: '==' should be on a new line.
+
     <module name="RegexpSingleline">
         <property name="format" value="^ *="/>
         <property name="fileExtensions" value="java"/>
         <property name="message" value="Line cannot start with this symbol, move it to the previous line"/>
     </module>
-
+    -->
     <!-- Checks for Header (we use our own configuration) -->
     <!--
     <module name="Header">
