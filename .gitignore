@@ -1,6 +1,8 @@
 target
 .settings
 .checkstyle
+*.iml
+.idea/
 bin
 *~
 /checkstyle-tester/src/main/java/
