@@ -426,7 +426,9 @@
         </module>
         -->
 
+        <!--  Too many false-positives
         <module name="com.qulice.checkstyle.ProtectedMethodInFinalClassCheck"/>
+        -->
 
     </module>
 
@@ -438,6 +440,10 @@
         <property name="fileExtensions" value="java"/>
     </module>
     -->
+
+    <!-- It is hard to predict size of collection because in Checkstyle everything depends on processed source file. -->
+    <!-- Therefore, default value (10) is OK. -->
+    <!--
     <module name="com.qulice.checkstyle.ConditionalRegexpMultilineCheck">
         <property name="condition" value="^import java\.util\.ArrayList;$"/>
         <property name="format" value="new ArrayList(?:&lt;.*?&gt;)?\(\)"/>
@@ -453,6 +459,7 @@
                   value="ArrayList should be initialized with a size parameter"/>
         <property name="fileExtensions" value="java"/>
     </module>
+    -->
 
     <module name="SuppressionFilter">
         <property name="file" value="suppressions.xml"/>
