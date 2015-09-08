@@ -43,21 +43,14 @@
 
   <module name="NewlineAtEndOfFile"/>
 
-<!--      require separate config file
-  <module name="Header">
-    <property name="headerFile" value="${checkstyle.header.file}"/>
-    <property name="fileExtensions" value="java"/>
-    <property name="id" value="header"/>
-  </module>
--->
   <module name="RegexpSingleline">
     <property name="format" value="\s+$"/>
     <property name="minimum" value="0"/>
     <property name="maximum" value="0"/>
   </module>
-<!--
+
+  <module name="Header"/>
   <module name="RegexpHeader"/>
--->
 
   <module name="RegexpMultiline"/>
 
@@ -256,9 +249,7 @@
     <module name="StringLiteralEquality"/>
     <module name="SuperClone"/>
     <module name="SuperFinalize"/>
-    <!-- till https://github.com/checkstyle/checkstyle/issues/1148
     <module name="SuppressWarningsHolder"/>
-    --> 
   
     <!--  JavadocAST  Checks - disabled dute to performance problem
      <module name="TodoComment"/> 
@@ -296,14 +287,12 @@
     <module name="OneTopLevelClass"/>
   
     <module name="OverloadMethodsDeclarationOrder"/>
-    <!--
-       till https://github.com/checkstyle/checkstyle/issues/1149
     <module name="PackageDeclaration"/>
-    -->
   
     <module name="Regexp"/>
     <module name="RegexpSinglelineJava"/>
 
+    <module name="CommentsIndentation"/>
     <module name="TrailingComment"/>
     <module name="RequireThis"/>
     <module name="ReturnCount"/>
