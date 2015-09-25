@@ -78,7 +78,7 @@ mvn --batch-mode clean
 #export MAVEN_OPTS="-Xmx3000m"
 
 echo "Running Checkstyle on $SOURCES_DIR ... with excludes $EXCLUDES_ACCUM"
-mvn --batch-mode site -Dcheckstyle.excludes=$EXCLUDES_ACCUM "$@"
+mvn -e --batch-mode site -Dcheckstyle.excludes=$EXCLUDES_ACCUM "$@"
 if [ "$?" != "0" ]
 then
 	echo "Checkstyle is failed on $SOURCES_DIR"
