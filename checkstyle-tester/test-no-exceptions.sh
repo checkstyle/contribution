@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VERSION=6.11-SNAPSHOT
+VERSION=6.12-SNAPSHOT
 
 #CHECKSTYLE_REPO=/home/rivanov/checkstyle-test/checkstyle
 CHECKSTYLE_REPO=checkstyle
