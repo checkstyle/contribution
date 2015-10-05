@@ -1,2 +1,4 @@
-CustomImportOrder checks import sorting according to ASCII order. #847. Author Michal Kordas
-Token WILDCARD_TYPE was added to WhitespaceAround check. #853. Author Danil Lopatin
+Issue #819: Create xdoc documentation for FileContentsHolder . Author: Andrei Selkin
+infra: macos integration tests . Author: Roman Ivanov
+minor: fixed jgit resource leaks in commit validation . Author: rnveach
+spelling: fix typo . Author: Roman Ivanov
