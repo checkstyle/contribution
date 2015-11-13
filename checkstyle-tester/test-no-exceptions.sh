@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-VERSION=6.13-SNAPSHOT
-
-#CHECKSTYLE_REPO=/home/rivanov/checkstyle-test/checkstyle
-CHECKSTYLE_REPO=checkstyle
-JAR_ALL=$CHECKSTYLE_REPO/target/checkstyle-$VERSION-all.jar
-
 cd /var/tmp/
 rm -rf checkstyle
 rm -rf guava-libraries
@@ -15,8 +9,14 @@ git clone https://github.com/checkstyle/checkstyle.git
 
 #compile
 cd checkstyle
+
+CS_POM_VERSION=$(mvn -q -Dexec.executable='echo' -Dexec.args='${project.version}' --non-recursive org.codehaus.mojo:exec-maven-plugin:1.3.1:exec)
+
 mvn clean install -Passembly
 cd ../
+
+JAR_ALL=checkstyle/target/checkstyle-CS_POM_VERSION-all.jar
+
 
 if [ ! -f $JAR_ALL ]; then
     echo "File $JAR_ALL not found!"
