@@ -24,7 +24,7 @@
   </module>
 -->
 
-<!--  deprecated old Jvadoc Checks , too much bugs in them
+<!--  deprecated old Javadoc Checks , too much bugs in them
   <module name="JavadocPackage">
     <property name="allowLegacy" value="false"/>
   </module>
@@ -69,11 +69,11 @@
     <module name="OneStatementPerLine"/>
 
     <module name="IllegalCatch"/>
-    <!--   deprecated old Jvadoc Checks , too much bugs in them
+    <!-- deprecated old Javadoc Checks, too much bugs in them
     <module name="ImportControl">
       <property name="file" value="${checkstyle.importcontrol.file}"/>
     </module>
-  -->
+    -->
     <module name="IllegalImport"/>
     <module name="IllegalInstantiation"/>
     <module name="IllegalThrows"/>
@@ -91,7 +91,7 @@
     <module name="JavadocStyle">
       <property name="scope" value="public"/>
     </module>
-  -->
+    -->
     <module name="LeftCurly">
       <property name="maxLineLength" value="100"/>
     </module>
@@ -213,7 +213,9 @@
     <module name="AnnotationLocation"/>
     <module name="AnonInnerLength"/>
     <module name="ArrayTypeStyle"/>
+    <!-- JavadocAST Checks - disabled due to performance problem
     <module name="AtclauseOrder"/>
+    -->
     <module name="AvoidNestedBlocks">
       <property name="allowInSwitchCase" value="true"/>
     </module>
@@ -250,10 +252,10 @@
     <module name="SuperClone"/>
     <module name="SuperFinalize"/>
     <module name="SuppressWarningsHolder"/>
-  
-    <!--  JavadocAST  Checks - disabled dute to performance problem
-     <module name="TodoComment"/> 
-     -->
+
+    <!-- JavadocAST Checks - disabled due to performance problem
+    <module name="TodoComment"/>
+    -->
     <module name="UnnecessaryParentheses"/>
 
     <module name="AbbreviationAsWordInName"/>
@@ -273,22 +275,24 @@
     <module name="IllegalType"/>
     <module name="ImportOrder"/>
     <module name="InnerTypeLast"/>
-    <!-- JavadocAST  Checks - disabled dute to performance problem
+    <!-- JavadocAST Checks - disabled due to performance problem
     <module name="JavadocParagraph"/>
     <module name="JavadocTagContinuationIndentation"/>
-  -->
-  
+    -->
+
     <module name="JavaNCSS"/>
     <module name="MissingCtor"/>
     <module name="ModifiedControlVariable"/>
     <module name="MultipleStringLiterals"/>
+    <!-- JavadocAST Checks - disabled due to performance problem
     <module name="NonEmptyAtclauseDescription"/>
+    -->
     <module name="NPathComplexity"/>
     <module name="OneTopLevelClass"/>
-  
+
     <module name="OverloadMethodsDeclarationOrder"/>
     <module name="PackageDeclaration"/>
-  
+
     <module name="Regexp"/>
     <module name="RegexpSinglelineJava"/>
 
@@ -296,17 +300,17 @@
     <module name="TrailingComment"/>
     <module name="RequireThis"/>
     <module name="ReturnCount"/>
-  
-    <!-- JavadocAST Checks  - disabled dute to performance problem
+
+    <!-- JavadocAST Checks  - disabled due to performance problem
     <module name="SingleLineJavadoc"/>
     <module name="SummaryJavadoc"/>
-  -->
+    -->
 
     <module name="ThrowsCount"/>
     <module name="VariableDeclarationUsageDistance"/>
     <module name="UncommentedMain"/>
     <module name="WriteTag"/>
-    
+
   </module>
 
     <module name="SeverityMatchFilter">
