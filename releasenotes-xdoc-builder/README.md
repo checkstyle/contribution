@@ -23,7 +23,8 @@ Jar file which includes all required dependencies will be located at
 
 ## Command line usage
 ```
-java -jar releasenotes-xdoc-builder-1.0-all.jar -localRepoPath <arg> -startRef <arg> [-endRef <arg>] -releaseNumber <arg> [-outputFile <args>] [-authToken <arg>]
+java -jar releasenotes-xdoc-builder-1.0-all.jar -localRepoPath <arg> -startRef <arg> [-endRef <arg>] \
+     -releaseNumber <arg> [-outputFile <args>] [-authToken <arg>]
 ```
 
 Release notes builder will do the generation of release notes and report warnings and errors to 
@@ -31,7 +32,7 @@ standard out in plain format.
 
 Command line options are:
 
-**localRepoPath** - path to the local git repository. For example,  ```/media/andreiselkin/TOURO/IDEA_Projects/checkstyle``` .
+**localRepoPath** - path to the local git repository. For example,  ```/media/andreiselkin/checkstyle``` .
 
 **startRef** - specifies the commit reference or tag from which to start the generation of 
 release notes. For example, ```753bc06``` or just tag ```checkstyle-6.12.1``` .
@@ -53,5 +54,6 @@ Command line usage example:
 The following example demonstrates how to generate releasenotes.xml for checkstyle 6.13 release starting with checkstyle-6.12.1 release tag.
 
 ```
-java -jar releasenotes-xdoc-builder-1.0-all.jar -localRepoPath /media/andreiselkin/TOURO/IDEA_Projects/checkstyle/ -startRef checkstyle-6.12.1 -releaseNumber 6.13
+java -jar releasenotes-xdoc-builder-1.0-all.jar -localRepoPath /media/andreiselkin/checkstyle/ \
+    -startRef checkstyle-6.12.1 -releaseNumber 6.13
 ```
