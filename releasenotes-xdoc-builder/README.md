@@ -9,12 +9,6 @@ for compilation and packaging:
 mvn clean compile package
 ```
 
-Compiled files will be located at
-
-```
-/releasenotes-xdoc-builder/target/classes/com/github/checkstyle/
-``` 
-
 Jar file which includes all required dependencies will be located at
 
 ```
