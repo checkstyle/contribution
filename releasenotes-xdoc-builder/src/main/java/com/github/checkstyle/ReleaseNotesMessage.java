@@ -41,7 +41,7 @@ public class ReleaseNotesMessage {
      */
     public ReleaseNotesMessage(GHIssue issue, String author) {
         issueNo = issue.getNumber();
-        title = issue.getTitle();
+        title = getActualTitle(issue);
         this.author = author;
     }
 
@@ -66,5 +66,22 @@ public class ReleaseNotesMessage {
 
     public String getAuthor() {
         return author;
+    }
+
+    /**
+     * Returns actual title of issue or pull request which is represented as an issue.
+     * @param issue issue object.
+     * @return actual title of issue or pull request which is represented as an issue.
+     */
+    private String getActualTitle(GHIssue issue) {
+        final String actualTitle;
+        final String issueTitle = issue.getTitle();
+        if (issueTitle.startsWith("Pull")) {
+            actualTitle = issueTitle.substring(issueTitle.indexOf(":") + 2);
+        }
+        else {
+            actualTitle = issueTitle;
+        }
+        return actualTitle;
     }
 }
