@@ -75,6 +75,7 @@ public final class TemplateProcessor {
 
         final String result = templateEngine.process(THYMELEAF_TEMPLATE_FILE, ctx);
         try (Writer fileWriter = new FileWriter(outputFile)) {
+            fileWriter.write("    ");
             fileWriter.write(result);
         }
     }
