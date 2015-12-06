@@ -19,12 +19,14 @@
 
 package com.github.checkstyle;
 
+import com.google.common.base.Verify;
+
 /**
  * Helper structure class to clear show what command line arguments are required for NotesBuilder
  * to run.
  * @author Andrei Selkin
  */
-public class CliOptions {
+public final class CliOptions {
 
     /** Path to a local git repository. */
     private String localRepoPath;
@@ -34,63 +36,132 @@ public class CliOptions {
     private String endRef;
     /** Release number. */
     private String releaseNumber;
-    /** Output file. */
+    /** Output file name. */
     private String outputFile;
-
     /** Auth token. */
     private String authToken;
 
     /** Default constructor. */
-    public CliOptions() {
-        outputFile = "releasenotes.xml";
-        endRef = "HEAD";
-    }
+    private CliOptions() { }
 
     public String getLocalRepoPath() {
         return localRepoPath;
-    }
-
-    public void setLocalRepoPath(String localRepoPath) {
-        this.localRepoPath = localRepoPath;
     }
 
     public String getStartRef() {
         return startRef;
     }
 
-    public void setStartRef(String startRef) {
-        this.startRef = startRef;
-    }
-
     public String getEndRef() {
         return endRef;
-    }
-
-    public void setEndRef(String endRef) {
-        this.endRef = endRef;
     }
 
     public String getReleaseNumber() {
         return releaseNumber;
     }
 
-    public void setReleaseNumber(String releaseNumber) {
-        this.releaseNumber = releaseNumber;
-    }
-
     public String getOutputFile() {
         return outputFile;
-    }
-
-    public void setOutputFile(String outputFile) {
-        this.outputFile = outputFile;
     }
 
     public String getAuthToken() {
         return authToken;
     }
 
-    public void setAuthToken(String authToken) {
-        this.authToken = authToken;
+    /**
+     * Creates a new Builder instance.
+     * @return new Builder instance.
+     */
+    public static Builder newBuilder() {
+        return new CliOptions().new Builder();
+    }
+
+    /**
+     * Class which implements Builder pattern for building CliOptions instance.
+     */
+    final class Builder {
+
+        /** Default constructor. */
+        private Builder() { }
+
+        /**
+         * Specifies path to a local git repository for CliOptions object and returns new
+         * builder object.
+         * @param path path to a local git repository.
+         * @return builder object.
+         */
+        public Builder localRepoPath(String path) {
+            CliOptions.this.localRepoPath = path;
+            return this;
+        }
+
+        /**
+         * Specifies start reference for CliOptions object and returns new builder object.
+         * @param ref start reference.
+         * @return builder object.
+         */
+        public Builder startRef(String ref) {
+            CliOptions.this.startRef = ref;
+            return this;
+        }
+
+        /**
+         * Specifies end reference for CliOptions object and returns new builder object.
+         * @param endRef end reference.
+         * @return builder object.
+         */
+        public Builder endRef(String endRef) {
+            CliOptions.this.endRef = endRef;
+            return this;
+        }
+
+        /**
+         * Specifies release number for CliOptions object and returns new builder object.
+         * @param number release number.
+         * @return builder object.
+         */
+        public Builder releaseNumber(String number) {
+            CliOptions.this.releaseNumber = number;
+            return this;
+        }
+
+        /**
+         * Specifies output file name for CliOptions object and returns new builder object.
+         * @param fileName output file name.
+         * @return builder object.
+         */
+        public Builder outputFile(String fileName) {
+            CliOptions.this.outputFile = fileName;
+            return this;
+        }
+
+        /**
+         * Specifies authentication for CliOptions object and returns new builder object.
+         * @param token github private authentication token.
+         * @return builder object.
+         */
+        public Builder authToken(String token) {
+            CliOptions.this.authToken = token;
+            return this;
+        }
+
+        /**
+         * Returns new CliOption instance.
+         * @return new CliOption instance
+         */
+        public CliOptions build() {
+            if (CliOptions.this.endRef == null) {
+                CliOptions.this.endRef = "HEAD";
+            }
+            if (CliOptions.this.outputFile == null) {
+                CliOptions.this.outputFile = "releasenotes.xml";
+            }
+            Verify.verifyNotNull(localRepoPath,
+                "Path to a local git repository should not be null!");
+            Verify.verifyNotNull(startRef, "Start reference should not be null!");
+            Verify.verifyNotNull(releaseNumber, "Release number should not be null!");
+
+            return CliOptions.this;
+        }
     }
 }

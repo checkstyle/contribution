@@ -122,23 +122,14 @@ public class CliProcessor {
      * @return command line options as POJO object.
      */
     public CliOptions getCliOptions() {
-        final CliOptions conf = new CliOptions();
-        conf.setLocalRepoPath(cmdLine.getOptionValue(OPTION_LOCAL_REPO_PATH));
-        conf.setStartRef(cmdLine.getOptionValue(OPTION_START_REF));
-
-        if (cmdLine.getOptionValue(OPTION_END_REF) != null) {
-            conf.setEndRef(cmdLine.getOptionValue(OPTION_END_REF));
-        }
-
-        conf.setReleaseNumber(cmdLine.getOptionValue(OPTION_RELEASE_NUMBER));
-
-        if (cmdLine.getOptionValue(OPTION_OUTPUT_FILE) != null) {
-            conf.setOutputFile(cmdLine.getOptionValue(OPTION_OUTPUT_FILE));
-        }
-
-        if (cmdLine.getOptionValue(OPTION_AUTH_TOKEN) != null) {
-            conf.setAuthToken(cmdLine.getOptionValue(OPTION_AUTH_TOKEN));
-        }
+        final CliOptions conf = CliOptions.newBuilder()
+            .localRepoPath(cmdLine.getOptionValue(OPTION_LOCAL_REPO_PATH))
+            .startRef(cmdLine.getOptionValue(OPTION_START_REF))
+            .endRef(cmdLine.getOptionValue(OPTION_END_REF))
+            .releaseNumber(cmdLine.getOptionValue(OPTION_RELEASE_NUMBER))
+            .outputFile(cmdLine.getOptionValue(OPTION_OUTPUT_FILE))
+            .authToken(cmdLine.getOptionValue(OPTION_AUTH_TOKEN))
+            .build();
 
         return conf;
     }
