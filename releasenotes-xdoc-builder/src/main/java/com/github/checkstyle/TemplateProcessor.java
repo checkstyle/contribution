@@ -69,9 +69,8 @@ public final class TemplateProcessor {
         templateResolver.setPrefix(TEMPLATE_FOLDER_PATH);
         templateEngine.addTemplateResolver(templateResolver);
 
-        final IContext ctx = new Context();
-        final Map<String, Object> variables = ctx.getVariables();
-        fillTemplateVariables(variables, releaseNotes, releaseNumber);
+        final IContext ctx =
+            new Context(Locale.US, getTemplateVariables(releaseNotes,releaseNumber));
 
         final String result = templateEngine.process(THYMELEAF_TEMPLATE_FILE, ctx);
         try (Writer fileWriter = new FileWriter(outputFile)) {
@@ -97,8 +96,7 @@ public final class TemplateProcessor {
         configuration.setNumberFormat("0.######");
         configuration.setClassForTemplateLoading(NotesBuilder.class, "/" + TEMPLATE_FOLDER_PATH);
 
-        final Map<String, Object> variables = new HashMap<>();
-        fillTemplateVariables(variables, releaseNotes, releaseNumber);
+        final Map<String, Object> variables = getTemplateVariables(releaseNotes, releaseNumber);
 
         final Template template = configuration.getTemplate(FREEMARKER_TEMPLATE_FILE);
         try (Writer fileWriter = new FileWriter(outputFile)) {
@@ -107,19 +105,21 @@ public final class TemplateProcessor {
     }
 
     /**
-     * Fills template variables.
-     * @param variables variables.
+     * Returns the map which represents template variables.
      * @param releaseNotes release notes map.
      * @param releaseNumber release number.
      */
-    private static void fillTemplateVariables(Map<String, Object> variables,
+    private static Map<String, Object> getTemplateVariables(
         Multimap<String, ReleaseNotesMessage> releaseNotes, String releaseNumber) {
 
+        final Map<String, Object> variables = new HashMap<>();
         variables.put("releaseNo", releaseNumber);
         variables.put("breakingMessages", releaseNotes.get(Constants.BREAKING_COMPATIBILITY_LABEL));
         variables.put("newMessages", releaseNotes.get(Constants.NEW_LABEL));
         variables.put("bugMessages", releaseNotes.get(Constants.BUG_LABEL));
         variables.put("notesMessages", releaseNotes.get(Constants.MISCELLANEOUS_LABEL));
+
+        return variables;
     }
 
 }
