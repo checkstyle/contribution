@@ -50,6 +50,9 @@ but expect it to print very and very much lines of terminal logs in this case. L
 ./launch.sh -Dcheckstyle.config.location=my_check.xml -Dcheckstyle.consoleOutput=true
 ```
 
+DIFF-REPORT:
+to generate compact diff report before and after your change please use tool
+[https://github.com/attatrol/ahsm](https://github.com/attatrol/ahsm)
 
 ATTENTION: 
 
