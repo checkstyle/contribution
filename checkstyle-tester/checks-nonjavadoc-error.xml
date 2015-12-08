@@ -52,14 +52,14 @@
 
   <!-- Headers -->
   <module name="Header">
-    <!-- require separate config file, so we use default
+    <!-- require separate config file, so we use default 
     <property name="headerFile" value="${checkstyle.header.file}"/>
     <property name="fileExtensions" value="java"/>
     <property name="id" value="header"/>
     -->
   </module>
   <module name="RegexpHeader">
-    <!-- require separate config file, so we use default
+  	<!-- require separate config file, so we use default 
     <property name="headerFile" value="${checkstyle.regexp.header.file}"/>
     <property name="fileExtensions" value="java"/>
     -->
@@ -75,7 +75,6 @@
   <module name="NewlineAtEndOfFile"/>
   <module name="Translation">
     <property name="requiredTranslations" value="de, fr, fi, es, pt, ja, tr"/>
-    <property name="severity" value="ignore"/>
   </module>
   <module name="UniqueProperties"/>
 
@@ -242,8 +241,6 @@
       <property name="specialImportsRegExp" value="org"/>
       <property name="sortImportsInGroupAlphabetically" value="true"/>
       <property name="separateLineBetweenGroups" value="true"/>
-      <!-- minimizing amount of violations -->
-      <property name="severity" value="ignore"/>
     </module>
     <module name="IllegalImport"/>
     <!-- require separate config file
@@ -299,21 +296,17 @@
 
     <!-- Metrics -->
     <module name="BooleanExpressionComplexity">
-      <!-- minimizing amount of violations -->
-      <property name="max" value="15"/>
+      <property name="max" value="7"/>
     </module>
     <module name="ClassDataAbstractionCoupling">
         <!-- Default classes are also listed-->
         <property name="excludedClasses" value="boolean, byte, char, double, float, int, long, short, void, Boolean, Byte, Character, Double, Float, Integer, Long, Short, Void, Object, Class, String, StringBuffer, StringBuilder, ArrayIndexOutOfBoundsException, Exception, RuntimeException, IllegalArgumentException, IllegalStateException, IndexOutOfBoundsException, NullPointerException, Throwable, SecurityException, UnsupportedOperationException, List, ArrayList, Deque, Queue, LinkedList, Set, HashSet, SortedSet, TreeSet, Map, HashMap, SortedMap, TreeMap,
             DetailsAST, CheckstyleException, UnsupportedEncodingException, BuildException, ConversionException, FileNotFoundException, TestException"/>
-        <property name="severity" value="ignore"/>
     </module>
     <module name="ClassFanOutComplexity">
-      <!-- minimizing amount of violations -->
         <property name="max" value="25"/>
         <!-- Default classes are also listed-->
         <property name="excludedClasses" value="boolean, byte, char, double, float, int, long, short,  void, Boolean, Byte, Character, Double, Float, Integer, Long, Short, Void, Object, Class, String, StringBuffer, StringBuilder, ArrayIndexOutOfBoundsException, Exception, RuntimeException, IllegalArgumentException, IllegalStateException, IndexOutOfBoundsException, NullPointerException, Throwable, SecurityException, UnsupportedOperationException, List, ArrayList, Deque, Queue, LinkedList, Set, HashSet, SortedSet, TreeSet, Map, HashMap, SortedMap, TreeMap, DetailsAST, CheckstyleException, UnsupportedEncodingException, BuildException, ConversionException, FileNotFoundException, TestException, Log, Sets, Multimap, TokenStreamRecognitionException, RecognitionException, TokenStreamException, IOException"/>
-        <property name="severity" value="ignore"/>
     </module>
     <module name="CyclomaticComplexity"/>
     <module name="JavaNCSS"/>
@@ -337,8 +330,6 @@
       <property name="basicOffset" value="4"/>
       <property name="braceAdjustment" value="0"/>
       <property name="caseIndent" value="4"/>
-      <!-- minimizing amount of violations -->
-      <property name="severity" value="ignore"/>
     </module>
     <module name="OuterTypeFilename"/>
     <!-- JavadocAST Checks - disabled due to performance problem
@@ -359,8 +350,7 @@
     <!-- Naming Conventions -->
     <module name="AbbreviationAsWordInName">
       <property name="ignoreFinal" value="false"/>
-      <!-- minimizing amount of violations -->
-      <property name="allowedAbbreviationLength" value="10"/>
+      <property name="allowedAbbreviationLength" value="1"/>
       <property name="allowedAbbreviations" value="AST"/>
     </module>
     <module name="AbstractClassName"/>
@@ -369,13 +359,11 @@
     <module name="InterfaceTypeParameterName"/>
     <module name="LocalFinalVariableName"/>
     <module name="LocalVariableName">
-      <!-- minimizing amount of violations -->
-      <property name="format" value="^(a-zA-Z0-9]*$"/>
+      <property name="format" value="^(id)|([a-z][a-z0-9][a-zA-Z0-9]+)$"/>
       <property name="allowOneCharVarInForLoop" value="true"/>
     </module>
     <module name="MemberName">
-      <!-- minimizing amount of violations -->
-      <property name="format" value="^[a-zA-Z0-9]*$"/>
+      <property name="format" value="^(id)|([a-z][a-z0-9][a-zA-Z0-9]+)$"/>
     </module>
     <module name="MethodName"/>
     <module name="MethodTypeParameterName"/>
@@ -387,12 +375,10 @@
     </module>
     -->
     <module name="CatchParameterName">
-      <!-- minimizing amount of violations -->
-      <property name="format" value="^[a-zA-Z0-9]*$"/>
+      <property name="format" value="^(ex|[a-z][a-z][a-zA-Z]+)$"/>
     </module>
     <module name="StaticVariableName">
-      <!-- minimizing amount of violations -->
-      <property name="format" value="^[a-zA-Z0-9]*$"/>
+      <property name="format" value="^(id)|([a-z][a-z0-9][a-zA-Z0-9]+)$"/>
     </module>
     <module name="TypeName"/>
 
@@ -412,8 +398,6 @@
         <property name="max" value="30"/>
     </module>
     <module name="LineLength">
-      <!-- minimizing amount of violations -->
-      <property name="severity" value="ignore"/>
       <property name="max" value="100"/>
       <property name="ignorePattern" value="^ *\* *[^ ]+$"/>
     </module>
