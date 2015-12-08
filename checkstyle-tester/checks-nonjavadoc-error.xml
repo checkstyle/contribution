@@ -79,20 +79,22 @@
   <module name="UniqueProperties"/>
 
   <!-- Regexp -->
+  <!-- we need only one instance of Check
   <module name="RegexpMultiline"/>
-  <!-- we need only one instance of Check, the most simple to minimize violation amount
+  -->
   <module name="RegexpMultiline">
     <property name="format" value="\r?\n[\t ]*\r?\n[\t ]*\r?\n"/>
     <property name="fileExtensions" value="java,xml,properties"/>
     <property name="message" value="Unnecessary consecutive lines"/>
   </module>
+  <!-- we need only one instance of Check
   <module name="RegexpMultiline">
       <property name="format" value="/\*\*\W+\* +\p{javaLowerCase}"/>
       <property name="fileExtensions" value="java"/>
       <property name="message" value="First sentence in a comment should start with a capital letter"/>
   </module>
   -->
-  <!-- we need only one instance of Check, the most simple to minimize violation amount
+  <!-- we need only one instance of Check
   <module name="RegexpSingleline">
     <property name="format" value="\s+$"/>
     <property name="minimum" value="0"/>
@@ -384,13 +386,13 @@
 
     <!-- Regexp -->
     <module name="Regexp"/>
+    <!-- we need only one instance of Check
     <module name="RegexpSinglelineJava"/>
-    <!-- we need only one instance of Check, the most simple to minimize violation amount
+    -->
     <module name="RegexpSinglelineJava">
       <property name="format" value="[^\p{ASCII}]"/>
       <property name="ignoreComments" value="true"/>
     </module>
-    -->
 
     <!-- Size Violations -->
     <module name="AnonInnerLength"/>
