@@ -370,7 +370,7 @@
     <module name="LocalFinalVariableName"/>
     <module name="LocalVariableName">
       <!-- minimizing amount of violations -->
-      <property name="format" value="^(a-zA-Z0-9]*$"/>
+      <property name="format" value="^[a-zA-Z0-9]*$"/>
       <property name="allowOneCharVarInForLoop" value="true"/>
     </module>
     <module name="MemberName">
