@@ -98,7 +98,7 @@ cd target/site/xref
 # generate list of referenced files
 FILES=$(grep xref ../index.html | grep -v "xref/index.html" |  sed 's/<td><a href=".\/xref\//.\//' | sed -E 's/\.html#L.*/.html'/ | sort | uniq | tr -s "\n" "|" | sed 's/|/\\|/g' | sed 's/\\|$//')
 # remove all except for referenced files
-find . -type f ! -regex "$FILES" -delete
+#find . -type f ! -regex "$FILES" -delete
 # remove all empty folders
 find . -type d -empty -delete
 # return back to original folder
