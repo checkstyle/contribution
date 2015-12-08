@@ -143,7 +143,6 @@
     <module name="EmptyCatchBlock"/>
     <module name="LeftCurly">
       <property name="maxLineLength" value="100"/>
-      <property name="severity" value="ignore"/>
     </module>
     <module name="NeedBraces"/>
     <module name="RightCurly">
@@ -167,17 +166,13 @@
     <module name="ThrowsCount">
       <property name="max" value="2"/>
     </module>
-    <module name="VisibilityModifier">
-      <property name="severity" value="ignore"/>
-    </module>
+    <module name="VisibilityModifier"/>
 
     <!-- Coding -->
     <module name="ArrayTrailingComma"/>
     <module name="AvoidInlineConditionals"/>
     <module name="CovariantEquals"/>
-    <module name="DeclarationOrder">
-      <property name="severity" value="ignore"/>
-    </module>
+    <module name="DeclarationOrder"/>
     <module name="DefaultComesLast"/>
     <module name="EmptyStatement"/>
     <module name="EqualsAvoidNull"/>
@@ -197,9 +192,7 @@
     <module name="IllegalTokenText"/>
     <module name="IllegalType"/>
     <module name="InnerAssignment"/>
-    <module name="MagicNumber">
-      <property name="severity" value="ignore"/>
-    </module>
+    <module name="MagicNumber"/>
     <module name="MissingCtor">
       <!--
         we will not use that fanatic validation, extra code is not good
@@ -209,9 +202,7 @@
     </module>
     <module name="MissingSwitchDefault"/>
     <module name="ModifiedControlVariable"/>
-    <module name="MultipleStringLiterals">
-      <property name="severity" value="ignore"/>
-    </module>
+    <module name="MultipleStringLiterals"/>
     <module name="MultipleVariableDeclarations"/>
     <module name="NestedForDepth">
       <property name="max" value="2"/>
@@ -485,9 +476,7 @@
     </module>
     <module name="TypecastParenPad"/>
     <module name="WhitespaceAfter"/>
-    <module name="WhitespaceAround">
-      <property name="severity" value="ignore"/>
-    </module>
+    <module name="WhitespaceAround"/>
 
   </module>
 
