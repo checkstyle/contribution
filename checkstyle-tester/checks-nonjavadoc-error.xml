@@ -52,13 +52,17 @@
 
   <!-- Headers -->
   <module name="Header">
+    <!-- require separate config file, so we use default 
     <property name="headerFile" value="${checkstyle.header.file}"/>
     <property name="fileExtensions" value="java"/>
     <property name="id" value="header"/>
+    -->
   </module>
   <module name="RegexpHeader">
+  	<!-- require separate config file, so we use default 
     <property name="headerFile" value="${checkstyle.regexp.header.file}"/>
     <property name="fileExtensions" value="java"/>
+    -->
   </module>
 
   <!--  deprecated old Javadoc Checks , too much bugs in them
