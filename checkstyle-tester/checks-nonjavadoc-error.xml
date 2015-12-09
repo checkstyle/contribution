@@ -5,11 +5,11 @@
 
 <module name="Checker">
   <!--
-      If you set the basedir property below, then all reported file
-      names will be relative to the specified directory. See
-      http://checkstyle.sourceforge.net/config.html#Checker
+      this config is a copy of
+      https://github.com/checkstyle/checkstyle/blob/master/config/checkstyle_checks.xml
+      with update to global severity=ignore to catch only exceptions.
 
-      <property name="basedir" value="${basedir}"/>
+      Some other checks are commented out to speed up execution time.
   -->
 
   <metadata name="com.atlas-sw.eclipse" value="I like Sydney"/>
