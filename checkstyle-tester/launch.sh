@@ -93,12 +93,25 @@ mv target/site/index.html target/site/_index.html
 ln -s checkstyle.html target/site/index.html 
 
 echo "Removing non refernced xref files in report ..."
+
 # to be safe on removal switch folder to "xref"
 cd target/site/xref
-# generate list of referenced files
-FILES=$(grep xref ../index.html | grep -v "xref/index.html" |  sed 's/<td><a href=".\/xref\//.\//' | sed -E 's/\.html#L.*/.html'/ | sort | uniq | tr -s "\n" "|" | sed 's/|/\\|/g' | sed 's/\\|$//')
-# remove all except for referenced files
-#find . -type f ! -regex "$FILES" -delete
+
+grep xref ../index.html | grep -v "xref/index.html" |  sed 's/<td><a href=".\/xref\//.\//' | sed -E 's/\.html#L.*/.html'/ | sort | uniq > file.txt
+
+echo "Backuping files that are refenced in report ..."
+for f in $(cat file.txt) ; do
+  mv "$f" "$f.save"
+done
+
+echo "Removing all non used html files"
+find . -name '*.html' | xargs rm
+
+echo "Restoring from backup.."
+for f in $(cat file.txt) ; do
+  mv "$f.save" "$f"
+done
+
 # remove all empty folders
 find . -type d -empty -delete
 # return back to original folder
