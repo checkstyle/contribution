@@ -70,7 +70,7 @@ public final class NotesBuilder {
         Pattern.compile("^\\[maven-release-plugin\\].*(\r|\n)?$|"
             + "^update to ([0-9]|\\.)+-SNAPSHOT(\r|\n)?$|"
             + "^doc: release notes.*(\r|\n)?$|"
-            + "^config:.*(\r|\n)?$");
+            + "^(config:|minor:|infra:)(.|\n)*[\r|\n]?$");
 
     /** Default constructor. */
     private NotesBuilder() { }
