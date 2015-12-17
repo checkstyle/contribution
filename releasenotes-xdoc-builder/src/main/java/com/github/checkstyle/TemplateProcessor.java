@@ -29,8 +29,8 @@ import java.util.Map;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.context.IContext;
+import org.thymeleaf.templateresolver.AbstractConfigurableTemplateResolver;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
-import org.thymeleaf.templateresolver.TemplateResolver;
 
 import com.google.common.collect.Multimap;
 import freemarker.template.Configuration;
@@ -64,17 +64,16 @@ public final class TemplateProcessor {
     public static void generateWithThymeleaf(Multimap<String, ReleaseNotesMessage> releaseNotes,
         String releaseNumber, String outputFile) throws IOException {
 
-        final TemplateEngine templateEngine = new TemplateEngine();
-        final TemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-        templateResolver.setPrefix(TEMPLATE_FOLDER_PATH);
-        templateEngine.addTemplateResolver(templateResolver);
+        final TemplateEngine engine = new TemplateEngine();
+        final AbstractConfigurableTemplateResolver resolver = new ClassLoaderTemplateResolver();
+        resolver.setPrefix(TEMPLATE_FOLDER_PATH);
+        engine.setTemplateResolver(resolver);
 
         final IContext ctx =
             new Context(Locale.US, getTemplateVariables(releaseNotes,releaseNumber));
 
-        final String result = templateEngine.process(THYMELEAF_TEMPLATE_FILE, ctx);
         try (Writer fileWriter = new FileWriter(outputFile)) {
-            fileWriter.write(result);
+            engine.process(THYMELEAF_TEMPLATE_FILE, ctx, fileWriter);
         }
     }
 
