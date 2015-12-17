@@ -15,7 +15,7 @@
         <maven.plugin.jgit.version>4.1.0.201509280440-r</maven.plugin.jgit.version>
         <maven.plugin.slf4j.version>1.7.12</maven.plugin.slf4j.version>
         <maven.plugin.freemarker.version>2.3.22</maven.plugin.freemarker.version>
-        <maven.plugin.thymeleaf.version>2.1.4.RELEASE</maven.plugin.thymeleaf.version>
+        <maven.plugin.thymeleaf.version>3.0.0.BETA01</maven.plugin.thymeleaf.version>
         <maven.plugin.apache.commons.cli.version>1.3.1</maven.plugin.apache.commons.cli.version>
         <maven.plugin.apache.commons.lang.version>2.6</maven.plugin.apache.commons.lang.version>
         <tools.jar.version>1.7.0</tools.jar.version>
