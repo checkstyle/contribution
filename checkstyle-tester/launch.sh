@@ -40,7 +40,7 @@ while read line ; do
     elif [ "$REPO_TYPE" == "git" ]; then
 		if [ ! -d "$REPO_SOURCES_DIR" ]; then
 			echo "Cloning $REPO_TYPE repository '${REPO_NAME}' ..."
-			git clone $REPO_URL $REPO_SOURCES_DIR .
+			git clone $REPO_URL $REPO_SOURCES_DIR
 			echo -e "Cloning $REPO_TYPE repository '$REPO_NAME' - completed\n"
 			fi
 
@@ -54,7 +54,7 @@ while read line ; do
         # esle is only hg (mercurial)
 		if [ ! -d "$REPO_SOURCES_DIR" ]; then
 			echo "Cloning $REPO_TYPE repository '${REPO_NAME}' ..."
-			hg clone $REPO_URL $REPO_SOURCES_DIR .
+			hg clone $REPO_URL $REPO_SOURCES_DIR
 			echo -e "Cloning $REPO_TYPE repository '$REPO_NAME' - completed\n"
 			fi
 
