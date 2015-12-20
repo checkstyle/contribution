@@ -59,6 +59,10 @@ ATTENTION:
 you can specify at projects-to-test-on.properties path to local file system if you have some 
 repositories on your local, example: "checkstyle=/home/username/java/git-repos/checkstyle/checkstyle".
 
+WINDOWS USERS:
+this project can be luanched on Windows OS by usage [https://www.cygwin.com/](Cygwin).
+Preinstall default commands - http://www.appveyor.com/updates/2015/05/30 search for "Installation command used:"
+Follow example how we do this in Windows CI server - https://github.com/checkstyle/checkstyle/blob/master/appveyor.yml#L71 search for matrix item "checkstyle-tester on guava"
 
 DEPLOY: 
 
