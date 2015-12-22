@@ -24,7 +24,12 @@ while read line ; do
     if [ "$REPO_TYPE" == "github" ]; then
         rm -rf $REPO_SOURCES_DIR
         if [ ! -d "$REPO_SOURCES_DIR" ]; then
-            TARNAME=$(echo $REPO_URL | sed -r 's/\//-/')
+            OS=`uname`
+            if [ $OS="Darwin" ]; then
+                TARNAME=$(echo $REPO_URL | sed -E 's/\//-/')
+            else
+                TARNAME=$(echo $REPO_URL | sed -r 's/\//-/')
+            fi
             TARPATH=$SOURCES_DIR/$TARNAME".tar.gz"
             if [ ! -f "$TARPATH" ]; then
                 echo "Requesting a tar: 'wget https://api.github.com/repos/$REPO_URL/tarball/$COMMIT_ID -O $TARPATH'"
