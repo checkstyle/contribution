@@ -98,6 +98,11 @@ echo "Removing non refernced xref files in report ..."
 cd target/site/xref
 
 grep xref ../index.html | grep -v "xref/index.html" |  sed 's/<td><a href=".\/xref\//.\//' | sed -E 's/\.html#L.*/.html'/ | sort | uniq > file.txt
+# such files are required by https://github.com/attatrol/ahsm tool
+echo "allclasses-frame.html" >> file.txt
+echo "index.html" >> file.txt
+echo "overview-frame.html" >> file.txt
+echo "overview-summary.html" >> file.txt
 
 echo "Backuping files that are refenced in report ..."
 for f in $(cat file.txt) ; do
