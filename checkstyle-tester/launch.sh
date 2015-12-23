@@ -112,6 +112,14 @@ for f in $(cat file.txt) ; do
   mv "$f.save" "$f"
 done
 
+VIOLATIONS=$(grep '<th>Line</th>' ../index.html | wc -l)
+XREF_FILES=$(find . -type f -name "*.html" | wc -l)
+if [[ "$VIOLATIONS" != "0" && "$XREF_FILES" == "0" ]]
+then
+    echo "Removing all non used html files, report has violations and xref is empty"
+    exit 1
+fi
+
 # remove all empty folders
 find . -type d -empty -delete
 # return back to original folder
