@@ -27,7 +27,8 @@ matrix:
         - CMD1=" && cd checkstyle-tester "
         - CMD2=" && sed -i 's/<checkstyle\.version>6\.14-SNAPSHOT</<checkstyle.version>/6.13/' pom.xml"
         - CMD3=" && ./launch.sh -Dcheckstyle.config.location=my_check.xml "
-        - CMD=$CMD0$CMD1$CMD2$CMD3
+        - CMD4=" && tree target/site/xref "
+        - CMD=$CMD0$CMD1$CMD2$CMD3$CMD4
 
 script: eval $CMD
 
