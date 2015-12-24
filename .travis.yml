@@ -17,7 +17,7 @@ matrix:
         - DESC="checkstyle-tester on linux"
         - CMD1=" cd checkstyle-tester "
         - CMD2=" && sed -i 's/<checkstyle\.version>6\.14-SNAPSHOT</<checkstyle.version>6.13</' pom.xml"
-        - CMD3=" && sed -i 's/|github|/|git|/' projects-to-test-on.properties "
+        - CMD3=" && cp projects-for-travis.properties projects-to-test-on.properties "
         - CMD4=" && ./launch.sh -Dcheckstyle.config.location=my_check.xml "
         - CMD=$CMD1$CMD2$CMD3$CMD4
 
@@ -27,7 +27,7 @@ matrix:
         - CMD0="export JAVA_HOME=$(/usr/libexec/java_home) "
         - CMD1=" && cd checkstyle-tester "
         - CMD2=" && sed -i '' 's/<checkstyle\.version>6\.14-SNAPSHOT</<checkstyle.version>6.13</' pom.xml"
-        - CMD3=" && sed -i '' 's/|github|/|git|/' projects-to-test-on.properties "
+        - CMD3=" && cp projects-for-travis.properties projects-to-test-on.properties "
         - CMD4=" && ./launch.sh -Dcheckstyle.config.location=my_check.xml "
         #- CMD4=" && tree target/site/xref "
         - CMD=$CMD0$CMD1$CMD2$CMD3$CMD4
