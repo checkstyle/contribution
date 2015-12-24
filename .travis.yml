@@ -1,0 +1,42 @@
+language: java
+sudo: false
+
+install:
+  - 
+
+matrix:
+  fast_finish: true
+  include:
+    - jdk: oraclejdk8
+      env: 
+        - DESC="releasenotes-xdoc-builder"
+        - CMD="cd releasenotes-xdoc-builder && mvn clean compile package"
+
+    - jdk: oraclejdk8
+      env:
+        - DESC="checkstyle-tester on linux"
+        - CMD1=" cd checkstyle-tester "
+        - CMD2=" && sed -i 's/<checkstyle\.version>6\.14-SNAPSHOT</<checkstyle.version>/6.13/' pom.xml"
+        - CMD3=" && ./launch.sh -Dcheckstyle.config.location=my_check.xml "
+        - CMD=$CMD1$CMD2$CMD3
+
+    - os: osx
+      env:
+        - DESC="checkstyle-tester on MacOS"
+        - CMD0="export JAVA_HOME=$(/usr/libexec/java_home) "
+        - CMD1=" && cd checkstyle-tester "
+        - CMD2=" && sed -i 's/<checkstyle\.version>6\.14-SNAPSHOT</<checkstyle.version>/6.13/' pom.xml"
+        - CMD3=" && ./launch.sh -Dcheckstyle.config.location=my_check.xml "
+        - CMD=$CMD0$CMD1$CMD2$CMD3
+
+script: eval $CMD
+
+after_success:
+
+cache:
+  directories:
+  - ~/.m2
+
+branches:
+  only:
+    - master
