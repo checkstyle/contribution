@@ -52,14 +52,14 @@
 
   <!-- Headers -->
   <module name="Header">
-    <!-- require separate config file, so we use default 
+    <!-- require separate config file, so we use default
     <property name="headerFile" value="${checkstyle.header.file}"/>
     <property name="fileExtensions" value="java"/>
     <property name="id" value="header"/>
     -->
   </module>
   <module name="RegexpHeader">
-  	<!-- require separate config file, so we use default 
+  	<!-- require separate config file, so we use default
     <property name="headerFile" value="${checkstyle.regexp.header.file}"/>
     <property name="fileExtensions" value="java"/>
     -->
@@ -219,12 +219,6 @@
     <module name="PackageDeclaration"/>
     <module name="ParameterAssignment"/>
     <module name="RequireThis">
-    <module name="ReturnCount"/>
-    <module name="SimplifyBooleanExpression"/>
-    <module name="SimplifyBooleanReturn"/>
-    <module name="StringLiteralEquality"/>
-    <module name="SuperClone"/>
-    <module name="SuperFinalize"/>
       <!--
         we will not use that fanatic validation, extra modifiers pollute a code
         it is better to use different names for arguments, or expect IDE to highlight field.
@@ -232,6 +226,12 @@
       -->
       <property name="severity" value="ignore"/>
     </module>
+    <module name="ReturnCount"/>
+    <module name="SimplifyBooleanExpression"/>
+    <module name="SimplifyBooleanReturn"/>
+    <module name="StringLiteralEquality"/>
+    <module name="SuperClone"/>
+    <module name="SuperFinalize"/>
     <module name="UnnecessaryParentheses"/>
     <module name="VariableDeclarationUsageDistance"/>
 
@@ -370,12 +370,10 @@
     <module name="MethodName"/>
     <module name="MethodTypeParameterName"/>
     <module name="PackageName"/>
-    <!-- till checkstyle/checkstyle#2678
     <module name="ParameterName">
       <property name="format" value="^(id)|([a-z][a-z0-9][a-zA-Z0-9]+)$"/>
       <property name="ignoreOverridden" value="true"/>
     </module>
-    -->
     <module name="CatchParameterName">
       <property name="format" value="^(ex|[a-z][a-z][a-zA-Z]+)$"/>
     </module>
