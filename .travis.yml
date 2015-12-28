@@ -10,7 +10,7 @@ matrix:
     - jdk: oraclejdk8
       env: 
         - DESC="releasenotes-xdoc-builder"
-        - CMD="cd releasenotes-xdoc-builder && mvn clean compile package"
+        - CMD="cd releasenotes-xdoc-builder && mvn clean verify && mvn clean compile package"
 
     - jdk: oraclejdk8
       env:
