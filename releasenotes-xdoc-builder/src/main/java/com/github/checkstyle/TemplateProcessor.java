@@ -70,7 +70,7 @@ public final class TemplateProcessor {
         engine.setTemplateResolver(resolver);
 
         final IContext ctx =
-            new Context(Locale.US, getTemplateVariables(releaseNotes,releaseNumber));
+            new Context(Locale.US, getTemplateVariables(releaseNotes, releaseNumber));
 
         try (Writer fileWriter = new FileWriter(outputFile)) {
             engine.process(THYMELEAF_TEMPLATE_FILE, ctx, fileWriter);
@@ -107,6 +107,7 @@ public final class TemplateProcessor {
      * Returns the map which represents template variables.
      * @param releaseNotes release notes map.
      * @param releaseNumber release number.
+     * @return the map which represents template variables.
      */
     private static Map<String, Object> getTemplateVariables(
         Multimap<String, ReleaseNotesMessage> releaseNotes, String releaseNumber) {
