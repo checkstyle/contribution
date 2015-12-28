@@ -187,7 +187,8 @@ public final class NotesBuilder {
 
                 final GHIssue issue = remoteRepo.getIssue(issueNo);
                 if (issue.getState() != GHIssueState.CLOSED) {
-                    result.addWarning(String.format("[WARN] Issue #%d is not closed!", issueNo));
+                    result.addWarning(String.format("[WARN] Issue #%d \"%s\" is not closed!"
+                        , issueNo, issue.getTitle()));
                 }
 
                 final String issueLabel = getIssueLabelFrom(issue);

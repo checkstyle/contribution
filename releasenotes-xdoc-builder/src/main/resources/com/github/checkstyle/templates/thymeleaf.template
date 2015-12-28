@@ -5,7 +5,7 @@
           <li th:each="message : ${breakingMessages}" th:inline="text">
             [[${message.title}]]. Author: [[${message.author}]]<a th:if="${message.issueNo} != -1"
             th:href="'https://github.com/checkstyle/checkstyle/issues/'
-            + ${message.issueNo}"> #[[${message.issueNo}]]</a>
+            + ${message.issueNo}">#[[${message.issueNo}]]</a>
           </li>
         </ul></th:block><th:block
       th:if="${not #lists.isEmpty(newMessages)}">
@@ -14,7 +14,7 @@
           <li th:each="message : ${newMessages}" th:inline="text">
             [[${message.title}]]. Author: [[${message.author}]]<a th:if="${message.issueNo} != -1"
             th:href="'https://github.com/checkstyle/checkstyle/issues/'
-            + ${message.issueNo}"> #[[${message.issueNo}]]</a>
+            + ${message.issueNo}">#[[${message.issueNo}]]</a>
           </li>
         </ul></th:block><th:block
       th:if="${not #lists.isEmpty(bugMessages)}">
@@ -23,7 +23,7 @@
           <li th:each="message : ${bugMessages}" th:inline="text">
             [[${message.title}]]. Author: [[${message.author}]]<a th:if="${message.issueNo} != -1"
             th:href="'https://github.com/checkstyle/checkstyle/issues/'
-            + ${message.issueNo}"> #[[${message.issueNo}]]</a>
+            + ${message.issueNo}">#[[${message.issueNo}]]</a>
           </li>
         </ul></th:block><th:block
       th:if="${not #lists.isEmpty(notesMessages)}">
@@ -32,7 +32,7 @@
           <li th:each="message : ${notesMessages}" th:inline="text">
             [[${message.title}]]. Author: [[${message.author}]]<a th:if="${message.issueNo} != -1"
             th:href="'https://github.com/checkstyle/checkstyle/issues/'
-            + ${message.issueNo}"> #[[${message.issueNo}]]</a>
+            + ${message.issueNo}">#[[${message.issueNo}]]</a>
           </li>
         </ul></th:block>
     </section>
