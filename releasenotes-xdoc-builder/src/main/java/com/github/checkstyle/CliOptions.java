@@ -107,11 +107,11 @@ public final class CliOptions {
 
         /**
          * Specifies end reference for CliOptions object and returns new builder object.
-         * @param endRef end reference.
+         * @param ref end reference.
          * @return builder object.
          */
-        public Builder endRef(String endRef) {
-            CliOptions.this.endRef = endRef;
+        public Builder endRef(String ref) {
+            CliOptions.this.endRef = ref;
             return this;
         }
 
