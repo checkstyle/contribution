@@ -9,6 +9,7 @@
     <version>1.0</version>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.plugin.guava.version>18.0</maven.plugin.guava.version>
         <maven.plugin.checkstyle.version>2.17</maven.plugin.checkstyle.version>
         <maven.plugin.github-api.version>1.70</maven.plugin.github-api.version>
