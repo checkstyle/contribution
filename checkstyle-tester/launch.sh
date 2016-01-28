@@ -106,7 +106,12 @@ echo "overview-summary.html" >> file.txt
 
 echo "Backuping files that are refenced in report ..."
 for f in $(cat file.txt) ; do
-  mv "$f" "$f.save"
+    if [ -f "$f" ]
+    then
+        mv "$f" "$f.save"
+    else
+        echo "warning: $f not found."
+    fi
 done
 
 echo "Removing all non used html files"
@@ -114,7 +119,12 @@ find . -name '*.html' | xargs rm
 
 echo "Restoring from backup.."
 for f in $(cat file.txt) ; do
-  mv "$f.save" "$f"
+    if [ -f "$f.save" ]
+    then
+        mv "$f.save" "$f"
+    else
+        echo "warning: $f.save not found."
+    fi
 done
 
 VIOLATIONS=$(grep '<th>Line</th>' ../index.html | wc -l)
