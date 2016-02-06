@@ -2,15 +2,20 @@ language: java
 sudo: false
 
 install:
-  - 
+  -
 
 matrix:
   fast_finish: true
   include:
     - jdk: oraclejdk8
-      env: 
+      env:
         - DESC="releasenotes-xdoc-builder"
         - CMD="cd releasenotes-xdoc-builder && mvn clean verify && mvn clean compile package"
+
+    - jdk: oraclejdk8
+      env:
+        - DESC="patch-diff-report-tool"
+        - CMD="cd patch-diff-report-tool && mvn clean install"
 
     - jdk: oraclejdk8
       env:
