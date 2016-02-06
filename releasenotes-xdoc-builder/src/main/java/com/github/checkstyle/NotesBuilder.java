@@ -93,9 +93,9 @@ public final class NotesBuilder {
                 errorCounter = runNotesBuilder(cliOptions);
             }
         }
-        catch (ParseException | GitAPIException | IOException e) {
+        catch (ParseException | GitAPIException | IOException ex) {
             errorCounter = 1;
-            System.out.println(e.getMessage());
+            System.out.println(ex.getMessage());
             CliProcessor.printUsage();
         }
         finally {

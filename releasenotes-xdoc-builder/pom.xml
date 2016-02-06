@@ -22,7 +22,7 @@
         <tools.jar.version>1.7.0</tools.jar.version>
         <tools.jar.path>${java.home}/../lib/tools.jar</tools.jar.path>
         <java.version>1.7</java.version>
-        <checkstyle.version>6.14</checkstyle.version>
+        <checkstyle.version>6.15</checkstyle.version>
     </properties>
 
     <dependencies>
@@ -131,7 +131,7 @@
                         <configuration>
                             <includeResources>false</includeResources>
                             <includeTestResources>false</includeTestResources>
-                            <configLocation>https://raw.githubusercontent.com/checkstyle/checkstyle/753bc06c7aa24cb6be8d23afb6b4dc5cf4b5caea/config/checkstyle_checks.xml</configLocation>
+                            <configLocation>https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-${checkstyle.version}/config/checkstyle_checks.xml</configLocation>
                             <propertiesLocation>config/checkstyle.properties</propertiesLocation>
                             <failOnViolation>true</failOnViolation>
                             <logViolationsToConsole>true</logViolationsToConsole>
