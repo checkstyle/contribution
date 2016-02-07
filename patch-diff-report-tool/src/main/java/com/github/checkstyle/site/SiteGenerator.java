@@ -1,3 +1,22 @@
+////////////////////////////////////////////////////////////////////////////////
+// checkstyle: Checks Java source code for adherence to a set of rules.
+// Copyright (C) 2001-2016 the original author or authors.
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+////////////////////////////////////////////////////////////////////////////////
+
 package com.github.checkstyle.site;
 
 import java.io.BufferedWriter;
@@ -9,12 +28,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.github.checkstyle.parser.CheckstyleRecord;
-import com.github.checkstyle.parser.ParsedContent;
-import com.github.checkstyle.parser.StatisticsHolder;
-
-import static com.github.checkstyle.Main.HELP_HTML_PATH;
-import static com.github.checkstyle.Main.SITEPATH;
+import com.github.checkstyle.data.CheckstyleRecord;
+import com.github.checkstyle.data.ParsedContent;
+import com.github.checkstyle.data.StatisticsHolder;
 
 /**
  * Site generator from parsed data.
@@ -23,23 +39,40 @@ import static com.github.checkstyle.Main.SITEPATH;
  *
  */
 public final class SiteGenerator {
+
     /**
-     * CSS style codes.
+     * CSS style code a.
      */
     public static final char FIRST_REPORT_CSS_STYLE = 'a';
+
+    /**
+     * CSS style code b.
+     */
     public static final char SECOND_REPORT_CSS_STYLE = 'b';
 
     /**
-     * Abbreviations used in site tables.
+     * Abbreviation used in table for warning message.
      */
     public static final char SEVERITY_WARNING_CHAR = 'W';
+
+    /**
+     * Abbreviation used in table for info message.
+     */
     public static final char SEVERITY_INFO_CHAR = 'I';
+
+    /**
+     * Abbreviation used in table for error message.
+     */
     public static final char SEVERITY_ERROR_CHAR = 'E';
 
     /**
-     * Conventional names of the initial XML files.
+     * Conventional name of the first XML source.
      */
     public static final String FIRST_REPORT_NAME = "first";
+
+    /**
+     * Conventional name of the second XML source.
+     */
     public static final String SECOND_REPORT_NAME = "second";
 
     /**
@@ -50,7 +83,7 @@ public final class SiteGenerator {
     /**
      * Counter used in anchor links generation.
      */
-    private static long anchorCounter = 0;
+    private static long anchorCounter;
 
     /**
      * Site head tag content.
@@ -71,7 +104,7 @@ public final class SiteGenerator {
             "<div class=\"section\">\n"
             + "<h2 a=\"Checkstyle XML difference report\">"
             + "Checkstyle XML difference report</h2>\n"
-            + "<a href=\"" + HELP_HTML_PATH + "\">"
+            + "<a href=\"" + com.github.checkstyle.Main.HELP_HTML_PATH + "\">"
             + "<h4>explanation</h4></a>\n</div>\n";
 
     /**
@@ -157,7 +190,8 @@ public final class SiteGenerator {
             + "<a href=\"https://github.com/checkstyle/contribution/"
             + "tree/master/patch-diff-report-tool\">"
             + "Utility that generated this report.</a>\n"
-            + "<h3><a href=\"" + SITEPATH + "\">back to report</a></h3>\n"
+            + "<h3><a href=\"" + com.github.checkstyle.Main.SITEPATH
+            + "\">back to report</a></h3>\n"
             + "</div>\n"
             + "</div>\n";
 
@@ -194,13 +228,13 @@ public final class SiteGenerator {
                 writeBody(content, writer, holder, generator);
                 writer.write("</html>\n");
             }
-            catch (IOException e) {
-                e.printStackTrace();
+            catch (IOException exception) {
+                exception.printStackTrace();
                 success = false;
             }
         }
-        catch (IOException e1) {
-            e1.printStackTrace();
+        catch (IOException anotherException) {
+            anotherException.printStackTrace();
             success = false;
 
         }
@@ -228,13 +262,13 @@ public final class SiteGenerator {
                 writer.write("</body>\n");
                 writer.write("</html>\n");
             }
-            catch (IOException e) {
-                e.printStackTrace();
+            catch (IOException exception) {
+                exception.printStackTrace();
                 success = false;
             }
         }
-        catch (IOException e1) {
-            e1.printStackTrace();
+        catch (IOException anotherException) {
+            anotherException.printStackTrace();
             success = false;
 
         }
@@ -336,12 +370,13 @@ public final class SiteGenerator {
             BufferedWriter writer, XrefGenerator generator)
                     throws IOException {
         writer.write(CONTENT_TITLE);
-        Iterator<Map.Entry<String, List<CheckstyleRecord>>> it =
+        final Iterator<Map.Entry<String, List<CheckstyleRecord>>> iter =
                 content.getRecords()
                 .entrySet()
                 .iterator();
-        while (it.hasNext()) {
-            final Map.Entry<String, List<CheckstyleRecord>> entry = it.next();
+        while (iter.hasNext()) {
+            final Map.Entry<String, List<CheckstyleRecord>> entry =
+                iter.next();
             final String filename = entry.getKey();
             final String xreference = generator.generateXref(filename);
             writer.write(String.format(TABLE_HEADER, filename, filename));
@@ -370,21 +405,31 @@ public final class SiteGenerator {
     private static void writeTableRow(CheckstyleRecord record,
             BufferedWriter writer, String xreference)
                     throws IOException {
-        final char styleChar = record.belongsToFirstReport()
-                ? FIRST_REPORT_CSS_STYLE : SECOND_REPORT_CSS_STYLE;
-        final String reportName = record.belongsToFirstReport()
-                ? FIRST_REPORT_NAME : SECOND_REPORT_NAME;
+        final char styleChar;
+        if (record.belongsToFirstReport()) {
+            styleChar = FIRST_REPORT_CSS_STYLE;
+        }
+        else {
+            styleChar = SECOND_REPORT_CSS_STYLE;
+        }
+        final String reportName;
+        if (record.belongsToFirstReport()) {
+            reportName = FIRST_REPORT_NAME;
+        }
+        else {
+            reportName = SECOND_REPORT_NAME;
+        }
         final String anchor = generateAnchor();
         final char severityChar;
         switch (record.getSeverity()) {
-        case INFORMATIONAL:
-            severityChar = SEVERITY_INFO_CHAR;
-            break;
-        case WARNING:
-            severityChar = SEVERITY_WARNING_CHAR;
-            break;
-        default:
-            severityChar = SEVERITY_ERROR_CHAR;
+            case INFORMATIONAL:
+                severityChar = SEVERITY_INFO_CHAR;
+                break;
+            case WARNING:
+                severityChar = SEVERITY_WARNING_CHAR;
+                break;
+            default:
+                severityChar = SEVERITY_ERROR_CHAR;
         }
         final int lineNum = record.getLine();
         final int columnNum = record.getColumn();

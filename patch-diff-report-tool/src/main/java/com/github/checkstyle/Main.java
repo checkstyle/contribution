@@ -1,3 +1,22 @@
+////////////////////////////////////////////////////////////////////////////////
+// checkstyle: Checks Java source code for adherence to a set of rules.
+// Copyright (C) 2001-2016 the original author or authors.
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+////////////////////////////////////////////////////////////////////////////////
+
 package com.github.checkstyle;
 
 import java.io.IOException;
@@ -10,8 +29,8 @@ import java.util.Calendar;
 
 import javax.xml.stream.XMLStreamException;
 
-import com.github.checkstyle.parser.ParsedContent;
-import com.github.checkstyle.parser.StatisticsHolder;
+import com.github.checkstyle.data.ParsedContent;
+import com.github.checkstyle.data.StatisticsHolder;
 import com.github.checkstyle.parser.StaxParserProcessor;
 import com.github.checkstyle.site.SiteGenerator;
 import com.github.checkstyle.site.XrefGenerator;
@@ -36,37 +55,69 @@ public final class Main {
     public static final Path SITEPATH = Paths.get("site.html");
 
     /**
-     * Messages for errors.
+     * Message for wrong number of arguments.
      */
     public static final String MSG_WRONG_NUMBER_OF_ARGS =
             "Not enough command line args, "
             + "need at least 2 and no more than 4.";
+
+    /**
+     * Message for bad input path.
+     */
     public static final String MSG_BAD_PATH =
             "Failed to resolve input paths.";
-    private static final String MSG_EXISTS =
+
+    /**
+     * Message for wrong file existence where it shouldn't be.
+     */
+    public static final String MSG_EXISTS =
             "Unknown regular file exists with this name: ";
+
+    /**
+     * Message when necessary file is absent.
+     */
     public static final String MSG_NOT_EXISTS =
             "XML file doesn't exist: ";
 
-    public static final String MSG_BAD_SITE =
-            "Failed to locate essentual files: ";
+    /**
+     * Message if both input XML files are the same.
+     */
     public static final String MSG_IDENTICAL_INPUT =
             "Both input XML files have the same path.";
 
+    /**
+     * Message on failure of the first stage of execution.
+     */
     public static final String MSG_PREPARATION_FAILURE =
             "Failed to pass initial integrity checks.";
+
+    /**
+     * Message on failure of the second stage of execution.
+     */
     public static final String MSG_PARSE_FAILURE =
             "Failed to create parse XML files.";
+
+    /**
+     * Message on failure of the third stage of execution.
+     */
     public static final String MSG_SITE_FAILURE =
             "Failed to create html site";
 
     /**
-     * Stage success messages.
+     * Message after successful first stage.
      */
     public static final String MSG_PREPARATION_SUCCESS =
             "Successfull preparation stage.";
+
+    /**
+     * Message after successful second stage.
+     */
     public static final String MSG_PARSE_SUCCESS =
             "XML files successfully parsed.";
+
+    /**
+     * Message after successful third stage.
+     */
     public static final String MSG_SITE_SUCCESS =
             "Creation of an html site succeed.";
 
@@ -185,8 +236,8 @@ public final class Main {
                 final Path pathXml2 = pathDir2.resolve(XML_FILEPATH);
                 executeStages(pathResult, pathXml1, pathXml2, pathTestData);
             }
-            catch (InvalidPathException e) {
-                e.printStackTrace();
+            catch (InvalidPathException exception) {
+                exception.printStackTrace();
                 System.out.print(MSG_HELP);
                 System.out.println(MSG_BAD_PATH);
             }
@@ -209,29 +260,29 @@ public final class Main {
      * @param pathTestData
      *        path to checkstyle subject data.
      */
-    private static void executeStages(Path pathResult, Path pathXml1,
+    private static void executeStages(Path resultPath, Path pathXml1,
             Path pathXml2, Path pathTestData) {
         //stage 1
         try {
-            preparationStage(pathResult, pathXml1, pathXml2, pathTestData);
+            preparationStage(resultPath, pathXml1, pathXml2, pathTestData);
             System.out.println(MSG_PREPARATION_SUCCESS);
             try {
                 //stage 2
-                ParsedContent content = new ParsedContent();
-                StatisticsHolder holder = new StatisticsHolder();
+                final ParsedContent content = new ParsedContent();
+                final StatisticsHolder holder = new StatisticsHolder();
                 StaxParserProcessor.parse(content, pathXml1,
                         pathXml2, XML_PARSE_PORTION_SIZE, holder);
                 System.out.println(MSG_PARSE_SUCCESS);
                 //stage 3
-                XrefGenerator generator =
-                        new XrefGenerator(pathTestData, pathResult
-                                .resolve(XREF_FILEPATH), pathResult);
+                final XrefGenerator generator =
+                        new XrefGenerator(pathTestData, resultPath
+                                .resolve(XREF_FILEPATH), resultPath);
                 content.getStatistics(holder);
                 if (SiteGenerator.writeParsedContentToHtml(content,
-                            pathResult.resolve(SITEPATH), holder,
+                            resultPath.resolve(SITEPATH), holder,
                             generator)
                         && SiteGenerator.writeHtmlHelp(
-                                pathResult
+                                resultPath
                                 .resolve(HELP_HTML_PATH))) {
                     System.out.println(MSG_SITE_SUCCESS);
                 }
@@ -239,13 +290,13 @@ public final class Main {
                     System.out.println(MSG_SITE_FAILURE);
                 }
             }
-            catch (IOException | XMLStreamException e) {
-                e.printStackTrace();
+            catch (IOException | XMLStreamException exception) {
+                exception.printStackTrace();
                 System.out.println(MSG_PARSE_FAILURE);
             }
         }
-        catch (IllegalArgumentException | IOException e1) {
-            e1.printStackTrace();
+        catch (IllegalArgumentException | IOException anotherException) {
+            anotherException.printStackTrace();
             System.out.print(MSG_HELP);
             System.out.println(MSG_PREPARATION_FAILURE);
         }

@@ -1,4 +1,23 @@
-package com.github.checkstyle.parser;
+////////////////////////////////////////////////////////////////////////////////
+// checkstyle: Checks Java source code for adherence to a set of rules.
+// Copyright (C) 2001-2016 the original author or authors.
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+////////////////////////////////////////////////////////////////////////////////
+
+package com.github.checkstyle.data;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,28 +35,6 @@ import java.util.TreeMap;
  *
  */
 public final class ParsedContent {
-    /**
-     * Comparator used to sort lists of CheckstyleRecord objects
-     * by their position in code.
-     *
-     * @author atta_troll
-     *
-     */
-    private static class PositionOrderComparator
-        implements Comparator<CheckstyleRecord> {
-
-        @Override
-        public int compare(final CheckstyleRecord arg0,
-                final CheckstyleRecord arg1) {
-            final int difference = arg0.getLine() - arg1.getLine();
-            if (difference == 0) {
-                return arg0.getColumn() - arg1.getColumn();
-            }
-            else {
-                return difference;
-            }
-        }
-    }
 
     /**
      * Container for parsed data,
@@ -74,9 +71,11 @@ public final class ParsedContent {
      */
     public void addRecords(String filename,
             List<CheckstyleRecord> newRecords) {
-        List<CheckstyleRecord> popped = records.put(filename, newRecords);
+        final List<CheckstyleRecord> popped =
+            records.put(filename, newRecords);
         if (popped != null) {
-            List<CheckstyleRecord> diff = produceDiff(popped, newRecords);
+            final List<CheckstyleRecord> diff =
+                produceDiff(popped, newRecords);
             if (diff.isEmpty()) {
                 records.remove(filename);
             }
@@ -98,7 +97,7 @@ public final class ParsedContent {
      */
     private static List<CheckstyleRecord> produceDiff(
             List<CheckstyleRecord> list1, List<CheckstyleRecord> list2) {
-        List<CheckstyleRecord> diff = new ArrayList<>();
+        final List<CheckstyleRecord> diff = new ArrayList<>();
         for (CheckstyleRecord rec1 : list1) {
             if (!isInList(rec1, list2)) {
                 diff.add(rec1);
@@ -144,18 +143,40 @@ public final class ParsedContent {
                 : records.entrySet()) {
             final List<CheckstyleRecord> list = entry.getValue();
             for (CheckstyleRecord rec : list) {
-                holder.incrementTotalNumDiff();
                 switch (rec.getSeverity()) {
-                case ERROR:
-                    holder.incrementErrorNumDiff();
-                    break;
-                case WARNING:
-                    holder.incrementWarningNumDiff();
-                    break;
-                default:
-                    holder.incrementInfoNumDiff();
-                    break;
+                    case ERROR:
+                        holder.registerSingleErrorDiff();
+                        break;
+                    case WARNING:
+                        holder.registerSingleWarningDiff();
+                        break;
+                    default:
+                        holder.registerSingleInfoDiff();
+                        break;
                 }
+            }
+        }
+    }
+
+    /**
+     * Comparator used to sort lists of CheckstyleRecord objects
+     * by their position in code.
+     *
+     * @author atta_troll
+     *
+     */
+    private static class PositionOrderComparator
+        implements Comparator<CheckstyleRecord> {
+
+        @Override
+        public int compare(final CheckstyleRecord arg0,
+                final CheckstyleRecord arg1) {
+            final int difference = arg0.getLine() - arg1.getLine();
+            if (difference == 0) {
+                return arg0.getColumn() - arg1.getColumn();
+            }
+            else {
+                return difference;
             }
         }
     }

@@ -1,3 +1,22 @@
+////////////////////////////////////////////////////////////////////////////////
+// checkstyle: Checks Java source code for adherence to a set of rules.
+// Copyright (C) 2001-2016 the original author or authors.
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+////////////////////////////////////////////////////////////////////////////////
+
 package com.github.checkstyle.parser;
 
 import java.io.FileInputStream;
@@ -16,6 +35,11 @@ import javax.xml.stream.events.EndElement;
 import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
+import com.github.checkstyle.data.CheckstyleRecord;
+import com.github.checkstyle.data.ParsedContent;
+import com.github.checkstyle.data.Severity;
+import com.github.checkstyle.data.StatisticsHolder;
+
 /**
  * Contains logics of the StaX parser for the checkstyle xml reports.
  * If its scheme changed, this class should be the first one to fix.
@@ -23,22 +47,55 @@ import javax.xml.stream.events.XMLEvent;
  * @author atta_troll
  */
 public final class StaxParserProcessor {
+
     /**
-     * XML tags values.
+     * String value for "file" tag.
      */
     private static final String FILE_TAG = "file";
+
+    /**
+     * String value for "error" tag.
+     */
     private static final String ERROR_TAG = "error";
+
+    /**
+     * String value for "name" attribute.
+     */
     private static final String FILENAME_ATTR = "name";
+
+    /**
+     * String value for "line" attribute.
+     */
     private static final String LINE_ATTR = "line";
+
+    /**
+     * String value for "column" attribute.
+     */
     private static final String COLUMN_ATTR = "column";
+
+    /**
+     * String value for "severity" attribute.
+     */
     private static final String SEVERITY_ATTR = "severity";
+
+    /**
+     * String value for "message" attribute.
+     */
     private static final String MESSAGE_ATTR = "message";
+
+    /**
+     * String value for "source" attribute.
+     */
     private static final String SOURCE_ATTR = "source";
 
     /**
-     * Severity attribute values.
+     * Severity attribute value "warning".
      */
     private static final String SEVERITY_WARNING = "warning";
+
+    /**
+     * Severity attribute value "error".
+     */
     private static final String SEVERITY_ERROR = "error";
 
     /**
@@ -71,11 +128,11 @@ public final class StaxParserProcessor {
     public static void parse(ParsedContent content, Path xml1,
             Path xml2, int portionSize, StatisticsHolder holder)
                     throws FileNotFoundException, XMLStreamException {
-        XMLEventReader reader1 = prepareParsing(xml1);
-        XMLEventReader reader2 = prepareParsing(xml2);
+        final XMLEventReader reader1 = prepareParsing(xml1);
+        final XMLEventReader reader2 = prepareParsing(xml2);
         while (reader1.hasNext() || reader2.hasNext()) {
-            parseXMLPortion(content, reader1, portionSize, true, holder);
-            parseXMLPortion(content, reader2, portionSize, false, holder);
+            parseXmlPortion(content, reader1, portionSize, true, holder);
+            parseXmlPortion(content, reader2, portionSize, false, holder);
         }
     }
 
@@ -92,10 +149,11 @@ public final class StaxParserProcessor {
      */
     private static XMLEventReader prepareParsing(Path xmlFilename)
             throws FileNotFoundException, XMLStreamException {
-        XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+        final XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         // Setup a new eventReader
-        InputStream in = new FileInputStream(xmlFilename.toFile());
-        return inputFactory.createXMLEventReader(in);
+        final InputStream inputStream =
+            new FileInputStream(xmlFilename.toFile());
+        return inputFactory.createXMLEventReader(inputStream);
     }
 
     /**
@@ -114,7 +172,7 @@ public final class StaxParserProcessor {
      * @throws XMLStreamException
      *         thrown on internal parser error.
      */
-    private static void parseXMLPortion(ParsedContent content,
+    private static void parseXmlPortion(ParsedContent content,
             XMLEventReader reader, int numOfFilenames, boolean first,
             StatisticsHolder holder)
                     throws XMLStreamException {
@@ -122,7 +180,7 @@ public final class StaxParserProcessor {
         String filename = null;
         List<CheckstyleRecord> records = null;
         while (reader.hasNext() && counter > 0) {
-            XMLEvent event = reader.nextEvent();
+            final XMLEvent event = reader.nextEvent();
             if (event.isStartElement()) {
                 final StartElement startElement = event.asStartElement();
                 final String startElementName = startElement.getName()
@@ -130,16 +188,11 @@ public final class StaxParserProcessor {
                 //file tag encounter
                 if (startElementName.equals(FILE_TAG)) {
                     counter--;
-                    if (first) {
-                        holder.incrementFileNum1();
-                    }
-                    else {
-                        holder.incrementFileNum2();
-                    }
-                    Iterator<Attribute> attributes = startElement
+                    registerFile(holder, first);
+                    final Iterator<Attribute> attributes = startElement
                             .getAttributes();
                     while (attributes.hasNext()) {
-                        Attribute attribute = attributes.next();
+                        final Attribute attribute = attributes.next();
                         if (attribute.getName().toString()
                                 .equals(FILENAME_ATTR)) {
                             filename = attribute.getValue();
@@ -162,6 +215,23 @@ public final class StaxParserProcessor {
     }
 
     /**
+     * Registers new file in statistics.
+     *
+     * @param holder
+     *        a StatisticsHolder instance.
+     * @param first
+     *        flag of parsing the first report.
+     */
+    private static void registerFile(StatisticsHolder holder, boolean first) {
+        if (first) {
+            holder.registerSingleFile1();
+        }
+        else {
+            holder.registerSingleFile2();
+        }
+    }
+
+    /**
      * Parses "error" XML tag.
      *
      * @param startElement
@@ -180,10 +250,10 @@ public final class StaxParserProcessor {
         String source = null;
         String message = null;
 
-        Iterator<Attribute> attributes = startElement
+        final Iterator<Attribute> attributes = startElement
                 .getAttributes();
         while (attributes.hasNext()) {
-            Attribute attribute = attributes.next();
+            final Attribute attribute = attributes.next();
             final String attrName = attribute.getName().toString();
             if (attrName.equals(LINE_ATTR)) {
                 line = Integer.parseInt(attribute.getValue());
@@ -226,36 +296,30 @@ public final class StaxParserProcessor {
     private static void incrementStatistics(Severity severity,
             StatisticsHolder holder, boolean first) {
         switch (severity) {
-        case ERROR:
-            if (first) {
-                holder.incrementErrorNum1();
-            }
-            else {
-                holder.incrementErrorNum2();
-            }
-            break;
-        case WARNING:
-            if (first) {
-                holder.incrementWarningNum1();
-            }
-            else {
-                holder.incrementWarningNum2();
-            }
-            break;
-        default:
-            if (first) {
-                holder.incrementInfoNum1();
-            }
-            else {
-                holder.incrementInfoNum2();
-            }
-            break;
-        }
-        if (first) {
-            holder.incrementTotalNum1();
-        }
-        else {
-            holder.incrementTotalNum2();
+            case ERROR:
+                if (first) {
+                    holder.registerSingleError1();
+                }
+                else {
+                    holder.registerSingleError2();
+                }
+                break;
+            case WARNING:
+                if (first) {
+                    holder.registerSingleWarning1();
+                }
+                else {
+                    holder.registerSingleWarning2();
+                }
+                break;
+            default:
+                if (first) {
+                    holder.registerSingleInfo1();
+                }
+                else {
+                    holder.registerSingleInfo2();
+                }
+                break;
         }
     }
 }
