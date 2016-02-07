@@ -17,38 +17,27 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.github.checkstyle.site;
-
-import org.apache.maven.jxr.log.Log;
+package com.github.checkstyle.data;
 
 /**
- * Dummy log used by maven-jxr PackageManager.
+ * Represents different states of severity of the checkstyle messages.
  *
  * @author atta_troll
  *
  */
-public class JxrDummyLog implements Log {
+public enum Severity {
+    /**
+     * Represents error level.
+     */
+    ERROR,
 
-    @Override
-    public void debug(String arg0) {
+    /**
+     * Represents warning level.
+     */
+    WARNING,
 
-    }
-
-    @Override
-    public void error(String arg0) {
-        System.out.println(arg0);
-
-    }
-
-    @Override
-    public void info(String arg0) {
-
-    }
-
-    @Override
-    public void warn(String arg0) {
-        System.out.println(arg0);
-
-    }
-
+    /**
+     * Represents informational level.
+     */
+    INFORMATIONAL;
 }

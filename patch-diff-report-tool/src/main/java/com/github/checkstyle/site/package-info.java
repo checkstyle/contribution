@@ -17,38 +17,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.github.checkstyle.site;
-
-import org.apache.maven.jxr.log.Log;
-
 /**
- * Dummy log used by maven-jxr PackageManager.
- *
- * @author atta_troll
- *
+ * Contains classes for site generation.
  */
-public class JxrDummyLog implements Log {
-
-    @Override
-    public void debug(String arg0) {
-
-    }
-
-    @Override
-    public void error(String arg0) {
-        System.out.println(arg0);
-
-    }
-
-    @Override
-    public void info(String arg0) {
-
-    }
-
-    @Override
-    public void warn(String arg0) {
-        System.out.println(arg0);
-
-    }
-
-}
+package com.github.checkstyle.site;

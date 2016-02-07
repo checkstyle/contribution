@@ -1,3 +1,22 @@
+////////////////////////////////////////////////////////////////////////////////
+// checkstyle: Checks Java source code for adherence to a set of rules.
+// Copyright (C) 2001-2016 the original author or authors.
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+////////////////////////////////////////////////////////////////////////////////
+
 package com.github.checkstyle;
 
 import java.io.IOException;
@@ -38,7 +57,8 @@ public final class FilesystemUtils {
     public static void delete(Path root)
             throws IOException {
         if (Files.isDirectory(root)) {
-            DirectoryStream<Path> subPaths = Files.newDirectoryStream(root);
+            final DirectoryStream<Path> subPaths =
+                Files.newDirectoryStream(root);
             for (Path path : subPaths) {
                 delete(path);
             }
@@ -94,7 +114,8 @@ public final class FilesystemUtils {
             else {
                 Files.createDirectory(destination);
             }
-            DirectoryStream<Path> subPaths = Files.newDirectoryStream(source);
+            final DirectoryStream<Path> subPaths =
+                Files.newDirectoryStream(source);
             for (Path path : subPaths) {
                 final Path relativePath = source.relativize(path);
                 copy(path, destination.resolve(relativePath));
@@ -119,7 +140,7 @@ public final class FilesystemUtils {
      */
     public static void copyFile(Path source, Path destination)
             throws IOException {
-        Path destFolders = destination.getParent();
+        final Path destFolders = destination.getParent();
         if (Files.notExists(destFolders)) {
             Files.createDirectories(destFolders);
         }
@@ -142,7 +163,7 @@ public final class FilesystemUtils {
                 .getResourceAsStream(resourceName);
                 OutputStream out = Files.newOutputStream(destination)) {
             int readBytes;
-            byte[] buffer = new byte[BUFFER_SIZE];
+            final byte[] buffer = new byte[BUFFER_SIZE];
             while ((readBytes = in.read(buffer)) > 0) {
                 out.write(buffer, 0, BUFFER_SIZE);
             }
