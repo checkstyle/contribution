@@ -19,7 +19,7 @@ matrix:
 
     - jdk: oraclejdk8
       env:
-        - DESC="checkstyle-tester on linux"
+        - DESC="checkstyle-tester on linux "
         - CMD1=" git clone https://github.com/checkstyle/checkstyle && cd checkstyle "
         - CMD2=" && mvn clean install -DskipTests -DskipITs -Dcobertura.skip=true"
         - CMD3="                   -Dpmd.skip=true -Dfindbugs.skip=true "
