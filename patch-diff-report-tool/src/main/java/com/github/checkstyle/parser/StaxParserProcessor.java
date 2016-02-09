@@ -179,7 +179,7 @@ public final class StaxParserProcessor {
         int counter = numOfFilenames;
         String filename = null;
         List<CheckstyleRecord> records = null;
-        while (reader.hasNext() && counter > 0) {
+        while (reader.hasNext()) {
             final XMLEvent event = reader.nextEvent();
             if (event.isStartElement()) {
                 final StartElement startElement = event.asStartElement();
@@ -209,6 +209,9 @@ public final class StaxParserProcessor {
                 final EndElement endElement = event.asEndElement();
                 if (endElement.getName().getLocalPart().equals(FILE_TAG)) {
                     content.addRecords(filename, records);
+                    if (counter == 0) {
+                        break;
+                    }
                 }
             }
         }
