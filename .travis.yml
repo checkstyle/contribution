@@ -19,23 +19,26 @@ matrix:
 
     - jdk: oraclejdk8
       env:
-        - DESC="checkstyle-tester on linux"
-        - CMD1=" cd checkstyle-tester "
-        - CMD2=" && sed -i 's/<checkstyle\.version>6\.16-SNAPSHOT</<checkstyle.version>6.15</' pom.xml"
-        - CMD3=" && cp projects-for-travis.properties projects-to-test-on.properties "
-        - CMD4=" && ./launch.sh -Dcheckstyle.config.location=my_check.xml "
-        - CMD=$CMD1$CMD2$CMD3$CMD4
+        - DESC="checkstyle-tester on linux "
+        - CMD1=" git clone https://github.com/checkstyle/checkstyle && cd checkstyle "
+        - CMD2=" && mvn clean install -DskipTests -DskipITs -Dcobertura.skip=true"
+        - CMD3="                   -Dpmd.skip=true -Dfindbugs.skip=true "
+        - CMD4="                   -Dcheckstyle.ant.skip=true -Dcheckstyle.skip=true -Dxml.skip=true"
+        - CMD5=" && cd ../checkstyle-tester && cp projects-for-travis.properties projects-to-test-on.properties "
+        - CMD6=" && ./launch.sh -Dcheckstyle.config.location=my_check.xml "
+        - CMD=$CMD1$CMD2$CMD3$CMD4$CMD5$CMD6
 
     - os: osx
       env:
         - DESC="checkstyle-tester on MacOS"
         - CMD0="export JAVA_HOME=$(/usr/libexec/java_home) "
-        - CMD1=" && cd checkstyle-tester "
-        - CMD2=" && sed -i '' 's/<checkstyle\.version>6\.16-SNAPSHOT</<checkstyle.version>6.15</' pom.xml"
-        - CMD3=" && cp projects-for-travis.properties projects-to-test-on.properties "
-        - CMD4=" && ./launch.sh -Dcheckstyle.config.location=my_check.xml "
-        #- CMD4=" && tree target/site/xref "
-        - CMD=$CMD0$CMD1$CMD2$CMD3$CMD4
+        - CMD1=" && git clone https://github.com/checkstyle/checkstyle && cd checkstyle "
+        - CMD2=" && mvn clean install -DskipTests -DskipITs -Dcobertura.skip=true"
+        - CMD3="                   -Dpmd.skip=true -Dfindbugs.skip=true "
+        - CMD4="                   -Dcheckstyle.ant.skip=true -Dcheckstyle.skip=true -Dxml.skip=true"
+        - CMD5=" && cd ../checkstyle-tester && cp projects-for-travis.properties projects-to-test-on.properties "
+        - CMD6=" && ./launch.sh -Dcheckstyle.config.location=my_check.xml "
+        - CMD=$CMD0$CMD1$CMD2$CMD3$CMD4$CMD5$CMD6
 
 script: eval $CMD
 
