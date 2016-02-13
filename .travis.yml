@@ -23,7 +23,7 @@ matrix:
         - CMD1=" git clone https://github.com/checkstyle/checkstyle && cd checkstyle "
         - CMD2=" && mvn clean install -DskipTests -DskipITs -Dcobertura.skip=true"
         - CMD3="                   -Dpmd.skip=true -Dfindbugs.skip=true "
-        - CMD4="                   -Dcheckstyle.ant.skip=true -Dcheckstyle.skip=true -Dxml.skip=true"        - CMD1=" cd checkstyle-tester "
+        - CMD4="                   -Dcheckstyle.ant.skip=true -Dcheckstyle.skip=true -Dxml.skip=true"
         - CMD5=" && cd ../checkstyle-tester && cp projects-for-travis.properties projects-to-test-on.properties "
         - CMD6=" && ./launch.sh -Dcheckstyle.config.location=my_check.xml "
         - CMD=$CMD1$CMD2$CMD3$CMD4$CMD5$CMD6
@@ -35,7 +35,7 @@ matrix:
         - CMD1=" && git clone https://github.com/checkstyle/checkstyle && cd checkstyle "
         - CMD2=" && mvn clean install -DskipTests -DskipITs -Dcobertura.skip=true"
         - CMD3="                   -Dpmd.skip=true -Dfindbugs.skip=true "
-        - CMD4="                   -Dcheckstyle.ant.skip=true -Dcheckstyle.skip=true -Dxml.skip=true"        - CMD1=" cd checkstyle-tester "
+        - CMD4="                   -Dcheckstyle.ant.skip=true -Dcheckstyle.skip=true -Dxml.skip=true"
         - CMD5=" && cd ../checkstyle-tester && cp projects-for-travis.properties projects-to-test-on.properties "
         - CMD6=" && ./launch.sh -Dcheckstyle.config.location=my_check.xml "
         - CMD=$CMD0$CMD1$CMD2$CMD3$CMD4$CMD5$CMD6
