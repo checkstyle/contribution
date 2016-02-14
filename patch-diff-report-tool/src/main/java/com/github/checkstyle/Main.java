@@ -19,15 +19,16 @@
 
 package com.github.checkstyle;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import javax.xml.stream.XMLStreamException;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 
 import com.github.checkstyle.data.ParsedContent;
 import com.github.checkstyle.data.StatisticsHolder;
@@ -36,11 +37,8 @@ import com.github.checkstyle.site.SiteGenerator;
 import com.github.checkstyle.site.XrefGenerator;
 
 /**
- * Utility class, contains main function and
- * its auxiliary routines.
- *
+ * Utility class, contains main function and its auxiliary routines.
  * @author atta_troll
- *
  */
 public final class Main {
 
@@ -55,120 +53,23 @@ public final class Main {
     public static final Path SITEPATH = Paths.get("site.html");
 
     /**
-     * Message for wrong number of arguments.
-     */
-    public static final String MSG_WRONG_NUMBER_OF_ARGS =
-            "Not enough command line args, "
-            + "need at least 2 and no more than 4.";
-
-    /**
-     * Message for bad input path.
-     */
-    public static final String MSG_BAD_PATH =
-            "Failed to resolve input paths.";
-
-    /**
-     * Message for wrong file existence where it shouldn't be.
-     */
-    public static final String MSG_EXISTS =
-            "Unknown regular file exists with this name: ";
-
-    /**
-     * Message when necessary file is absent.
-     */
-    public static final String MSG_NOT_EXISTS =
-            "XML file doesn't exist: ";
-
-    /**
-     * Message if both input XML files are the same.
-     */
-    public static final String MSG_IDENTICAL_INPUT =
-            "Both input XML files have the same path.";
-
-    /**
-     * Message on failure of the first stage of execution.
-     */
-    public static final String MSG_PREPARATION_FAILURE =
-            "Failed to pass initial integrity checks.";
-
-    /**
-     * Message on failure of the second stage of execution.
-     */
-    public static final String MSG_PARSE_FAILURE =
-            "Failed to create parse XML files.";
-
-    /**
-     * Message on failure of the third stage of execution.
-     */
-    public static final String MSG_SITE_FAILURE =
-            "Failed to create html site";
-
-    /**
-     * Message after successful first stage.
-     */
-    public static final String MSG_PREPARATION_SUCCESS =
-            "Successfull preparation stage.";
-
-    /**
-     * Message after successful second stage.
-     */
-    public static final String MSG_PARSE_SUCCESS =
-            "XML files successfully parsed.";
-
-    /**
-     * Message after successful third stage.
-     */
-    public static final String MSG_SITE_SUCCESS =
-            "Creation of an html site succeed.";
-
-    /**
      * Help message.
      */
-    public static final String MSG_HELP =
-            "This program creates symmetric difference "
+    public static final String MSG_HELP = "This program creates symmetric difference "
             + "from two checkstyle-result.xml reports\n"
             + "generated for checkstyle build.\n"
-            + "It has from 2 to 4 command line arguments:\n"
-            + "First two are the links to directories, each containing "
-            + "checkstyle-result.xml, these are obligatory arguments,\n"
-            + "Third argument is a link to the folder with the code "
-            + "under testing, it is fucultative, it will be used to "
-            + "relativize xdoc file structure, but it can be skipped and "
-            + "absolute paths will be used.\n"
-            + "Forth argument is a destination folder for the result site, "
-            + "it is facultative, if skipped, you will find the result site "
-            + "in your home directory, if this folder already exists, "
-            + "ITS CONTENT WILL BE PURGED.\n";
-
-    /**
-     * Minimal number of the cli arguments.
-     */
-    public static final int MIN_ARGS_NUMBER = 2;
-
-    /**
-     * Maximal number of the cli arguments.
-     */
-    public static final int MAX_ARGS_NUMBER = 4;
-
-    /**
-     * Minimal number of arguments when first obligatory argument is present.
-     */
-    public static final int ARGS_NUMBER_FIRST_OBLIGATORY = 0;
-
-    /**
-     * Minimal number of arguments when second obligatory argument is present.
-     */
-    public static final int ARGS_NUMBER_SECOND_OBLIGATORY = 1;
-
-    /**
-     * Minimal number of arguments when first facultative argument is present.
-     */
-    public static final int ARGS_NUMBER_FIRST_FACULTATIVE = 2;
-
-    /**
-     * Minimal number of arguments when second facultative argument is present.
-     */
-    public static final int ARGS_NUMBER_SECOND_FACULTATIVE = 3;
+            + "Command line arguments:\n"
+            + "\t-baseReportPath - path to the directory containing first checkstyle-result.xml, "
+            + "obligatory argument;\n"
+            + "\t-patchReportPath - path to the directory containing second checkstyle-result.xml, "
+            + "also obligatory argument;\n"
+            + "\t-sourcePath - path to the data under check (facultative, if absent then file "
+            + "structure for cross reference files won't be relativized, "
+            + "full paths will be used);\n"
+            + "\t-resultPath - path to the resulting site (facultative, if absent then default "
+            + "path will be used: ~/XMLDiffGen_report_yyyy.mm.dd_hh:mm:ss), remember, "
+            + "if this folder exists its content will be purged;\n"
+            + "\t-h - simply shows help message.";
 
     /**
      * Number of "file" xml tags parsed at one iteration of parser.
@@ -178,18 +79,42 @@ public final class Main {
     /**
      * Name for standart checkstyle xml report.
      */
-    private static final Path XML_FILEPATH =
-            Paths.get("checkstyle-result.xml");
+    public static final Path XML_FILEPATH = Paths.get("checkstyle-result.xml");
 
     /**
      * Name for the CSS files folder.
      */
-    private static final Path CSS_FILEPATH = Paths.get("css");
+    public static final Path CSS_FILEPATH = Paths.get("css");
 
     /**
      * Name for the CSS files folder.
      */
-    private static final Path XREF_FILEPATH = Paths.get("xref");
+    public static final Path XREF_FILEPATH = Paths.get("xref");
+
+    /**
+     * Name for command line option "baseReportPath".
+     */
+    private static final String OPTION_BASE_FOLDER = "baseReportPath";
+
+    /**
+     * Name for command line option "patchReportPath".
+     */
+    private static final String OPTION_PATCH_FOLDER = "patchReportPath";
+
+    /**
+     * Name for command line option "sourcePath".
+     */
+    private static final String OPTION_SOURCE_PATH = "sourcePath";
+
+    /**
+     * Name for command line option "resultPath".
+     */
+    private static final String OPTION_PESULT_FOLDER = "resultPath";
+
+    /**
+     * Name for command line option that shows help message.
+     */
+    private static final String OPTION_HELP = "h";
 
     /**
      * Utility class ctor.
@@ -199,170 +124,130 @@ public final class Main {
     }
 
     /**
-     * Parses CLI arguments,
-     * then passes control to executeStages.
+     * Parses CLI arguments, then passes control to executeStages.
      *
      * @param args
      *        cli arguments.
+     * @throws Exception
+     *         on failure to execute stages.
      */
-    public static void main(final String... args) {
-        if (args.length >= MIN_ARGS_NUMBER && args.length <= MAX_ARGS_NUMBER) {
-            try {
-                final Path pathDir1 = Paths
-                        .get(args[ARGS_NUMBER_FIRST_OBLIGATORY]);
-                final Path pathDir2 = Paths
-                        .get(args[ARGS_NUMBER_SECOND_OBLIGATORY]);
-                final Path pathTestData;
-                if (args.length > ARGS_NUMBER_FIRST_FACULTATIVE) {
-                    pathTestData = Paths
-                            .get(args[ARGS_NUMBER_FIRST_FACULTATIVE]);
-                }
-                else {
-                    pathTestData = null;
-                }
-                final Path pathResult;
-                if (args.length > ARGS_NUMBER_SECOND_FACULTATIVE) {
-                    pathResult = Paths
-                            .get(args[ARGS_NUMBER_SECOND_FACULTATIVE]);
-                }
-                else {
-                    pathResult = Paths.get(System.getProperty("user.home"))
-                            .resolve("XMLDiffGen_report_"
-                                    + new SimpleDateFormat(
-                                    "yyyy.MM.dd_HH:mm:ss")
-                                    .format(Calendar.getInstance().getTime()));
-                }
-                final Path pathXml1 = pathDir1.resolve(XML_FILEPATH);
-                final Path pathXml2 = pathDir2.resolve(XML_FILEPATH);
-                executeStages(pathResult, pathXml1, pathXml2, pathTestData);
-            }
-            catch (InvalidPathException exception) {
-                exception.printStackTrace();
-                System.out.print(MSG_HELP);
-                System.out.println(MSG_BAD_PATH);
-            }
+    public static void main(final String... args) throws Exception {
+        final CommandLine commandLine = parseCli(args);
+        if (commandLine.hasOption(OPTION_HELP)) {
+            System.out.println(MSG_HELP);
         }
         else {
-            System.out.print(MSG_HELP);
-            System.out.println(MSG_WRONG_NUMBER_OF_ARGS);
+            final CliPathsHolder paths = parseCliToPojo(commandLine);
+            executeStages(paths);
         }
+    }
+
+    /**
+     * Parses CLI.
+     *
+     * @param args
+     *        command line parameters
+     * @return parsed information about passed parameters
+     * @throws ParseException
+     *         when passed arguments are not valid
+     */
+    private static CommandLine parseCli(String... args)
+            throws ParseException {
+        // parse the parameters
+        final CommandLineParser clp = new DefaultParser();
+        // always returns not null value
+        return clp.parse(buildOptions(), args);
+    }
+
+    /**
+     * Forms POJO containing input paths.
+     *
+     * @param commandLine
+     *        parsed CLI.
+     * @return POJO instance.
+     * @throws IllegalArgumentException
+     *         on failure to find necessary arguments.
+     */
+    private static CliPathsHolder parseCliToPojo(CommandLine commandLine)
+            throws IllegalArgumentException {
+        if (!commandLine.hasOption(OPTION_BASE_FOLDER)
+                || !commandLine.hasOption(OPTION_PATCH_FOLDER)) {
+            System.out.println(MSG_HELP);
+            throw new IllegalArgumentException("CLI obligatory arguments not present");
+        }
+        final Path pathDir1 = Paths
+                .get(commandLine.getOptionValue(OPTION_BASE_FOLDER));
+        final Path pathDir2 = Paths
+                .get(commandLine.getOptionValue(OPTION_PATCH_FOLDER));
+        final Path pathTestData;
+        if (commandLine.hasOption(OPTION_SOURCE_PATH)) {
+            pathTestData = Paths
+                    .get(commandLine.getOptionValue(OPTION_SOURCE_PATH));
+        }
+        else {
+            pathTestData = null;
+        }
+        final Path pathResult;
+        if (commandLine.hasOption(OPTION_PESULT_FOLDER)) {
+            pathResult = Paths
+                    .get(commandLine.getOptionValue(OPTION_PESULT_FOLDER));
+        }
+        else {
+            pathResult = Paths.get(System.getProperty("user.home"))
+                    .resolve("XMLDiffGen_report_" + new SimpleDateFormat("yyyy.MM.dd_HH:mm:ss")
+                            .format(Calendar.getInstance().getTime()));
+        }
+        final Path pathXml1 = pathDir1.resolve(XML_FILEPATH);
+        final Path pathXml2 = pathDir2.resolve(XML_FILEPATH);
+        return new CliPathsHolder(pathXml1, pathXml2, pathTestData, pathResult);
+    }
+
+    /**
+     * Builds and returns list of parameters supported by cli Checkstyle.
+     *
+     * @return available options
+     */
+    private static Options buildOptions() {
+        final Options options = new Options();
+        options.addOption(OPTION_BASE_FOLDER, true,
+                "Path to the directory containing first checkstyle-report.xml");
+        options.addOption(OPTION_PATCH_FOLDER, true,
+                "Path to the directory containing second checkstyle-report.xml");
+        options.addOption(OPTION_SOURCE_PATH, true,
+                "Path to the directory containing source under checkstyle check, facultative.");
+        options.addOption(OPTION_PESULT_FOLDER, true,
+                "Print to directory where result path will be stored.");
+        options.addOption(OPTION_HELP, false,
+                "Simply show help message.");
+        return options;
     }
 
     /**
      * Executes all three stages of this utility process.
      *
-     * @param resultPath
-     *        path to folder with result site.
-     * @param pathXml1
-     *        path to first checkstyle-result.xml.
-     * @param pathXml2
-     *        path to second checkstyle-result.xml.
-     * @param pathTestData
-     *        path to checkstyle subject data.
+     * @param paths
+     *        POJO holding all input paths.
+     * @throws Exception
+     *         on different failures during stages execution.
      */
-    private static void executeStages(Path resultPath, Path pathXml1,
-            Path pathXml2, Path pathTestData) {
-        //stage 1
-        try {
-            preparationStage(resultPath, pathXml1, pathXml2, pathTestData);
-            System.out.println(MSG_PREPARATION_SUCCESS);
-            try {
-                //stage 2
-                final ParsedContent content = new ParsedContent();
-                final StatisticsHolder holder = new StatisticsHolder();
-                StaxParserProcessor.parse(content, pathXml1,
-                        pathXml2, XML_PARSE_PORTION_SIZE, holder);
-                System.out.println(MSG_PARSE_SUCCESS);
-                //stage 3
-                final XrefGenerator generator =
-                        new XrefGenerator(pathTestData, resultPath
-                                .resolve(XREF_FILEPATH), resultPath);
-                content.getStatistics(holder);
-                if (SiteGenerator.writeParsedContentToHtml(content,
-                            resultPath.resolve(SITEPATH), holder,
-                            generator)
-                        && SiteGenerator.writeHtmlHelp(
-                                resultPath
-                                .resolve(HELP_HTML_PATH))) {
-                    System.out.println(MSG_SITE_SUCCESS);
-                }
-                else {
-                    System.out.println(MSG_SITE_FAILURE);
-                }
-            }
-            catch (IOException | XMLStreamException exception) {
-                exception.printStackTrace();
-                System.out.println(MSG_PARSE_FAILURE);
-            }
-        }
-        catch (IllegalArgumentException | IOException anotherException) {
-            anotherException.printStackTrace();
-            System.out.print(MSG_HELP);
-            System.out.println(MSG_PREPARATION_FAILURE);
-        }
-
-    }
-
-    /**
-     * Perform preliminary file existence checks,
-     * also exports to disc necessary static resources.
-     *
-     * @param resultPath
-     *        path to folder with result site.
-     * @param pathXml1
-     *        path to first checkstyle-result.xml.
-     * @param pathXml2
-     *        path to second checkstyle-result.xml.
-     * @param pathTestData
-     *        path to checkstyle subject data.
-     * @throws IOException
-     *        thrown on failure to perform checks.
-     */
-    private static void preparationStage(Path resultPath, Path pathXml1,
-            Path pathXml2, Path pathTestData) throws IOException {
-        initialVerification(resultPath, pathXml1, pathXml2, pathTestData);
-        FilesystemUtils.createOverwriteDirectory(resultPath);
-        FilesystemUtils.createOverwriteDirectory(resultPath
-                .resolve(CSS_FILEPATH));
-        FilesystemUtils.createOverwriteDirectory(resultPath
-                .resolve(XREF_FILEPATH));
-        FilesystemUtils.exportResource("/maven-theme.css",
-                resultPath.resolve(CSS_FILEPATH).resolve("maven-theme.css"));
-        FilesystemUtils.exportResource("/maven-base.css",
-                resultPath.resolve(CSS_FILEPATH).resolve("maven-base.css"));
-    }
-
-    /**
-     * Performs file existence checks.
-     *
-     * @param resultPath
-     *        path to folder with result site.
-     * @param pathXml1
-     *        path to first checkstyle-result.xml.
-     * @param pathXml2
-     *        path to second checkstyle-result.xml.
-     * @param pathTestData
-     *        path to checkstyle subject data.
-     * @throws IllegalArgumentException
-     *         on failure of any check.
-     */
-    private static void initialVerification(Path resultPath,
-            Path pathXml1, Path pathXml2, Path pathTestData)
-                    throws IllegalArgumentException {
-        if (!Files.isRegularFile(pathXml1)) {
-            throw new IllegalArgumentException(MSG_NOT_EXISTS + pathXml1);
-        }
-        if (!Files.isRegularFile(pathXml2)) {
-            throw new IllegalArgumentException(MSG_NOT_EXISTS + pathXml2);
-        }
-        if (pathXml1.equals(pathXml2)) {
-            throw new IllegalArgumentException(MSG_IDENTICAL_INPUT);
-        }
-        if (Files.isRegularFile(resultPath)) {
-            throw new IllegalArgumentException(MSG_EXISTS + resultPath);
-        }
-        if (pathTestData != null && !Files.isDirectory(pathTestData)) {
-            throw new IllegalArgumentException(MSG_NOT_EXISTS + pathTestData);
-        }
+    private static void executeStages(CliPathsHolder paths) throws Exception {
+        //preparation stage, checks validity of input paths
+        PreliminaryVerifier.prepare(paths);
+        System.out.println("Successfull preparation stage.");
+        //XML parsing stage
+        final ParsedContent content = new ParsedContent();
+        final StatisticsHolder holder = new StatisticsHolder();
+        StaxParserProcessor.parse(content, paths.getBaseReportPath(),
+                paths.getPatchReportPath(), XML_PARSE_PORTION_SIZE, holder);
+        System.out.println("XML files successfully parsed.");
+        //Site and XREF generation stage
+        final XrefGenerator generator = new XrefGenerator(paths.getSourcePath(),
+                paths.getResultPath().resolve(XREF_FILEPATH), paths.getResultPath());
+        content.getStatistics(holder);
+        SiteGenerator.writeParsedContentToHtml(content,
+                paths.getResultPath().resolve(SITEPATH), holder, generator);
+        SiteGenerator.writeHtmlHelp(
+                paths.getResultPath().resolve(HELP_HTML_PATH));
+        System.out.println("Creation of an html site succeed.");
     }
 }
