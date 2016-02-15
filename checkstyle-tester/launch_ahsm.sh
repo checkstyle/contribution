@@ -30,6 +30,9 @@ SITE_SAVE_PULL_DIR=savepull
 #declare -a EXTPROJECTS
 EXTPROJECTS=()
 INSTALL_MASTER=true
+RUN_MASTER=true
+INSTALL_PULL=true
+RUN_PULL=true
 
 if [ -z "$1" ]; then
 	echo "No parameter supplied!"
@@ -63,6 +66,17 @@ function parse_arguments {
 				install_master)
 					INSTALL_MASTER=false
 					;;
+				master)
+					INSTALL_MASTER=false
+					RUN_MASTER=false
+					;;
+				install_pull)
+					INSTALL_PULL=false
+					;;
+				pull)
+					INSTALL_PULL=false
+					RUN_PULL=false
+					;;
 				esac
 				shift
 				;;
@@ -75,7 +89,7 @@ function parse_arguments {
 }
 
 function mvn_install {
-	mvn --batch-mode clean install -Dmaven.test.skip=true -Dcheckstyle.ant.skip=true
+	mvn --batch-mode clean install -Dmaven.test.skip=true -Dcheckstyle.ant.skip=true -Dcheckstyle.skip=true -Dpmd.skip=true -Dfindbugs.skip=true
 
 	if [ $? -ne 0 ]; then
 		echo "Maven Install Failed!"
@@ -231,7 +245,6 @@ if $INSTALL_MASTER ; then
 
 	if $CONTACTSERVER ; then
 		git fetch origin
-		git fetch $PULL_REMOTE
 	fi
 	git reset --hard HEAD
 	git checkout master
@@ -244,33 +257,74 @@ else
 	echo "Skipping Install Master"
 fi
 
-echo "Starting Master Launcher"
+if $RUN_MASTER ; then
+	echo "Starting Master Launcher"
 
-cd $TESTER_DIR
+	cd $TESTER_DIR
 
-rm -rf $SITE_SAVE_MASTER_DIR
-rm -rf $SITE_SAVE_PULL_DIR
+	rm -rf $SITE_SAVE_MASTER_DIR
 
-launch $SITE_SAVE_MASTER_DIR
+	launch $SITE_SAVE_MASTER_DIR
+else
+	echo "Skipping Launch Master"
+fi
 
-cd $CHECKSTYLE_DIR
+if $INSTALL_PULL ; then
+	cd $CHECKSTYLE_DIR
 
-echo "Checking out and Installing PR $1"
+	echo "Checking out and Installing PR $1"
 
-git checkout $1
-git pull
+	if $CONTACTSERVER ; then
+		git fetch $PULL_REMOTE
+	fi
 
-mvn_install
+	if [ ! `git rev-parse --verify $PULL_REMOTE/$1` ] ;
+	then
+		echo "Branch $PULL_REMOTE/$1 doesn't exist"
+		exit 1
+	fi
 
-echo "Starting PR $1 Launcher"
+	git checkout $PULL_REMOTE/$1
 
-launch $SITE_SAVE_PULL_DIR
+	mvn_install
+else
+	echo "Skipping Install PR $1"
+fi
+
+if $RUN_PULL ; then
+	echo "Starting PR $1 Launcher"
+
+	cd $TESTER_DIR
+
+	rm -rf $SITE_SAVE_PULL_DIR
+
+aunch $SITE_SAVE_PULL_DIR
+else
+	echo "Skipping Launch PR $1"
+fi
+
+if ! $RUN_MASTER && ! $RUN_PULL ; then
+	echo "Figuring out AHSMs to run"
+
+	while read line ; do
+		[[ "$line" == \#* ]] && continue # Skip lines with comments
+		[[ -z "$line" ]] && continue     # Skip empty lines
+		
+		REPO_NAME=`echo $line | cut -d '|' -f 1`
+
+		EXTPROJECTS+=($REPO_NAME)
+	done < $TESTER_DIR/projects-to-test-on.properties
+fi
 
 echo "Starting all AHSMs"
 
 if [ ! -d "$FINAL_RESULTS_DIR" ]; then
 	mkdir $FINAL_RESULTS_DIR
 fi
+if [ -f $FINAL_RESULTS_DIR/index.html ] ; then
+	rm $FINAL_RESULTS_DIR/index.html
+fi
+echo "<html><body>" >> $FINAL_RESULTS_DIR/index.html
 
 for extp in "${EXTPROJECTS[@]}"
 do
@@ -287,8 +341,11 @@ do
 	else
 		echo "Skipping AHSM for $extp"
 	fi
+
+	echo "<a href='$extp/checkstyle_merged.html'>$extp</a><br />" >> $FINAL_RESULTS_DIR/index.html
 done
 
+echo "</body></html>" >> $FINAL_RESULTS_DIR/index.html
 echo "Complete"
 
 exit 0
