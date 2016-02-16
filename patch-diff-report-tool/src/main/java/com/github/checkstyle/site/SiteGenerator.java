@@ -68,12 +68,12 @@ public final class SiteGenerator {
     /**
      * Conventional name of the first XML source.
      */
-    public static final String FIRST_REPORT_NAME = "first";
+    public static final String FIRST_REPORT_NAME = "base";
 
     /**
      * Conventional name of the second XML source.
      */
-    public static final String SECOND_REPORT_NAME = "second";
+    public static final String SECOND_REPORT_NAME = "patch";
 
     /**
      * Delimiter used in full names of checks.
@@ -172,7 +172,7 @@ public final class SiteGenerator {
             + "<td>%s</td>\n"
             + "<td>%s</td>\n"
             + "<td><a href=\"%s#L%d\">%d</a></td>\n"
-            + "<td>%d</td>\n"
+            + "<td>%s</td>\n"
             + "<td>%s</td>\n"
             + "<tr>\n";
 
@@ -214,32 +214,19 @@ public final class SiteGenerator {
      *        StatisticsHolder instance.
      * @param generator
      *        XrefGenerator instance.
-     * @return true if overall success.
+     * @throws IOException
+     *         on failure of file system.
      */
-    public static boolean writeParsedContentToHtml(ParsedContent content,
-            Path path, StatisticsHolder holder, XrefGenerator generator) {
-        boolean success = true;
-        try {
-            Files.createFile(path);
-            try (BufferedWriter writer =
-                    new BufferedWriter(new FileWriter(path.toFile()))) {
-                writer.write("<html>\n");
-                writeHead(writer);
-                writeBody(content, writer, holder, generator);
-                writer.write("</html>\n");
-            }
-            catch (IOException exception) {
-                exception.printStackTrace();
-                success = false;
-            }
+    public static void writeParsedContentToHtml(ParsedContent content,
+            Path path, StatisticsHolder holder, XrefGenerator generator) throws IOException {
+        Files.createFile(path);
+        try (BufferedWriter writer =
+                new BufferedWriter(new FileWriter(path.toFile()))) {
+            writer.write("<html>\n");
+            writeHead(writer);
+            writeBody(content, writer, holder, generator);
+            writer.write("</html>\n");
         }
-        catch (IOException anotherException) {
-            anotherException.printStackTrace();
-            success = false;
-
-        }
-
-        return success;
     }
 
     /**
@@ -247,33 +234,20 @@ public final class SiteGenerator {
      *
      * @param path
      *        path to the help file.
-     * @return true on success.
+     * @throws IOException
+     *         on failure of file system.
      */
-    public static boolean writeHtmlHelp(Path path) {
-        boolean success = true;
-        try {
-            Files.createFile(path);
-            try (BufferedWriter writer =
-                    new BufferedWriter(new FileWriter(path.toFile()))) {
-                writer.write("<html>\n");
-                writeHead(writer);
-                writer.write("<body class=\"composite\">\n");
-                writer.write(HELP_FILE_CONTENT);
-                writer.write("</body>\n");
-                writer.write("</html>\n");
-            }
-            catch (IOException exception) {
-                exception.printStackTrace();
-                success = false;
-            }
+    public static void writeHtmlHelp(Path path) throws IOException {
+        Files.createFile(path);
+        try (BufferedWriter writer =
+                new BufferedWriter(new FileWriter(path.toFile()))) {
+            writer.write("<html>\n");
+            writeHead(writer);
+            writer.write("<body class=\"composite\">\n");
+            writer.write(HELP_FILE_CONTENT);
+            writer.write("</body>\n");
+            writer.write("</html>\n");
         }
-        catch (IOException anotherException) {
-            anotherException.printStackTrace();
-            success = false;
-
-        }
-
-        return success;
     }
 
     /**
@@ -332,13 +306,13 @@ public final class SiteGenerator {
         writer.write("<div class=\"section\">\n");
         writer.write(STATISTICS_TITLE);
         writer.write(STATISTICS_TABLE_HEADER);
-        writer.write(String.format(STATISTICS_TABLE_ROW, 'a', "first",
+        writer.write(String.format(STATISTICS_TABLE_ROW, 'a', FIRST_REPORT_NAME,
                 holder.getFileNum1(),
                 holder.getTotalNum1(),
                 holder.getInfoNum1(),
                 holder.getWarningNum1(),
                 holder.getErrorNum1()));
-        writer.write(String.format(STATISTICS_TABLE_ROW, 'b', "second",
+        writer.write(String.format(STATISTICS_TABLE_ROW, 'b', SECOND_REPORT_NAME,
                 holder.getFileNum2(),
                 holder.getTotalNum2(),
                 holder.getInfoNum2(),
@@ -433,13 +407,20 @@ public final class SiteGenerator {
         }
         final int lineNum = record.getLine();
         final int columnNum = record.getColumn();
+        final String columnStr;
+        if (columnNum == -1) {
+            columnStr = "";
+        }
+        else {
+            columnStr = String.valueOf(columnNum);
+        }
         final String fullCheckName = record.getSource();
         final String shortCheckName = fullCheckName
                 .substring(fullCheckName
                         .lastIndexOf(CHECK_NAME_DELIMITER) + 1);
         writer.write(String.format(TABLE_ROW, styleChar, anchor, anchor,
                 anchor, severityChar, shortCheckName, record.getMessage(),
-                xreference, lineNum, lineNum, columnNum, reportName));
+                xreference, lineNum, lineNum, columnStr, reportName));
 
     }
 
