@@ -28,9 +28,9 @@ package com.github.checkstyle.data;
 public class CheckstyleRecord {
 
     /**
-     * Flag of belonging to the first source.
+     * Index of the source.
      */
-    private boolean belongsToFirst;
+    private int index;
 
     /**
      * Record line index.
@@ -60,8 +60,8 @@ public class CheckstyleRecord {
     /**
      * POJO ctor.
      *
-     * @param belongsToFirst1
-     *        flag of belonging to first XML report.
+     * @param index1
+     *        internal index of the source.
      * @param line1
      *        line number.
      * @param column1
@@ -73,9 +73,9 @@ public class CheckstyleRecord {
      * @param message1
      *        error message.
      */
-    public CheckstyleRecord(boolean belongsToFirst1, int line1, int column1,
+    public CheckstyleRecord(int index1, int line1, int column1,
             Severity severity1, String source1, String message1) {
-        this.belongsToFirst = belongsToFirst1;
+        this.index = index1;
         this.line = line1;
         this.column = column1;
         this.severity = severity1;
@@ -86,10 +86,10 @@ public class CheckstyleRecord {
     /**
      * Below are multiple getters.
      *
-     * @return true if belongs to the first report.
+     * @return internal index of the file.
      */
-    public final boolean belongsToFirstReport() {
-        return belongsToFirst;
+    public final int getIndex() {
+        return index;
     }
 
     public final int getLine() {
