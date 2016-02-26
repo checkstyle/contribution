@@ -19,6 +19,9 @@
 
 package com.github.checkstyle.parser;
 
+import static com.github.checkstyle.Main.BASE_REPORT_INDEX;
+import static com.github.checkstyle.Main.PATCH_REPORT_INDEX;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -38,7 +41,7 @@ import javax.xml.stream.events.XMLEvent;
 import com.github.checkstyle.data.CheckstyleRecord;
 import com.github.checkstyle.data.ParsedContent;
 import com.github.checkstyle.data.Severity;
-import com.github.checkstyle.data.StatisticsHolder;
+import com.github.checkstyle.data.Statistics;
 
 /**
  * Contains logics of the StaX parser for the checkstyle xml reports.
@@ -99,7 +102,7 @@ public final class StaxParserProcessor {
     private static final String SEVERITY_ERROR = "error";
 
     /**
-     * Utility ctor.
+     * Private ctor, see parse method.
      */
     private StaxParserProcessor() {
 
@@ -113,9 +116,9 @@ public final class StaxParserProcessor {
      * @param content
      *        container for parsed data.
      * @param xml1
-     *        path to first XML file.
+     *        path to base XML file.
      * @param xml2
-     *        path to second XML file.
+     *        path to patch XML file.
      * @param portionSize
      *        single portion of XML file processed at once by any parser.
      * @param holder
@@ -126,13 +129,13 @@ public final class StaxParserProcessor {
      *         thrown on internal parser error.
      */
     public static void parse(ParsedContent content, Path xml1,
-            Path xml2, int portionSize, StatisticsHolder holder)
+            Path xml2, int portionSize, Statistics holder)
                     throws FileNotFoundException, XMLStreamException {
-        final XMLEventReader reader1 = prepareParsing(xml1);
-        final XMLEventReader reader2 = prepareParsing(xml2);
+        final XMLEventReader reader1 = createReader(xml1);
+        final XMLEventReader reader2 = createReader(xml2);
         while (reader1.hasNext() || reader2.hasNext()) {
-            parseXmlPortion(content, reader1, portionSize, true, holder);
-            parseXmlPortion(content, reader2, portionSize, false, holder);
+            parseXmlPortion(content, reader1, portionSize, BASE_REPORT_INDEX, holder);
+            parseXmlPortion(content, reader2, portionSize, PATCH_REPORT_INDEX, holder);
         }
     }
 
@@ -147,7 +150,7 @@ public final class StaxParserProcessor {
      * @throws XMLStreamException
      *         on internal factory failure.
      */
-    private static XMLEventReader prepareParsing(Path xmlFilename)
+    private static XMLEventReader createReader(Path xmlFilename)
             throws FileNotFoundException, XMLStreamException {
         final XMLInputFactory inputFactory = XMLInputFactory.newInstance();
         // Setup a new eventReader
@@ -165,16 +168,16 @@ public final class StaxParserProcessor {
      *        pStAX parser interface.
      * @param numOfFilenames
      *        number of "file" tags to parse.
-     * @param first
-     *        flag of parsing the first report.
+     * @param index
+     *        internal index of the parsed file.
      * @param holder
      *        StatisticsHolder instance.
      * @throws XMLStreamException
      *         thrown on internal parser error.
      */
     private static void parseXmlPortion(ParsedContent content,
-            XMLEventReader reader, int numOfFilenames, boolean first,
-            StatisticsHolder holder)
+            XMLEventReader reader, int numOfFilenames, int index,
+            Statistics holder)
                     throws XMLStreamException {
         int counter = numOfFilenames;
         String filename = null;
@@ -188,7 +191,7 @@ public final class StaxParserProcessor {
                 //file tag encounter
                 if (startElementName.equals(FILE_TAG)) {
                     counter--;
-                    registerFile(holder, first);
+                    holder.registerSingleFile(index);
                     final Iterator<Attribute> attributes = startElement
                             .getAttributes();
                     while (attributes.hasNext()) {
@@ -202,7 +205,7 @@ public final class StaxParserProcessor {
                 }
                 //error tag encounter
                 else if (startElementName.equals(ERROR_TAG)) {
-                    records.add(parseErrorTag(startElement, holder, first));
+                    records.add(parseErrorTag(startElement, holder, index));
                 }
             }
             if (event.isEndElement()) {
@@ -218,35 +221,18 @@ public final class StaxParserProcessor {
     }
 
     /**
-     * Registers new file in statistics.
-     *
-     * @param holder
-     *        a StatisticsHolder instance.
-     * @param first
-     *        flag of parsing the first report.
-     */
-    private static void registerFile(StatisticsHolder holder, boolean first) {
-        if (first) {
-            holder.registerSingleFile1();
-        }
-        else {
-            holder.registerSingleFile2();
-        }
-    }
-
-    /**
      * Parses "error" XML tag.
      *
      * @param startElement
      *        cursor of StAX parser pointed on the tag.
      * @param holder
      *        StatisticsHolder instance.
-     * @param first
-     *        flag of parsing the first report.
+     * @param index
+     *        internal index of the parsed file.
      * @return parsed data as CheckstyleRecord instance.
      */
     private static CheckstyleRecord parseErrorTag(StartElement startElement,
-            StatisticsHolder holder, boolean first) {
+            Statistics holder, int index) {
         int line = -1;
         int column = -1;
         Severity severity = Severity.INFORMATIONAL;
@@ -272,7 +258,7 @@ public final class StaxParserProcessor {
                 else if (attrValue.equals(SEVERITY_WARNING)) {
                     severity = Severity.WARNING;
                 }
-                incrementStatistics(severity, holder, first);
+                incrementStatistics(severity, holder, index);
             }
             else if (attrName.equals(MESSAGE_ATTR)) {
                 message = attribute.getValue();
@@ -281,7 +267,7 @@ public final class StaxParserProcessor {
                 source = attribute.getValue();
             }
         }
-        return new CheckstyleRecord(first,
+        return new CheckstyleRecord(index,
                 line, column, severity, source, message);
 
     }
@@ -293,35 +279,20 @@ public final class StaxParserProcessor {
      *        severity level of "error" tag.
      * @param holder
      *        StatisticsHolder instance.
-     * @param first
-     *        flag of parsing the first report.
+     * @param index
+     *        internal index of the source file.
      */
     private static void incrementStatistics(Severity severity,
-            StatisticsHolder holder, boolean first) {
+            Statistics holder, int index) {
         switch (severity) {
             case ERROR:
-                if (first) {
-                    holder.registerSingleError1();
-                }
-                else {
-                    holder.registerSingleError2();
-                }
+                holder.registerSingleError(index);
                 break;
             case WARNING:
-                if (first) {
-                    holder.registerSingleWarning1();
-                }
-                else {
-                    holder.registerSingleWarning2();
-                }
+                holder.registerSingleWarning(index);
                 break;
             default:
-                if (first) {
-                    holder.registerSingleInfo1();
-                }
-                else {
-                    holder.registerSingleInfo2();
-                }
+                holder.registerSingleInfo(index);
                 break;
         }
     }

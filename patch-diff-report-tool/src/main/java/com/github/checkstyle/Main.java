@@ -31,7 +31,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import com.github.checkstyle.data.ParsedContent;
-import com.github.checkstyle.data.StatisticsHolder;
+import com.github.checkstyle.data.Statistics;
 import com.github.checkstyle.parser.StaxParserProcessor;
 import com.github.checkstyle.site.SiteGenerator;
 import com.github.checkstyle.site.XrefGenerator;
@@ -59,14 +59,14 @@ public final class Main {
             + "from two checkstyle-result.xml reports\n"
             + "generated for checkstyle build.\n"
             + "Command line arguments:\n"
-            + "\t-baseReportPath - path to the directory containing first checkstyle-result.xml, "
+            + "\t--baseReportPath - path to the directory containing base checkstyle-result.xml, "
             + "obligatory argument;\n"
-            + "\t-patchReportPath - path to the directory containing second checkstyle-result.xml, "
+            + "\t--patchReportPath - path to the directory containing patch checkstyle-result.xml, "
             + "also obligatory argument;\n"
-            + "\t-sourcePath - path to the data under check (facultative, if absent then file "
+            + "\t--sourcePath - path to the data under check (optional, if absent then file "
             + "structure for cross reference files won't be relativized, "
             + "full paths will be used);\n"
-            + "\t-resultPath - path to the resulting site (facultative, if absent then default "
+            + "\t--resultPath - path to the resulting site (optional, if absent then default "
             + "path will be used: ~/XMLDiffGen_report_yyyy.mm.dd_hh:mm:ss), remember, "
             + "if this folder exists its content will be purged;\n"
             + "\t-h - simply shows help message.";
@@ -90,6 +90,21 @@ public final class Main {
      * Name for the CSS files folder.
      */
     public static final Path XREF_FILEPATH = Paths.get("xref");
+
+    /**
+     * Internal index of the base report file.
+     */
+    public static final int BASE_REPORT_INDEX = 1;
+
+    /**
+     * Internal index of the patch report file.
+     */
+    public static final int PATCH_REPORT_INDEX = 2;
+
+    /**
+     * Internal index of the generated difference.
+     */
+    public static final int DIFF_REPORT_INDEX = 0;
 
     /**
      * Name for command line option "baseReportPath".
@@ -117,14 +132,14 @@ public final class Main {
     private static final String OPTION_HELP = "h";
 
     /**
-     * Utility class ctor.
+     * Private ctor, see main method.
      */
     private Main() {
 
     }
 
     /**
-     * Parses CLI arguments, then passes control to executeStages.
+     * Executes all three processing stages according to CLI options.
      *
      * @param args
      *        cli arguments.
@@ -137,8 +152,19 @@ public final class Main {
             System.out.println(MSG_HELP);
         }
         else {
-            final CliPathsHolder paths = parseCliToPojo(commandLine);
-            executeStages(paths);
+            final CliPaths paths = parseCliToPojo(commandLine);
+            //preparation stage, checks validity of input paths
+            PathVerifier.prepare(paths);
+            System.out.println("Successfull preparation stage.");
+            //XML parsing stage
+            final ParsedContent content = new ParsedContent();
+            final Statistics holder = new Statistics();
+            StaxParserProcessor.parse(content, paths.getBaseReportPath(),
+                    paths.getPatchReportPath(), XML_PARSE_PORTION_SIZE, holder);
+            System.out.println("XML files successfully parsed.");
+            //Site and XREF generation stage
+            generateSite(paths, content, holder);
+            System.out.println("Creation of an html site succeed.");
         }
     }
 
@@ -168,24 +194,20 @@ public final class Main {
      * @throws IllegalArgumentException
      *         on failure to find necessary arguments.
      */
-    private static CliPathsHolder parseCliToPojo(CommandLine commandLine)
+    private static CliPaths parseCliToPojo(CommandLine commandLine)
             throws IllegalArgumentException {
         if (!commandLine.hasOption(OPTION_BASE_FOLDER)
                 || !commandLine.hasOption(OPTION_PATCH_FOLDER)) {
-            System.out.println(MSG_HELP);
-            throw new IllegalArgumentException("CLI obligatory arguments not present");
+            throw new IllegalArgumentException("CLI obligatory arguments not present, "
+                    + "-h for help");
         }
-        final Path pathDir1 = Paths
-                .get(commandLine.getOptionValue(OPTION_BASE_FOLDER));
-        final Path pathDir2 = Paths
-                .get(commandLine.getOptionValue(OPTION_PATCH_FOLDER));
-        final Path pathTestData;
+        final Path pathSource;
         if (commandLine.hasOption(OPTION_SOURCE_PATH)) {
-            pathTestData = Paths
+            pathSource = Paths
                     .get(commandLine.getOptionValue(OPTION_SOURCE_PATH));
         }
         else {
-            pathTestData = null;
+            pathSource = null;
         }
         final Path pathResult;
         if (commandLine.hasOption(OPTION_PESULT_FOLDER)) {
@@ -197,9 +219,13 @@ public final class Main {
                     .resolve("XMLDiffGen_report_" + new SimpleDateFormat("yyyy.MM.dd_HH:mm:ss")
                             .format(Calendar.getInstance().getTime()));
         }
+        final Path pathDir1 = Paths
+                .get(commandLine.getOptionValue(OPTION_BASE_FOLDER));
+        final Path pathDir2 = Paths
+                .get(commandLine.getOptionValue(OPTION_PATCH_FOLDER));
         final Path pathXml1 = pathDir1.resolve(XML_FILEPATH);
         final Path pathXml2 = pathDir2.resolve(XML_FILEPATH);
-        return new CliPathsHolder(pathXml1, pathXml2, pathTestData, pathResult);
+        return new CliPaths(pathXml1, pathXml2, pathSource, pathResult);
     }
 
     /**
@@ -209,38 +235,33 @@ public final class Main {
      */
     private static Options buildOptions() {
         final Options options = new Options();
-        options.addOption(OPTION_BASE_FOLDER, true,
-                "Path to the directory containing first checkstyle-report.xml");
-        options.addOption(OPTION_PATCH_FOLDER, true,
-                "Path to the directory containing second checkstyle-report.xml");
-        options.addOption(OPTION_SOURCE_PATH, true,
-                "Path to the directory containing source under checkstyle check, facultative.");
-        options.addOption(OPTION_PESULT_FOLDER, true,
-                "Print to directory where result path will be stored.");
+        options.addOption(null, OPTION_BASE_FOLDER, true,
+                "Path to the directory containing base checkstyle-report.xml");
+        options.addOption(null, OPTION_PATCH_FOLDER, true,
+                "Path to the directory containing patch checkstyle-report.xml");
+        options.addOption(null, OPTION_SOURCE_PATH, true,
+                "Path to the directory containing source under checkstyle check, optional.");
+        options.addOption(null, OPTION_PESULT_FOLDER, true,
+                "Path to directory where result path will be stored.");
         options.addOption(OPTION_HELP, false,
                 "Simply show help message.");
         return options;
     }
 
     /**
-     * Executes all three stages of this utility process.
+     * Generates site and XREF documents within it.
      *
      * @param paths
      *        POJO holding all input paths.
+     * @param content
+     *        container with parsed data.
+     * @param holder
+     *        container for statistics.
      * @throws Exception
      *         on different failures during stages execution.
      */
-    private static void executeStages(CliPathsHolder paths) throws Exception {
-        //preparation stage, checks validity of input paths
-        PreliminaryVerifier.prepare(paths);
-        System.out.println("Successfull preparation stage.");
-        //XML parsing stage
-        final ParsedContent content = new ParsedContent();
-        final StatisticsHolder holder = new StatisticsHolder();
-        StaxParserProcessor.parse(content, paths.getBaseReportPath(),
-                paths.getPatchReportPath(), XML_PARSE_PORTION_SIZE, holder);
-        System.out.println("XML files successfully parsed.");
-        //Site and XREF generation stage
+    private static void generateSite(CliPaths paths, ParsedContent content, Statistics holder)
+            throws Exception {
         final XrefGenerator generator = new XrefGenerator(paths.getSourcePath(),
                 paths.getResultPath().resolve(XREF_FILEPATH), paths.getResultPath());
         content.getStatistics(holder);
@@ -248,6 +269,5 @@ public final class Main {
                 paths.getResultPath().resolve(SITEPATH), holder, generator);
         SiteGenerator.writeHtmlHelp(
                 paths.getResultPath().resolve(HELP_HTML_PATH));
-        System.out.println("Creation of an html site succeed.");
     }
 }

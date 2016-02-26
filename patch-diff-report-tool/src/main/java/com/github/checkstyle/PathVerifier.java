@@ -29,7 +29,7 @@ import java.nio.file.Path;
  * @author atta_troll
  *
  */
-public final class PreliminaryVerifier {
+public final class PathVerifier {
 
     /**
      * Message when necessary file is absent.
@@ -39,7 +39,7 @@ public final class PreliminaryVerifier {
     /**
      * Utility ctor.
      */
-    private PreliminaryVerifier() {
+    private PathVerifier() {
 
     }
 
@@ -51,7 +51,7 @@ public final class PreliminaryVerifier {
      * @throws IOException
      *         thrown on failure to perform checks.
      */
-    public static void prepare(CliPathsHolder paths)
+    public static void prepare(CliPaths paths)
             throws IOException {
         verifyExistense(paths);
         final Path resultPath = paths.getResultPath();
@@ -75,7 +75,7 @@ public final class PreliminaryVerifier {
      * @throws IllegalArgumentException
      *         on failure of any check.
      */
-    private static void verifyExistense(CliPathsHolder paths)
+    private static void verifyExistense(CliPaths paths)
                     throws IllegalArgumentException {
         if (!Files.isRegularFile(paths.getBaseReportPath())) {
             throw new IllegalArgumentException(MSG_NOT_EXISTS + paths.getBaseReportPath());
@@ -90,8 +90,9 @@ public final class PreliminaryVerifier {
             throw new IllegalArgumentException("Unknown regular file exists with this name: "
                     + paths.getResultPath());
         }
-        if (paths.getSourcePath() != null && !Files.isDirectory(paths.getSourcePath())) {
-            throw new IllegalArgumentException(MSG_NOT_EXISTS + paths.getSourcePath());
+        if (paths.getSourcePath() == null || !Files.isDirectory(paths.getSourcePath())) {
+            throw new IllegalArgumentException("Source path is not a directory:"
+                    + paths.getSourcePath());
         }
     }
 }

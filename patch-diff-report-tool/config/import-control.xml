@@ -9,6 +9,7 @@
 	<allow pkg="java.util" />
 	<allow pkg="java.text" />
 	<allow pkg="com.github.checkstyle.data" />
+	<allow pkg="com.github.checkstyle.Main" />
 	<allow pkg="com.github.checkstyle" local-only="true" />
 	<allow pkg="org.apache.commons.cli" />
 	<subpackage name="site">

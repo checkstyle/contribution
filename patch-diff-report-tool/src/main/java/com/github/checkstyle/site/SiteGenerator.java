@@ -19,6 +19,8 @@
 
 package com.github.checkstyle.site;
 
+import static com.github.checkstyle.Main.BASE_REPORT_INDEX;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -30,7 +32,7 @@ import java.util.Map;
 
 import com.github.checkstyle.data.CheckstyleRecord;
 import com.github.checkstyle.data.ParsedContent;
-import com.github.checkstyle.data.StatisticsHolder;
+import com.github.checkstyle.data.Statistics;
 
 /**
  * Site generator from parsed data.
@@ -41,14 +43,14 @@ import com.github.checkstyle.data.StatisticsHolder;
 public final class SiteGenerator {
 
     /**
-     * CSS style code a.
+     * CSS style code for base XML entries.
      */
-    public static final char FIRST_REPORT_CSS_STYLE = 'a';
+    public static final char BASE_REPORT_CSS_STYLE = 'b';
 
     /**
-     * CSS style code b.
+     * CSS style code for patch XML entries.
      */
-    public static final char SECOND_REPORT_CSS_STYLE = 'b';
+    public static final char PATCH_REPORT_CSS_STYLE = 'a';
 
     /**
      * Abbreviation used in table for warning message.
@@ -66,14 +68,14 @@ public final class SiteGenerator {
     public static final char SEVERITY_ERROR_CHAR = 'E';
 
     /**
-     * Conventional name of the first XML source.
+     * Conventional name of the base XML source.
      */
-    public static final String FIRST_REPORT_NAME = "base";
+    public static final String BASE_REPORT_NAME = "base";
 
     /**
-     * Conventional name of the second XML source.
+     * Conventional name of the patch XML source.
      */
-    public static final String SECOND_REPORT_NAME = "patch";
+    public static final String PATCH_REPORT_NAME = "patch";
 
     /**
      * Delimiter used in full names of checks.
@@ -196,7 +198,7 @@ public final class SiteGenerator {
             + "</div>\n";
 
     /**
-     * Utility class ctor.
+     * Private ctor.
      */
     private SiteGenerator() {
 
@@ -218,7 +220,7 @@ public final class SiteGenerator {
      *         on failure of file system.
      */
     public static void writeParsedContentToHtml(ParsedContent content,
-            Path path, StatisticsHolder holder, XrefGenerator generator) throws IOException {
+            Path path, Statistics holder, XrefGenerator generator) throws IOException {
         Files.createFile(path);
         try (BufferedWriter writer =
                 new BufferedWriter(new FileWriter(path.toFile()))) {
@@ -280,7 +282,7 @@ public final class SiteGenerator {
      *         thrown on writer failure.
      */
     private static void writeBody(ParsedContent content, BufferedWriter writer,
-            StatisticsHolder holder, XrefGenerator generator)
+            Statistics holder, XrefGenerator generator)
                     throws IOException {
         writer.write("<body class=\"composite\">\n");
         writer.write("<div id=\"contentBox\">\n");
@@ -302,23 +304,23 @@ public final class SiteGenerator {
      *         thrown on writer failure.
      */
     private static void writeStatistics(BufferedWriter writer,
-            StatisticsHolder holder) throws IOException {
+            Statistics holder) throws IOException {
         writer.write("<div class=\"section\">\n");
         writer.write(STATISTICS_TITLE);
         writer.write(STATISTICS_TABLE_HEADER);
-        writer.write(String.format(STATISTICS_TABLE_ROW, 'a', FIRST_REPORT_NAME,
-                holder.getFileNum1(),
-                holder.getTotalNum1(),
-                holder.getInfoNum1(),
-                holder.getWarningNum1(),
-                holder.getErrorNum1()));
-        writer.write(String.format(STATISTICS_TABLE_ROW, 'b', SECOND_REPORT_NAME,
-                holder.getFileNum2(),
-                holder.getTotalNum2(),
-                holder.getInfoNum2(),
-                holder.getWarningNum2(),
-                holder.getErrorNum2()));
-        writer.write(String.format(STATISTICS_TABLE_ROW, 'a', "difference",
+        writer.write(String.format(STATISTICS_TABLE_ROW, 'b', BASE_REPORT_NAME,
+                holder.getFileNumBase(),
+                holder.getTotalNumBase(),
+                holder.getInfoNumBase(),
+                holder.getWarningNumBase(),
+                holder.getErrorNumBase()));
+        writer.write(String.format(STATISTICS_TABLE_ROW, 'a', PATCH_REPORT_NAME,
+                holder.getFileNumPatch(),
+                holder.getTotalNumPatch(),
+                holder.getInfoNumPatch(),
+                holder.getWarningNumPatch(),
+                holder.getErrorNumPatch()));
+        writer.write(String.format(STATISTICS_TABLE_ROW, 'b', "difference",
                 holder.getFileNumDiff(),
                 holder.getTotalNumDiff(),
                 holder.getInfoNumDiff(),
@@ -380,18 +382,14 @@ public final class SiteGenerator {
             BufferedWriter writer, String xreference)
                     throws IOException {
         final char styleChar;
-        if (record.belongsToFirstReport()) {
-            styleChar = FIRST_REPORT_CSS_STYLE;
-        }
-        else {
-            styleChar = SECOND_REPORT_CSS_STYLE;
-        }
         final String reportName;
-        if (record.belongsToFirstReport()) {
-            reportName = FIRST_REPORT_NAME;
+        if (record.getIndex() == BASE_REPORT_INDEX) {
+            styleChar = BASE_REPORT_CSS_STYLE;
+            reportName = BASE_REPORT_NAME;
         }
         else {
-            reportName = SECOND_REPORT_NAME;
+            styleChar = PATCH_REPORT_CSS_STYLE;
+            reportName = PATCH_REPORT_NAME;
         }
         final String anchor = generateAnchor();
         final char severityChar;

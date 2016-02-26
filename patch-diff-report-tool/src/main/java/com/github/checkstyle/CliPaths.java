@@ -25,7 +25,7 @@ import java.nio.file.Path;
  * POJO class that hold input paths.
  * @author atta_troll
  */
-public class CliPathsHolder {
+public class CliPaths {
     /**
      * Path to the first checkstyle-report.xml.
      */
@@ -58,7 +58,7 @@ public class CliPathsHolder {
      * @param resultPath1
      *        path to the result site.
      */
-    public CliPathsHolder(Path baseReportPath1, Path patchReportPath1,
+    public CliPaths(Path baseReportPath1, Path patchReportPath1,
             Path sourcePath1, Path resultPath1) {
         this.baseReportPath = baseReportPath1;
         this.patchReportPath = patchReportPath1;

@@ -19,6 +19,8 @@
 
 package com.github.checkstyle.data;
 
+import static com.github.checkstyle.Main.DIFF_REPORT_INDEX;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -44,7 +46,7 @@ public final class ParsedContent {
             new TreeMap<>();
 
     /**
-     * Utility ctor.
+     * Private ctor, please use addRecords method.
      */
     public ParsedContent() {
 
@@ -137,7 +139,7 @@ public final class ParsedContent {
      *
      * @param holder a StatisticsHolder instance.
      */
-    public void getStatistics(StatisticsHolder holder) {
+    public void getStatistics(Statistics holder) {
         holder.setFileNumDiff(records.size());
         for (Map.Entry<String, List<CheckstyleRecord>> entry
                 : records.entrySet()) {
@@ -145,13 +147,13 @@ public final class ParsedContent {
             for (CheckstyleRecord rec : list) {
                 switch (rec.getSeverity()) {
                     case ERROR:
-                        holder.registerSingleErrorDiff();
+                        holder.registerSingleError(DIFF_REPORT_INDEX);
                         break;
                     case WARNING:
-                        holder.registerSingleWarningDiff();
+                        holder.registerSingleWarning(DIFF_REPORT_INDEX);
                         break;
                     default:
-                        holder.registerSingleInfoDiff();
+                        holder.registerSingleInfo(DIFF_REPORT_INDEX);
                         break;
                 }
             }

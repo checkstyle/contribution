@@ -40,7 +40,7 @@ public final class FilesystemUtils {
     private static final int BUFFER_SIZE = 4096;
 
     /**
-     * Utility class ctor.
+     * Private ctor.
      */
     private FilesystemUtils() {
 
