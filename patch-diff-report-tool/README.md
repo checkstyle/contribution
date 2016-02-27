@@ -4,10 +4,10 @@ usage example:
 
 You have 2 different checkstyle repos, original and forked, for each of them do 1-4:
 
-    1. mvn clean install
-    2. go to checkstyle-tester directory, uncomment all links in projects-to-test-on.properties, edit my_check.xml
-    3. execute ./launch.sh -Dcheckstyle.config.location=my_check.xml
-    4. copy checkstyle-result.xml from checkstyle-tester/target to some other location.
+1. `mvn clean install`
+2. go to `checkstyle-tester` directory, uncomment all links in `projects-to-test-on.properties`, edit `my_check.xml`
+3. execute `./launch.sh -Dcheckstyle.config.location=my_check.xml`
+4. copy `checkstyle-result.xml` from `checkstyle-tester/target` to some other location.
 
 Now execute this utility with 4 command line args:
 
