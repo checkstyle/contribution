@@ -88,28 +88,38 @@ public class CheckstyleRecord {
      *
      * @return internal index of the file.
      */
-    public final int getIndex() {
+    public int getIndex() {
         return index;
     }
 
-    public final int getLine() {
+    public int getLine() {
         return line;
     }
 
-    public final int getColumn() {
+    public int getColumn() {
         return column;
     }
 
-    public final String getSource() {
+    public String getSource() {
         return source;
     }
 
-    public final String getMessage() {
+    public String getMessage() {
         return message;
     }
 
-    public final Severity getSeverity() {
+    public Severity getSeverity() {
         return severity;
+    }
+
+    /**
+     * Generates and returns simple form of check's name.
+     *
+     * @return simple form of check's name.
+     */
+    public String getSimpleSourceName() {
+        final int lastPointIndex = source.lastIndexOf('.');
+        return source.substring(lastPointIndex + 1);
     }
 
     /**

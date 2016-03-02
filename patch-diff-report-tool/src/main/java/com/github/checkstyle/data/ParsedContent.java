@@ -135,25 +135,26 @@ public final class ParsedContent {
     }
 
     /**
-     * Generates statistical information and puts in in the holder.
+     * Generates statistical information and puts in in the accumulator.
      *
-     * @param holder a StatisticsHolder instance.
+     * @param statistics
+     *        container that accumulates statistics.
      */
-    public void getStatistics(Statistics holder) {
-        holder.setFileNumDiff(records.size());
+    public void getStatistics(Statistics statistics) {
+        statistics.setFileNumDiff(records.size());
         for (Map.Entry<String, List<CheckstyleRecord>> entry
                 : records.entrySet()) {
             final List<CheckstyleRecord> list = entry.getValue();
             for (CheckstyleRecord rec : list) {
                 switch (rec.getSeverity()) {
                     case ERROR:
-                        holder.registerSingleError(DIFF_REPORT_INDEX);
+                        statistics.incrementErrorCount(DIFF_REPORT_INDEX);
                         break;
                     case WARNING:
-                        holder.registerSingleWarning(DIFF_REPORT_INDEX);
+                        statistics.incrementWarningCount(DIFF_REPORT_INDEX);
                         break;
                     default:
-                        holder.registerSingleInfo(DIFF_REPORT_INDEX);
+                        statistics.incrementInfoCount(DIFF_REPORT_INDEX);
                         break;
                 }
             }

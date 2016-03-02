@@ -42,7 +42,7 @@ public class XrefGenerator {
     /**
      * Encoding used for input and output files.
      */
-    public static final String ENCODING = "ISO-8859-1";
+    public static final String ENCODING = "UTF-8";
 
     /**
      * Maven-jxr package manager.
@@ -78,18 +78,18 @@ public class XrefGenerator {
     /**
      * The only constructor.
      *
-     * @param relativizationPath1
+     * @param relativizationPath
      *        path to the sources, used to shorten paths.
-     * @param destinationPath1
+     * @param destinationPath
      *        destination folder for XREF files.
-     * @param sitePath1
+     * @param sitePath
      *        path to the site.
      */
-    public XrefGenerator(Path relativizationPath1,
-            Path destinationPath1, Path sitePath1) {
-        this.relativizationPath = relativizationPath1;
-        this.destinationPath = destinationPath1;
-        this.sitePath = sitePath1;
+    public XrefGenerator(Path relativizationPath,
+            Path destinationPath, Path sitePath) {
+        this.relativizationPath = relativizationPath;
+        this.destinationPath = destinationPath;
+        this.sitePath = sitePath;
     }
 
     /**

@@ -19,416 +19,130 @@
 
 package com.github.checkstyle.site;
 
-import static com.github.checkstyle.Main.BASE_REPORT_INDEX;
+import static com.github.checkstyle.Main.SITEPATH;
+import static com.github.checkstyle.Main.XREF_FILEPATH;
 
-import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+
 import com.github.checkstyle.data.CheckstyleRecord;
+import com.github.checkstyle.data.CliPaths;
 import com.github.checkstyle.data.ParsedContent;
 import com.github.checkstyle.data.Statistics;
 
 /**
- * Site generator from parsed data.
- *
+ * Generates site report using thymeleaf template engine.
+ * Instead of single template 3 smaller ones are used with purpose
+ * of avoiding creation of extra large Context instance.
  * @author atta_troll
  *
  */
 public final class SiteGenerator {
 
     /**
-     * CSS style code for base XML entries.
-     */
-    public static final char BASE_REPORT_CSS_STYLE = 'b';
-
-    /**
-     * CSS style code for patch XML entries.
-     */
-    public static final char PATCH_REPORT_CSS_STYLE = 'a';
-
-    /**
-     * Abbreviation used in table for warning message.
-     */
-    public static final char SEVERITY_WARNING_CHAR = 'W';
-
-    /**
-     * Abbreviation used in table for info message.
-     */
-    public static final char SEVERITY_INFO_CHAR = 'I';
-
-    /**
-     * Abbreviation used in table for error message.
-     */
-    public static final char SEVERITY_ERROR_CHAR = 'E';
-
-    /**
-     * Conventional name of the base XML source.
-     */
-    public static final String BASE_REPORT_NAME = "base";
-
-    /**
-     * Conventional name of the patch XML source.
-     */
-    public static final String PATCH_REPORT_NAME = "patch";
-
-    /**
-     * Delimiter used in full names of checks.
-     */
-    private static final char CHECK_NAME_DELIMITER = '.';
-
-    /**
-     * Counter used in anchor links generation.
-     */
-    private static long anchorCounter;
-
-    /**
-     * Site head tag content.
-     */
-    private static final String HTML_HEAD =
-            "<title>checkstyle xml difference report</title>\n"
-            + "<style type=\"text/css\" media=\"all\">"
-            + "@import url(\"./css/maven-base.css\");"
-            + "@import url(\"./css/maven-theme.css\"); );"
-            + "</style>\n"
-            + "<http-equiv http-equiv=\"Content-Language\" content=\"en\">"
-            + "</http-equiv>";
-
-    /**
-     * Site title.
-     */
-    private static final String SITE_TITLE =
-            "<div class=\"section\">\n"
-            + "<h2 a=\"Checkstyle XML difference report\">"
-            + "Checkstyle XML difference report</h2>\n"
-            + "<a href=\"" + com.github.checkstyle.Main.HELP_HTML_PATH + "\">"
-            + "<h4>explanation</h4></a>\n</div>\n";
-
-    /**
-     * Statistics section title.
-     */
-    private static final String STATISTICS_TITLE =
-            "<h2 a=\"Summary:\">Summary:</h2>\n";
-
-    /**
-     * Statistics table header.
-     */
-    private static final String STATISTICS_TABLE_HEADER =
-            "<div class=\"section\">\n"
-            + "<table border=\"0\" class=\"bodyTable\">\n"
-            + "<tr class=\"a\">\n"
-            + "<th>Report index</th>\n"
-            + "<th>Files</th>\n"
-            + "<th>Unique rows</th>\n"
-            + "<th>Info</th>\n"
-            + "<th>Warnings</th>\n"
-            + "<th>Errors</th>\n"
-            + "</tr>\n";
-
-    /**
-     * Statistics table row template.
-     */
-    private static final String STATISTICS_TABLE_ROW =
-            "<tr class=\"%c\">\n"
-            + "<td>%s</td>\n"
-            + "<td>%d</td>\n"
-            + "<td>%d</td>\n"
-            + "<td>%d</td>\n"
-            + "<td>%d</td>\n"
-            + "<td>%d</td>\n"
-            + "<tr>\n";
-
-    /**
-     * Title for the content section.
-     */
-    private static final String CONTENT_TITLE =
-            "<div class=\"section\">\n"
-            + "<h2 a=\"Unique rows:\">Unique rows:</h2>\n";
-
-    /**
-     * Header for every content section table.
-     */
-    private static final String TABLE_HEADER =
-            "<div class=\"section\"><h3 id=\"%s\">%s</h3>\n<tr class=\"b\">\n"
-            + "<table border=\"0\" class=\"bodyTable\">"
-            + "<th>Anchor</th>\n"
-            + "<th>Severity</th>\n"
-            + "<th>Rule</th>\n"
-            + "<th>Message</th>\n"
-            + "<th>Line</th>\n"
-            + "<th>Column</th>\n"
-            + "<th>Report</th>\n"
-            + "</tr>\n";
-
-    /**
-     * Content section table row template.
-     */
-    private static final String TABLE_ROW = "<tr class=\"%c\">\n"
-            + "<td><a name=\"%s\" href=\"#%s\">%s</a></td>\n"
-            + "<td>%c</td>\n"
-            + "<td>%s</td>\n"
-            + "<td>%s</td>\n"
-            + "<td><a href=\"%s#L%d\">%d</a></td>\n"
-            + "<td>%s</td>\n"
-            + "<td>%s</td>\n"
-            + "<tr>\n";
-
-    /**
-     * Content for help file.
-     */
-    private static final String HELP_FILE_CONTENT = "<div id=\"contentBox\">\n"
-            + "<div class=\"section\">\n <h2 a=\"Explanation:\">Explanation:"
-            + "</h2>This is symmetric difference generated "
-            + "from two checkstyle-result.xml reports.\n"
-            + "<br>All matching records from each XML file are deleted, "
-            + "then remaining records are merged into single report.\n"
-            + "<br>\n"
-            + "<br>\n"
-            + "<a href=\"https://github.com/checkstyle/contribution/"
-            + "tree/master/patch-diff-report-tool\">"
-            + "Utility that generated this report.</a>\n"
-            + "<h3><a href=\"" + com.github.checkstyle.Main.SITEPATH
-            + "\">back to report</a></h3>\n"
-            + "</div>\n"
-            + "</div>\n";
-
-    /**
-     * Private ctor.
+     * Private ctor, please use generate method.
      */
     private SiteGenerator() {
-
     }
 
     /**
-     * Generates site from ParsedContent and StatisticsHolder
-     * and writes it on disk.
+     * Generates site report using thymeleaf template engine.
      *
      * @param content
-     *        container for parsed data.
-     * @param path
-     *        of the result site.
-     * @param holder
-     *        StatisticsHolder instance.
-     * @param generator
-     *        XrefGenerator instance.
+     *        container with parsed data.
+     * @param statistics
+     *        accumulator for statistical data.
+     * @param paths
+     *        cli paths.
      * @throws IOException
-     *         on failure of file system.
+     *         on failure to write site to disc.
      */
-    public static void writeParsedContentToHtml(ParsedContent content,
-            Path path, Statistics holder, XrefGenerator generator) throws IOException {
-        Files.createFile(path);
-        try (BufferedWriter writer =
-                new BufferedWriter(new FileWriter(path.toFile()))) {
-            writer.write("<html>\n");
-            writeHead(writer);
-            writeBody(content, writer, holder, generator);
-            writer.write("</html>\n");
-        }
-    }
-
-    /**
-     * Writes to disk html help.
-     *
-     * @param path
-     *        path to the help file.
-     * @throws IOException
-     *         on failure of file system.
-     */
-    public static void writeHtmlHelp(Path path) throws IOException {
-        Files.createFile(path);
-        try (BufferedWriter writer =
-                new BufferedWriter(new FileWriter(path.toFile()))) {
-            writer.write("<html>\n");
-            writeHead(writer);
-            writer.write("<body class=\"composite\">\n");
-            writer.write(HELP_FILE_CONTENT);
-            writer.write("</body>\n");
-            writer.write("</html>\n");
-        }
-    }
-
-    /**
-     * Writes out HTML head.
-     *
-     * @param writer
-     *        BufferedWriter used to write HTML to file on disk.
-     * @throws IOException
-     *         thrown on writer failure.
-     */
-    private static void writeHead(BufferedWriter writer)
-            throws IOException {
-        writer.write("<head>\n");
-        writer.write(HTML_HEAD);
-        writer.write("</head>\n");
-    }
-
-    /**
-     * Writes out html body.
-     *
-     * @param content
-     *        container for parsed data.
-     * @param writer
-     *        BufferedWriter used to write HTML to file on disk.
-     * @param holder
-     *        StatisticsHolder instance.
-     * @param generator
-     *        XrefGenerator instance.
-     * @throws IOException
-     *         thrown on writer failure.
-     */
-    private static void writeBody(ParsedContent content, BufferedWriter writer,
-            Statistics holder, XrefGenerator generator)
-                    throws IOException {
-        writer.write("<body class=\"composite\">\n");
-        writer.write("<div id=\"contentBox\">\n");
-        writer.write(SITE_TITLE);
-        writeStatistics(writer, holder);
-        writeContent(content, writer, generator);
-        writer.write("</div>\n");
-        writer.write("</body>\n");
-    }
-
-    /**
-     * Writes statistics section to the file.
-     *
-     * @param writer
-     *        BufferedWriter used to write HTML to file on disk.
-     * @param holder
-     *        StatisticsHolder instance
-     * @throws IOException
-     *         thrown on writer failure.
-     */
-    private static void writeStatistics(BufferedWriter writer,
-            Statistics holder) throws IOException {
-        writer.write("<div class=\"section\">\n");
-        writer.write(STATISTICS_TITLE);
-        writer.write(STATISTICS_TABLE_HEADER);
-        writer.write(String.format(STATISTICS_TABLE_ROW, 'b', BASE_REPORT_NAME,
-                holder.getFileNumBase(),
-                holder.getTotalNumBase(),
-                holder.getInfoNumBase(),
-                holder.getWarningNumBase(),
-                holder.getErrorNumBase()));
-        writer.write(String.format(STATISTICS_TABLE_ROW, 'a', PATCH_REPORT_NAME,
-                holder.getFileNumPatch(),
-                holder.getTotalNumPatch(),
-                holder.getInfoNumPatch(),
-                holder.getWarningNumPatch(),
-                holder.getErrorNumPatch()));
-        writer.write(String.format(STATISTICS_TABLE_ROW, 'b', "difference",
-                holder.getFileNumDiff(),
-                holder.getTotalNumDiff(),
-                holder.getInfoNumDiff(),
-                holder.getWarningNumDiff(),
-                holder.getErrorNumDiff()));
-        writer.write("</table>\n</div>\n");
-        writer.write("</div>\n");
-    }
-
-    /**
-     * Writes content section to the file.
-     *
-     * @param content
-     *        container for parsed data.
-     * @param writer
-     *        BufferedWriter used to write HTML to file on disk.
-     * @param generator
-     *        XrefGenerator instance.
-     * @throws IOException
-     *         thrown on writer failure.
-     */
-    private static void writeContent(ParsedContent content,
-            BufferedWriter writer, XrefGenerator generator)
-                    throws IOException {
-        writer.write(CONTENT_TITLE);
-        final Iterator<Map.Entry<String, List<CheckstyleRecord>>> iter =
-                content.getRecords()
-                .entrySet()
-                .iterator();
-        while (iter.hasNext()) {
-            final Map.Entry<String, List<CheckstyleRecord>> entry =
-                iter.next();
-            final String filename = entry.getKey();
-            final String xreference = generator.generateXref(filename);
-            writer.write(String.format(TABLE_HEADER, filename, filename));
-            final List<CheckstyleRecord> records = entry.getValue();
-            for (CheckstyleRecord record : records) {
-                writeTableRow(record, writer, xreference);
+    public static void generate(ParsedContent content, Statistics statistics,
+            CliPaths paths) throws IOException {
+        //setup thymeleaf engine
+        final ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+        templateResolver.setTemplateMode("HTML");
+        templateResolver.setPrefix("/");
+        templateResolver.setSuffix(".template");
+        final TemplateEngine tplEngine = new TemplateEngine();
+        tplEngine.setTemplateResolver(templateResolver);
+        //setup xreference generator
+        final XrefGenerator xrefGenerator = new XrefGenerator(paths.getSourcePath(),
+            paths.getResultPath().resolve(XREF_FILEPATH), paths.getResultPath());
+        //html generation
+        final Path sitepath = paths.getResultPath().resolve(SITEPATH);
+        try (FileWriter writer = new FileWriter(sitepath.toString())) {
+            //write statistics
+            generateHtmlHeadPart(tplEngine, writer, statistics, paths);
+            //write parsed content
+            final AnchorCounter anchorCounter = new AnchorCounter();
+            final Iterator<Map.Entry<String, List<CheckstyleRecord>>> iter =
+                    content.getRecords().entrySet().iterator();
+            while (iter.hasNext()) {
+                appendHtmlTable(iter, tplEngine, writer, xrefGenerator, anchorCounter);
             }
-            writer.write("</table>\n</div>\n");
+            //write final html chunk
+            tplEngine.process("endPortion", new Context(), writer);
         }
-        writer.write("</div>\n");
     }
 
     /**
-     * Writes single CheckstyleRecord as a row of content section table
-     * to the file.
+     * Creates beginning part of resulting site.
      *
-     * @param record
-     *        CheckstyleRecord instance
+     * @param tplEngine
+     *        thymeleaf template engine.
      * @param writer
-     *        BufferedWriter used to write HTML to file on disk.
-     * @param xreference
-     *        link to the XDOC file.
-     * @throws IOException
-     *         thrown on writer failure.
+     *        file writer.
+     * @param statistics
+     *        container for statistics.
+     * @param paths
+     *        cli paths.
      */
-    private static void writeTableRow(CheckstyleRecord record,
-            BufferedWriter writer, String xreference)
-                    throws IOException {
-        final char styleChar;
-        final String reportName;
-        if (record.getIndex() == BASE_REPORT_INDEX) {
-            styleChar = BASE_REPORT_CSS_STYLE;
-            reportName = BASE_REPORT_NAME;
-        }
-        else {
-            styleChar = PATCH_REPORT_CSS_STYLE;
-            reportName = PATCH_REPORT_NAME;
-        }
-        final String anchor = generateAnchor();
-        final char severityChar;
-        switch (record.getSeverity()) {
-            case INFORMATIONAL:
-                severityChar = SEVERITY_INFO_CHAR;
-                break;
-            case WARNING:
-                severityChar = SEVERITY_WARNING_CHAR;
-                break;
-            default:
-                severityChar = SEVERITY_ERROR_CHAR;
-        }
-        final int lineNum = record.getLine();
-        final int columnNum = record.getColumn();
-        final String columnStr;
-        if (columnNum == -1) {
-            columnStr = "";
-        }
-        else {
-            columnStr = String.valueOf(columnNum);
-        }
-        final String fullCheckName = record.getSource();
-        final String shortCheckName = fullCheckName
-                .substring(fullCheckName
-                        .lastIndexOf(CHECK_NAME_DELIMITER) + 1);
-        writer.write(String.format(TABLE_ROW, styleChar, anchor, anchor,
-                anchor, severityChar, shortCheckName, record.getMessage(),
-                xreference, lineNum, lineNum, columnStr, reportName));
-
+    private static void generateHtmlHeadPart(TemplateEngine tplEngine, FileWriter writer,
+            Statistics statistics, CliPaths paths) {
+        final Context context = new Context();
+        context.setVariable("statistics", statistics);
+        context.setVariable("paths", paths);
+        tplEngine.process("headPortion", context, writer);
     }
 
     /**
-     * Generates unique string value to be used as anchor link names.
+     * Appends to the site a table with parsed data for a single file entry.
      *
-     * @return unique string.
+     * @param iter
+     *        iterator on the map containing file entries.
+     * @param tplEngine
+     *        thymeleaf template engine.
+     * @param writer
+     *        file writer.
+     * @param xrefGenerator
+     *        xreference generator.
+     * @param anchorCounter
+     *        anchor links provider.
+     * @throws IOException
+     *         on failure to write data on disk or generate xreference file.
      */
-    private static String generateAnchor() {
-        anchorCounter++;
-        return String.format("A%d", anchorCounter);
+    private static void appendHtmlTable(Iterator<Map.Entry<String, List<CheckstyleRecord>>> iter,
+            TemplateEngine tplEngine, FileWriter writer, XrefGenerator xrefGenerator,
+            AnchorCounter anchorCounter) throws IOException {
+        final Map.Entry<String, List<CheckstyleRecord>> entry = iter.next();
+        final String filename = entry.getKey();
+        final List<CheckstyleRecord> records = entry.getValue();
+        final String xreference = xrefGenerator.generateXref(filename);
+        final Context context = new Context();
+        context.setVariable("filename", filename);
+        context.setVariable("records", records);
+        context.setVariable("xref", xreference);
+        context.setVariable("anchor", anchorCounter);
+        tplEngine.process("table", context, writer);
     }
+
 }
