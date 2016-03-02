@@ -14,6 +14,7 @@
 	<allow pkg="org.apache.commons.cli" />
 	<subpackage name="site">
 		<allow pkg="org.apache.maven.jxr" />
+		<allow pkg="org.thymeleaf" />
 	</subpackage>
 	<subpackage name="parser">
 		<allow pkg="javax.xml.stream" />

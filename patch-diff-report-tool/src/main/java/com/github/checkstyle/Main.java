@@ -30,11 +30,12 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
+import com.github.checkstyle.data.CliPaths;
 import com.github.checkstyle.data.ParsedContent;
 import com.github.checkstyle.data.Statistics;
 import com.github.checkstyle.parser.StaxParserProcessor;
+import com.github.checkstyle.site.JxrDummyLog;
 import com.github.checkstyle.site.SiteGenerator;
-import com.github.checkstyle.site.XrefGenerator;
 
 /**
  * Utility class, contains main function and its auxiliary routines.
@@ -46,11 +47,6 @@ public final class Main {
      * Link to the help html.
      */
     public static final String HELP_HTML_PATH = "help.html";
-
-    /**
-     * Name for the site file.
-     */
-    public static final Path SITEPATH = Paths.get("site.html");
 
     /**
      * Help message.
@@ -77,6 +73,16 @@ public final class Main {
     public static final int XML_PARSE_PORTION_SIZE = 50;
 
     /**
+     * Name for the site file.
+     */
+    public static final Path SITEPATH = Paths.get("index.html");
+
+    /**
+     * Name for the XREF files folder.
+     */
+    public static final Path XREF_FILEPATH = Paths.get("xref");
+
+    /**
      * Name for standart checkstyle xml report.
      */
     public static final Path XML_FILEPATH = Paths.get("checkstyle-result.xml");
@@ -85,11 +91,6 @@ public final class Main {
      * Name for the CSS files folder.
      */
     public static final Path CSS_FILEPATH = Paths.get("css");
-
-    /**
-     * Name for the CSS files folder.
-     */
-    public static final Path XREF_FILEPATH = Paths.get("xref");
 
     /**
      * Internal index of the base report file.
@@ -153,18 +154,38 @@ public final class Main {
         }
         else {
             final CliPaths paths = parseCliToPojo(commandLine);
+            if (paths.getBaseReportPath() == null) {
+                throw new IllegalArgumentException("obligatory argument --baseReportPath"
+                        + " not present, -h for help");
+            }
+            if (paths.getPatchReportPath() == null) {
+                throw new IllegalArgumentException("obligatory argument --patchReportPath "
+                        + "not present, -h for help");
+            }
+
             //preparation stage, checks validity of input paths
-            PathVerifier.prepare(paths);
-            System.out.println("Successfull preparation stage.");
+            System.out.println("Preparation stage is started.");
+            PreparationUtils.checkFilesExistence(paths);
+            PreparationUtils.exportResources(paths);
+
             //XML parsing stage
+            System.out.println("XML parsing is started.");
             final ParsedContent content = new ParsedContent();
-            final Statistics holder = new Statistics();
+            final Statistics statistics = new Statistics();
             StaxParserProcessor.parse(content, paths.getBaseReportPath(),
-                    paths.getPatchReportPath(), XML_PARSE_PORTION_SIZE, holder);
-            System.out.println("XML files successfully parsed.");
+                    paths.getPatchReportPath(), XML_PARSE_PORTION_SIZE, statistics);
+
             //Site and XREF generation stage
-            generateSite(paths, content, holder);
-            System.out.println("Creation of an html site succeed.");
+            System.out.println("Creation of diff html site is started.");
+            try {
+                SiteGenerator.generate(content, statistics, paths);
+            }
+            finally {
+                for (String message:JxrDummyLog.getLog()) {
+                    System.out.println(message);
+                }
+            }
+            System.out.println("Creation of the site succeed.");
         }
     }
 
@@ -196,10 +217,23 @@ public final class Main {
      */
     private static CliPaths parseCliToPojo(CommandLine commandLine)
             throws IllegalArgumentException {
-        if (!commandLine.hasOption(OPTION_BASE_FOLDER)
-                || !commandLine.hasOption(OPTION_PATCH_FOLDER)) {
-            throw new IllegalArgumentException("CLI obligatory arguments not present, "
-                    + "-h for help");
+        final Path pathXmlBase;
+        if (commandLine.hasOption(OPTION_BASE_FOLDER)) {
+            final Path pathDirBase = Paths
+                    .get(commandLine.getOptionValue(OPTION_BASE_FOLDER));
+            pathXmlBase = pathDirBase.resolve(XML_FILEPATH);
+        }
+        else {
+            pathXmlBase = null;
+        }
+        final Path pathXmlPatch;
+        if (commandLine.hasOption(OPTION_PATCH_FOLDER)) {
+            final Path pathDirPatch = Paths
+                    .get(commandLine.getOptionValue(OPTION_PATCH_FOLDER));
+            pathXmlPatch = pathDirPatch.resolve(XML_FILEPATH);
+        }
+        else {
+            pathXmlPatch = null;
         }
         final Path pathSource;
         if (commandLine.hasOption(OPTION_SOURCE_PATH)) {
@@ -219,19 +253,13 @@ public final class Main {
                     .resolve("XMLDiffGen_report_" + new SimpleDateFormat("yyyy.MM.dd_HH:mm:ss")
                             .format(Calendar.getInstance().getTime()));
         }
-        final Path pathDir1 = Paths
-                .get(commandLine.getOptionValue(OPTION_BASE_FOLDER));
-        final Path pathDir2 = Paths
-                .get(commandLine.getOptionValue(OPTION_PATCH_FOLDER));
-        final Path pathXml1 = pathDir1.resolve(XML_FILEPATH);
-        final Path pathXml2 = pathDir2.resolve(XML_FILEPATH);
-        return new CliPaths(pathXml1, pathXml2, pathSource, pathResult);
+        return new CliPaths(pathXmlBase, pathXmlPatch, pathSource, pathResult);
     }
 
     /**
-     * Builds and returns list of parameters supported by cli Checkstyle.
+     * Builds and returns list of parameters supported by this utility.
      *
-     * @return available options
+     * @return available options.
      */
     private static Options buildOptions() {
         final Options options = new Options();
@@ -248,26 +276,4 @@ public final class Main {
         return options;
     }
 
-    /**
-     * Generates site and XREF documents within it.
-     *
-     * @param paths
-     *        POJO holding all input paths.
-     * @param content
-     *        container with parsed data.
-     * @param holder
-     *        container for statistics.
-     * @throws Exception
-     *         on different failures during stages execution.
-     */
-    private static void generateSite(CliPaths paths, ParsedContent content, Statistics holder)
-            throws Exception {
-        final XrefGenerator generator = new XrefGenerator(paths.getSourcePath(),
-                paths.getResultPath().resolve(XREF_FILEPATH), paths.getResultPath());
-        content.getStatistics(holder);
-        SiteGenerator.writeParsedContentToHtml(content,
-                paths.getResultPath().resolve(SITEPATH), holder, generator);
-        SiteGenerator.writeHtmlHelp(
-                paths.getResultPath().resolve(HELP_HTML_PATH));
-    }
 }

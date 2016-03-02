@@ -17,46 +17,39 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.github.checkstyle.data;
+package com.github.checkstyle.site;
 
 /**
- * Represents different states of severity of the checkstyle messages.
+ * Provides site generator with anchor links.
  *
  * @author atta_troll
  *
  */
-public enum Severity {
+public class AnchorCounter {
     /**
-     * Represents error level.
+     * Beginning literal for anchor links.
      */
-    ERROR('E'),
+    private static final String ANCHOR_TEXT = "A";
 
     /**
-     * Represents warning level.
+     * Counter of anchor links.
      */
-    WARNING('W'),
+    private int counter;
 
     /**
-     * Represents informational level.
-     */
-    INFORMATIONAL('I');
-
-    /**
-     * Abbreviation mapped by enum member.
-     */
-    private char abbreviation;
-
-    /**
-     * Enum ctor.
+     * Getter for a current anchor link.
      *
-     * @param abbreviation
-     *        abbreviation mapped with this enum member.
+     * @return current anchor link.
      */
-    Severity(char abbreviation) {
-        this.abbreviation = abbreviation;
+    public String getAnchor() {
+        return ANCHOR_TEXT + counter;
     }
 
-    public char getAbbreviation() {
-        return abbreviation;
+    /**
+     * Increments anchor counter.
+     */
+    public void increment() {
+        counter++;
     }
+
 }

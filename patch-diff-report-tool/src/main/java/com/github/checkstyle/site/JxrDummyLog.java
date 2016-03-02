@@ -19,36 +19,46 @@
 
 package com.github.checkstyle.site;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.maven.jxr.log.Log;
 
 /**
- * Dummy log used by maven-jxr PackageManager.
+ * Simple log used by maven-jxr PackageManager.
  *
  * @author atta_troll
  *
  */
 public class JxrDummyLog implements Log {
 
+    /**
+     * Container for log.
+     */
+    private static List<String> log = new ArrayList<>();
+
     @Override
     public void debug(String arg0) {
-
+        log.add(arg0);
     }
 
     @Override
     public void error(String arg0) {
-        System.out.println(arg0);
-
+        log.add(arg0);
     }
 
     @Override
     public void info(String arg0) {
-
+        log.add(arg0);
     }
 
     @Override
     public void warn(String arg0) {
-        System.out.println(arg0);
+        log.add(arg0);
+    }
 
+    public static List<String> getLog() {
+        return log;
     }
 
 }

@@ -23,7 +23,7 @@ import static com.github.checkstyle.Main.BASE_REPORT_INDEX;
 import static com.github.checkstyle.Main.PATCH_REPORT_INDEX;
 
 /**
- * POJO holding all statistics gathered during parsing stage.
+ * POJO that accumulates all statistics gathered during parsing stage.
  * @author atta_troll
  */
 public class Statistics {
@@ -92,7 +92,6 @@ public class Statistics {
      * Default ctor.
      */
     public Statistics() {
-
     }
 
     public final int getErrorNumDiff() {
@@ -167,7 +166,7 @@ public class Statistics {
      * Registers single error row from indexed source.
      * @param index index of the source.
      */
-    public final void registerSingleError(int index) {
+    public final void incrementErrorCount(int index) {
         if (index == BASE_REPORT_INDEX) {
             this.errorNumBase++;
         }
@@ -183,7 +182,7 @@ public class Statistics {
      * Registers single warning row from an indexed source.
      * @param index index of the source.
      */
-    public final void registerSingleWarning(int index) {
+    public final void incrementWarningCount(int index) {
         if (index == BASE_REPORT_INDEX) {
             this.warningNumBase++;
         }
@@ -199,7 +198,7 @@ public class Statistics {
      * Registers single info row from source 1.
      * @param index index of the source.
      */
-    public final void registerSingleInfo(int index) {
+    public final void incrementInfoCount(int index) {
         if (index == BASE_REPORT_INDEX) {
             this.infoNumBase++;
         }
@@ -215,7 +214,7 @@ public class Statistics {
      * Registers single file from source 1.
      * @param index index of the source.
      */
-    public final void registerSingleFile(int index) {
+    public final void incrementFileCount(int index) {
         this.fileNumBase++;
         if (index == BASE_REPORT_INDEX) {
             this.fileNumBase++;

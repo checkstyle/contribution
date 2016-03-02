@@ -121,22 +121,23 @@ public final class StaxParserProcessor {
      *        path to patch XML file.
      * @param portionSize
      *        single portion of XML file processed at once by any parser.
-     * @param holder
-     *        StatisticsHolder instance.
+     * @param statistics
+     *        container accumulating statistics.
      * @throws FileNotFoundException
      *         thrown if files not found.
      * @throws XMLStreamException
      *         thrown on internal parser error.
      */
     public static void parse(ParsedContent content, Path xml1,
-            Path xml2, int portionSize, Statistics holder)
+            Path xml2, int portionSize, Statistics statistics)
                     throws FileNotFoundException, XMLStreamException {
         final XMLEventReader reader1 = createReader(xml1);
         final XMLEventReader reader2 = createReader(xml2);
         while (reader1.hasNext() || reader2.hasNext()) {
-            parseXmlPortion(content, reader1, portionSize, BASE_REPORT_INDEX, holder);
-            parseXmlPortion(content, reader2, portionSize, PATCH_REPORT_INDEX, holder);
+            parseXmlPortion(content, reader1, portionSize, BASE_REPORT_INDEX, statistics);
+            parseXmlPortion(content, reader2, portionSize, PATCH_REPORT_INDEX, statistics);
         }
+        content.getStatistics(statistics);
     }
 
     /**
@@ -170,14 +171,14 @@ public final class StaxParserProcessor {
      *        number of "file" tags to parse.
      * @param index
      *        internal index of the parsed file.
-     * @param holder
-     *        StatisticsHolder instance.
+     * @param statistics
+     *        container accumulating statistics.
      * @throws XMLStreamException
      *         thrown on internal parser error.
      */
     private static void parseXmlPortion(ParsedContent content,
             XMLEventReader reader, int numOfFilenames, int index,
-            Statistics holder)
+            Statistics statistics)
                     throws XMLStreamException {
         int counter = numOfFilenames;
         String filename = null;
@@ -191,7 +192,7 @@ public final class StaxParserProcessor {
                 //file tag encounter
                 if (startElementName.equals(FILE_TAG)) {
                     counter--;
-                    holder.registerSingleFile(index);
+                    statistics.incrementFileCount(index);
                     final Iterator<Attribute> attributes = startElement
                             .getAttributes();
                     while (attributes.hasNext()) {
@@ -205,7 +206,7 @@ public final class StaxParserProcessor {
                 }
                 //error tag encounter
                 else if (startElementName.equals(ERROR_TAG)) {
-                    records.add(parseErrorTag(startElement, holder, index));
+                    records.add(parseErrorTag(startElement, statistics, index));
                 }
             }
             if (event.isEndElement()) {
@@ -225,14 +226,14 @@ public final class StaxParserProcessor {
      *
      * @param startElement
      *        cursor of StAX parser pointed on the tag.
-     * @param holder
-     *        StatisticsHolder instance.
+     * @param statistics
+     *        container accumulating statistics.
      * @param index
      *        internal index of the parsed file.
      * @return parsed data as CheckstyleRecord instance.
      */
     private static CheckstyleRecord parseErrorTag(StartElement startElement,
-            Statistics holder, int index) {
+            Statistics statistics, int index) {
         int line = -1;
         int column = -1;
         Severity severity = Severity.INFORMATIONAL;
@@ -258,7 +259,7 @@ public final class StaxParserProcessor {
                 else if (attrValue.equals(SEVERITY_WARNING)) {
                     severity = Severity.WARNING;
                 }
-                incrementStatistics(severity, holder, index);
+                incrementStatistics(severity, statistics, index);
             }
             else if (attrName.equals(MESSAGE_ATTR)) {
                 message = attribute.getValue();
@@ -273,26 +274,26 @@ public final class StaxParserProcessor {
     }
 
     /**
-     * Adds statistics from single "error" tag to the StatisticsHolder POJO.
+     * Stores statistics from single "error" tag.
      *
      * @param severity
      *        severity level of "error" tag.
-     * @param holder
-     *        StatisticsHolder instance.
+     * @param statistics
+     *        container accumulating statistics.
      * @param index
      *        internal index of the source file.
      */
     private static void incrementStatistics(Severity severity,
-            Statistics holder, int index) {
+            Statistics statistics, int index) {
         switch (severity) {
             case ERROR:
-                holder.registerSingleError(index);
+                statistics.incrementErrorCount(index);
                 break;
             case WARNING:
-                holder.registerSingleWarning(index);
+                statistics.incrementWarningCount(index);
                 break;
             default:
-                holder.registerSingleInfo(index);
+                statistics.incrementInfoCount(index);
                 break;
         }
     }

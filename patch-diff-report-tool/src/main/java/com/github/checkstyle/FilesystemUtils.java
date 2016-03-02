@@ -151,7 +151,7 @@ public final class FilesystemUtils {
      * Exports a resource embedded into a Jar file to the local file path.
      *
      * @param resourceName
-     *        ie.: "/SmartLibrary.dll".
+     *        i.e.: "/SmartLibrary.dll".
      * @param destination
      *        the desired path of the resource.
      * @throws IOException

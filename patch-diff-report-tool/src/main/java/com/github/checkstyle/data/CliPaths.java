@@ -17,7 +17,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.github.checkstyle;
+package com.github.checkstyle.data;
 
 import java.nio.file.Path;
 
@@ -49,21 +49,21 @@ public class CliPaths {
     /**
      * POJO ctor.
      *
-     * @param baseReportPath1
+     * @param baseReportPath
      *        path to the first checkstyle-report.xml.
-     * @param patchReportPath1
+     * @param patchReportPath
      *        path to the second checkstyle-report.xml.
-     * @param sourcePath1
+     * @param sourcePath
      *        path to the data, tested by checkstyle.
-     * @param resultPath1
+     * @param resultPath
      *        path to the result site.
      */
-    public CliPaths(Path baseReportPath1, Path patchReportPath1,
-            Path sourcePath1, Path resultPath1) {
-        this.baseReportPath = baseReportPath1;
-        this.patchReportPath = patchReportPath1;
-        this.sourcePath = sourcePath1;
-        this.resultPath = resultPath1;
+    public CliPaths(Path baseReportPath, Path patchReportPath,
+            Path sourcePath, Path resultPath) {
+        this.baseReportPath = baseReportPath;
+        this.patchReportPath = patchReportPath;
+        this.sourcePath = sourcePath;
+        this.resultPath = resultPath;
     }
 
     public Path getBaseReportPath() {

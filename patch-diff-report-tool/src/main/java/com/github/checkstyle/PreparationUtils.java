@@ -23,13 +23,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import com.github.checkstyle.data.CliPaths;
+
 /**
- * Initial checks performer.
+ * Preparatory stage peformer.
  *
  * @author atta_troll
  *
  */
-public final class PathVerifier {
+public final class PreparationUtils {
 
     /**
      * Message when necessary file is absent.
@@ -37,23 +39,22 @@ public final class PathVerifier {
     public static final String MSG_NOT_EXISTS = "XML file doesn't exist: ";
 
     /**
-     * Utility ctor.
+     * Private ctor, use static methods.
      */
-    private PathVerifier() {
+    private PreparationUtils() {
 
     }
 
     /**
-     * Perform preliminary file existence checks, also exports to disc necessary static resources.
+     * Exports to disc necessary static resources.
      *
      * @param paths
      *        POJO holding all input paths.
      * @throws IOException
      *         thrown on failure to perform checks.
      */
-    public static void prepare(CliPaths paths)
+    public static void exportResources(CliPaths paths)
             throws IOException {
-        verifyExistense(paths);
         final Path resultPath = paths.getResultPath();
         FilesystemUtils.createOverwriteDirectory(resultPath);
         FilesystemUtils.createOverwriteDirectory(resultPath
@@ -66,6 +67,8 @@ public final class PathVerifier {
         FilesystemUtils.exportResource("/maven-base.css",
                 resultPath.resolve(com.github.checkstyle.Main.CSS_FILEPATH)
                         .resolve("maven-base.css"));
+        FilesystemUtils.exportResource("/help.html",
+                resultPath.resolve(com.github.checkstyle.Main.HELP_HTML_PATH));
     }
 
     /**
@@ -75,7 +78,7 @@ public final class PathVerifier {
      * @throws IllegalArgumentException
      *         on failure of any check.
      */
-    private static void verifyExistense(CliPaths paths)
+    public static void checkFilesExistence(CliPaths paths)
                     throws IllegalArgumentException {
         if (!Files.isRegularFile(paths.getBaseReportPath())) {
             throw new IllegalArgumentException(MSG_NOT_EXISTS + paths.getBaseReportPath());
@@ -90,7 +93,7 @@ public final class PathVerifier {
             throw new IllegalArgumentException("Unknown regular file exists with this name: "
                     + paths.getResultPath());
         }
-        if (paths.getSourcePath() == null || !Files.isDirectory(paths.getSourcePath())) {
+        if (paths.getSourcePath() != null && !Files.isDirectory(paths.getSourcePath())) {
             throw new IllegalArgumentException("Source path is not a directory:"
                     + paths.getSourcePath());
         }
