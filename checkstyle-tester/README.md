@@ -70,7 +70,7 @@ to github pages repo (https://pages.github.com/) to share your report with other
 
 1) please follow instruction from https://pages.github.com/ to create your static web site on github
 
-2) please copy whole "target/site" folder to newly created repo.
+2) please copy whole "target/site" folder to newly created repo. Please rename target/­site/checkstyle.html to target/­site/index.html to let github.io open it by default.
 
 3) please make sure that report is available as http://YOURUSER.github.io/.
 
