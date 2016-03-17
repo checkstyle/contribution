@@ -31,22 +31,19 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import com.github.checkstyle.data.CliPaths;
+import com.github.checkstyle.data.MergedConfigurationModule;
 import com.github.checkstyle.data.ParsedContent;
-import com.github.checkstyle.data.Statistics;
-import com.github.checkstyle.parser.StaxParserProcessor;
+import com.github.checkstyle.parser.StaxConfigurationParser;
+import com.github.checkstyle.parser.StaxContentParser;
 import com.github.checkstyle.site.JxrDummyLog;
 import com.github.checkstyle.site.SiteGenerator;
 
 /**
  * Utility class, contains main function and its auxiliary routines.
- * @author atta_troll
+ *
+ * @author attatrol
  */
 public final class Main {
-
-    /**
-     * Link to the help html.
-     */
-    public static final String HELP_HTML_PATH = "help.html";
 
     /**
      * Help message.
@@ -75,47 +72,17 @@ public final class Main {
     /**
      * Name for the site file.
      */
-    public static final Path SITEPATH = Paths.get("index.html");
-
-    /**
-     * Name for the XREF files folder.
-     */
-    public static final Path XREF_FILEPATH = Paths.get("xref");
-
-    /**
-     * Name for standart checkstyle xml report.
-     */
-    public static final Path XML_FILEPATH = Paths.get("checkstyle-result.xml");
-
-    /**
-     * Name for the CSS files folder.
-     */
-    public static final Path CSS_FILEPATH = Paths.get("css");
-
-    /**
-     * Internal index of the base report file.
-     */
-    public static final int BASE_REPORT_INDEX = 1;
-
-    /**
-     * Internal index of the patch report file.
-     */
-    public static final int PATCH_REPORT_INDEX = 2;
-
-    /**
-     * Internal index of the generated difference.
-     */
-    public static final int DIFF_REPORT_INDEX = 0;
+    public static final Path CONFIGPATH = Paths.get("configuration.html");
 
     /**
      * Name for command line option "baseReportPath".
      */
-    private static final String OPTION_BASE_FOLDER = "baseReportPath";
+    private static final String OPTION_BASE_REPORT_PATH = "baseReportPath";
 
     /**
      * Name for command line option "patchReportPath".
      */
-    private static final String OPTION_PATCH_FOLDER = "patchReportPath";
+    private static final String OPTION_PATCH_REPORT_PATH = "patchReportPath";
 
     /**
      * Name for command line option "sourcePath".
@@ -125,7 +92,17 @@ public final class Main {
     /**
      * Name for command line option "resultPath".
      */
-    private static final String OPTION_PESULT_FOLDER = "resultPath";
+    private static final String OPTION_RESULT_FOLDER_PATH = "resultPath";
+
+    /**
+     * Name for command line option "baseConfigPath".
+     */
+    private static final String OPTION_BASE_CONFIG_PATH = "baseConfigPath";
+
+    /**
+     * Name for command line option "patchConfigPath".
+     */
+    private static final String OPTION_PATCH_CONFIG_PATH = "patchConfigPath";
 
     /**
      * Name for command line option that shows help message.
@@ -148,20 +125,13 @@ public final class Main {
      *         on failure to execute stages.
      */
     public static void main(final String... args) throws Exception {
+        System.out.println("patch-diff-report-tool execution started.");
         final CommandLine commandLine = parseCli(args);
         if (commandLine.hasOption(OPTION_HELP)) {
             System.out.println(MSG_HELP);
         }
         else {
             final CliPaths paths = parseCliToPojo(commandLine);
-            if (paths.getBaseReportPath() == null) {
-                throw new IllegalArgumentException("obligatory argument --baseReportPath"
-                        + " not present, -h for help");
-            }
-            if (paths.getPatchReportPath() == null) {
-                throw new IllegalArgumentException("obligatory argument --patchReportPath "
-                        + "not present, -h for help");
-            }
 
             //preparation stage, checks validity of input paths
             System.out.println("Preparation stage is started.");
@@ -170,23 +140,37 @@ public final class Main {
 
             //XML parsing stage
             System.out.println("XML parsing is started.");
-            final ParsedContent content = new ParsedContent();
-            final Statistics statistics = new Statistics();
-            StaxParserProcessor.parse(content, paths.getBaseReportPath(),
-                    paths.getPatchReportPath(), XML_PARSE_PORTION_SIZE, statistics);
+            final ParsedContent content =
+                    StaxContentParser.parse(paths.getBaseReportPath(),
+                    paths.getPatchReportPath(), XML_PARSE_PORTION_SIZE);
 
             //Site and XREF generation stage
             System.out.println("Creation of diff html site is started.");
             try {
-                SiteGenerator.generate(content, statistics, paths);
+                SiteGenerator.generateDiffReport(content, paths);
             }
             finally {
-                for (String message:JxrDummyLog.getLog()) {
+                for (String message : JxrDummyLog.getLog()) {
                     System.out.println(message);
                 }
             }
-            System.out.println("Creation of the site succeed.");
+
+            //Configuration processing stage.
+            if (paths.configurationPresent()) {
+                System.out.println("Creation of configuration report is started.");
+                final MergedConfigurationModule configuration =
+                        StaxConfigurationParser.parse(paths.getBaseConfigPath(),
+                                paths.getPatchConfigPath());
+                SiteGenerator.generateConfigurationReport(configuration,
+                        paths.getResultPath().resolve(CONFIGPATH));
+            }
+            else {
+                System.out.println("Cronfiguration processing skipped: "
+                        + "no configuration paths provided.");
+            }
+            System.out.println("Creation of the result site succeed.");
         }
+        System.out.println("patch-diff-report-tool execution ended.");
     }
 
     /**
@@ -217,43 +201,19 @@ public final class Main {
      */
     private static CliPaths parseCliToPojo(CommandLine commandLine)
             throws IllegalArgumentException {
-        final Path pathXmlBase;
-        if (commandLine.hasOption(OPTION_BASE_FOLDER)) {
-            final Path pathDirBase = Paths
-                    .get(commandLine.getOptionValue(OPTION_BASE_FOLDER));
-            pathXmlBase = pathDirBase.resolve(XML_FILEPATH);
-        }
-        else {
-            pathXmlBase = null;
-        }
-        final Path pathXmlPatch;
-        if (commandLine.hasOption(OPTION_PATCH_FOLDER)) {
-            final Path pathDirPatch = Paths
-                    .get(commandLine.getOptionValue(OPTION_PATCH_FOLDER));
-            pathXmlPatch = pathDirPatch.resolve(XML_FILEPATH);
-        }
-        else {
-            pathXmlPatch = null;
-        }
-        final Path pathSource;
-        if (commandLine.hasOption(OPTION_SOURCE_PATH)) {
-            pathSource = Paths
-                    .get(commandLine.getOptionValue(OPTION_SOURCE_PATH));
-        }
-        else {
-            pathSource = null;
-        }
-        final Path pathResult;
-        if (commandLine.hasOption(OPTION_PESULT_FOLDER)) {
-            pathResult = Paths
-                    .get(commandLine.getOptionValue(OPTION_PESULT_FOLDER));
-        }
-        else {
-            pathResult = Paths.get(System.getProperty("user.home"))
-                    .resolve("XMLDiffGen_report_" + new SimpleDateFormat("yyyy.MM.dd_HH:mm:ss")
-                            .format(Calendar.getInstance().getTime()));
-        }
-        return new CliPaths(pathXmlBase, pathXmlPatch, pathSource, pathResult);
+        final Path xmlBasePath = getPath(OPTION_BASE_REPORT_PATH, commandLine, null);
+        final Path xmlPatchPath = getPath(OPTION_PATCH_REPORT_PATH, commandLine, null);
+        final Path sourcePath = getPath(OPTION_SOURCE_PATH, commandLine, null);
+        final Path defaultResultPath = Paths.get(System.getProperty("user.home"))
+                .resolve("XMLDiffGen_report_" + new SimpleDateFormat("yyyy.MM.dd_HH:mm:ss")
+                        .format(Calendar.getInstance().getTime()));
+        final Path resultPath =
+                getPath(OPTION_RESULT_FOLDER_PATH, commandLine, defaultResultPath);
+        final Path configBasePath = getPath(OPTION_BASE_CONFIG_PATH, commandLine, null);
+        final Path configPatchPath =
+                getPath(OPTION_PATCH_CONFIG_PATH, commandLine, null);
+        return new CliPaths(xmlBasePath, xmlPatchPath, sourcePath,
+                resultPath, configBasePath, configPatchPath);
     }
 
     /**
@@ -263,17 +223,44 @@ public final class Main {
      */
     private static Options buildOptions() {
         final Options options = new Options();
-        options.addOption(null, OPTION_BASE_FOLDER, true,
+        options.addOption(null, OPTION_BASE_REPORT_PATH, true,
                 "Path to the directory containing base checkstyle-report.xml");
-        options.addOption(null, OPTION_PATCH_FOLDER, true,
+        options.addOption(null, OPTION_PATCH_REPORT_PATH, true,
                 "Path to the directory containing patch checkstyle-report.xml");
         options.addOption(null, OPTION_SOURCE_PATH, true,
                 "Path to the directory containing source under checkstyle check, optional.");
-        options.addOption(null, OPTION_PESULT_FOLDER, true,
+        options.addOption(null, OPTION_RESULT_FOLDER_PATH, true,
                 "Path to directory where result path will be stored.");
+        options.addOption(null, OPTION_BASE_CONFIG_PATH, true,
+                "Path to the configuration of the base report.");
+        options.addOption(null, OPTION_PATCH_CONFIG_PATH, true,
+                "Path to the configuration of the patch report.");
         options.addOption(OPTION_HELP, false,
-                "Simply show help message.");
+                "Shows help message, nothing else.");
         return options;
+    }
+
+    /**
+     * Generates path from CLI option.
+     *
+     * @param optionName
+     *        name of the option.
+     * @param commandLine
+     *        parsed CLI.
+     * @param alternativePath
+     *        path which is used if CLI option is absent.
+     * @return generated path.
+     */
+    private static Path getPath(String optionName,
+            CommandLine commandLine, Path alternativePath) {
+        final Path path;
+        if (commandLine.hasOption(optionName)) {
+            path = Paths.get(commandLine.getOptionValue(optionName));
+        }
+        else {
+            path = alternativePath;
+        }
+        return path;
     }
 
 }

@@ -19,29 +19,23 @@
 
 package com.github.checkstyle.data;
 
-import static com.github.checkstyle.Main.BASE_REPORT_INDEX;
-import static com.github.checkstyle.Main.PATCH_REPORT_INDEX;
+import static com.github.checkstyle.parser.StaxContentParser.BASE_REPORT_INDEX;
+import static com.github.checkstyle.parser.StaxContentParser.PATCH_REPORT_INDEX;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * POJO that accumulates all statistics gathered during parsing stage.
- * @author atta_troll
+ *
+ * @author attatrol
  */
 public class Statistics {
 
     /**
-     * Number of error rows in difference.
+     * Map storing severity numbers for difference.
      */
-    private int errorNumDiff;
-
-    /**
-     * Number of warning rows in difference.
-     */
-    private int warningNumDiff;
-
-    /**
-     * Number of info rows in difference.
-     */
-    private int infoNumDiff;
+    private Map<String, Integer> severityNumDiff = new HashMap<>();
 
     /**
      * Number of files in difference.
@@ -49,19 +43,9 @@ public class Statistics {
     private int fileNumDiff;
 
     /**
-     * Number of error rows in the base source.
+     * Map storing severity numbers for base source.
      */
-    private int errorNumBase;
-
-    /**
-     * Number of warning rows in the base source.
-     */
-    private int warningNumBase;
-
-    /**
-     * Number of info rows in the base source.
-     */
-    private int infoNumBase;
+    private Map<String, Integer> severityNumBase = new HashMap<>();
 
     /**
      * Number of files in the base source.
@@ -69,85 +53,72 @@ public class Statistics {
     private int fileNumBase;
 
     /**
-     * Number of error rows in the patch source.
+     * Map storing severity numbers for patch source.
      */
-    private int errorNumPatch;
-
-    /**
-     * Number of warning rows in the patch source.
-     */
-    private int warningNumPatch;
-
-    /**
-     * Number of info rows in the patch source.
-     */
-    private int infoNumPatch;
+    private Map<String, Integer> severityNumPatch = new HashMap<>();
 
     /**
      * Number of files in the patch source.
      */
     private int fileNumPatch;
 
+    public final Map<String, Integer> getSeverityNumDiff() {
+        return severityNumDiff;
+    }
+
     /**
-     * Default ctor.
+     * Getter for total number of severity records for difference.
+     *
+     * @return total number of severity records.
      */
-    public Statistics() {
-    }
-
-    public final int getErrorNumDiff() {
-        return errorNumDiff;
-    }
-
-    public final int getWarningNumDiff() {
-        return warningNumDiff;
-    }
-
-    public final int getInfoNumDiff() {
-        return infoNumDiff;
-    }
-
     public final int getTotalNumDiff() {
-        return errorNumDiff + warningNumDiff + infoNumDiff;
+        int totalSeverityNumber = 0;
+        for (Integer number : severityNumDiff.values()) {
+            totalSeverityNumber += number;
+        }
+        return totalSeverityNumber;
     }
 
     public final int getFileNumDiff() {
         return fileNumDiff;
     }
 
-    public final int getErrorNumBase() {
-        return errorNumBase;
+    public final Map<String, Integer> getSeverityNumBase() {
+        return severityNumBase;
     }
 
-    public final int getWarningNumBase() {
-        return warningNumBase;
-    }
-
-    public final int getInfoNumBase() {
-        return infoNumBase;
-    }
-
+    /**
+     * Getter for total number of severity records for base source.
+     *
+     * @return total number of severity records.
+     */
     public final int getTotalNumBase() {
-        return errorNumBase + warningNumBase + infoNumBase;
+        int totalSeverityNumber = 0;
+        for (Integer number : severityNumBase.values()) {
+            totalSeverityNumber += number;
+        }
+        return totalSeverityNumber;
+    }
+
+    public final Map<String, Integer> getSeverityNumPatch() {
+        return severityNumPatch;
     }
 
     public final int getFileNumBase() {
         return fileNumBase;
     }
 
-    public final int getErrorNumPatch() {
-        return errorNumPatch;
-    }
-
-    public final int getWarningNumPatch() {
-        return warningNumPatch;
-    }
-
-    public final int getInfoNumPatch() {
-        return infoNumPatch;
-    }
-
+    /**
+     * Getter for total number of severity records for patch source.
+     *
+     * @return total number of severity records.
+     */
     public final int getTotalNumPatch() {
-        return errorNumPatch + warningNumPatch + infoNumPatch;
+        int totalSeverityNumber = 0;
+        for (Integer number : severityNumPatch.values()) {
+            totalSeverityNumber += number;
+        }
+        return totalSeverityNumber;
     }
 
     public final int getFileNumPatch() {
@@ -163,55 +134,32 @@ public class Statistics {
     }
 
     /**
-     * Registers single error row from indexed source.
+     * Registers single severity record from indexed source.
+     * @param severity value of severity record.
      * @param index index of the source.
      */
-    public final void incrementErrorCount(int index) {
+    public final void addSeverityRecord(String severity, int index) {
+        final Map<String, Integer> severityRecorder;
         if (index == BASE_REPORT_INDEX) {
-            this.errorNumBase++;
+            severityRecorder = severityNumBase;
         }
         else if (index == PATCH_REPORT_INDEX) {
-            this.errorNumPatch++;
+            severityRecorder = severityNumPatch;
         }
         else {
-            this.errorNumDiff++;
+            severityRecorder = severityNumDiff;
+        }
+        final Integer newNumber = severityRecorder.get(severity);
+        if (newNumber != null) {
+            severityRecorder.put(severity, newNumber + 1);
+        }
+        else {
+            severityRecorder.put(severity, 1);
         }
     }
 
     /**
-     * Registers single warning row from an indexed source.
-     * @param index index of the source.
-     */
-    public final void incrementWarningCount(int index) {
-        if (index == BASE_REPORT_INDEX) {
-            this.warningNumBase++;
-        }
-        else if (index == PATCH_REPORT_INDEX) {
-            this.warningNumPatch++;
-        }
-        else {
-            this.warningNumDiff++;
-        }
-    }
-
-    /**
-     * Registers single info row from source 1.
-     * @param index index of the source.
-     */
-    public final void incrementInfoCount(int index) {
-        if (index == BASE_REPORT_INDEX) {
-            this.infoNumBase++;
-        }
-        else if (index == PATCH_REPORT_INDEX) {
-            this.infoNumPatch++;
-        }
-        else {
-            this.infoNumDiff++;
-        }
-    }
-
-    /**
-     * Registers single file from source 1.
+     * Registers single file from numbered source.
      * @param index index of the source.
      */
     public final void incrementFileCount(int index) {

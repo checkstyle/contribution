@@ -22,7 +22,7 @@ package com.github.checkstyle.data;
 /**
  * POJO, maps into single "error" tag of the XML.
  *
- * @author atta_troll
+ * @author attatrol
  *
  */
 public class CheckstyleRecord {
@@ -45,7 +45,7 @@ public class CheckstyleRecord {
     /**
      * Severity of this record.
      */
-    private Severity severity;
+    private String severity;
 
     /**
      * Name of the check that generated this record.
@@ -60,27 +60,27 @@ public class CheckstyleRecord {
     /**
      * POJO ctor.
      *
-     * @param index1
+     * @param index
      *        internal index of the source.
-     * @param line1
+     * @param line
      *        line number.
-     * @param column1
+     * @param column
      *        column number.
-     * @param severity1
+     * @param severity
      *        record severity level.
-     * @param source1
+     * @param source
      *        name of check that generated record.
-     * @param message1
+     * @param message
      *        error message.
      */
-    public CheckstyleRecord(int index1, int line1, int column1,
-            Severity severity1, String source1, String message1) {
-        this.index = index1;
-        this.line = line1;
-        this.column = column1;
-        this.severity = severity1;
-        this.source = source1;
-        this.message = message1;
+    public CheckstyleRecord(int index, int line, int column,
+            String severity, String source, String message) {
+        this.index = index;
+        this.line = line;
+        this.column = column;
+        this.severity = severity;
+        this.source = source;
+        this.message = message;
     }
 
     /**
@@ -108,7 +108,7 @@ public class CheckstyleRecord {
         return message;
     }
 
-    public Severity getSeverity() {
+    public String getSeverity() {
         return severity;
     }
 

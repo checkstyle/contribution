@@ -22,16 +22,32 @@ package com.github.checkstyle;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import com.github.checkstyle.data.CliPaths;
 
 /**
  * Preparatory stage peformer.
  *
- * @author atta_troll
+ * @author attatrol
  *
  */
 public final class PreparationUtils {
+
+    /**
+     * Name for the XREF files folder.
+     */
+    public static final Path XREF_FILEPATH = Paths.get("xref");
+
+    /**
+     * Name for the CSS files folder.
+     */
+    public static final Path CSS_FILEPATH = Paths.get("css");
+
+    /**
+     * Link to the help html.
+     */
+    public static final String HELP_PATH = "help.html";
 
     /**
      * Message when necessary file is absent.
@@ -56,23 +72,19 @@ public final class PreparationUtils {
     public static void exportResources(CliPaths paths)
             throws IOException {
         final Path resultPath = paths.getResultPath();
-        FilesystemUtils.createOverwriteDirectory(resultPath);
-        FilesystemUtils.createOverwriteDirectory(resultPath
-                .resolve(com.github.checkstyle.Main.CSS_FILEPATH));
-        FilesystemUtils.createOverwriteDirectory(resultPath
-                .resolve(com.github.checkstyle.Main.XREF_FILEPATH));
+        Files.createDirectories(resultPath);
+        FilesystemUtils.createOverwriteDirectory(resultPath.resolve(CSS_FILEPATH));
+        FilesystemUtils.createOverwriteDirectory(resultPath.resolve(XREF_FILEPATH));
         FilesystemUtils.exportResource("/maven-theme.css",
-                resultPath.resolve(com.github.checkstyle.Main.CSS_FILEPATH)
-                        .resolve("maven-theme.css"));
+                resultPath.resolve(CSS_FILEPATH).resolve("maven-theme.css"));
         FilesystemUtils.exportResource("/maven-base.css",
-                resultPath.resolve(com.github.checkstyle.Main.CSS_FILEPATH)
-                        .resolve("maven-base.css"));
-        FilesystemUtils.exportResource("/help.html",
-                resultPath.resolve(com.github.checkstyle.Main.HELP_HTML_PATH));
+                resultPath.resolve(CSS_FILEPATH).resolve("maven-base.css"));
+        FilesystemUtils.exportResource("/help.html", resultPath.resolve(HELP_PATH));
     }
 
     /**
      * Performs file existence checks.
+     *
      * @param paths
      *        POJO holding all input paths.
      * @throws IllegalArgumentException
@@ -80,11 +92,21 @@ public final class PreparationUtils {
      */
     public static void checkFilesExistence(CliPaths paths)
                     throws IllegalArgumentException {
+        if (paths.getBaseReportPath() == null) {
+            throw new IllegalArgumentException("obligatory argument --baseReportPath"
+                    + " not present, -h for help");
+        }
+        if (paths.getPatchReportPath() == null) {
+            throw new IllegalArgumentException("obligatory argument --patchReportPath "
+                    + "not present, -h for help");
+        }
         if (!Files.isRegularFile(paths.getBaseReportPath())) {
-            throw new IllegalArgumentException(MSG_NOT_EXISTS + paths.getBaseReportPath());
+            throw new IllegalArgumentException("XML file doesn't exist: "
+                    + paths.getBaseReportPath());
         }
         if (!Files.isRegularFile(paths.getPatchReportPath())) {
-            throw new IllegalArgumentException(MSG_NOT_EXISTS + paths.getPatchReportPath());
+            throw new IllegalArgumentException("XML file doesn't exist: "
+                    + paths.getPatchReportPath());
         }
         if (paths.getPatchReportPath().equals(paths.getBaseReportPath())) {
             throw new IllegalArgumentException("Both input XML files have the same path.");
@@ -97,5 +119,23 @@ public final class PreparationUtils {
             throw new IllegalArgumentException("Source path is not a directory:"
                     + paths.getSourcePath());
         }
+        if ((paths.getBaseConfigPath() != null) && (paths.getPatchConfigPath() == null)) {
+            throw new IllegalArgumentException("Patch configuration path is missing while base "
+                    + "configuration path is present");
+        }
+        if ((paths.getPatchConfigPath() != null) && (paths.getBaseConfigPath() == null)) {
+            throw new IllegalArgumentException("Base configuration path is missing while patch "
+                    + "configuration path is present");
+        }
+        if (paths.getBaseConfigPath() != null && !Files.isRegularFile(paths.getBaseConfigPath())) {
+            throw new IllegalArgumentException("Base configuration file is missing:"
+                    + paths.getBaseConfigPath());
+        }
+        if (paths.getPatchConfigPath() != null
+                && !Files.isRegularFile(paths.getPatchConfigPath())) {
+            throw new IllegalArgumentException("Patch configuration file is missing:"
+                    + paths.getPatchConfigPath());
+        }
     }
+
 }
