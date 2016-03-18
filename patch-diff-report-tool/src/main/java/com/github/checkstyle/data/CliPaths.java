@@ -23,7 +23,7 @@ import java.nio.file.Path;
 
 /**
  * POJO class that hold input paths.
- * @author atta_troll
+ * @author attatrol
  */
 public class CliPaths {
     /**
@@ -47,23 +47,39 @@ public class CliPaths {
     private Path resultPath;
 
     /**
+     * Path to the data, tested by checkstyle.
+     */
+    private Path baseConfigPath;
+
+    /**
+     * Path to the result site.
+     */
+    private Path patchConfigPath;
+
+    /**
      * POJO ctor.
      *
      * @param baseReportPath
-     *        path to the first checkstyle-report.xml.
+     *        path to the base checkstyle-report.xml.
      * @param patchReportPath
-     *        path to the second checkstyle-report.xml.
+     *        path to the patch checkstyle-report.xml.
      * @param sourcePath
      *        path to the data, tested by checkstyle.
      * @param resultPath
      *        path to the result site.
+     * @param patchConfigPath
+     *        path to the configuration of the base report.
+     * @param baseConfigPath
+     *        path to the configuration of the patch report.
      */
     public CliPaths(Path baseReportPath, Path patchReportPath,
-            Path sourcePath, Path resultPath) {
+            Path sourcePath, Path resultPath, Path baseConfigPath, Path patchConfigPath) {
         this.baseReportPath = baseReportPath;
         this.patchReportPath = patchReportPath;
         this.sourcePath = sourcePath;
         this.resultPath = resultPath;
+        this.baseConfigPath = baseConfigPath;
+        this.patchConfigPath = patchConfigPath;
     }
 
     public Path getBaseReportPath() {
@@ -80,6 +96,23 @@ public class CliPaths {
 
     public Path getResultPath() {
         return resultPath;
+    }
+
+    public Path getBaseConfigPath() {
+        return baseConfigPath;
+    }
+
+    public Path getPatchConfigPath() {
+        return patchConfigPath;
+    }
+
+    /**
+     * Checks if configuration paths are present.
+     *
+     * @return true if they are not null.
+     */
+    public boolean configurationPresent() {
+        return baseConfigPath != null && patchConfigPath != null;
     }
 
 }

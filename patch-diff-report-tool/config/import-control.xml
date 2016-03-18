@@ -9,10 +9,13 @@
 	<allow pkg="java.util" />
 	<allow pkg="java.text" />
 	<allow pkg="com.github.checkstyle.data" />
-	<allow pkg="com.github.checkstyle.Main" />
 	<allow pkg="com.github.checkstyle" local-only="true" />
 	<allow pkg="org.apache.commons.cli" />
+	<subpackage name="data">
+		<allow pkg="com.github.checkstyle.parser.StaxContentParser" />
+	</subpackage>
 	<subpackage name="site">
+		<allow pkg="com.github.checkstyle.PreparationUtils" />
 		<allow pkg="org.apache.maven.jxr" />
 		<allow pkg="org.thymeleaf" />
 	</subpackage>

@@ -1,0 +1,133 @@
+////////////////////////////////////////////////////////////////////////////////
+// checkstyle: Checks Java source code for adherence to a set of rules.
+// Copyright (C) 2001-2016 the original author or authors.
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+////////////////////////////////////////////////////////////////////////////////
+
+package com.github.checkstyle.data;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * Describes prepared for output merged "module" tags
+ * which had the same name and the same location in the
+ * tree structure of each configuration XML.
+ *
+ * @author attatrol
+ *
+ */
+public class MergedConfigurationModule {
+
+    /**
+     * Module name that contains names of all parents sequentially.
+     */
+    private String fullModuleName;
+
+    /**
+     * Simple module name.
+     */
+    private String simpleModuleName;
+
+    /**
+     * Module properties from the base module.
+     * If null then no base module is present.
+     */
+    private Map<String, List<String>> baseModuleProperties;
+
+    /**
+     * Module properties from the patch module.
+     * If null then no base module is present.
+     */
+    private Map<String, List<String>> patchModuleProperties;
+
+    /**
+     * Child modules of this module.
+     */
+    private List<MergedConfigurationModule> children = new ArrayList<>();
+
+    /**
+     * Basic ctor, creates instance without any child.
+     * Children should be added with addChild method.
+     *
+     * @param baseModuleProperties
+     *        properties of the base module, may be null.
+     * @param patchModuleProperties
+     *        properties of the patch module, may be null.
+     * @param simpleName
+     *        simple name of the module.
+     * @param parentName
+     *        full name of the parent.
+     */
+    public MergedConfigurationModule(Map<String, List<String>> baseModuleProperties,
+            Map<String, List<String>> patchModuleProperties,
+            String simpleName, String parentName) {
+        this.baseModuleProperties = baseModuleProperties;
+        this.patchModuleProperties = patchModuleProperties;
+        simpleModuleName = simpleName;
+        fullModuleName = parentName + "/" + simpleModuleName;
+    }
+
+    public Map<String, List<String>> getBaseModuleProperties() {
+        return baseModuleProperties;
+    }
+
+    public Map<String, List<String>> getPatchModuleProperties() {
+        return patchModuleProperties;
+    }
+
+    public String getFullModuleName() {
+        return fullModuleName;
+    }
+
+    public String getSimpleModuleName() {
+        return simpleModuleName;
+    }
+
+    public List<MergedConfigurationModule> getChildren() {
+        return children;
+    }
+
+    /**
+     * Adds single child module to the set of children.
+     *
+     * @param child
+     *        the child module.
+     */
+    public void addChild(MergedConfigurationModule child) {
+        children.add(child);
+    }
+
+    /**
+     * Checks if patch module is present in this merge.
+     *
+     * @return true if patch module is present.
+     */
+    public boolean hasPatchModule() {
+        return patchModuleProperties != null;
+    }
+
+    /**
+     * Checks if base module is present in this merge.
+     *
+     * @return true if base module is present.
+     */
+    public boolean hasBaseModule() {
+        return baseModuleProperties != null;
+    }
+
+}

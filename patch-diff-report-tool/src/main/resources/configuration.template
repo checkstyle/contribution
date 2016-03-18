@@ -1,0 +1,59 @@
+<html>
+	<head>
+		<title>checkstyle xml difference report</title>
+		<style type="text/css" media="all">@import url("./css/maven-base.css");@import url("./css/maven-theme.css"); );</style>
+		<http-equiv http-equiv="Content-Language" content="en"></http-equiv>
+	</head>
+	<body class="composite">
+		<div id="contentBox">
+			<div class="section">
+				<h2 a="Checkstyle configuration report">Checkstyle configuration report</h2>
+				<h3>
+					<a href="index.html">back to difference report</a>
+				</h3>
+			</div>
+			<div class="section">
+				<table border="0" class="bodyTable">
+						<tr class="a">
+							<th>Check Name</th>
+							<th>Base properties</th>
+							<th>Patch properties</th>
+						</tr>
+						<th:block th:each="child : ${config.children}">
+							<th:block th:fragment="module" class="a">
+								<tr>
+									<td th:text=${child.simpleModuleName} class="c"> moduleName </td>
+									<td th:if="${child.hasBaseModule()}" class="a">
+										<th:block th:each="property : ${child.baseModuleProperties}">
+											<th:block th:text=${property.key}> propertyName </th:block>
+											<th:block th:each="token : ${property.value}">
+												<li th:text=${token}> tokenValue </li>
+											</th:block>
+											<br/>
+										</th:block>
+									</td>
+									<td th:unless="${child.hasBaseModule()}"> </td>
+									
+									<td th:if="${child.hasPatchModule()}" class="b">
+										<th:block th:each="property : ${child.patchModuleProperties}">
+											<th:block th:text=${property.key}> propertyName </th:block>
+											<th:block th:each="token : ${property.value}">
+												<li th:text=${token}> tokenValue </li>
+											</th:block>
+											<br/>
+										</th:block>
+									</td>
+									<td th:unless="${child.hasPatchModule()}"> </td>
+								</tr>
+								<th:block th:each="grandchild : ${child.children}">
+									<th:block th:include="::module" th:with="child = ${grandchild}"/>
+								</th:block>
+							</th:block>
+
+						</th:block>
+						
+				</table>	
+			</div>
+			
+	</body>
+</html>

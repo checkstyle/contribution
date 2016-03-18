@@ -102,6 +102,22 @@ table.bodyTable tr.b {
   background-color: #fca;
 }
 
+table.bodyTable tr.c {
+  background-color: #eee;
+}
+
+table.bodyTable td.a {
+  background-color: #af8;
+}
+
+table.bodyTable td.b {
+  background-color: #fca;
+}
+
+table.bodyTable td.c {
+  background-color: #eee;
+}
+
 .source {
   border: 1px solid #999;
 }

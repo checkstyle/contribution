@@ -34,10 +34,10 @@ import org.apache.maven.jxr.pacman.PackageManager;
  * from java source files. Wrapper around
  * maven-jxr functional.
  *
- * @author atta_troll
+ * @author attatrol
  *
  */
-public class XrefGenerator {
+class XrefGenerator {
 
     /**
      * Encoding used for input and output files.
@@ -85,7 +85,7 @@ public class XrefGenerator {
      * @param sitePath
      *        path to the site.
      */
-    public XrefGenerator(Path relativizationPath,
+    XrefGenerator(Path relativizationPath,
             Path destinationPath, Path sitePath) {
         this.relativizationPath = relativizationPath;
         this.destinationPath = destinationPath;

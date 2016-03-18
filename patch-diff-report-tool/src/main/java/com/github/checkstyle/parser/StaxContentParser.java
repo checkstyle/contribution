@@ -19,19 +19,13 @@
 
 package com.github.checkstyle.parser;
 
-import static com.github.checkstyle.Main.BASE_REPORT_INDEX;
-import static com.github.checkstyle.Main.PATCH_REPORT_INDEX;
-
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.events.Attribute;
 import javax.xml.stream.events.EndElement;
@@ -40,16 +34,30 @@ import javax.xml.stream.events.XMLEvent;
 
 import com.github.checkstyle.data.CheckstyleRecord;
 import com.github.checkstyle.data.ParsedContent;
-import com.github.checkstyle.data.Severity;
 import com.github.checkstyle.data.Statistics;
 
 /**
  * Contains logics of the StaX parser for the checkstyle xml reports.
- * If its scheme changed, this class should be the first one to fix.
+ * If its scheme is changed, this class should be the first one to fix.
  *
- * @author atta_troll
+ * @author attatrol
  */
-public final class StaxParserProcessor {
+public final class StaxContentParser {
+
+    /**
+     * Internal index of the base report file.
+     */
+    public static final int BASE_REPORT_INDEX = 1;
+
+    /**
+     * Internal index of the patch report file.
+     */
+    public static final int PATCH_REPORT_INDEX = 2;
+
+    /**
+     * Internal index of the generated difference.
+     */
+    public static final int DIFF_REPORT_INDEX = 0;
 
     /**
      * String value for "file" tag.
@@ -92,19 +100,9 @@ public final class StaxParserProcessor {
     private static final String SOURCE_ATTR = "source";
 
     /**
-     * Severity attribute value "warning".
-     */
-    private static final String SEVERITY_WARNING = "warning";
-
-    /**
-     * Severity attribute value "error".
-     */
-    private static final String SEVERITY_ERROR = "error";
-
-    /**
      * Private ctor, see parse method.
      */
-    private StaxParserProcessor() {
+    private StaxContentParser() {
 
     }
 
@@ -113,51 +111,29 @@ public final class StaxParserProcessor {
      * which process their XML files in rotation and try
      * to write their results to the ParsedContent class
      * inner map, where they are eagerly compared.
-     * @param content
-     *        container for parsed data.
-     * @param xml1
+     * @param baseXml
      *        path to base XML file.
-     * @param xml2
+     * @param patchXml
      *        path to patch XML file.
      * @param portionSize
      *        single portion of XML file processed at once by any parser.
-     * @param statistics
-     *        container accumulating statistics.
+     * @return parsed content.
      * @throws FileNotFoundException
-     *         thrown if files not found.
+     *         if files not found.
      * @throws XMLStreamException
-     *         thrown on internal parser error.
+     *         on internal parser error.
      */
-    public static void parse(ParsedContent content, Path xml1,
-            Path xml2, int portionSize, Statistics statistics)
+    public static ParsedContent parse(Path baseXml, Path patchXml, int portionSize)
                     throws FileNotFoundException, XMLStreamException {
-        final XMLEventReader reader1 = createReader(xml1);
-        final XMLEventReader reader2 = createReader(xml2);
-        while (reader1.hasNext() || reader2.hasNext()) {
-            parseXmlPortion(content, reader1, portionSize, BASE_REPORT_INDEX, statistics);
-            parseXmlPortion(content, reader2, portionSize, PATCH_REPORT_INDEX, statistics);
+        final ParsedContent content = new ParsedContent();
+        final XMLEventReader baseReader = StaxUtils.createReader(baseXml);
+        final XMLEventReader patchReader = StaxUtils.createReader(patchXml);
+        while (baseReader.hasNext() || patchReader.hasNext()) {
+            parseXmlPortion(content, baseReader, portionSize, BASE_REPORT_INDEX);
+            parseXmlPortion(content, patchReader, portionSize, PATCH_REPORT_INDEX);
         }
-        content.getStatistics(statistics);
-    }
-
-    /**
-     * Creates parser linked to the existing XML file.
-     *
-     * @param xmlFilename
-     *        name of an XML report file.
-     * @return StAX parser interface.
-     * @throws FileNotFoundException
-     *         on wrong filename.
-     * @throws XMLStreamException
-     *         on internal factory failure.
-     */
-    private static XMLEventReader createReader(Path xmlFilename)
-            throws FileNotFoundException, XMLStreamException {
-        final XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        // Setup a new eventReader
-        final InputStream inputStream =
-            new FileInputStream(xmlFilename.toFile());
-        return inputFactory.createXMLEventReader(inputStream);
+        content.getDiffStatistics();
+        return content;
     }
 
     /**
@@ -166,19 +142,16 @@ public final class StaxParserProcessor {
      * @param content
      *        container for parsed data.
      * @param reader
-     *        pStAX parser interface.
+     *        StAX parser interface.
      * @param numOfFilenames
      *        number of "file" tags to parse.
      * @param index
      *        internal index of the parsed file.
-     * @param statistics
-     *        container accumulating statistics.
      * @throws XMLStreamException
-     *         thrown on internal parser error.
+     *         on internal parser error.
      */
     private static void parseXmlPortion(ParsedContent content,
-            XMLEventReader reader, int numOfFilenames, int index,
-            Statistics statistics)
+            XMLEventReader reader, int numOfFilenames, int index)
                     throws XMLStreamException {
         int counter = numOfFilenames;
         String filename = null;
@@ -192,7 +165,7 @@ public final class StaxParserProcessor {
                 //file tag encounter
                 if (startElementName.equals(FILE_TAG)) {
                     counter--;
-                    statistics.incrementFileCount(index);
+                    content.getStatistics().incrementFileCount(index);
                     final Iterator<Attribute> attributes = startElement
                             .getAttributes();
                     while (attributes.hasNext()) {
@@ -206,7 +179,7 @@ public final class StaxParserProcessor {
                 }
                 //error tag encounter
                 else if (startElementName.equals(ERROR_TAG)) {
-                    records.add(parseErrorTag(startElement, statistics, index));
+                    records.add(parseErrorTag(startElement, content.getStatistics(), index));
                 }
             }
             if (event.isEndElement()) {
@@ -236,36 +209,33 @@ public final class StaxParserProcessor {
             Statistics statistics, int index) {
         int line = -1;
         int column = -1;
-        Severity severity = Severity.INFORMATIONAL;
         String source = null;
         String message = null;
-
+        String severity = null;
         final Iterator<Attribute> attributes = startElement
                 .getAttributes();
         while (attributes.hasNext()) {
             final Attribute attribute = attributes.next();
             final String attrName = attribute.getName().toString();
-            if (attrName.equals(LINE_ATTR)) {
-                line = Integer.parseInt(attribute.getValue());
-            }
-            else if (attrName.equals(COLUMN_ATTR)) {
-                column = Integer.parseInt(attribute.getValue());
-            }
-            else if (attrName.equals(SEVERITY_ATTR)) {
-                final String attrValue = attribute.getValue();
-                if (attrValue.equals(SEVERITY_ERROR)) {
-                    severity = Severity.ERROR;
-                }
-                else if (attrValue.equals(SEVERITY_WARNING)) {
-                    severity = Severity.WARNING;
-                }
-                incrementStatistics(severity, statistics, index);
-            }
-            else if (attrName.equals(MESSAGE_ATTR)) {
-                message = attribute.getValue();
-            }
-            else if (attrName.equals(SOURCE_ATTR)) {
-                source = attribute.getValue();
+            switch (attrName) {
+                case LINE_ATTR:
+                    line = Integer.parseInt(attribute.getValue());
+                    break;
+                case COLUMN_ATTR:
+                    column = Integer.parseInt(attribute.getValue());
+                    break;
+                case SEVERITY_ATTR:
+                    severity = attribute.getValue();
+                    statistics.addSeverityRecord(severity, index);
+                    break;
+                case MESSAGE_ATTR:
+                    message = attribute.getValue();
+                    break;
+                case SOURCE_ATTR:
+                    source = attribute.getValue();
+                    break;
+                default:
+                    break;
             }
         }
         return new CheckstyleRecord(index,
@@ -273,28 +243,4 @@ public final class StaxParserProcessor {
 
     }
 
-    /**
-     * Stores statistics from single "error" tag.
-     *
-     * @param severity
-     *        severity level of "error" tag.
-     * @param statistics
-     *        container accumulating statistics.
-     * @param index
-     *        internal index of the source file.
-     */
-    private static void incrementStatistics(Severity severity,
-            Statistics statistics, int index) {
-        switch (severity) {
-            case ERROR:
-                statistics.incrementErrorCount(index);
-                break;
-            case WARNING:
-                statistics.incrementWarningCount(index);
-                break;
-            default:
-                statistics.incrementInfoCount(index);
-                break;
-        }
-    }
 }

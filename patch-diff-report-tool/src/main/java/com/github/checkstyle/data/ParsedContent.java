@@ -19,7 +19,7 @@
 
 package com.github.checkstyle.data;
 
-import static com.github.checkstyle.Main.DIFF_REPORT_INDEX;
+import static com.github.checkstyle.parser.StaxContentParser.DIFF_REPORT_INDEX;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,7 +33,7 @@ import java.util.TreeMap;
  * immediately when there is an opportunity to do so,
  * thus keeping memory usage as minimal as possible.
  *
- * @author atta_troll
+ * @author attatrol
  *
  */
 public final class ParsedContent {
@@ -46,11 +46,9 @@ public final class ParsedContent {
             new TreeMap<>();
 
     /**
-     * Private ctor, please use addRecords method.
+     * Container for statistical data.
      */
-    public ParsedContent() {
-
-    }
+    private Statistics statistics = new Statistics();
 
     /**
      * Getter for data container.
@@ -59,6 +57,10 @@ public final class ParsedContent {
      */
     public Map<String, List<CheckstyleRecord>> getRecords() {
         return records;
+    }
+
+    public Statistics getStatistics() {
+        return statistics;
     }
 
     /**
@@ -136,27 +138,14 @@ public final class ParsedContent {
 
     /**
      * Generates statistical information and puts in in the accumulator.
-     *
-     * @param statistics
-     *        container that accumulates statistics.
      */
-    public void getStatistics(Statistics statistics) {
+    public void getDiffStatistics() {
         statistics.setFileNumDiff(records.size());
         for (Map.Entry<String, List<CheckstyleRecord>> entry
                 : records.entrySet()) {
             final List<CheckstyleRecord> list = entry.getValue();
             for (CheckstyleRecord rec : list) {
-                switch (rec.getSeverity()) {
-                    case ERROR:
-                        statistics.incrementErrorCount(DIFF_REPORT_INDEX);
-                        break;
-                    case WARNING:
-                        statistics.incrementWarningCount(DIFF_REPORT_INDEX);
-                        break;
-                    default:
-                        statistics.incrementInfoCount(DIFF_REPORT_INDEX);
-                        break;
-                }
+                statistics.addSeverityRecord(rec.getSeverity(), DIFF_REPORT_INDEX);
             }
         }
     }

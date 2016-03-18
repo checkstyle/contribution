@@ -29,7 +29,7 @@ import java.nio.file.Path;
 /**
  * Utility class used for common manipulations with files.
  *
- * @author atta_troll
+ * @author attatrol
  *
  */
 public final class FilesystemUtils {

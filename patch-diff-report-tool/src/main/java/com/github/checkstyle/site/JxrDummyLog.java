@@ -27,7 +27,7 @@ import org.apache.maven.jxr.log.Log;
 /**
  * Simple log used by maven-jxr PackageManager.
  *
- * @author atta_troll
+ * @author attatrol
  *
  */
 public class JxrDummyLog implements Log {
@@ -39,22 +39,22 @@ public class JxrDummyLog implements Log {
 
     @Override
     public void debug(String arg0) {
-        log.add(arg0);
+        log.add("Debug: " + arg0);
     }
 
     @Override
     public void error(String arg0) {
-        log.add(arg0);
+        log.add("Error: " + arg0);
     }
 
     @Override
     public void info(String arg0) {
-        log.add(arg0);
+        log.add("Info: " + arg0);
     }
 
     @Override
     public void warn(String arg0) {
-        log.add(arg0);
+        log.add("Warning: " + arg0);
     }
 
     public static List<String> getLog() {

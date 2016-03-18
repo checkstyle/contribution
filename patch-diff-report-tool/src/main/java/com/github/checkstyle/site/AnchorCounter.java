@@ -22,10 +22,10 @@ package com.github.checkstyle.site;
 /**
  * Provides site generator with anchor links.
  *
- * @author atta_troll
+ * @author attatrol
  *
  */
-public class AnchorCounter {
+class AnchorCounter {
     /**
      * Beginning literal for anchor links.
      */
@@ -34,7 +34,7 @@ public class AnchorCounter {
     /**
      * Counter of anchor links.
      */
-    private int counter;
+    private long counter;
 
     /**
      * Getter for a current anchor link.
@@ -50,6 +50,10 @@ public class AnchorCounter {
      */
     public void increment() {
         counter++;
+    }
+
+    public long getCounter() {
+        return counter;
     }
 
 }
