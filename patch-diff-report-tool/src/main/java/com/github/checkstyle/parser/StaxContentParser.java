@@ -33,7 +33,7 @@ import javax.xml.stream.events.StartElement;
 import javax.xml.stream.events.XMLEvent;
 
 import com.github.checkstyle.data.CheckstyleRecord;
-import com.github.checkstyle.data.ParsedContent;
+import com.github.checkstyle.data.DiffReport;
 import com.github.checkstyle.data.Statistics;
 
 /**
@@ -123,9 +123,9 @@ public final class StaxContentParser {
      * @throws XMLStreamException
      *         on internal parser error.
      */
-    public static ParsedContent parse(Path baseXml, Path patchXml, int portionSize)
+    public static DiffReport parse(Path baseXml, Path patchXml, int portionSize)
                     throws FileNotFoundException, XMLStreamException {
-        final ParsedContent content = new ParsedContent();
+        final DiffReport content = new DiffReport();
         final XMLEventReader baseReader = StaxUtils.createReader(baseXml);
         final XMLEventReader patchReader = StaxUtils.createReader(patchXml);
         while (baseReader.hasNext() || patchReader.hasNext()) {
@@ -150,7 +150,7 @@ public final class StaxContentParser {
      * @throws XMLStreamException
      *         on internal parser error.
      */
-    private static void parseXmlPortion(ParsedContent content,
+    private static void parseXmlPortion(DiffReport content,
             XMLEventReader reader, int numOfFilenames, int index)
                     throws XMLStreamException {
         int counter = numOfFilenames;

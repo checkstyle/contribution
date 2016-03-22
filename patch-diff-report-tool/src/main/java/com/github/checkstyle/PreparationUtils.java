@@ -45,11 +45,6 @@ public final class PreparationUtils {
     public static final Path CSS_FILEPATH = Paths.get("css");
 
     /**
-     * Link to the help html.
-     */
-    public static final String HELP_PATH = "help.html";
-
-    /**
      * Message when necessary file is absent.
      */
     public static final String MSG_NOT_EXISTS = "XML file doesn't exist: ";
@@ -79,7 +74,6 @@ public final class PreparationUtils {
                 resultPath.resolve(CSS_FILEPATH).resolve("maven-theme.css"));
         FilesystemUtils.exportResource("/maven-base.css",
                 resultPath.resolve(CSS_FILEPATH).resolve("maven-base.css"));
-        FilesystemUtils.exportResource("/help.html", resultPath.resolve(HELP_PATH));
     }
 
     /**

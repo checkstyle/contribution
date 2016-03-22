@@ -106,6 +106,10 @@ table.bodyTable tr.c {
   background-color: #eee;
 }
 
+table.bodyTable tr.d {
+  background-color: #fef7bc;
+}
+
 table.bodyTable td.a {
   background-color: #af8;
 }
@@ -129,25 +133,39 @@ dl {
 dt {
   color: #900;
 }
-#organizationLogo img, #projectLogo img, #projectLogo span{
-  margin: 8px;
-}
+
 #banner {
   border-bottom: 1px solid #fff;
 }
-.errormark, .warningmark, .donemark, .infomark {
-  background: url(../images/icon_error_sml.gif) no-repeat;
+
+button {
+    background-color: #ddd;
+    border: none;
+    color: #900;
+    padding: 6px 12px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 25px;
+    margin: 4px 2px;
+    cursor: pointer;
 }
 
-.warningmark {
-  background-image: url(../images/icon_warning_sml.gif);
+#example {
+  position: relative;
 }
 
-.donemark {
-  background-image: url(../images/icon_success_sml.gif);
+#example-checkbox {
+  display: none;
 }
 
-.infomark {
-  background-image: url(../images/icon_info_sml.gif);
+#example-checkbox:checked + #example:after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
 }
 

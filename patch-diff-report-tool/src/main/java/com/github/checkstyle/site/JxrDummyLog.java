@@ -33,32 +33,32 @@ import org.apache.maven.jxr.log.Log;
 public class JxrDummyLog implements Log {
 
     /**
-     * Container for log.
+     * Container for logs.
      */
-    private static List<String> log = new ArrayList<>();
+    private static List<String> logs = new ArrayList<>();
 
     @Override
     public void debug(String arg0) {
-        log.add("Debug: " + arg0);
+        logs.add("Debug: " + arg0);
     }
 
     @Override
     public void error(String arg0) {
-        log.add("Error: " + arg0);
+        logs.add("Error: " + arg0);
     }
 
     @Override
     public void info(String arg0) {
-        log.add("Info: " + arg0);
+        logs.add("Info: " + arg0);
     }
 
     @Override
     public void warn(String arg0) {
-        log.add("Warning: " + arg0);
+        logs.add("Warning: " + arg0);
     }
 
-    public static List<String> getLog() {
-        return log;
+    public static List<String> getLogs() {
+        return logs;
     }
 
 }

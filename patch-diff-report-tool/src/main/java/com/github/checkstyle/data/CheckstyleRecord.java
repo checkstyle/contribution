@@ -19,6 +19,9 @@
 
 package com.github.checkstyle.data;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * POJO, maps into single "error" tag of the XML.
  *
@@ -26,6 +29,17 @@ package com.github.checkstyle.data;
  *
  */
 public class CheckstyleRecord {
+
+    /**
+     * It is usual for sources of records to have name that
+     * matches this pattern. It is used for shortening source names.
+     */
+    private static final Pattern CHECKSTYLE_CHECK_NAME = Pattern.compile(".+Check");
+
+    /**
+     * Length of "Check" string.
+     */
+    private static final int CHECK_STRING_LENGTH = 5;
 
     /**
      * Index of the source.
@@ -120,6 +134,23 @@ public class CheckstyleRecord {
     public String getSimpleSourceName() {
         final int lastPointIndex = source.lastIndexOf('.');
         return source.substring(lastPointIndex + 1);
+    }
+
+    /**
+     * Generates and returns simple form of check's name.
+     * Tries to delete "Check" ending substring of the result.
+     *
+     * @return simple form of check's name without ending "Check".
+     */
+    public String getSimpleCuttedSourceName() {
+        final String simpleName = getSimpleSourceName();
+        final Matcher matcher = CHECKSTYLE_CHECK_NAME.matcher(simpleName);
+        if (matcher.matches()) {
+            return simpleName.substring(0, simpleName.length() - CHECK_STRING_LENGTH);
+        }
+        else {
+            return simpleName;
+        }
     }
 
     /**

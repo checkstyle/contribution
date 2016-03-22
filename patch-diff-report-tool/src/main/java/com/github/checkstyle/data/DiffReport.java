@@ -29,14 +29,14 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Container for all parsed data, expunges all abundant information
+ * Contains diff from parsed data, expunges all abundant information
  * immediately when there is an opportunity to do so,
  * thus keeping memory usage as minimal as possible.
  *
  * @author attatrol
  *
  */
-public final class ParsedContent {
+public final class DiffReport {
 
     /**
      * Container for parsed data,
@@ -64,7 +64,7 @@ public final class ParsedContent {
     }
 
     /**
-     * Adds new records to the container,
+     * Adds new records to the diff report,
      * when there are records with this filename, comparison
      * between them and new record is performed and only difference is saved.
      *
