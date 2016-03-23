@@ -21,6 +21,7 @@ package com.github.checkstyle.site;
 
 import static com.github.checkstyle.PreparationUtils.XREF_FILEPATH;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -35,8 +36,8 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 import com.github.checkstyle.data.CheckstyleRecord;
 import com.github.checkstyle.data.CliPaths;
+import com.github.checkstyle.data.DiffReport;
 import com.github.checkstyle.data.MergedConfigurationModule;
-import com.github.checkstyle.data.ParsedContent;
 import com.github.checkstyle.data.Statistics;
 
 /**
@@ -67,10 +68,13 @@ public final class SiteGenerator {
      *        container with parsed data.
      * @param paths
      *        cli paths.
+     * @param configuration
+     *        merged configurations from both reports.
      * @throws IOException
      *         on failure to write site to disc.
      */
-    public static void generateDiffReport(ParsedContent content, CliPaths paths)
+    public static void generate(DiffReport content,
+            CliPaths paths, MergedConfigurationModule configuration)
             throws IOException {
         //setup thymeleaf engine
         final TemplateEngine tplEngine = getTemplateEngine();
@@ -81,7 +85,7 @@ public final class SiteGenerator {
         final Path sitepath = paths.getResultPath().resolve(SITEPATH);
         try (FileWriter writer = new FileWriter(sitepath.toString())) {
             //write statistics
-            generateHeader(tplEngine, writer, content.getStatistics(), paths);
+            generateHeader(tplEngine, writer, content.getStatistics(), configuration);
             //write parsed content
             final AnchorCounter anchorCounter = new AnchorCounter();
             final Iterator<Map.Entry<String, List<CheckstyleRecord>>> iter =
@@ -142,14 +146,14 @@ public final class SiteGenerator {
      *        file writer.
      * @param statistics
      *        container for statistics.
-     * @param paths
-     *        cli paths.
+     * @param configuration
+     *        merged configurations from both reports.
      */
     private static void generateHeader(TemplateEngine tplEngine, FileWriter writer,
-            Statistics statistics, CliPaths paths) {
+            Statistics statistics, MergedConfigurationModule configuration) {
         final Context context = new Context();
         context.setVariable("statistics", statistics);
-        context.setVariable("paths", paths);
+        context.setVariable("config", configuration);
         tplEngine.process("header", context, writer);
     }
 
@@ -181,12 +185,26 @@ public final class SiteGenerator {
         if (sourcePath != null) {
             filename = sourcePath.relativize(Paths.get(filename)).toString();
         }
+        final String simpleFilename = getSimpleFilename(filename);
         final Context context = new Context();
         context.setVariable("filename", filename);
+        context.setVariable("simpleFilename", simpleFilename);
         context.setVariable("records", records);
         context.setVariable("xref", xreference);
         context.setVariable("anchor", anchorCounter);
         tplEngine.process("content", context, writer);
+    }
+
+    /**
+     * Generates simple filename for a current full filename.
+     *
+     * @param filename
+     *        full filename.
+     * @return simple filename.
+     */
+    private static String getSimpleFilename(String filename) {
+        final int lastDelimiter = filename.lastIndexOf(File.separator);
+        return filename.substring(lastDelimiter + 1);
     }
 
 }

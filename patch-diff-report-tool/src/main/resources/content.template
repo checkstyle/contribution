@@ -1,31 +1,27 @@
-				<div class="section"><h3 th:text=${filename}> filename </h3>
+				<div class="section">
+					<button id="swap-filename" th:data-text-swap=${filename} th:text=${simpleFilename}>SimpleName</button><br/>
 					<tr class="b">
 					<table border="0" class="bodyTable">
-					        <th>Anchor</th>
+					        <th></th>
 							<th>Severity</th>
 							<th>Rule</th>
 							<th>Message</th>
 							<th>Line</th>
-							<th>Column</th>
-							<th>Report</th>
+							<th>Col</th>
 						</tr>
 						<th:block th:each="record : ${records}" th:object = "${anchor.increment()}">
 							<th:block th:switch="${record.index}">
 								<tr th:case = "1" class="b">
 								<tr th:case = "*" class="a">
 							</th:block>
-								<td><a th:name="${anchor.getAnchor()}" th:href = "@{#} + ${anchor.getAnchor()}" th:text = ${anchor.counter}> Anchor </a></td>
+								<td><a th:name="${anchor.getAnchor()}" th:href = "@{#} + ${anchor.getAnchor()}" th:text = @{#}> Anchor </a></td>
 								<td th:text = ${record.severity}> Severity </td>
-								<td th:text = ${record.simpleSourceName}> Rule </td>
+								<td th:text = ${record.simpleCuttedSourceName}> Rule </td>
 								<td th:text = ${record.message}> Message </td>
 								<td><a th:href = "${xref} + @{#L} + ${record.line}" th:text = ${record.line}> Line </a></td>
 								<th:block th:switch="${record.column}">
 									<td th:case = "-1"> </td>
 									<td th:case = "*" th:text=${record.column}> column </td>
-								</th:block>
-								<th:block th:switch="${record.index}">
-									<td th:case = "1"> base </td>
-									<td th:case = "*"> patch </td>
 								</th:block>
 							</tr>
 						</th:block>

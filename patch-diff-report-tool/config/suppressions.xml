@@ -6,9 +6,8 @@
 
 <suppressions>
 	<suppress checks="AvoidStaticImport" files="site/SiteGenerator.java" />
-	<suppress checks="AvoidStaticImport" files="data/ParsedContent.java" />
+	<suppress checks="AvoidStaticImport" files="data/DiffReport.java" />
 	<suppress checks="AvoidStaticImport" files="data/Statistics.java" />
-	<suppress checks="AvoidStaticImport" files="parser/StaxContentParser.java" />
 	<suppress checks="MultipleStringLiterals" files="site/SiteGenerator.java" />
 	<suppress checks="MultipleStringLiterals" files="parser/StaxParserProcessor.java" />
 	<suppress checks="MultipleStringLiterals" files="PreparationUtils.java" />

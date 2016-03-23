@@ -15,7 +15,7 @@
 			<div class="section">
 				<table border="0" class="bodyTable">
 						<tr class="a">
-							<th>Check Name</th>
+							<th>Module Name</th>
 							<th>Base properties</th>
 							<th>Patch properties</th>
 						</tr>

@@ -4,7 +4,7 @@ usage example:
 
 1) Create local copy of checkstyle/contribution repository with command `git clone https://github.com/checkstyle/contribution`<br/>
 2) `cd ./contribution/patch-diff-report-tool`<br/>
-3) Compile source with `mvn clean install`, your application is located in `cd ./contribution/patch-diff-report-tool/target` and named `patch-diff-report-tool-0.1-SNAPSHOT-jar-with-dependencies.jar`, you may rename it and move to another folder.<br/>
+3) Compile source with `mvn clean install`, your application is located in `cd ./contribution/patch-diff-report-tool/target` and named `patch-diff-report-tool-0.1-SNAPSHOT-jar-with-dependencies.jar`<br/>
 
 You have 2 different checkstyle repos, original (base) and forked (patch), for each of them do 4-7:
 
@@ -15,15 +15,14 @@ You have 2 different checkstyle repos, original (base) and forked (patch), for e
 
 8) Now execute this utility with 6 command line arguments:<br/>
 
-`--baseReportPath` - path to the directory containing base checkstyle-result.xml;<br/>
-`--patchReportPath` - path to the directory containing patch checkstyle-result.xml;<br/>
-`--sourcePath` - path to the source file under check;<br/>
-`--resultPath` - path to the resulting site (default: ~/XMLDiffGen_report_yyyy.mm.dd_hh:mm:ss)<br/>
-`--baseConfigPath` - path to the base checkstyle configuration xml file;<br/>
-`--patchConfigPath` - path to the patch checkstyle configuration xml file;<br/>
+`--baseReport` - path to the base checkstyle-result.xml (required argument);<br/>
+`--patchReport` - path to the patch checkstyle-result.xml (required argument);<br/>
+`--refFiles` - path to the source file under check (optional argument);<br/>
+`--output` - path to the resulting site (optional argument, default: ~/XMLDiffGen_report_yyyy.mm.dd_hh:mm:ss)<br/>
+`--baseConfig` - path to the base checkstyle configuration xml file (optional argument);<br/>
+`--patchConfig` - path to the patch checkstyle configuration xml file (optional argument);<br/>
 `-h` - shows help message.<br/>
 
-Note that only two first arguments are obligatory.
 
 
 Example:

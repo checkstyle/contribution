@@ -23,7 +23,9 @@ import static com.github.checkstyle.parser.StaxContentParser.BASE_REPORT_INDEX;
 import static com.github.checkstyle.parser.StaxContentParser.PATCH_REPORT_INDEX;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * POJO that accumulates all statistics gathered during parsing stage.
@@ -127,6 +129,7 @@ public class Statistics {
 
     /**
      * Setter for number of files in difference.
+     *
      * @param fileNumDiff1 number of files in difference.
      */
     public final void setFileNumDiff(final int fileNumDiff1) {
@@ -135,6 +138,7 @@ public class Statistics {
 
     /**
      * Registers single severity record from indexed source.
+     *
      * @param severity value of severity record.
      * @param index index of the source.
      */
@@ -160,6 +164,7 @@ public class Statistics {
 
     /**
      * Registers single file from numbered source.
+     *
      * @param index index of the source.
      */
     public final void incrementFileCount(int index) {
@@ -170,6 +175,19 @@ public class Statistics {
         else if (index == PATCH_REPORT_INDEX) {
             this.fileNumPatch++;
         }
+    }
+
+    /**
+     * Getter for all severity level names encountered during
+     * statistics generation.
+     *
+     * @return severity level names.
+     */
+    public final Set<String> getSeverityNames() {
+        final Set<String> names = new HashSet<>(severityNumDiff.keySet());
+        names.addAll(severityNumBase.keySet());
+        names.addAll(severityNumPatch.keySet());
+        return names;
     }
 
 }

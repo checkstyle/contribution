@@ -3,52 +3,91 @@
 		<title>checkstyle xml difference report</title>
 		<style type="text/css" media="all">@import url("./css/maven-base.css");@import url("./css/maven-theme.css"); );</style>
 		<http-equiv http-equiv="Content-Language" content="en"></http-equiv>
+		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.0.min.js"></script>
+			<script>
+				$(document).ready(function(){
+					$("button").on("click", function() {
+						var el = $(this);
+						if (el.text() == el.data("text-swap")) {
+							el.text(el.data("text-original"));
+	  					} else {
+							el.data("text-original", el.text());
+							el.text(el.data("text-swap"));
+						}
+					});
+				});
+			</script>
 	</head>
 	<body class="composite">
 		<div id="contentBox">
 			<div class="section">
 				<h2 a="Checkstyle XML difference report">Checkstyle XML difference report</h2>
-				<a href="help.html"><h4>explanation</h4></a>
+				This is symmetric difference generated from two checkstyle-result.xml reports. <br/>
+				All matching records from each XML file are deleted, then remaining records are merged into single report. <br>
+		        <a href="https://github.com/checkstyle/contribution/tree/master/patch-diff-report-tool">Utility that generated this report.</a>
 			</div>
-			<div class="section">
-				<h2 a="CLI options">CLI options:</h2>
+
+			<th:block th:if="${config} != null">
+				<h2 a="Checkstyle configuration report">Checkstyle configuration report</h2>
 				<div class="section">
 					<table border="0" class="bodyTable">
-						<tr class="a">
-							<th>Option name</th>
-							<th>Option value</th>
-						</tr>
-						<tr class="c">
-							<td>baseReportPath</td>
-							<td id="baseReportPath" th:text=${paths.baseReportPath}> baseReportPath </td>
-						</tr>
-						<tr class="c">
-							<td>patchReportPath</td>
-							<td id="patchReportPath" th:text=${paths.patchReportPath}> patchReportPath </td>
-						</tr>
-						<tr th:if="${paths.sourcePath} != null" class="c">
-							<td>sourcePath</td>
-							<td id="sourcePath" th:text=${paths.sourcePath}> sourcePath </td>
-						</tr>
-						<tr class="c">
-							<td>resultPath</td>
-							<td id="resultPath" th:text=${paths.resultPath}> resultPath </td>
-						</tr>
-						<tr th:if="${paths.baseConfigPath} != null" class="c">
-							<td>baseConfigPath</td>
-							<td id="baseConfigPath" th:text=${paths.baseConfigPath}> baseConfigPath </td>
-						</tr>
-						<tr th:if="${paths.patchConfigPath} != null" class="c">
-							<td>patchConfigPath</td>
-							<td id="patchConfigPath" th:text=${paths.patchConfigPath}> patchConfigPath </td>
-						</tr>
-					</table>
+							<tr class="a">
+								<th>Module Name</th>
+								<th>Base properties</th>
+								<th>Patch properties</th>
+							</tr>
+							<th:block th:each="child : ${config.children}">
+								<th:block th:fragment="module" class="a">
+									<tr>
+										<td th:text=${child.simpleModuleName} class="c"> moduleName </td>
+										<td th:if="${child.hasBaseModule() and not child.hasIdenticalProperties}" class="a">
+											<th:block th:each="property : ${child.baseModuleProperties}">
+												<th:block th:text=${property.key}> propertyName </th:block>
+												<th:block th:each="token : ${property.value}">
+													<li th:text=${token}> tokenValue </li>
+												</th:block>
+												<br/>
+											</th:block>
+										</td>
+										<td th:if="${child.hasBaseModule() and child.hasIdenticalProperties}" class="c">
+											<th:block th:each="property : ${child.baseModuleProperties}">
+												<th:block th:text=${property.key}> propertyName </th:block>
+												<th:block th:each="token : ${property.value}">
+													<li th:text=${token}> tokenValue </li>
+												</th:block>
+												<br/>
+											</th:block>
+										</td>
+										<td th:unless="${child.hasBaseModule()}"> </td>
+										<td th:if="${child.hasPatchModule() and not child.hasIdenticalProperties}" class="b">
+											<th:block th:each="property : ${child.patchModuleProperties}">
+												<th:block th:text=${property.key}> propertyName </th:block>
+												<th:block th:each="token : ${property.value}">
+													<li th:text=${token}> tokenValue </li>
+												</th:block>
+												<br/>
+											</th:block>
+										</td>
+										<td th:if="${child.hasPatchModule() and child.hasIdenticalProperties}" class="c">
+											<th:block th:each="property : ${child.patchModuleProperties}">
+												<th:block th:text=${property.key}> propertyName </th:block>
+												<th:block th:each="token : ${property.value}">
+													<li th:text=${token}> tokenValue </li>
+												</th:block>
+												<br/>
+											</th:block>
+										</td>
+										<td th:unless="${child.hasPatchModule()}"> </td>
+									</tr>
+									<th:block th:each="grandchild : ${child.children}">
+										<th:block th:include="::module" th:with="child = ${grandchild}"/>
+									</th:block>
+								</th:block>
+							</th:block>	
+					</table>	
 				</div>
-			</div>
-			<div th:if="${paths.configurationPresent()}" class="section">
-				<h2 a="Checkstyle configuration report">Checkstyle configuration report</h2>
-				<a href="configuration.html"><h4>configurations</h4></a>
-			</div>
+			</th:block>
+
 			<div class="section">
 				<h2 a="Summary:">Summary:</h2>
 				<div class="section">
@@ -57,52 +96,37 @@
 							<th>Report id</th>
 							<th>Files</th>
 							<th>Unique rows</th>
-							<th:block th:each="record : ${statistics.severityNumBase}">
-								<th th:text="Severity- + ${record.key}"> infoNumBase </th>
+							<th:block th:each="name : ${statistics.severityNames}">
+								<th th:text="Severity- + ${name}"> infoNumBase </th>
 							</th:block>
 						</tr>
 						<tr class="b">
 							<td>base</td>
 							<td id="filesBase" th:text=${statistics.fileNumBase}> fileNumBase </td>
 							<td id="totalBase" th:text=${statistics.totalNumBase}> totalNumBase </td>
-							<th:block th:each="record : ${statistics.severityNumBase}">
-								<td th:id="base_ + ${record.key}" th:text=${record.value}> infoNumBase </td>
-							</th:block>
-						</tr>
-						<tr class="a">
-							<th>Report id</th>
-							<th>Files</th>
-							<th>Unique rows</th>
-							<th:block th:each="record : ${statistics.severityNumPatch}">
-								<th th:text="Severity- + ${record.key}"> infoNumBase </th>
+							<th:block th:each="name : ${statistics.severityNames}">
+								<td th:text="${statistics.severityNumBase.get(name) != null} ? ${statistics.severityNumBase.get(name)} : '0'"> infoNumBase </td>
 							</th:block>
 						</tr>
 						<tr class="a">
 							<td>patch</td>
 							<td id="filesPatch" th:text=${statistics.fileNumPatch}> fileNumPatch </td>
 							<td id="totalPatch" th:text=${statistics.totalNumPatch}> totalNumPatch </td>
-							<th:block th:each="record : ${statistics.severityNumPatch}">
-								<td th:id="patch_ + ${record.key}" th:text=${record.value}> infoNumBase </td>
+							<th:block th:each="name : ${statistics.severityNames}">
+								<td th:text="${statistics.severityNumPatch.get(name) != null} ? ${statistics.severityNumPatch.get(name)} : '0'"> infoNumBase </td>
 							</th:block>
 						</tr>
-						<tr class="a">
-							<th>Report id</th>
-							<th>Files</th>
-							<th>Unique rows</th>
-							<th:block th:each="record : ${statistics.severityNumDiff}">
-								<th th:text="Severity- + ${record.key}"> infoNumBase </th>
-							</th:block>
-						</tr>
-						<tr class="c">
+						<tr class="d">
 							<td>difference</td>
 							<td id="filesDiff" th:text=${statistics.fileNumDiff}> fileNumDiff </td>
 							<td id="totalDiff" th:text=${statistics.totalNumDiff}> totalNumDiff </td>
-							<th:block th:each="record : ${statistics.severityNumDiff}">
-								<td th:id="diff_ + ${record.key}" th:text=${record.value}> infoNumBase </td>
+							<th:block th:each="name : ${statistics.severityNames}">
+								<td th:text="${statistics.severityNumDiff.get(name) != null} ? ${statistics.severityNumDiff.get(name)} : '0'"> infoNumBase </td>
 							</th:block>
 						<tr>
 					</table>
 				</div>
 			</div>
+
 			<div class="section">
 				<h2 a="Unique rows:">Unique rows:</h2>

@@ -31,8 +31,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import com.github.checkstyle.data.CliPaths;
+import com.github.checkstyle.data.DiffReport;
 import com.github.checkstyle.data.MergedConfigurationModule;
-import com.github.checkstyle.data.ParsedContent;
 import com.github.checkstyle.parser.StaxConfigurationParser;
 import com.github.checkstyle.parser.StaxContentParser;
 import com.github.checkstyle.site.JxrDummyLog;
@@ -77,32 +77,32 @@ public final class Main {
     /**
      * Name for command line option "baseReportPath".
      */
-    private static final String OPTION_BASE_REPORT_PATH = "baseReportPath";
+    private static final String OPTION_BASE_REPORT_PATH = "baseReport";
 
     /**
      * Name for command line option "patchReportPath".
      */
-    private static final String OPTION_PATCH_REPORT_PATH = "patchReportPath";
+    private static final String OPTION_PATCH_REPORT_PATH = "patchReport";
 
     /**
      * Name for command line option "sourcePath".
      */
-    private static final String OPTION_SOURCE_PATH = "sourcePath";
+    private static final String OPTION_SOURCE_PATH = "refFiles";
 
     /**
      * Name for command line option "resultPath".
      */
-    private static final String OPTION_RESULT_FOLDER_PATH = "resultPath";
+    private static final String OPTION_RESULT_FOLDER_PATH = "output";
 
     /**
      * Name for command line option "baseConfigPath".
      */
-    private static final String OPTION_BASE_CONFIG_PATH = "baseConfigPath";
+    private static final String OPTION_BASE_CONFIG_PATH = "baseConfig";
 
     /**
      * Name for command line option "patchConfigPath".
      */
-    private static final String OPTION_PATCH_CONFIG_PATH = "patchConfigPath";
+    private static final String OPTION_PATCH_CONFIG_PATH = "patchConfig";
 
     /**
      * Name for command line option that shows help message.
@@ -140,33 +140,32 @@ public final class Main {
 
             //XML parsing stage
             System.out.println("XML parsing is started.");
-            final ParsedContent content =
+            final DiffReport diffReport =
                     StaxContentParser.parse(paths.getBaseReportPath(),
                     paths.getPatchReportPath(), XML_PARSE_PORTION_SIZE);
 
-            //Site and XREF generation stage
-            System.out.println("Creation of diff html site is started.");
-            try {
-                SiteGenerator.generateDiffReport(content, paths);
-            }
-            finally {
-                for (String message : JxrDummyLog.getLog()) {
-                    System.out.println(message);
-                }
-            }
-
             //Configuration processing stage.
+            final MergedConfigurationModule configuration;
             if (paths.configurationPresent()) {
                 System.out.println("Creation of configuration report is started.");
-                final MergedConfigurationModule configuration =
-                        StaxConfigurationParser.parse(paths.getBaseConfigPath(),
+                configuration = StaxConfigurationParser.parse(paths.getBaseConfigPath(),
                                 paths.getPatchConfigPath());
-                SiteGenerator.generateConfigurationReport(configuration,
-                        paths.getResultPath().resolve(CONFIGPATH));
             }
             else {
                 System.out.println("Cronfiguration processing skipped: "
                         + "no configuration paths provided.");
+                configuration = null;
+            }
+
+            //Site and XREF generation stage
+            System.out.println("Creation of diff html site is started.");
+            try {
+                SiteGenerator.generate(diffReport, paths, configuration);
+            }
+            finally {
+                for (String message : JxrDummyLog.getLogs()) {
+                    System.out.println(message);
+                }
             }
             System.out.println("Creation of the result site succeed.");
         }

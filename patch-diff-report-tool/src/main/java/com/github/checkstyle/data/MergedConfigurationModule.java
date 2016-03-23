@@ -20,6 +20,7 @@
 package com.github.checkstyle.data;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -61,6 +62,11 @@ public class MergedConfigurationModule {
     private List<MergedConfigurationModule> children = new ArrayList<>();
 
     /**
+     * True if properties from both configuration modules are identical.
+     */
+    private boolean hasIdenticalProperties;
+
+    /**
      * Basic ctor, creates instance without any child.
      * Children should be added with addChild method.
      *
@@ -80,6 +86,7 @@ public class MergedConfigurationModule {
         this.patchModuleProperties = patchModuleProperties;
         simpleModuleName = simpleName;
         fullModuleName = parentName + "/" + simpleModuleName;
+        hasIdenticalProperties = compareProperties(baseModuleProperties, patchModuleProperties);
     }
 
     public Map<String, List<String>> getBaseModuleProperties() {
@@ -100,6 +107,10 @@ public class MergedConfigurationModule {
 
     public List<MergedConfigurationModule> getChildren() {
         return children;
+    }
+
+    public boolean isHasIdenticalProperties() {
+        return hasIdenticalProperties;
     }
 
     /**
@@ -128,6 +139,59 @@ public class MergedConfigurationModule {
      */
     public boolean hasBaseModule() {
         return baseModuleProperties != null;
+    }
+
+    /**
+     * Compares properties from base and patch modules.
+     *
+     * @param baseModuleProperties
+     *        base module properties.
+     * @param patchModuleProperties
+     *        patch module properties.
+     * @return true, if properties are equal.
+     */
+    private static boolean compareProperties(Map<String, List<String>> baseModuleProperties,
+            Map<String, List<String>> patchModuleProperties) {
+        if (baseModuleProperties != null && patchModuleProperties != null) {
+            return isSubset(baseModuleProperties, patchModuleProperties)
+                    && isSubset(patchModuleProperties, baseModuleProperties);
+        }
+        else {
+            return false;
+        }
+    }
+
+    /**
+     * Checks if properties from one source are a subset for
+     * properties from another source.
+     *
+     * @param properties
+     *        subset properties.
+     * @param set
+     *        set properties.
+     * @return true, if subset relation between properties is present.
+     */
+    private static boolean isSubset(Map<String, List<String>> properties,
+            Map<String, List<String>> set) {
+        final Iterator<Map.Entry<String, List<String>>> iter = properties.entrySet().iterator();
+        boolean result = true;
+        while (result && iter.hasNext()) {
+            final Map.Entry<String, List<String>> entry = iter.next();
+            final List<String> setTokens = set.get(entry.getKey());
+            if (setTokens == null) {
+                result = false;
+                break;
+            }
+            else {
+                for (String token : entry.getValue()) {
+                    if (!setTokens.contains(token)) {
+                        result = false;
+                        break;
+                    }
+                }
+            }
+        }
+        return result;
     }
 
 }
