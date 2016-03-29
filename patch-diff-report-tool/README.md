@@ -26,4 +26,4 @@ You have 2 different checkstyle repos, original (base) and forked (patch), for e
 
 
 Example:
-`java -jar ./patch-diff-report-tool-0.1-SNAPSHOT-jar-with-dependencies.jar --baseReportPath ~/checkstyle-tester/location1 --patchReportPath ~/checkstyle-tester/location2 --sourcePath ~/checkstyle-tester/src/main/java --resultPath ~/checkstyle-tester/site_result --baseConfigPath ~/checkstyle-tester/my_check.xml --patchConfigPath ~/checkstyle-tester/my_other_check.xml`
+`java -jar ./patch-diff-report-tool-0.1-SNAPSHOT-jar-with-dependencies.jar --baseReport ~/checkstyle-tester/location1 --patchReport ~/checkstyle-tester/location2 --refFiles ~/checkstyle-tester/src/main/java --output ~/checkstyle-tester/site_result --baseConfig ~/checkstyle-tester/my_check.xml --patchConfig ~/checkstyle-tester/my_other_check.xml`
