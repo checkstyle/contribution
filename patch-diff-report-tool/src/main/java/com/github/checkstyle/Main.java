@@ -60,7 +60,7 @@ public final class Main {
             + "structure for cross reference files won't be relativized, "
             + "full paths will be used);\n"
             + "\t--resultPath - path to the resulting site (optional, if absent then default "
-            + "path will be used: ~/XMLDiffGen_report_yyyy.mm.dd_hh:mm:ss), remember, "
+            + "path will be used: ~/XMLDiffGen_report_yyyy.mm.dd_hh_mm_ss), remember, "
             + "if this folder exists its content will be purged;\n"
             + "\t-h - simply shows help message.";
 
@@ -204,7 +204,7 @@ public final class Main {
         final Path xmlPatchPath = getPath(OPTION_PATCH_REPORT_PATH, commandLine, null);
         final Path sourcePath = getPath(OPTION_SOURCE_PATH, commandLine, null);
         final Path defaultResultPath = Paths.get(System.getProperty("user.home"))
-                .resolve("XMLDiffGen_report_" + new SimpleDateFormat("yyyy.MM.dd_HH:mm:ss")
+                .resolve("XMLDiffGen_report_" + new SimpleDateFormat("yyyy.MM.dd_HH_mm_ss")
                         .format(Calendar.getInstance().getTime()));
         final Path resultPath =
                 getPath(OPTION_RESULT_FOLDER_PATH, commandLine, defaultResultPath);
