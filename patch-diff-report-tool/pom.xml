@@ -6,11 +6,10 @@
 	<packaging>jar</packaging>
 	<version>0.1-SNAPSHOT</version>
 	<name>patch-diff-report-tool</name>
-	<url>http://maven.apache.org</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<checkstyle.version>6.15</checkstyle.version>
+		<checkstyle.version>6.17</checkstyle.version>
 		<maven.plugin.checkstyle.version>2.17</maven.plugin.checkstyle.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
