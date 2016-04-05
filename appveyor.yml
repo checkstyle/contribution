@@ -59,7 +59,7 @@ environment:
     # verify without checkstyle
     - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
       DESC: "patch-diff-report-tool"
-      CMD1: "cd patch-diff-report-tool && mvn clean compile"
+      CMD1: "cd patch-diff-report-tool && mvn clean install"
     # checkstyle-tester
     # - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
     #   DESC: "checkstyle-tester on guava"
