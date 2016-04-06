@@ -4,23 +4,23 @@
         "http://www.puppycrawl.com/dtds/import_control_1_1.dtd">
 
 <import-control pkg="com.github.checkstyle">
-	<allow pkg="java.io" />
-	<allow pkg="java.nio" />
-	<allow pkg="java.util" />
-	<allow pkg="java.text" />
-	<allow pkg="com.github.checkstyle.data" />
-	<allow pkg="com.github.checkstyle" />
-	<allow pkg="org.apache.commons.cli" />
-	<subpackage name="data">
-		<allow pkg="com.github.checkstyle.parser.StaxContentParser" />
-		<allow pkg="com.github.checkstyle.PreparationUtils" />
-	</subpackage>
-	<subpackage name="site">
-		<allow pkg="com.github.checkstyle.PreparationUtils" />
-		<allow pkg="org.apache.maven.jxr" />
-		<allow pkg="org.thymeleaf" />
-	</subpackage>
-	<subpackage name="parser">
-		<allow pkg="javax.xml.stream" />
-	</subpackage>
+    <allow pkg="java.io" />
+    <allow pkg="java.nio" />
+    <allow pkg="java.util" />
+    <allow pkg="java.text" />
+    <allow pkg="com.github.checkstyle.data" />
+    <allow pkg="com.github.checkstyle" />
+    <allow pkg="org.apache.commons.cli" />
+    <subpackage name="data">
+        <allow pkg="com.github.checkstyle.parser.StaxContentParser" />
+        <allow pkg="com.github.checkstyle.PreparationUtils" />
+    </subpackage>
+    <subpackage name="site">
+        <allow pkg="com.github.checkstyle.PreparationUtils" />
+        <allow pkg="org.apache.maven.jxr" />
+        <allow pkg="org.thymeleaf" />
+    </subpackage>
+    <subpackage name="parser">
+        <allow pkg="javax.xml.stream" />
+    </subpackage>
 </import-control>
