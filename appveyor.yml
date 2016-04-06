@@ -70,7 +70,7 @@ environment:
       CMD5: " && cd ..\\checkstyle-tester "
       CMD6: " && move /Y projects-for-travis.properties projects-to-test-on.properties "
       CMD7: " && C:\\cygwin\\bin\\bash.exe -lc "
-      CMD8: "          \"cd $APPVEYOR_BUILD_FOLDER/contribution/checkstyle-tester/ ;"
+      CMD8: "          \"cd $APPVEYOR_BUILD_FOLDER/checkstyle-tester/ ;"
       CMD9: "               ./launch.sh -Dcheckstyle.config.location=checks-nonjavadoc-error.xml\""
 
 build_script:
