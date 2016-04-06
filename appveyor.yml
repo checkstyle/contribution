@@ -67,11 +67,11 @@ environment:
       CMD2: "      https://github.com/checkstyle/checkstyle C:\\projects\\contribution\\checkstyle "
       CMD3: " && cd checkstyle && mvn clean install -DskipTests -DskipITs -Dcobertura.skip=true "
       CMD4: "    -Dpmd.skip=true -Dfindbugs.skip=true -Dcheckstyle.ant.skip=true -Dcheckstyle.skip=true -Dxml.skip=true"
-      # CMD5: " && cd ..\\contribution\\checkstyle-tester "
-      # CMD6: " && move /Y projects-for-travis.properties projects-to-test-on.properties "
-      # CMD7: " && C:\\cygwin\\bin\\bash.exe -lc "
-      # CMD8: "          \"cd $APPVEYOR_BUILD_FOLDER/contribution/checkstyle-tester/ ;"
-      # CMD9: "               ./launch.sh -Dcheckstyle.config.location=checks-nonjavadoc-error.xml\""
+      CMD5: " && cd ..\\checkstyle-tester "
+      CMD6: " && move /Y projects-for-travis.properties projects-to-test-on.properties "
+      CMD7: " && C:\\cygwin\\bin\\bash.exe -lc "
+      CMD8: "          \"cd $APPVEYOR_BUILD_FOLDER/contribution/checkstyle-tester/ ;"
+      CMD9: "               ./launch.sh -Dcheckstyle.config.location=checks-nonjavadoc-error.xml\""
 
 build_script:
   - ps: >
