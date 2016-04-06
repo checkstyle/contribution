@@ -19,8 +19,6 @@
 
 package com.github.checkstyle.site;
 
-import static com.github.checkstyle.PreparationUtils.XREF_FILEPATH;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -34,6 +32,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
+import com.github.checkstyle.PreparationUtils;
 import com.github.checkstyle.data.CheckstyleRecord;
 import com.github.checkstyle.data.CliPaths;
 import com.github.checkstyle.data.DiffReport;
@@ -80,7 +79,7 @@ public final class SiteGenerator {
         final TemplateEngine tplEngine = getTemplateEngine();
         //setup xreference generator
         final XrefGenerator xrefGenerator = new XrefGenerator(paths.getSourcePath(),
-            paths.getResultPath().resolve(XREF_FILEPATH), paths.getResultPath());
+            paths.getResultPath().resolve(PreparationUtils.XREF_FILEPATH), paths.getResultPath());
         //html generation
         final Path sitepath = paths.getResultPath().resolve(SITEPATH);
         try (FileWriter writer = new FileWriter(sitepath.toString())) {

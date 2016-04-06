@@ -19,14 +19,14 @@
 
 package com.github.checkstyle.data;
 
-import static com.github.checkstyle.parser.StaxContentParser.DIFF_REPORT_INDEX;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import com.github.checkstyle.parser.StaxContentParser;
 
 /**
  * Contains diff from parsed data, expunges all abundant information
@@ -145,7 +145,8 @@ public final class DiffReport {
                 : records.entrySet()) {
             final List<CheckstyleRecord> list = entry.getValue();
             for (CheckstyleRecord rec : list) {
-                statistics.addSeverityRecord(rec.getSeverity(), DIFF_REPORT_INDEX);
+                statistics.addSeverityRecord(rec.getSeverity(),
+                        StaxContentParser.DIFF_REPORT_INDEX);
             }
         }
     }

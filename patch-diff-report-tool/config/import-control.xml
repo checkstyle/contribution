@@ -9,10 +9,11 @@
 	<allow pkg="java.util" />
 	<allow pkg="java.text" />
 	<allow pkg="com.github.checkstyle.data" />
-	<allow pkg="com.github.checkstyle" local-only="true" />
+	<allow pkg="com.github.checkstyle" />
 	<allow pkg="org.apache.commons.cli" />
 	<subpackage name="data">
 		<allow pkg="com.github.checkstyle.parser.StaxContentParser" />
+		<allow pkg="com.github.checkstyle.PreparationUtils" />
 	</subpackage>
 	<subpackage name="site">
 		<allow pkg="com.github.checkstyle.PreparationUtils" />

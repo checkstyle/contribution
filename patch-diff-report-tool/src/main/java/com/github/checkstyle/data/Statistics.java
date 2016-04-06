@@ -19,13 +19,12 @@
 
 package com.github.checkstyle.data;
 
-import static com.github.checkstyle.parser.StaxContentParser.BASE_REPORT_INDEX;
-import static com.github.checkstyle.parser.StaxContentParser.PATCH_REPORT_INDEX;
-
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import com.github.checkstyle.parser.StaxContentParser;
 
 /**
  * POJO that accumulates all statistics gathered during parsing stage.
@@ -144,10 +143,10 @@ public class Statistics {
      */
     public final void addSeverityRecord(String severity, int index) {
         final Map<String, Integer> severityRecorder;
-        if (index == BASE_REPORT_INDEX) {
+        if (index == StaxContentParser.BASE_REPORT_INDEX) {
             severityRecorder = severityNumBase;
         }
-        else if (index == PATCH_REPORT_INDEX) {
+        else if (index == StaxContentParser.PATCH_REPORT_INDEX) {
             severityRecorder = severityNumPatch;
         }
         else {
@@ -169,10 +168,10 @@ public class Statistics {
      */
     public final void incrementFileCount(int index) {
         this.fileNumBase++;
-        if (index == BASE_REPORT_INDEX) {
+        if (index == StaxContentParser.BASE_REPORT_INDEX) {
             this.fileNumBase++;
         }
-        else if (index == PATCH_REPORT_INDEX) {
+        else if (index == StaxContentParser.PATCH_REPORT_INDEX) {
             this.fileNumPatch++;
         }
     }
