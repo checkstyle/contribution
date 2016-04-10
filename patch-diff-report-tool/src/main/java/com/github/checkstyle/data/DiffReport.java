@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.github.checkstyle.parser.StaxContentParser;
+import com.github.checkstyle.parser.CheckstyleReportsParser;
 
 /**
  * Contains diff from parsed data, expunges all abundant information
@@ -68,13 +68,13 @@ public final class DiffReport {
      * when there are records with this filename, comparison
      * between them and new record is performed and only difference is saved.
      *
-     * @param filename
-     *        name of a file which is a cause of records generation.
      * @param newRecords
      *        a new records list.
+     * @param filename
+     *        name of a file which is a cause of records generation.
      */
-    public void addRecords(String filename,
-            List<CheckstyleRecord> newRecords) {
+    public void addRecords(List<CheckstyleRecord> newRecords,
+            String filename) {
         final List<CheckstyleRecord> popped =
             records.put(filename, newRecords);
         if (popped != null) {
@@ -103,12 +103,12 @@ public final class DiffReport {
             List<CheckstyleRecord> list1, List<CheckstyleRecord> list2) {
         final List<CheckstyleRecord> diff = new ArrayList<>();
         for (CheckstyleRecord rec1 : list1) {
-            if (!isInList(rec1, list2)) {
+            if (!isInList(list2, rec1)) {
                 diff.add(rec1);
             }
         }
         for (CheckstyleRecord rec2 : list2) {
-            if (!isInList(rec2, list1)) {
+            if (!isInList(list1, rec2)) {
                 diff.add(rec2);
             }
         }
@@ -118,14 +118,14 @@ public final class DiffReport {
     /**
      * Compares the record against list of records.
      *
-     * @param testedRecord
-     *        the record.
      * @param list
      *        of records.
+     * @param testedRecord
+     *        the record.
      * @return true, if has its copy in a list.
      */
-    private static boolean isInList(CheckstyleRecord testedRecord,
-            List<CheckstyleRecord> list) {
+    private static boolean isInList(List<CheckstyleRecord> list,
+            CheckstyleRecord testedRecord) {
         boolean belongsToList = false;
         for (CheckstyleRecord record : list) {
             if (testedRecord.specificEquals(record)) {
@@ -146,7 +146,7 @@ public final class DiffReport {
             final List<CheckstyleRecord> list = entry.getValue();
             for (CheckstyleRecord rec : list) {
                 statistics.addSeverityRecord(rec.getSeverity(),
-                        StaxContentParser.DIFF_REPORT_INDEX);
+                        CheckstyleReportsParser.DIFF_REPORT_INDEX);
             }
         }
     }

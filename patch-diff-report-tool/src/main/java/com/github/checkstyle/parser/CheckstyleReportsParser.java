@@ -42,7 +42,7 @@ import com.github.checkstyle.data.Statistics;
  *
  * @author attatrol
  */
-public final class StaxContentParser {
+public final class CheckstyleReportsParser {
 
     /**
      * Internal index of the base report file.
@@ -102,7 +102,7 @@ public final class StaxContentParser {
     /**
      * Private ctor, see parse method.
      */
-    private StaxContentParser() {
+    private CheckstyleReportsParser() {
 
     }
 
@@ -139,7 +139,7 @@ public final class StaxContentParser {
     /**
      * Parses portion of the XML report.
      *
-     * @param content
+     * @param diffReport
      *        container for parsed data.
      * @param reader
      *        StAX parser interface.
@@ -150,7 +150,7 @@ public final class StaxContentParser {
      * @throws XMLStreamException
      *         on internal parser error.
      */
-    private static void parseXmlPortion(DiffReport content,
+    private static void parseXmlPortion(DiffReport diffReport,
             XMLEventReader reader, int numOfFilenames, int index)
                     throws XMLStreamException {
         int counter = numOfFilenames;
@@ -165,7 +165,7 @@ public final class StaxContentParser {
                 //file tag encounter
                 if (startElementName.equals(FILE_TAG)) {
                     counter--;
-                    content.getStatistics().incrementFileCount(index);
+                    diffReport.getStatistics().incrementFileCount(index);
                     final Iterator<Attribute> attributes = startElement
                             .getAttributes();
                     while (attributes.hasNext()) {
@@ -179,13 +179,13 @@ public final class StaxContentParser {
                 }
                 //error tag encounter
                 else if (startElementName.equals(ERROR_TAG)) {
-                    records.add(parseErrorTag(startElement, content.getStatistics(), index));
+                    records.add(parseErrorTag(startElement, diffReport.getStatistics(), index));
                 }
             }
             if (event.isEndElement()) {
                 final EndElement endElement = event.asEndElement();
                 if (endElement.getName().getLocalPart().equals(FILE_TAG)) {
-                    content.addRecords(filename, records);
+                    diffReport.addRecords(records, filename);
                     if (counter == 0) {
                         break;
                     }

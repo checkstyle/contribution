@@ -19,30 +19,17 @@
 
 package com.github.checkstyle;
 
-import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import com.github.checkstyle.data.CliPaths;
 
 /**
- * Preparatory stage peformer.
+ * Checker for paths validity.
  *
  * @author attatrol
  *
  */
-public final class PreparationUtils {
-
-    /**
-     * Name for the XREF files folder.
-     */
-    public static final Path XREF_FILEPATH = Paths.get("xref");
-
-    /**
-     * Name for the CSS files folder.
-     */
-    public static final Path CSS_FILEPATH = Paths.get("css");
+public final class CliArgsValidator {
 
     /**
      * Message when necessary file is absent.
@@ -52,28 +39,8 @@ public final class PreparationUtils {
     /**
      * Private ctor, use static methods.
      */
-    private PreparationUtils() {
+    private CliArgsValidator() {
 
-    }
-
-    /**
-     * Exports to disc necessary static resources.
-     *
-     * @param paths
-     *        POJO holding all input paths.
-     * @throws IOException
-     *         thrown on failure to perform checks.
-     */
-    public static void exportResources(CliPaths paths)
-            throws IOException {
-        final Path resultPath = paths.getResultPath();
-        Files.createDirectories(resultPath);
-        FilesystemUtils.createOverwriteDirectory(resultPath.resolve(CSS_FILEPATH));
-        FilesystemUtils.createOverwriteDirectory(resultPath.resolve(XREF_FILEPATH));
-        FilesystemUtils.exportResource("/maven-theme.css",
-                resultPath.resolve(CSS_FILEPATH).resolve("maven-theme.css"));
-        FilesystemUtils.exportResource("/maven-base.css",
-                resultPath.resolve(CSS_FILEPATH).resolve("maven-base.css"));
     }
 
     /**
@@ -84,7 +51,7 @@ public final class PreparationUtils {
      * @throws IllegalArgumentException
      *         on failure of any check.
      */
-    public static void checkFilesExistence(CliPaths paths)
+    public static void checkPaths(CliPaths paths)
                     throws IllegalArgumentException {
         if (paths.getBaseReportPath() == null) {
             throw new IllegalArgumentException("obligatory argument --baseReportPath"

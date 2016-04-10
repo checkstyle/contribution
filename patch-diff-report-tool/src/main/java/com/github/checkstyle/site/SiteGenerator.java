@@ -19,20 +19,19 @@
 
 package com.github.checkstyle.site;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
-import com.github.checkstyle.PreparationUtils;
+import com.github.checkstyle.Main;
 import com.github.checkstyle.data.CheckstyleRecord;
 import com.github.checkstyle.data.CliPaths;
 import com.github.checkstyle.data.DiffReport;
@@ -40,12 +39,10 @@ import com.github.checkstyle.data.MergedConfigurationModule;
 import com.github.checkstyle.data.Statistics;
 
 /**
- * Generates site report using thymeleaf template engine.
- * Instead of single template 3 smaller ones are used with purpose
- * of avoiding creation of extra large Context instance.
- *
+ * Generates site report using thymeleaf template engine. Instead of single
+ * template 3 smaller ones are used with purpose of avoiding creation of extra
+ * large Context instance.
  * @author attatrol
- *
  */
 public final class SiteGenerator {
 
@@ -53,6 +50,16 @@ public final class SiteGenerator {
      * Name for the site file.
      */
     public static final Path SITEPATH = Paths.get("index.html");
+
+    /**
+     * Pattern for a common file name beginning.
+     */
+    private static final Pattern COMMON_FILENAME_BEGINNING = Pattern.compile("src/main/java/.*");
+
+    /**
+     * Common filename beginning length.
+     */
+    private static final int COMMON_FILENAME_BEGINNING_LENGTH = 14;
 
     /**
      * Private ctor, please use generate method.
@@ -63,37 +70,30 @@ public final class SiteGenerator {
     /**
      * Generates site report using thymeleaf template engine.
      *
-     * @param content
+     * @param diffReport
      *        container with parsed data.
-     * @param paths
-     *        cli paths.
-     * @param configuration
+     * @param diffConfiguration
      *        merged configurations from both reports.
+     * @param paths
+     *        CLI paths.
      * @throws IOException
      *         on failure to write site to disc.
      */
-    public static void generate(DiffReport content,
-            CliPaths paths, MergedConfigurationModule configuration)
-            throws IOException {
-        //setup thymeleaf engine
+    public static void generate(DiffReport diffReport, MergedConfigurationModule diffConfiguration,
+            CliPaths paths) throws IOException {
+        // setup thymeleaf engine
         final TemplateEngine tplEngine = getTemplateEngine();
-        //setup xreference generator
+        // setup xreference generator
         final XrefGenerator xrefGenerator = new XrefGenerator(paths.getSourcePath(),
-            paths.getResultPath().resolve(PreparationUtils.XREF_FILEPATH), paths.getResultPath());
-        //html generation
+                paths.getResultPath().resolve(Main.XREF_FILEPATH), paths.getResultPath());
+        // html generation
         final Path sitepath = paths.getResultPath().resolve(SITEPATH);
         try (FileWriter writer = new FileWriter(sitepath.toString())) {
-            //write statistics
-            generateHeader(tplEngine, writer, content.getStatistics(), configuration);
-            //write parsed content
-            final AnchorCounter anchorCounter = new AnchorCounter();
-            final Iterator<Map.Entry<String, List<CheckstyleRecord>>> iter =
-                    content.getRecords().entrySet().iterator();
-            final Path sourcePath = paths.getSourcePath();
-            while (iter.hasNext()) {
-                generateContent(iter, tplEngine, writer, xrefGenerator, anchorCounter, sourcePath);
-            }
-            //write html footer
+            // write statistics
+            generateHeader(tplEngine, writer, diffReport.getStatistics(), diffConfiguration);
+            // write parsed content
+            generateBody(tplEngine, writer, diffReport, paths, xrefGenerator);
+            // write html footer
             tplEngine.process("footer", new Context(), writer);
         }
     }
@@ -101,21 +101,21 @@ public final class SiteGenerator {
     /**
      * Generates configuration report site using thymeleaf.
      *
-     * @param configuration
+     * @param diffConfiguration
      *        doubled configuration from both reports.
      * @param sitepath
      *        path to the resulting site.
      * @throws IOException
      *         on failure to write site to disc.
      */
-    public static void generateConfigurationReport(MergedConfigurationModule configuration,
+    public static void generateConfigurationReport(MergedConfigurationModule diffConfiguration,
             Path sitepath) throws IOException {
-        //setup thymeleaf engine
+        // setup thymeleaf engine
         final TemplateEngine tplEngine = getTemplateEngine();
-        //form context
+        // form context
         final Context context = new Context();
-        context.setVariable("config", configuration);
-        //html generation
+        context.setVariable("config", diffConfiguration);
+        // html generation
         try (FileWriter writer = new FileWriter(sitepath.toString())) {
             tplEngine.process("configuration", context, writer);
         }
@@ -145,49 +145,73 @@ public final class SiteGenerator {
      *        file writer.
      * @param statistics
      *        container for statistics.
-     * @param configuration
+     * @param diffConfiguration
      *        merged configurations from both reports.
      */
     private static void generateHeader(TemplateEngine tplEngine, FileWriter writer,
-            Statistics statistics, MergedConfigurationModule configuration) {
+            Statistics statistics, MergedConfigurationModule diffConfiguration) {
         final Context context = new Context();
         context.setVariable("statistics", statistics);
-        context.setVariable("config", configuration);
+        context.setVariable("config", diffConfiguration);
         tplEngine.process("header", context, writer);
+    }
+
+    /**
+     * Creates main part of resulting site.
+     *
+     * @param tplEngine
+     *        thymeleaf template engine.
+     * @param writer
+     *        file writer.
+     * @param diffReport
+     *        difference between two checkstyle reports.
+     * @param paths
+     *        CLI paths.
+     * @param xrefGenerator
+     *        xReference generator.
+     * @throws IOException
+     *         on failure to write data on disk or generate xreference file.
+     */
+    private static void generateBody(TemplateEngine tplEngine, FileWriter writer,
+            DiffReport diffReport, CliPaths paths, XrefGenerator xrefGenerator) throws IOException {
+        final AnchorCounter anchorCounter = new AnchorCounter();
+
+        final Path sourcePath = paths.getSourcePath();
+        for (Map.Entry<String, List<CheckstyleRecord>> entry : diffReport.getRecords().entrySet()) {
+            final List<CheckstyleRecord> records = entry.getValue();
+            String filename = entry.getKey();
+            final String xreference = xrefGenerator.generateXref(filename);
+            if (sourcePath != null) {
+                filename = sourcePath.relativize(Paths.get(filename)).toString();
+            }
+            generateContent(tplEngine, writer, records, shortenFilename(filename), xreference,
+                    anchorCounter);
+        }
     }
 
     /**
      * Appends to the site a table with parsed data for a single file entry.
      *
-     * @param iter
-     *        iterator on the map containing file entries.
      * @param tplEngine
      *        thymeleaf template engine.
      * @param writer
      *        file writer.
-     * @param xrefGenerator
-     *        xreference generator.
+     * @param records
+     *        checkstyle records for a single file.
+     * @param filename
+     *        current file name from checkstyle reports.
+     * @param xreference
+     *        path to xreference file.
      * @param anchorCounter
      *        anchor links provider.
-     * @param sourcePath
-     *        path to source data, used for relativization.
      * @throws IOException
      *         on failure to write data on disk or generate xreference file.
      */
-    private static void generateContent(Iterator<Map.Entry<String, List<CheckstyleRecord>>> iter,
-            TemplateEngine tplEngine, FileWriter writer, XrefGenerator xrefGenerator,
-            AnchorCounter anchorCounter, Path sourcePath) throws IOException {
-        final Map.Entry<String, List<CheckstyleRecord>> entry = iter.next();
-        final List<CheckstyleRecord> records = entry.getValue();
-        String filename = entry.getKey();
-        final String xreference = xrefGenerator.generateXref(filename);
-        if (sourcePath != null) {
-            filename = sourcePath.relativize(Paths.get(filename)).toString();
-        }
-        final String simpleFilename = getSimpleFilename(filename);
+    private static void generateContent(TemplateEngine tplEngine, FileWriter writer,
+            List<CheckstyleRecord> records, String filename, String xreference,
+            AnchorCounter anchorCounter) throws IOException {
         final Context context = new Context();
         context.setVariable("filename", filename);
-        context.setVariable("simpleFilename", simpleFilename);
         context.setVariable("records", records);
         context.setVariable("xref", xreference);
         context.setVariable("anchor", anchorCounter);
@@ -195,15 +219,23 @@ public final class SiteGenerator {
     }
 
     /**
-     * Generates simple filename for a current full filename.
+     * Removes "src/main/java/" from filename beginning.
      *
      * @param filename
-     *        full filename.
-     * @return simple filename.
+     *        file name.
+     * @return shortened
+     *         file name.
      */
-    private static String getSimpleFilename(String filename) {
-        final int lastDelimiter = filename.lastIndexOf(File.separator);
-        return filename.substring(lastDelimiter + 1);
+    private static String shortenFilename(String filename) {
+        final String shortenedFilename;
+        if (COMMON_FILENAME_BEGINNING.matcher(filename).matches()) {
+            shortenedFilename = filename.substring(COMMON_FILENAME_BEGINNING_LENGTH,
+                    filename.length());
+        }
+        else {
+            shortenedFilename = filename;
+        }
+        return shortenedFilename;
     }
 
 }

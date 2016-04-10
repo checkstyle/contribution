@@ -1,5 +1,5 @@
 				<div class="section">
-					<button id="swap-filename" th:data-text-swap=${filename} th:text=${simpleFilename}>SimpleName</button><br/>
+					<h3 th:text=${filename}>FileName</h3>
 					<tr class="b">
 					<table border="0" class="bodyTable">
 					        <th></th>
