@@ -7,7 +7,7 @@
 <suppressions>
     <suppress checks="MultipleStringLiterals" files="site[\\/]SiteGenerator.java" />
     <suppress checks="MultipleStringLiterals" files="parser[\\/]StaxParserProcessor.java" />
-    <suppress checks="MultipleStringLiterals" files="PreparationUtils.java" />
-    <suppress checks="CyclomaticComplexity" files="PreparationUtils.java" />
-    <suppress checks="NPathComplexity" files="PreparationUtils.java" />
+    <suppress checks="MultipleStringLiterals" files="CliArgsValidator.java" />
+    <suppress checks="CyclomaticComplexity" files="CliArgsValidator.java" />
+    <suppress checks="NPathComplexity" files="CliArgsValidator.java" />
 </suppressions>

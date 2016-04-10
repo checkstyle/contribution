@@ -3,20 +3,6 @@
 		<title>checkstyle xml difference report</title>
 		<style type="text/css" media="all">@import url("./css/maven-base.css");@import url("./css/maven-theme.css"); );</style>
 		<http-equiv http-equiv="Content-Language" content="en"></http-equiv>
-		<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.12.0.min.js"></script>
-			<script>
-				$(document).ready(function(){
-					$("button").on("click", function() {
-						var el = $(this);
-						if (el.text() == el.data("text-swap")) {
-							el.text(el.data("text-original"));
-	  					} else {
-							el.data("text-original", el.text());
-							el.text(el.data("text-swap"));
-						}
-					});
-				});
-			</script>
 	</head>
 	<body class="composite">
 		<div id="contentBox">
@@ -40,7 +26,7 @@
 								<th:block th:fragment="module" class="a">
 									<tr>
 										<td th:text=${child.simpleModuleName} class="c"> moduleName </td>
-										<td th:if="${child.hasBaseModule() and not child.hasIdenticalProperties}" class="a">
+										<td th:if="${child.hasBaseModule() and not child.hasIdenticalProperties}" class="b">
 											<th:block th:each="property : ${child.baseModuleProperties}">
 												<th:block th:text=${property.key}> propertyName </th:block>
 												<th:block th:each="token : ${property.value}">
@@ -59,7 +45,7 @@
 											</th:block>
 										</td>
 										<td th:unless="${child.hasBaseModule()}"> </td>
-										<td th:if="${child.hasPatchModule() and not child.hasIdenticalProperties}" class="b">
+										<td th:if="${child.hasPatchModule() and not child.hasIdenticalProperties}" class="a">
 											<th:block th:each="property : ${child.patchModuleProperties}">
 												<th:block th:text=${property.key}> propertyName </th:block>
 												<th:block th:each="token : ${property.value}">

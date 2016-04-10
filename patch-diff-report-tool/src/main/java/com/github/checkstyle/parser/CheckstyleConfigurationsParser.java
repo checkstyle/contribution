@@ -38,7 +38,7 @@ import com.github.checkstyle.data.MergedConfigurationModule;
  * @author attatrol
  *
  */
-public final class StaxConfigurationParser {
+public final class CheckstyleConfigurationsParser {
 
     /**
      * Name for virtual root module.
@@ -68,7 +68,7 @@ public final class StaxConfigurationParser {
     /**
      * Private ctor, see parse method.
      */
-    private StaxConfigurationParser() {
+    private CheckstyleConfigurationsParser() {
 
     }
 

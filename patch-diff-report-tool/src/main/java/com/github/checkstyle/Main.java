@@ -19,6 +19,8 @@
 
 package com.github.checkstyle;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -33,14 +35,13 @@ import org.apache.commons.cli.ParseException;
 import com.github.checkstyle.data.CliPaths;
 import com.github.checkstyle.data.DiffReport;
 import com.github.checkstyle.data.MergedConfigurationModule;
-import com.github.checkstyle.parser.StaxConfigurationParser;
-import com.github.checkstyle.parser.StaxContentParser;
+import com.github.checkstyle.parser.CheckstyleConfigurationsParser;
+import com.github.checkstyle.parser.CheckstyleReportsParser;
 import com.github.checkstyle.site.JxrDummyLog;
 import com.github.checkstyle.site.SiteGenerator;
 
 /**
  * Utility class, contains main function and its auxiliary routines.
- *
  * @author attatrol
  */
 public final class Main {
@@ -49,8 +50,7 @@ public final class Main {
      * Help message.
      */
     public static final String MSG_HELP = "This program creates symmetric difference "
-            + "from two checkstyle-result.xml reports\n"
-            + "generated for checkstyle build.\n"
+            + "from two checkstyle-result.xml reports\n" + "generated for checkstyle build.\n"
             + "Command line arguments:\n"
             + "\t--baseReportPath - path to the directory containing base checkstyle-result.xml, "
             + "obligatory argument;\n"
@@ -72,7 +72,17 @@ public final class Main {
     /**
      * Name for the site file.
      */
-    public static final Path CONFIGPATH = Paths.get("configuration.html");
+    public static final Path CONFIG_PATH = Paths.get("configuration.html");
+
+    /**
+     * Name for the XREF files folder.
+     */
+    public static final Path XREF_FILEPATH = Paths.get("xref");
+
+    /**
+     * Name for the CSS files folder.
+     */
+    public static final Path CSS_FILEPATH = Paths.get("css");
 
     /**
      * Name for command line option "baseReportPath".
@@ -131,36 +141,30 @@ public final class Main {
             System.out.println(MSG_HELP);
         }
         else {
-            final CliPaths paths = parseCliToPojo(commandLine);
+            final CliPaths paths = getCliPaths(commandLine);
 
-            //preparation stage, checks validity of input paths
-            System.out.println("Preparation stage is started.");
-            PreparationUtils.checkFilesExistence(paths);
-            PreparationUtils.exportResources(paths);
-
-            //XML parsing stage
+            // XML parsing stage
             System.out.println("XML parsing is started.");
-            final DiffReport diffReport =
-                    StaxContentParser.parse(paths.getBaseReportPath(),
+            final DiffReport diffReport = CheckstyleReportsParser.parse(paths.getBaseReportPath(),
                     paths.getPatchReportPath(), XML_PARSE_PORTION_SIZE);
 
-            //Configuration processing stage.
-            final MergedConfigurationModule configuration;
+            // Configuration processing stage.
+            MergedConfigurationModule diffConfiguration = null;
             if (paths.configurationPresent()) {
                 System.out.println("Creation of configuration report is started.");
-                configuration = StaxConfigurationParser.parse(paths.getBaseConfigPath(),
-                                paths.getPatchConfigPath());
+                diffConfiguration = CheckstyleConfigurationsParser.parse(paths.getBaseConfigPath(),
+                        paths.getPatchConfigPath());
             }
             else {
-                System.out.println("Cronfiguration processing skipped: "
-                        + "no configuration paths provided.");
-                configuration = null;
+                System.out.println(
+                        "Cronfiguration processing skipped: " + "no configuration paths provided.");
             }
 
-            //Site and XREF generation stage
+            // Site and XREF generation stage
             System.out.println("Creation of diff html site is started.");
             try {
-                SiteGenerator.generate(diffReport, paths, configuration);
+                exportResources(paths);
+                SiteGenerator.generate(diffReport, diffConfiguration, paths);
             }
             finally {
                 for (String message : JxrDummyLog.getLogs()) {
@@ -169,7 +173,7 @@ public final class Main {
             }
             System.out.println("Creation of the result site succeed.");
         }
-        System.out.println("patch-diff-report-tool execution ended.");
+        System.out.println("patch-diff-report-tool execution finished.");
     }
 
     /**
@@ -181,8 +185,7 @@ public final class Main {
      * @throws ParseException
      *         when passed arguments are not valid
      */
-    private static CommandLine parseCli(String... args)
-            throws ParseException {
+    private static CommandLine parseCli(String... args) throws ParseException {
         // parse the parameters
         final CommandLineParser clp = new DefaultParser();
         // always returns not null value
@@ -190,29 +193,36 @@ public final class Main {
     }
 
     /**
-     * Forms POJO containing input paths.
+     * Generates a CliPaths instance from commandLine and checks it for
+     * validity.
      *
      * @param commandLine
-     *        parsed CLI.
-     * @return POJO instance.
-     * @throws IllegalArgumentException
-     *         on failure to find necessary arguments.
+     *        CLI arguments.
+     * @return CliPaths instance.
      */
-    private static CliPaths parseCliToPojo(CommandLine commandLine)
-            throws IllegalArgumentException {
-        final Path xmlBasePath = getPath(OPTION_BASE_REPORT_PATH, commandLine, null);
-        final Path xmlPatchPath = getPath(OPTION_PATCH_REPORT_PATH, commandLine, null);
-        final Path sourcePath = getPath(OPTION_SOURCE_PATH, commandLine, null);
-        final Path defaultResultPath = Paths.get(System.getProperty("user.home"))
-                .resolve("XMLDiffGen_report_" + new SimpleDateFormat("yyyy.MM.dd_HH_mm_ss")
-                        .format(Calendar.getInstance().getTime()));
-        final Path resultPath =
-                getPath(OPTION_RESULT_FOLDER_PATH, commandLine, defaultResultPath);
-        final Path configBasePath = getPath(OPTION_BASE_CONFIG_PATH, commandLine, null);
-        final Path configPatchPath =
-                getPath(OPTION_PATCH_CONFIG_PATH, commandLine, null);
-        return new CliPaths(xmlBasePath, xmlPatchPath, sourcePath,
-                resultPath, configBasePath, configPatchPath);
+    private static CliPaths getCliPaths(CommandLine commandLine) {
+        final CliPaths paths = parseCliToPojo(commandLine);
+        CliArgsValidator.checkPaths(paths);
+        return paths;
+    }
+
+    /**
+     * Exports to disc necessary static resources.
+     *
+     * @param paths
+     *        POJO holding all input paths.
+     * @throws IOException
+     *         thrown on failure to perform checks.
+     */
+    private static void exportResources(CliPaths paths) throws IOException {
+        final Path resultPath = paths.getResultPath();
+        Files.createDirectories(resultPath);
+        FilesystemUtils.createOverwriteDirectory(resultPath.resolve(CSS_FILEPATH));
+        FilesystemUtils.createOverwriteDirectory(resultPath.resolve(XREF_FILEPATH));
+        FilesystemUtils.exportResource("/maven-theme.css",
+                resultPath.resolve(CSS_FILEPATH).resolve("maven-theme.css"));
+        FilesystemUtils.exportResource("/maven-base.css",
+                resultPath.resolve(CSS_FILEPATH).resolve("maven-base.css"));
     }
 
     /**
@@ -234,9 +244,32 @@ public final class Main {
                 "Path to the configuration of the base report.");
         options.addOption(null, OPTION_PATCH_CONFIG_PATH, true,
                 "Path to the configuration of the patch report.");
-        options.addOption(OPTION_HELP, false,
-                "Shows help message, nothing else.");
+        options.addOption(OPTION_HELP, false, "Shows help message, nothing else.");
         return options;
+    }
+
+    /**
+     * Forms POJO containing input paths.
+     *
+     * @param commandLine
+     *        parsed CLI.
+     * @return POJO instance.
+     * @throws IllegalArgumentException
+     *         on failure to find necessary arguments.
+     */
+    private static CliPaths parseCliToPojo(CommandLine commandLine)
+            throws IllegalArgumentException {
+        final Path xmlBasePath = getPath(OPTION_BASE_REPORT_PATH, commandLine, null);
+        final Path xmlPatchPath = getPath(OPTION_PATCH_REPORT_PATH, commandLine, null);
+        final Path sourcePath = getPath(OPTION_SOURCE_PATH, commandLine, null);
+        final Path defaultResultPath = Paths.get(System.getProperty("user.home"))
+                .resolve("XMLDiffGen_report_" + new SimpleDateFormat("yyyy.MM.dd_HH_mm_ss")
+                        .format(Calendar.getInstance().getTime()));
+        final Path resultPath = getPath(OPTION_RESULT_FOLDER_PATH, commandLine, defaultResultPath);
+        final Path configBasePath = getPath(OPTION_BASE_CONFIG_PATH, commandLine, null);
+        final Path configPatchPath = getPath(OPTION_PATCH_CONFIG_PATH, commandLine, null);
+        return new CliPaths(xmlBasePath, xmlPatchPath, sourcePath, resultPath, configBasePath,
+                configPatchPath);
     }
 
     /**
@@ -250,8 +283,7 @@ public final class Main {
      *        path which is used if CLI option is absent.
      * @return generated path.
      */
-    private static Path getPath(String optionName,
-            CommandLine commandLine, Path alternativePath) {
+    private static Path getPath(String optionName, CommandLine commandLine, Path alternativePath) {
         final Path path;
         if (commandLine.hasOption(optionName)) {
             path = Paths.get(commandLine.getOptionValue(optionName));
