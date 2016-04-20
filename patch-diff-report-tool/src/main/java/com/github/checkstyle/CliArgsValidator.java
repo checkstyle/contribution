@@ -62,40 +62,45 @@ public final class CliArgsValidator {
                     + "not present, -h for help");
         }
         if (!Files.isRegularFile(paths.getBaseReportPath())) {
-            throw new IllegalArgumentException("XML file doesn't exist: "
+            throw new IllegalArgumentException("Base XML Report file doesn't exist: "
                     + paths.getBaseReportPath());
         }
         if (!Files.isRegularFile(paths.getPatchReportPath())) {
-            throw new IllegalArgumentException("XML file doesn't exist: "
+            throw new IllegalArgumentException("Patch XML Report file doesn't exist: "
                     + paths.getPatchReportPath());
         }
         if (paths.getPatchReportPath().equals(paths.getBaseReportPath())) {
-            throw new IllegalArgumentException("Both input XML files have the same path.");
+            throw new IllegalArgumentException(
+                    "Both Base and Patch XML report files have the same path.");
         }
         if (Files.isRegularFile(paths.getResultPath())) {
-            throw new IllegalArgumentException("Unknown regular file exists with this name: "
+            throw new IllegalArgumentException("Output path is not a directory: "
                     + paths.getResultPath());
         }
         if (paths.getSourcePath() != null && !Files.isDirectory(paths.getSourcePath())) {
-            throw new IllegalArgumentException("Source path is not a directory:"
+            throw new IllegalArgumentException("Source path is not a directory: "
                     + paths.getSourcePath());
         }
         if ((paths.getBaseConfigPath() != null) && (paths.getPatchConfigPath() == null)) {
-            throw new IllegalArgumentException("Patch configuration path is missing while base "
-                    + "configuration path is present");
+            throw new IllegalArgumentException(
+                    "Patch checkstyle configuration xml path is missing while base "
+                            + "configuration path is present");
         }
         if ((paths.getPatchConfigPath() != null) && (paths.getBaseConfigPath() == null)) {
-            throw new IllegalArgumentException("Base configuration path is missing while patch "
-                    + "configuration path is present");
+            throw new IllegalArgumentException(
+                    "Base checkstyle configuration xml path is missing while patch "
+                            + "configuration path is present");
         }
         if (paths.getBaseConfigPath() != null && !Files.isRegularFile(paths.getBaseConfigPath())) {
-            throw new IllegalArgumentException("Base configuration file is missing:"
-                    + paths.getBaseConfigPath());
+            throw new IllegalArgumentException(
+                    "Base checkstyle configuration xml file is missing: "
+                            + paths.getBaseConfigPath());
         }
         if (paths.getPatchConfigPath() != null
                 && !Files.isRegularFile(paths.getPatchConfigPath())) {
-            throw new IllegalArgumentException("Patch configuration file is missing:"
-                    + paths.getPatchConfigPath());
+            throw new IllegalArgumentException(
+                    "Patch checkstyle configuration xml file is missing: "
+                            + paths.getPatchConfigPath());
         }
     }
 
