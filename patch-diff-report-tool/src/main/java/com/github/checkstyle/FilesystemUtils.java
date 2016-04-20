@@ -165,7 +165,7 @@ public final class FilesystemUtils {
             int readBytes;
             final byte[] buffer = new byte[BUFFER_SIZE];
             while ((readBytes = in.read(buffer)) > 0) {
-                out.write(buffer, 0, BUFFER_SIZE);
+                out.write(buffer, 0, readBytes);
             }
         }
     }
