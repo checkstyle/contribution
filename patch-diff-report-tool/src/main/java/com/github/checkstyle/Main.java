@@ -52,15 +52,15 @@ public final class Main {
     public static final String MSG_HELP = "This program creates symmetric difference "
             + "from two checkstyle-result.xml reports\n" + "generated for checkstyle build.\n"
             + "Command line arguments:\n"
-            + "\t--baseReportPath - path to the directory containing base checkstyle-result.xml, "
+            + "\t--baseReportPath - path to the base checkstyle-result.xml, "
             + "obligatory argument;\n"
-            + "\t--patchReportPath - path to the directory containing patch checkstyle-result.xml, "
+            + "\t--patchReportPath - path to the patch checkstyle-result.xml, "
             + "also obligatory argument;\n"
             + "\t--sourcePath - path to the data under check (optional, if absent then file "
             + "structure for cross reference files won't be relativized, "
             + "full paths will be used);\n"
-            + "\t--resultPath - path to the resulting site (optional, if absent then default "
-            + "path will be used: ~/XMLDiffGen_report_yyyy.mm.dd_hh_mm_ss), remember, "
+            + "\t--output - path to store the resulting diff report (optional, if absent then "
+            + "default path will be used: ~/XMLDiffGen_report_yyyy.mm.dd_hh_mm_ss), remember, "
             + "if this folder exists its content will be purged;\n"
             + "\t-h - simply shows help message.";
 
@@ -157,7 +157,7 @@ public final class Main {
             }
             else {
                 System.out.println(
-                        "Cronfiguration processing skipped: " + "no configuration paths provided.");
+                        "Configuration processing skipped: " + "no configuration paths provided.");
             }
 
             // Site and XREF generation stage
@@ -233,17 +233,17 @@ public final class Main {
     private static Options buildOptions() {
         final Options options = new Options();
         options.addOption(null, OPTION_BASE_REPORT_PATH, true,
-                "Path to the directory containing base checkstyle-report.xml");
+                "Path to the base checkstyle-report.xml");
         options.addOption(null, OPTION_PATCH_REPORT_PATH, true,
-                "Path to the directory containing patch checkstyle-report.xml");
+                "Path to the patch checkstyle-report.xml");
         options.addOption(null, OPTION_SOURCE_PATH, true,
                 "Path to the directory containing source under checkstyle check, optional.");
         options.addOption(null, OPTION_RESULT_FOLDER_PATH, true,
-                "Path to directory where result path will be stored.");
+                "Path to directory where diff results will be stored.");
         options.addOption(null, OPTION_BASE_CONFIG_PATH, true,
-                "Path to the configuration of the base report.");
+                "Path to the checkstyle configuration xml of the base report.");
         options.addOption(null, OPTION_PATCH_CONFIG_PATH, true,
-                "Path to the configuration of the patch report.");
+                "Path to the checkstyle configuration xml of the patch report.");
         options.addOption(OPTION_HELP, false, "Shows help message, nothing else.");
         return options;
     }

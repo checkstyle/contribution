@@ -18,7 +18,7 @@ You have 2 different checkstyle repos, original (base) and forked (patch), for e
 `--baseReport` - path to the base checkstyle-result.xml (required argument);<br/>
 `--patchReport` - path to the patch checkstyle-result.xml (required argument);<br/>
 `--refFiles` - path to the source file under check (optional argument);<br/>
-`--output` - path to the resulting site (optional argument, default: ~/XMLDiffGen_report_yyyy.mm.dd_hh_mm_ss)<br/>
+`--output` - path to store the resulting diff report (optional argument, default: ~/XMLDiffGen_report_yyyy.mm.dd_hh_mm_ss)<br/>
 `--baseConfig` - path to the base checkstyle configuration xml file (optional argument);<br/>
 `--patchConfig` - path to the patch checkstyle configuration xml file (optional argument);<br/>
 `-h` - shows help message.<br/>
@@ -26,4 +26,4 @@ You have 2 different checkstyle repos, original (base) and forked (patch), for e
 
 
 Example:
-`java -jar ./patch-diff-report-tool-0.1-SNAPSHOT-jar-with-dependencies.jar --baseReport ~/checkstyle-tester/location1 --patchReport ~/checkstyle-tester/location2 --refFiles ~/checkstyle-tester/src/main/java --output ~/checkstyle-tester/site_result --baseConfig ~/checkstyle-tester/my_check.xml --patchConfig ~/checkstyle-tester/my_other_check.xml`
+`java -jar ./patch-diff-report-tool-0.1-SNAPSHOT-jar-with-dependencies.jar --baseReport ~/contribution/checkstyle-tester/location1/checkstyle-result.xml --patchReport ~/contribution/checkstyle-tester/location2/checkstyle-result.xml --refFiles ~/contribution/checkstyle-tester/src/main/java --output ~/contribution/checkstyle-tester/site_result --baseConfig ~/contribution/checkstyle-tester/my_check.xml --patchConfig ~/contribution/checkstyle-tester/my_other_check.xml`
