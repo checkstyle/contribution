@@ -15,6 +15,7 @@
 		<checkstyle.version>6.18-SNAPSHOT</checkstyle.version>
 		<sevntu-checkstyle.version>1.20.0</sevntu-checkstyle.version>
 		<jxr-plugin.version>2.5</jxr-plugin.version>
+		<jxr-plugin.exclude>EXCLUDEDOESNTEXIST</jxr-plugin.exclude>
 		<checkstyle.config.location>https://raw.githubusercontent.com/checkstyle/checkstyle/master/src/main/resources/google_checks.xml</checkstyle.config.location>
 	</properties>
 
@@ -63,6 +64,11 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jxr-plugin</artifactId>
             <version>${jxr-plugin.version}</version>
+            <configuration>
+              <excludes>
+                <exclude>${jxr-plugin.exclude}</exclude>
+              </excludes>
+            </configuration>
           </plugin>
 
 		</plugins>
