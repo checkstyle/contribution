@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 # ============================================================
 # Custom Options
@@ -13,7 +12,7 @@ CHECKSTYLE_DIR=~/opensource/checkstyle
 TESTER_DIR=~/opensource/contribution/checkstyle-tester
 EXTRA_DIR=~/opensource/downloads
 FINAL_RESULTS_DIR=~/opensource/results
-AHSM_JAR=~/Downloads/ahsm.jar
+DIFF_JAR=~/opensource/patch-diff-report-tool.jar
 
 # Note: Full paths no longer needed
 
@@ -22,12 +21,12 @@ PULL_REMOTE=pull
 SITE_SOURCES_DIR=src/main/java
 SITE_SAVE_MASTER_DIR=savemaster
 SITE_SAVE_PULL_DIR=savepull
+SITE_SAVE_REF_DIR=saverefs
 
 # ============================================================
 # ============================================================
 # ============================================================
 
-#declare -a EXTPROJECTS
 EXTPROJECTS=()
 INSTALL_MASTER=true
 RUN_MASTER=true
@@ -50,6 +49,7 @@ if [ "$1" == clean ]; then
 	rm -rf $SITE_SOURCES_DIR/*
 	rm -rf $SITE_SAVE_MASTER_DIR
 	rm -rf $SITE_SAVE_PULL_DIR
+	rm -rf $SITE_SAVE_REF_DIR
 	mvn --batch-mode clean
 	rm -rf $FINAL_RESULTS_DIR/*
 	exit 0
@@ -89,7 +89,7 @@ function parse_arguments {
 }
 
 function mvn_install {
-	mvn --batch-mode clean install -Dmaven.test.skip=true -Dcheckstyle.ant.skip=true -Dcheckstyle.skip=true -Dpmd.skip=true -Dfindbugs.skip=true
+	mvn --batch-mode clean install -Dmaven.test.skip=true -Dcheckstyle.ant.skip=true -Dcheckstyle.skip=true -Dpmd.skip=true -Dfindbugs.skip=true -Dcobertura.skip=true
 
 	if [ $? -ne 0 ]; then
 		echo "Maven Install Failed!"
@@ -99,6 +99,19 @@ function mvn_install {
 
 function launch {
 		cd $TESTER_DIR
+
+		echo "Verifying Launch config ..."
+
+		CS_VERSION="grep 'SNAPSHOT</version>' $CHECKSTYLE_DIR/pom.xml | tail -1 | cut -d '>' -f2 | cut -d '<' -f1"
+		CS_VERSION="$(eval $CS_VERSION)"
+		TEST_VERSION="grep 'SNAPSHOT</checkstyle.version>' pom.xml | tail -1 | cut -d '>' -f2 | cut -d '<' -f1"
+		TEST_VERSION="$(eval $TEST_VERSION)"
+
+		echo "Config version: $CS_VERSION vs $TEST_VERSION"
+		if [ "$CS_VERSION" != "$TEST_VERSION" ]; then
+			echo "Config version mis-match"
+			exit 1
+		fi
 
 		while read line ; do
 			rm -rf $SITE_SOURCES_DIR/*
@@ -158,7 +171,9 @@ function launch {
 			fi
 
 			echo "Running Checkstyle on $SITE_SOURCES_DIR ... with excludes $EXCLUDES_ACCUM"
+			echo "mvn -e --batch-mode clean site -Dcheckstyle.excludes=$EXCLUDES -DMAVEN_OPTS=-Xmx3024m"
 			mvn -e --batch-mode clean site -Dcheckstyle.excludes=$EXCLUDES -DMAVEN_OPTS=-Xmx3024m
+
 			if [ "$?" != "0" ]
 			then
 				echo "Checkstyle failed on $SITE_SOURCES_DIR"
@@ -224,12 +239,37 @@ function launch {
 			if [ ! -d "$1" ]; then
 				mkdir $1
 			fi
+			if [ ! -d "$SITE_SAVE_REF_DIR" ]; then
+				mkdir $SITE_SAVE_REF_DIR
+			fi
 			
+			# change xml paths to save directory
+			sed -i -e "s#$TESTER_DIR/$SITE_SOURCES_DIR#$TESTER_DIR/$SITE_SAVE_REF_DIR/$REPO_NAME#g" target/checkstyle-result.xml
+			# save files
 			mv target/site $1/$REPO_NAME
-			EXTPROJECTS+=($REPO_NAME)
+			mv target/*.xml $1/$REPO_NAME
+
+			if ! containsElement "$REPO_NAME" "${EXTPROJECTS[@]}" ; then
+				EXTPROJECTS+=($REPO_NAME)
+
+				if [ ! -d "$TESTER_DIR/$SITE_SAVE_REF_DIR/$REPO_NAME" ]; then
+					mkdir $TESTER_DIR/$SITE_SAVE_REF_DIR/$REPO_NAME
+				fi
+				rm -rf $TESTER_DIR/$SITE_SAVE_REF_DIR/$REPO_NAME/*
+				mv $SITE_SOURCES_DIR/* $TESTER_DIR/$SITE_SAVE_REF_DIR/$REPO_NAME
+			fi
 
 			echo "Running Launch on $REPO_NAME - completed"
 		done < projects-to-test-on.properties
+}
+
+function containsElement {
+	local e
+	for e in "${@:2}";
+	do
+		[[ "$e" == "$1" ]] && return 0;
+	done
+	return 1
 }
 
 # ============================================================
@@ -263,6 +303,7 @@ if $RUN_MASTER ; then
 	cd $TESTER_DIR
 
 	rm -rf $SITE_SAVE_MASTER_DIR
+	rm -rf $SITE_SAVE_REF_DIR
 
 	launch $SITE_SAVE_MASTER_DIR
 else
@@ -298,13 +339,13 @@ if $RUN_PULL ; then
 
 	rm -rf $SITE_SAVE_PULL_DIR
 
-aunch $SITE_SAVE_PULL_DIR
+	launch $SITE_SAVE_PULL_DIR
 else
 	echo "Skipping Launch PR $1"
 fi
 
 if ! $RUN_MASTER && ! $RUN_PULL ; then
-	echo "Figuring out AHSMs to run"
+	echo "Figuring out Reports to run"
 
 	while read line ; do
 		[[ "$line" == \#* ]] && continue # Skip lines with comments
@@ -316,11 +357,14 @@ if ! $RUN_MASTER && ! $RUN_PULL ; then
 	done < $TESTER_DIR/projects-to-test-on.properties
 fi
 
-echo "Starting all AHSMs"
+echo "Starting all Reports"
 
 if [ ! -d "$FINAL_RESULTS_DIR" ]; then
 	mkdir $FINAL_RESULTS_DIR
+else
+	rm -rf $FINAL_RESULTS_DIR/*
 fi
+
 if [ -f $FINAL_RESULTS_DIR/index.html ] ; then
 	rm $FINAL_RESULTS_DIR/index.html
 fi
@@ -329,20 +373,28 @@ echo "<html><body>" >> $FINAL_RESULTS_DIR/index.html
 for extp in "${EXTPROJECTS[@]}"
 do
 	if [ ! -d "$FINAL_RESULTS_DIR/$extp" ]; then
-		echo "java -jar $AHSM_JAR checkstyle $TESTER_DIR/$SITE_SAVE_MASTER_DIR/$extp $TESTER_DIR/$SITE_SAVE_PULL_DIR/$extp $FINAL_RESULTS_DIR/$extp"
-	
-		java -jar $AHSM_JAR checkstyle $TESTER_DIR/$SITE_SAVE_MASTER_DIR/$extp $TESTER_DIR/$SITE_SAVE_PULL_DIR/$extp $FINAL_RESULTS_DIR/$extp
+		echo "java -jar $DIFF_JAR --baseReport $TESTER_DIR/$SITE_SAVE_MASTER_DIR/$extp/checkstyle-result.xml --patchReport $TESTER_DIR/$SITE_SAVE_PULL_DIR/$extp/checkstyle-result.xml --output $FINAL_RESULTS_DIR/$extp --refFiles $TESTER_DIR"
+
+		java -jar $DIFF_JAR --baseReport $TESTER_DIR/$SITE_SAVE_MASTER_DIR/$extp/checkstyle-result.xml --patchReport $TESTER_DIR/$SITE_SAVE_PULL_DIR/$extp/checkstyle-result.xml --output $FINAL_RESULTS_DIR/$extp --refFiles $TESTER_DIR
 		
 		if [ "$?" != "0" ]
 		then
-			echo "AHSM failed on $extp"
+			echo "patch-diff-report-tool failed on $extp"
 			exit 1
 		fi
 	else
-		echo "Skipping AHSM for $extp"
+		echo "Skipping patch-diff-report-tool for $extp"
 	fi
 
-	echo "<a href='$extp/checkstyle_merged.html'>$extp</a><br />" >> $FINAL_RESULTS_DIR/index.html
+	total=($(grep -Eo 'totalDiff">[0-9]+' $FINAL_RESULTS_DIR/$extp/index.html | grep -Eo '[0-9]+'))
+
+	echo "<a href='$extp/index.html'>$extp</a>" >> $FINAL_RESULTS_DIR/index.html
+	if [ ${#total[@]} != "0" ] ; then
+		if [ ${total[0]} -ne 0 ] ; then
+			echo " (${total[0]})" >> $FINAL_RESULTS_DIR/index.html
+		fi
+	fi
+	echo "<br />" >> $FINAL_RESULTS_DIR/index.html
 done
 
 echo "</body></html>" >> $FINAL_RESULTS_DIR/index.html
