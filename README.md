@@ -6,7 +6,7 @@ contributions that are valuable but should not be in [main checkstyle repo](http
 
 [![][license img]][license]
 
-This software is licensed under the terms in the file named "LICENSE" in this
+All files/code/.... are licensed under the terms in the file named "LICENSE" in this
 directory.
 
 [travis]:https://travis-ci.org/checkstyle/contribution/builds
