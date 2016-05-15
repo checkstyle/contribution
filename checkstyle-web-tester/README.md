@@ -32,3 +32,14 @@ download-nightly.sh
 -------------------
 
 No parameters required. Downloads checkstyle's repository and packages the jar from the master branch.
+
+download-sevntu.sh
+------------------
+
+No parameters required. Downloads sevntu's and checkstyle's repository and packages the jar from both master branches.
+
+Live Test Version
+=================
+
+A live test version can be found at: http://rveach.no-ip.org/checkstyle/checkstyle.php
+

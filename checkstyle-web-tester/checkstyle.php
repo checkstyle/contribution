@@ -30,6 +30,7 @@ $action = getParameter("action");
 $checkstyle = getParameter("checkstyle");
 $config = getParameter("config");
 $code = getParameter("code");
+$printTree = getParameter("printTree");
 
 if (!isset($checkstyle)) {
 	$checkstyle = "checkstyle-6.17-all.jar";
@@ -132,22 +133,23 @@ if ($action == "view") {
 	echo "Results:<br />";
 	echo "<div style='border: 1px solid black;' id='cs_results'>";
 
-	$output = shell_exec("java -jar " . $checkstyleFile . " -c " . $configFile . " " . $codeFile . " 2>&1");
+	$output = shell_exec("java -jar " . $checkstyleFile . ($printTree == "true" ? " -T" : " -c " . $configFile) . " " . $codeFile . " 2>&1");
 
 	// pretty display
 	echo str_replace("\n", "<br />", str_replace("  ", "&nbsp; ", str_replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;", str_replace($saveDir, "", str_replace($code, "TestClass", str_replace($config, "TestConfig.xml", _sanitizeText($output)))))));
 
 	echo "</div>";
 
-	$link = $_SERVER['SCRIPT_NAME'] . "?action=view&config=" . $config . "&code=" . $code . "&checkstyle=" . $checkstyle;
+	$link = $_SERVER['SCRIPT_NAME'] . "?action=view&config=" . $config . "&code=" . $code . "&checkstyle=" . $checkstyle . "&printTree=" . $printTree;
 	$lpos = strrpos($link, "/");
 	if ($lpos >= 0) {
 		$link = substr($link, $lpos + 1);
 	}
 
 	echo "<br />Share Link: <a href='" . $link . "'>" . $link . "</a>";
-	//echo "<br />GitHub Link Text: [CheckStyle Example in Web Tester](" . $link . ")";
-	echo "<br /><br /><input type=\"submit\" value=\"Create GitHub CLI Report\" id=\"reportCreate\" onclick=\"report();\">";
+	if ($printTree != "true") {
+		echo "<br /><br /><input type=\"submit\" value=\"Create GitHub CLI Report\" id=\"reportCreate\" onclick=\"report();\">";
+	}
 	echo "<br /><br /><hr /><br />";
 
 	showForm($checkstyle, $configContents, $codeContents);
@@ -175,6 +177,7 @@ function showForm($checkstyle, $config, $code) {
 	echo "<textarea name='code' rows='12' wrap='off' style='width: 100%' id='cs_code' onchange='report_on_change();' onkeyup='report_on_change();'>";
 	echo _sanitizeText($code);
 	echo "</textarea><br /><br />";
+	echo "<input type=\"checkbox\" name=\"printTree\" value=\"true\"> Print Tree Only<br /><br /><br />";
 	echo "<input type=\"submit\" value=\"Submit\">";
 	echo "</form>";
 	echo "<script>$(function() { $(\"#cs_config\").linedtextarea(); $(\"#cs_code\").linedtextarea(); });</script>";
