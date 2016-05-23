@@ -32,6 +32,8 @@ INSTALL_MASTER=true
 RUN_MASTER=true
 INSTALL_PULL=true
 RUN_PULL=true
+USE_CUSTOM_CONFIG=false
+CUSTOM_CONFIG=""
 
 if [ -z "$1" ]; then
 	echo "No parameter supplied!"
@@ -40,7 +42,7 @@ if [ -z "$1" ]; then
 	exit 1
 fi
 
-if [ "$1" == clean ]; then
+if [ "$1" == "clean" ] || [ "$1" == "-clean" ]; then
 	echo "Cleaning..."
 
 	cd $CHECKSTYLE_DIR
@@ -80,6 +82,11 @@ function parse_arguments {
 				esac
 				shift
 				;;
+			-config)
+				USE_CUSTOM_CONFIG=true
+				CUSTOM_CONFIG=$2
+				shift
+				;;
 			esac
 		else
 			SKIP=false
@@ -89,7 +96,7 @@ function parse_arguments {
 }
 
 function mvn_install {
-	mvn --batch-mode clean install -Dmaven.test.skip=true -Dcheckstyle.ant.skip=true -Dcheckstyle.skip=true -Dpmd.skip=true -Dfindbugs.skip=true -Dcobertura.skip=true
+	mvn --batch-mode clean install -Dmaven.test.skip=true -Dcheckstyle.ant.skip=true -Dcheckstyle.skip=true -Dpmd.skip=true -Dfindbugs.skip=true -Dcobertura.skip=true -Dforbiddenapis.skip=true -Dxml.skip=true
 
 	if [ $? -ne 0 ]; then
 		echo "Maven Install Failed!"
@@ -157,22 +164,39 @@ function launch {
 				if [ "$COMMIT_ID" != "" ]; then
 					echo "Reseting $REPO_TYPE sources to commit '$COMMIT_ID'"
 					cd $REPO_SOURCES_DIR
+					git fetch origin
 					git reset --hard $COMMIT_ID
+					git clean -f -d
 					cd -
 				else
 					echo "Reseting $REPO_TYPE sources to head"
 					cd $REPO_SOURCES_DIR
-					git reset --hard HEAD
+					git fetch origin
+					git reset --hard origin/master
+					git clean -f -d
 					cd -
 				fi
+
+				cp $GITPATH $SITE_SOURCES_DIR
 			else
 				echo "Unknown RepoType: $REPO_TYPE"
 				exit 1
 			fi
 
-			echo "Running Checkstyle on $SITE_SOURCES_DIR ... with excludes $EXCLUDES_ACCUM"
-			echo "mvn -e --batch-mode clean site -Dcheckstyle.excludes=$EXCLUDES -DMAVEN_OPTS=-Xmx3024m"
-			mvn -e --batch-mode clean site -Dcheckstyle.excludes=$EXCLUDES -DMAVEN_OPTS=-Xmx3024m
+			CONFIG=""
+			if $USE_CUSTOM_CONFIG ; then
+				CONFIG=$CUSTOM_CONFIG
+			else
+				CONFIG="my_checks_$REPO_NAME.xml"
+
+				if [ ! -f $CONFIG ] ; then
+					CONFIG="my_checks.xml"
+				fi
+			fi
+
+			echo "Running Checkstyle on $SITE_SOURCES_DIR with config $CONFIG ... with excludes $EXCLUDES"
+			echo "mvn -e --batch-mode clean site -Dcheckstyle.excludes=$EXCLUDES -Dcheckstyle.config.location=$CONFIG -DMAVEN_OPTS=-Xmx3024m"
+			mvn -e --batch-mode clean site -Dcheckstyle.excludes=$EXCLUDES -Dcheckstyle.config.location=$CONFIG -DMAVEN_OPTS=-Xmx3024m
 
 			if [ "$?" != "0" ]
 			then
@@ -287,8 +311,8 @@ if $INSTALL_MASTER ; then
 		git fetch origin
 	fi
 	git reset --hard HEAD
-	git checkout master
-	git pull
+	git checkout origin/master
+	git clean -f -d
 
 	echo "Installing Master"
 
@@ -326,6 +350,7 @@ if $INSTALL_PULL ; then
 	fi
 
 	git checkout $PULL_REMOTE/$1
+	git clean -f -d
 
 	mvn_install
 else
@@ -373,9 +398,20 @@ echo "<html><body>" >> $FINAL_RESULTS_DIR/index.html
 for extp in "${EXTPROJECTS[@]}"
 do
 	if [ ! -d "$FINAL_RESULTS_DIR/$extp" ]; then
-		echo "java -jar $DIFF_JAR --baseReport $TESTER_DIR/$SITE_SAVE_MASTER_DIR/$extp/checkstyle-result.xml --patchReport $TESTER_DIR/$SITE_SAVE_PULL_DIR/$extp/checkstyle-result.xml --output $FINAL_RESULTS_DIR/$extp --refFiles $TESTER_DIR"
+		CONFIG=""
+		if $USE_CUSTOM_CONFIG ; then
+			CONFIG=$CUSTOM_CONFIG
+		else
+			CONFIG="my_checks_$extp.xml"
 
-		java -jar $DIFF_JAR --baseReport $TESTER_DIR/$SITE_SAVE_MASTER_DIR/$extp/checkstyle-result.xml --patchReport $TESTER_DIR/$SITE_SAVE_PULL_DIR/$extp/checkstyle-result.xml --output $FINAL_RESULTS_DIR/$extp --refFiles $TESTER_DIR
+			if [ ! -f $CONFIG ] ; then
+				CONFIG="my_checks.xml"
+			fi
+		fi
+
+		echo "java -jar $DIFF_JAR --baseReport $TESTER_DIR/$SITE_SAVE_MASTER_DIR/$extp/checkstyle-result.xml --patchReport $TESTER_DIR/$SITE_SAVE_PULL_DIR/$extp/checkstyle-result.xml --output $FINAL_RESULTS_DIR/$extp --baseConfig $TESTER_DIR/$CONFIG --patchConfig $TESTER_DIR/$CONFIG --refFiles $TESTER_DIR"
+
+		java -jar $DIFF_JAR --baseReport $TESTER_DIR/$SITE_SAVE_MASTER_DIR/$extp/checkstyle-result.xml --patchReport $TESTER_DIR/$SITE_SAVE_PULL_DIR/$extp/checkstyle-result.xml --output $FINAL_RESULTS_DIR/$extp --baseConfig $TESTER_DIR/$CONFIG --patchConfig $TESTER_DIR/$CONFIG --refFiles $TESTER_DIR
 		
 		if [ "$?" != "0" ]
 		then
