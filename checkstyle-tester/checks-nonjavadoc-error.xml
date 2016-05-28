@@ -458,7 +458,7 @@
       <property name="tokens" value="COMMA"/>
       <property name="option" value="EOL"/>
     </module>
-    <module name="SingleSpaceSeparator">
+    <module name="com.puppycrawl.tools.checkstyle.checks.whitespace.SingleSpaceSeparator">
       <property name="validateComments" value="false"/>
     </module>
     <module name="TypecastParenPad"/>
