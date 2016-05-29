@@ -77,7 +77,7 @@ public class Result {
      * Adds error message into result.
      * @param message error message.
      */
-    public void  addError(String message) {
+    public void addError(String message) {
         errorMessages.add(message);
     }
 
