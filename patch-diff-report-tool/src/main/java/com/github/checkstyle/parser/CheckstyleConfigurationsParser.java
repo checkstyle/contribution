@@ -152,7 +152,7 @@ public final class CheckstyleConfigurationsParser {
                 final EndElement endElement = event.asEndElement();
                 if (endElement.getName().getLocalPart().equals(MODULE_TAG)) {
                     //return from recursive method
-                    return;
+                    break;
                 }
             }
         }
