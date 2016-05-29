@@ -311,7 +311,7 @@ public final class NotesBuilder {
         else {
             final Ref repoPeeled = repo.peel(referenceObj);
             if (repoPeeled.getPeeledObjectId() == null) {
-                actualObjectId =  referenceObj.getObjectId();
+                actualObjectId = referenceObj.getObjectId();
             }
             else {
                 actualObjectId = repoPeeled.getPeeledObjectId();
@@ -395,8 +395,8 @@ public final class NotesBuilder {
      * @throws IOException if an I/o error occurs.
      */
     private static String getIssueLabelFrom(GHIssue issue) throws IOException {
-        final Collection<GHLabel> issueLabels =  issue.getLabels();
-        final GHLabel label =  Iterables.tryFind(issueLabels, new Predicate<GHLabel>() {
+        final Collection<GHLabel> issueLabels = issue.getLabels();
+        final GHLabel label = Iterables.tryFind(issueLabels, new Predicate<GHLabel>() {
             @Override
             public boolean apply(GHLabel input) {
                 return Arrays.binarySearch(Constants.ISSUE_LABELS, input.getName()) != -1;
