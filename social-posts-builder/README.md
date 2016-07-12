@@ -29,7 +29,7 @@ Options for generating and publishing are:
 - `Sf` - SourceForge
 - `Mlist` - mailing list
 - `Rss` - RSS
-- `All` - all of the above
+- `All` - all of the above 
 
 To publish on Twitter the following options in command line or properties file are required:
 - `-consKeyTw key` - consumer key
