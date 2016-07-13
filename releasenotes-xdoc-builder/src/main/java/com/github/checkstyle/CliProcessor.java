@@ -135,7 +135,7 @@ public class CliProcessor {
     }
 
     /**
-     * Builds and returns list of parameters supported by cli NotesBuilder.
+     * Builds and returns list of parameters supported by cli Main.
      * @return available options.
      */
     private static Options buildOptions() {
