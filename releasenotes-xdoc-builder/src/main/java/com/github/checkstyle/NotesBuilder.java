@@ -25,12 +25,10 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.cli.ParseException;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
@@ -42,12 +40,10 @@ import org.kohsuke.github.GHIssue;
 import org.kohsuke.github.GHIssueState;
 import org.kohsuke.github.GHLabel;
 import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GitHub;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 
 /**
@@ -56,14 +52,8 @@ import com.google.common.collect.Sets;
  */
 public final class NotesBuilder {
 
-    /** A path to remote checkstyle repository. */
-    private static final String REMOTE_REPO_PATH = "checkstyle/checkstyle";
-
     /** Array elements separator. */
     private static final String SEPARATOR = ", ";
-
-    /** Exit code returned when execution finishes with errors. */
-    private static final int EXIT_WITH_ERRORS_CODE = -2;
 
     /** Regexp pattern for ignoring commit messages. */
     private static final Pattern IGNORED_COMMIT_MESSAGES_PATTERN =
@@ -76,82 +66,6 @@ public final class NotesBuilder {
     private NotesBuilder() { }
 
     /**
-     * Entry point.
-     * @param args command line arguments.
-     */
-    public static void main(String... args) {
-        int errorCounter = 0;
-        try {
-            final CliProcessor cliProcessor = new CliProcessor(args);
-            cliProcessor.process();
-            if (cliProcessor.hasErrors()) {
-                printListOf(cliProcessor.getErrorMessages());
-                errorCounter = cliProcessor.getErrorMessages().size();
-            }
-            else {
-                final CliOptions cliOptions = cliProcessor.getCliOptions();
-                errorCounter = runNotesBuilder(cliOptions);
-            }
-        }
-        catch (ParseException | GitAPIException | IOException ex) {
-            errorCounter = 1;
-            System.out.println(ex.getMessage());
-            CliProcessor.printUsage();
-        }
-        finally {
-            if (errorCounter == 0) {
-                System.out.println(String.format("%nGeneration succeed!"));
-            }
-            else {
-                System.out.println(String.format("%nGeneration ends with %d errors.",
-                    errorCounter));
-                System.exit(EXIT_WITH_ERRORS_CODE);
-            }
-        }
-    }
-
-    /**
-     * Executes NotesBuilder based on passed command line options.
-     * @param cliOptions command line options.
-     * @return number of errors.
-     * @throws IOException if an I/O error occurs.
-     * @throws GitAPIException if an error occurs while accessing GitHub API.
-     */
-    private static int runNotesBuilder(CliOptions cliOptions) throws IOException, GitAPIException {
-        final String localRepoPath = cliOptions.getLocalRepoPath();
-        final String startRef = cliOptions.getStartRef();
-        final String endRef = cliOptions.getEndRef();
-        final String authToken = cliOptions.getAuthToken();
-
-        final GitHub connection;
-        if (authToken == null) {
-            connection = GitHub.connectAnonymously();
-        }
-        else {
-            connection = GitHub.connectUsingOAuth(authToken);
-        }
-
-        final GHRepository remoteRepo = connection.getRepository(REMOTE_REPO_PATH);
-        final Result result = buildResult(remoteRepo, localRepoPath, startRef, endRef);
-        if (result.hasWarnings()) {
-            printListOf(result.getWarningMessages());
-        }
-
-        int errorCounter = 0;
-        if (result.hasErrors()) {
-            printListOf(result.getErrorMessages());
-            errorCounter = result.getErrorMessages().size();
-        }
-        else {
-            final Multimap<String, ReleaseNotesMessage> releaseNotes = result.getReleaseNotes();
-            final String releaseNumber = cliOptions.getReleaseNumber();
-            final String outputFile = cliOptions.getOutputFile();
-            TemplateProcessor.generateWithThymeleaf(releaseNotes, releaseNumber, outputFile);
-        }
-        return errorCounter;
-    }
-
-    /**
      * Forms release notes as a map.
      * @param remoteRepo git remote repository object.
      * @param localRepoPath path to local git repository.
@@ -161,7 +75,7 @@ public final class NotesBuilder {
      * @throws IOException if an I/O error occurs.
      * @throws GitAPIException if an error occurs when accessing Git API.
      */
-    private static Result buildResult(GHRepository remoteRepo, String localRepoPath,
+    public static Result buildResult(GHRepository remoteRepo, String localRepoPath,
         String startRef, String endRef) throws IOException, GitAPIException {
 
         final Result result = new Result();
@@ -411,16 +325,5 @@ public final class NotesBuilder {
             issueLabelName = label.getName();
         }
         return issueLabelName;
-    }
-
-    /**
-     * Prints a list of elements in standard out.
-     * @param entities a list.
-     */
-    private static void printListOf(List<String> entities) {
-        System.out.println();
-        for (String e : entities) {
-            System.out.println(e);
-        }
     }
 }
