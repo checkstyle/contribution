@@ -161,7 +161,15 @@ public final class CliOptions {
             Verify.verifyNotNull(startRef, "Start reference should not be null!");
             Verify.verifyNotNull(releaseNumber, "Release number should not be null!");
 
-            return CliOptions.this;
+            final CliOptions cliOptions = new CliOptions();
+            cliOptions.localRepoPath = CliOptions.this.localRepoPath;
+            cliOptions.startRef = CliOptions.this.startRef;
+            cliOptions.endRef = CliOptions.this.endRef;
+            cliOptions.releaseNumber = CliOptions.this.releaseNumber;
+            cliOptions.outputFile = CliOptions.this.outputFile;
+            cliOptions.authToken = CliOptions.this.authToken;
+
+            return cliOptions;
         }
     }
 }
