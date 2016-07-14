@@ -21,6 +21,7 @@ package com.github.checkstyle;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.cli.ParseException;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -28,6 +29,7 @@ import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 
 import com.google.common.collect.Multimap;
+import freemarker.template.TemplateException;
 
 /**
  * Class for command line usage.
@@ -37,6 +39,34 @@ public final class Main {
 
     /** A path to remote checkstyle repository. */
     private static final String REMOTE_REPO_PATH = "checkstyle/checkstyle";
+
+    /** Filename for a generated xdoc. */
+    private static final String XDOC_FILENAME = "xdoc.xml";
+    /** Filename for a generated Twitter post. */
+    private static final String TWITTER_FILENAME = "twitter.txt";
+    /** Filename for a generated Google Plus post. */
+    private static final String GPLUS_FILENAME = "gplus.txt";
+    /** Filename for a generated RSS post. */
+    private static final String RSS_FILENAME = "rss.txt";
+    /** Filename for a generated Sourceforge post. */
+    private static final String SOURCEFORGE_FILENAME = "sourceforge.txt";
+    /** Filename for a generated Mailing List post. */
+    private static final String MLIST_FILENAME = "mailing_list.txt";
+
+    /** FreeMarker xdoc template file name. */
+    private static final String FREEMARKER_XDOC_TEMPLATE_FILE = "xdoc_freemarker.template";
+    /** Thymeleaf xdoc template file name. */
+    private static final String THYMELEAF_XDOC_TEMPLATE_FILE = "xdoc_thymeleaf.template";
+    /** Twitter template file name. */
+    private static final String TWITTER_TEMPLATE_FILE = "twitter.template";
+    /** Google Plus template file name. */
+    private static final String GPLUS_TEMPLATE_FILE = "gplus.template";
+    /** RSS template file name. */
+    private static final String RSS_TEMPLATE_FILE = "rss.template";
+    /** Sourceforge template file name. */
+    private static final String SOURCEFORGE_TEMPLATE_FILE = "sourceforge.template";
+    /** Mailing List template file name. */
+    private static final String MLIST_TEMPLATE_FILE = "mailing_list.template";
 
     /** Exit code returned when execution finishes with errors. */
     private static final int EXIT_WITH_ERRORS_CODE = -2;
@@ -59,10 +89,14 @@ public final class Main {
             }
             else {
                 final CliOptions cliOptions = cliProcessor.getCliOptions();
-                errorCounter = runNotesBuilder(cliOptions);
+                final Result notesBuilderResult = runNotesBuilder(cliOptions);
+                errorCounter = notesBuilderResult.getErrorMessages().size();
+                if (errorCounter == 0) {
+                    runPostGeneration(notesBuilderResult.getReleaseNotes(), cliOptions);
+                }
             }
         }
-        catch (ParseException | GitAPIException | IOException ex) {
+        catch (ParseException | GitAPIException | IOException | TemplateException ex) {
             errorCounter = 1;
             System.out.println(ex.getMessage());
             CliProcessor.printUsage();
@@ -82,11 +116,13 @@ public final class Main {
     /**
      * Executes NotesBuilder based on passed command line options.
      * @param cliOptions command line options.
-     * @return number of errors.
+     * @return result of NotesBuilder work.
      * @throws IOException if an I/O error occurs.
      * @throws GitAPIException if an error occurs while accessing GitHub API.
      */
-    private static int runNotesBuilder(CliOptions cliOptions) throws IOException, GitAPIException {
+    private static Result runNotesBuilder(CliOptions cliOptions)
+            throws IOException, GitAPIException {
+
         final String localRepoPath = cliOptions.getLocalRepoPath();
         final String startRef = cliOptions.getStartRef();
         final String endRef = cliOptions.getEndRef();
@@ -105,19 +141,51 @@ public final class Main {
         if (result.hasWarnings()) {
             printListOf(result.getWarningMessages());
         }
-
-        int errorCounter = 0;
         if (result.hasErrors()) {
             printListOf(result.getErrorMessages());
-            errorCounter = result.getErrorMessages().size();
         }
-        else {
-            final Multimap<String, ReleaseNotesMessage> releaseNotes = result.getReleaseNotes();
-            final String releaseNumber = cliOptions.getReleaseNumber();
-            final String outputFile = cliOptions.getOutputFile();
-            TemplateProcessor.generateWithThymeleaf(releaseNotes, releaseNumber, outputFile);
+        return result;
+    }
+
+    /**
+     * Generate posts and write them to files.
+     * @param releaseNotes map of realeasenotes messages.
+     * @param cliOptions command line options.
+     * @throws IOException if I/O error occurs.
+     * @throws TemplateException if an error occurs while generating freemarker template.
+     */
+    private static void runPostGeneration(Multimap<String, ReleaseNotesMessage> releaseNotes,
+            CliOptions cliOptions) throws IOException, TemplateException {
+
+        final String releaseNumber = cliOptions.getReleaseNumber();
+        final String outputLocation = cliOptions.getOutputLocation();
+        final Map<String, Object> templateVariables =
+                TemplateProcessor.getTemplateVariables(releaseNotes, releaseNumber);
+
+        if (cliOptions.isGenerateAll() || cliOptions.isGenerateXdoc()) {
+            TemplateProcessor.generateWithThymeleaf(templateVariables,
+                    outputLocation + XDOC_FILENAME, THYMELEAF_XDOC_TEMPLATE_FILE);
         }
-        return errorCounter;
+        if (cliOptions.isGenerateAll() || cliOptions.isGenerateTw()) {
+            TemplateProcessor.generateWithFreemarker(templateVariables,
+                    outputLocation + TWITTER_FILENAME, TWITTER_TEMPLATE_FILE);
+        }
+        if (cliOptions.isGenerateAll() || cliOptions.isGenerateGplus()) {
+            TemplateProcessor.generateWithFreemarker(templateVariables,
+                    outputLocation + GPLUS_FILENAME, GPLUS_TEMPLATE_FILE);
+        }
+        if (cliOptions.isGenerateAll() || cliOptions.isGenerateRss()) {
+            TemplateProcessor.generateWithFreemarker(templateVariables,
+                    outputLocation + RSS_FILENAME, RSS_TEMPLATE_FILE);
+        }
+        if (cliOptions.isGenerateAll() || cliOptions.isGenerateSf()) {
+            TemplateProcessor.generateWithFreemarker(templateVariables,
+                    outputLocation + SOURCEFORGE_FILENAME, SOURCEFORGE_TEMPLATE_FILE);
+        }
+        if (cliOptions.isGenerateAll() || cliOptions.isGenerateMlist()) {
+            TemplateProcessor.generateWithFreemarker(templateVariables,
+                    outputLocation + MLIST_FILENAME, MLIST_TEMPLATE_FILE);
+        }
     }
 
     /**

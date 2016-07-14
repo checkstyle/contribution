@@ -5,5 +5,7 @@
         "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 
 <suppressions>
-   <suppress checks="UncommentedMain" files="NotesBuilder.java"/>
+   <suppress checks="UncommentedMain" files="Main.java"/>
+   <suppress checks="CyclomaticComplexity" files="Main.java" lines="157"/>
+   <suppress checks="JavadocMethod" files="CliOptions.java"/>
 </suppressions>

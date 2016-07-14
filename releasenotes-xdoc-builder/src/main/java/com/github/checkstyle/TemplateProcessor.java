@@ -46,58 +46,51 @@ public final class TemplateProcessor {
 
     /** Path to the template folder. */
     private static final String TEMPLATE_FOLDER_PATH = "com/github/checkstyle/templates/";
-    /** FreeMarker template file name. */
-    private static final String FREEMARKER_TEMPLATE_FILE = "freemarker.template";
-    /** Thymeleaf template file name. */
-    private static final String THYMELEAF_TEMPLATE_FILE = "thymeleaf.template";
 
     /** Default constructor. */
     private TemplateProcessor() { }
 
     /**
      * Generates output file with release notes using Thymeleaf.
-     * @param releaseNotes release notes map.
-     * @param releaseNumber current release number.
+     * @param variables the map which represents template variables.
      * @param outputFile output file.
+     * @param templateFilename template name.
      * @throws IOException if I/O error occurs.
      */
-    public static void generateWithThymeleaf(Multimap<String, ReleaseNotesMessage> releaseNotes,
-        String releaseNumber, String outputFile) throws IOException {
+    public static void generateWithThymeleaf(Map<String, Object> variables, String outputFile,
+            String templateFilename) throws IOException {
 
         final TemplateEngine engine = new TemplateEngine();
         final AbstractConfigurableTemplateResolver resolver = new ClassLoaderTemplateResolver();
         resolver.setPrefix(TEMPLATE_FOLDER_PATH);
         engine.setTemplateResolver(resolver);
 
-        final IContext ctx =
-            new Context(Locale.US, getTemplateVariables(releaseNotes, releaseNumber));
+        final IContext ctx = new Context(Locale.US, variables);
 
         try (Writer fileWriter = new FileWriter(outputFile)) {
-            engine.process(THYMELEAF_TEMPLATE_FILE, ctx, fileWriter);
+            engine.process(templateFilename, ctx, fileWriter);
         }
     }
 
     /**
      * Generates output file with release notes using FreeMarker.
-     * @param releaseNotes release notes map.
-     * @param releaseNumber current release number.
+     * @param variables the map which represents template variables.
      * @param outputFile output file.
+     * @param templateFilename template name.
      * @throws IOException if I/O error occurs.
      * @throws TemplateException if an error occurs while generating freemarker template.
      */
-    public static void generateWithFreemarker(Multimap<String, ReleaseNotesMessage> releaseNotes,
-        String releaseNumber, String outputFile) throws IOException, TemplateException {
+    public static void generateWithFreemarker(Map<String, Object> variables, String outputFile,
+            String templateFilename) throws IOException, TemplateException {
 
         final Configuration configuration = new Configuration(Configuration.VERSION_2_3_22);
         configuration.setDefaultEncoding("UTF-8");
         configuration.setLocale(Locale.US);
         configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         configuration.setNumberFormat("0.######");
-        configuration.setClassForTemplateLoading(NotesBuilder.class, "/" + TEMPLATE_FOLDER_PATH);
+        configuration.setClassForTemplateLoading(Main.class, "/" + TEMPLATE_FOLDER_PATH);
 
-        final Map<String, Object> variables = getTemplateVariables(releaseNotes, releaseNumber);
-
-        final Template template = configuration.getTemplate(FREEMARKER_TEMPLATE_FILE);
+        final Template template = configuration.getTemplate(templateFilename);
         try (Writer fileWriter = new FileWriter(outputFile)) {
             template.process(variables, fileWriter);
         }
@@ -109,7 +102,7 @@ public final class TemplateProcessor {
      * @param releaseNumber release number.
      * @return the map which represents template variables.
      */
-    private static Map<String, Object> getTemplateVariables(
+    public static Map<String, Object> getTemplateVariables(
         Multimap<String, ReleaseNotesMessage> releaseNotes, String releaseNumber) {
 
         final Map<String, Object> variables = new HashMap<>();
