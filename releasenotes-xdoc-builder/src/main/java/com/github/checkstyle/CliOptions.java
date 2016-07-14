@@ -36,10 +36,25 @@ public final class CliOptions {
     private String endRef;
     /** Release number. */
     private String releaseNumber;
-    /** Output file name. */
-    private String outputFile;
     /** Auth token. */
     private String authToken;
+
+    /** Output file location. */
+    private String outputLocation;
+    /** Whether to generate all posts. */
+    private boolean generateAll;
+    /** Whether to generate a post for xdoc. */
+    private boolean generateXdoc;
+    /** Whether to generate a post for Twitter. */
+    private boolean generateTw;
+    /** Whether to generate a post for Google Plus. */
+    private boolean generateGplus;
+    /** Whether to generate a post for RSS. */
+    private boolean generateRss;
+    /** Whether to generate a post for Sourceforge. */
+    private boolean generateSf;
+    /** Whether to generate a post for Mailing List. */
+    private boolean generateMlist;
 
     /** Default constructor. */
     private CliOptions() { }
@@ -60,12 +75,40 @@ public final class CliOptions {
         return releaseNumber;
     }
 
-    public String getOutputFile() {
-        return outputFile;
-    }
-
     public String getAuthToken() {
         return authToken;
+    }
+
+    public String getOutputLocation() {
+        return outputLocation;
+    }
+
+    public boolean isGenerateAll() {
+        return generateAll;
+    }
+
+    public boolean isGenerateXdoc() {
+        return generateXdoc;
+    }
+
+    public boolean isGenerateTw() {
+        return generateTw;
+    }
+
+    public boolean isGenerateGplus() {
+        return generateGplus;
+    }
+
+    public boolean isGenerateRss() {
+        return generateRss;
+    }
+
+    public boolean isGenerateSf() {
+        return generateSf;
+    }
+
+    public boolean isGenerateMlist() {
+        return generateMlist;
     }
 
     /**
@@ -84,64 +127,68 @@ public final class CliOptions {
         /** Default constructor. */
         private Builder() { }
 
-        /**
-         * Specifies path to a local git repository for CliOptions object and returns new
-         * builder object.
-         * @param path path to a local git repository.
-         * @return builder object.
-         */
         public Builder localRepoPath(String path) {
             CliOptions.this.localRepoPath = path;
             return this;
         }
 
-        /**
-         * Specifies start reference for CliOptions object and returns new builder object.
-         * @param ref start reference.
-         * @return builder object.
-         */
         public Builder startRef(String ref) {
             CliOptions.this.startRef = ref;
             return this;
         }
 
-        /**
-         * Specifies end reference for CliOptions object and returns new builder object.
-         * @param ref end reference.
-         * @return builder object.
-         */
         public Builder endRef(String ref) {
             CliOptions.this.endRef = ref;
             return this;
         }
 
-        /**
-         * Specifies release number for CliOptions object and returns new builder object.
-         * @param number release number.
-         * @return builder object.
-         */
         public Builder releaseNumber(String number) {
             CliOptions.this.releaseNumber = number;
             return this;
         }
 
-        /**
-         * Specifies output file name for CliOptions object and returns new builder object.
-         * @param fileName output file name.
-         * @return builder object.
-         */
-        public Builder outputFile(String fileName) {
-            CliOptions.this.outputFile = fileName;
+        public Builder authToken(String token) {
+            CliOptions.this.authToken = token;
             return this;
         }
 
-        /**
-         * Specifies authentication for CliOptions object and returns new builder object.
-         * @param token github private authentication token.
-         * @return builder object.
-         */
-        public Builder authToken(String token) {
-            CliOptions.this.authToken = token;
+        public Builder outputLocation(String outputLoc) {
+            CliOptions.this.outputLocation = outputLoc;
+            return this;
+        }
+
+        public Builder generateAll(boolean genAll) {
+            CliOptions.this.generateAll = genAll;
+            return this;
+        }
+
+        public Builder generateXdoc(boolean genXdoc) {
+            CliOptions.this.generateXdoc = genXdoc;
+            return this;
+        }
+
+        public Builder generateTw(boolean genTw) {
+            CliOptions.this.generateTw = genTw;
+            return this;
+        }
+
+        public Builder generateGplus(boolean genGplus) {
+            CliOptions.this.generateGplus = genGplus;
+            return this;
+        }
+
+        public Builder generateRss(boolean genRss) {
+            CliOptions.this.generateRss = genRss;
+            return this;
+        }
+
+        public Builder generateSf(boolean genSf) {
+            CliOptions.this.generateSf = genSf;
+            return this;
+        }
+
+        public Builder generateMlist(boolean genMlist) {
+            CliOptions.this.generateMlist = genMlist;
             return this;
         }
 
@@ -153,8 +200,8 @@ public final class CliOptions {
             if (CliOptions.this.endRef == null) {
                 CliOptions.this.endRef = "HEAD";
             }
-            if (CliOptions.this.outputFile == null) {
-                CliOptions.this.outputFile = "releasenotes.xml";
+            if (CliOptions.this.outputLocation == null) {
+                CliOptions.this.outputLocation = "";
             }
             Verify.verifyNotNull(localRepoPath,
                 "Path to a local git repository should not be null!");
@@ -166,8 +213,15 @@ public final class CliOptions {
             cliOptions.startRef = CliOptions.this.startRef;
             cliOptions.endRef = CliOptions.this.endRef;
             cliOptions.releaseNumber = CliOptions.this.releaseNumber;
-            cliOptions.outputFile = CliOptions.this.outputFile;
+            cliOptions.outputLocation = CliOptions.this.outputLocation;
             cliOptions.authToken = CliOptions.this.authToken;
+            cliOptions.generateAll = CliOptions.this.generateAll;
+            cliOptions.generateXdoc = CliOptions.this.generateXdoc;
+            cliOptions.generateTw = CliOptions.this.generateTw;
+            cliOptions.generateGplus = CliOptions.this.generateGplus;
+            cliOptions.generateRss = CliOptions.this.generateRss;
+            cliOptions.generateSf = CliOptions.this.generateSf;
+            cliOptions.generateMlist = CliOptions.this.generateMlist;
 
             return cliOptions;
         }

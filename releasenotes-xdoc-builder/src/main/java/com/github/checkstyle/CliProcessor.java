@@ -47,9 +47,23 @@ public class CliProcessor {
     /** Name for the option 'releaseNumber'. */
     private static final String OPTION_RELEASE_NUMBER = "releaseNumber";
     /** Name for the option 'outputFile'. */
-    private static final String OPTION_OUTPUT_FILE = "outputFile";
+    private static final String OPTION_OUTPUT_LOCATION = "outputLocation";
     /** Name for the option 'authToken'. */
     private static final String OPTION_AUTH_TOKEN = "authToken";
+    /** Name for the option 'generateAll'. */
+    private static final String OPTION_GENERATE_ALL = "generateAll";
+    /** Name for the option 'generateXdoc'. */
+    private static final String OPTION_GENERATE_XDOC = "generateXdoc";
+    /** Name for the option 'generateTw'. */
+    private static final String OPTION_GENERATE_TW = "generateTw";
+    /** Name for the option 'generateGplus'. */
+    private static final String OPTION_GENERATE_GPLUS = "generateGplus";
+    /** Name for the option 'generateRss'. */
+    private static final String OPTION_GENERATE_RSS = "generateRss";
+    /** Name for the option 'generateSf'. */
+    private static final String OPTION_GENERATE_SF = "generateSf";
+    /** Name for the option 'generateMlist'. */
+    private static final String OPTION_GENERATE_MLIST = "generateMlist";
 
     /** Command line cmdArgs. */
     private final String[] cmdArgs;
@@ -122,16 +136,21 @@ public class CliProcessor {
      * @return command line options as POJO object.
      */
     public CliOptions getCliOptions() {
-        final CliOptions conf = CliOptions.newBuilder()
+        return CliOptions.newBuilder()
             .localRepoPath(cmdLine.getOptionValue(OPTION_LOCAL_REPO_PATH))
             .startRef(cmdLine.getOptionValue(OPTION_START_REF))
             .endRef(cmdLine.getOptionValue(OPTION_END_REF))
             .releaseNumber(cmdLine.getOptionValue(OPTION_RELEASE_NUMBER))
-            .outputFile(cmdLine.getOptionValue(OPTION_OUTPUT_FILE))
+            .outputLocation(cmdLine.getOptionValue(OPTION_OUTPUT_LOCATION))
             .authToken(cmdLine.getOptionValue(OPTION_AUTH_TOKEN))
+            .generateAll(cmdLine.hasOption(OPTION_GENERATE_ALL))
+            .generateXdoc(cmdLine.hasOption(OPTION_GENERATE_XDOC))
+            .generateTw(cmdLine.hasOption(OPTION_GENERATE_TW))
+            .generateGplus(cmdLine.hasOption(OPTION_GENERATE_GPLUS))
+            .generateRss(cmdLine.hasOption(OPTION_GENERATE_RSS))
+            .generateSf(cmdLine.hasOption(OPTION_GENERATE_SF))
+            .generateMlist(cmdLine.hasOption(OPTION_GENERATE_MLIST))
             .build();
-
-        return conf;
     }
 
     /**
@@ -146,7 +165,15 @@ public class CliProcessor {
         options.addOption(OPTION_RELEASE_NUMBER, true, "Release number.");
         options.addOption(OPTION_AUTH_TOKEN, true,
             "GitHub auth access token to establish connection.");
-        options.addOption(OPTION_OUTPUT_FILE, true, "Output file for release notes.");
+        options.addOption(OPTION_OUTPUT_LOCATION, true, "Location for output files.");
+        options.addOption(OPTION_GENERATE_ALL, "Whether all posts should be generated.");
+        options.addOption(OPTION_GENERATE_XDOC, "Whether a xdoc should be generated.");
+        options.addOption(OPTION_GENERATE_TW, "Whether a twitter post should be generated.");
+        options.addOption(OPTION_GENERATE_GPLUS, "Whether a google plus post should be generated.");
+        options.addOption(OPTION_GENERATE_RSS, "Whether a RSS post should be generated.");
+        options.addOption(OPTION_GENERATE_SF, "Whether a sourceforge post should be generated.");
+        options.addOption(OPTION_GENERATE_MLIST,
+            "Whether a mailing list post should be generated.");
         return options;
     }
 

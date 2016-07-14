@@ -1,0 +1,9 @@
+Checkstyle ${releaseNo} - http://checkstyle.sourceforge.net/releasenotes.html#Release_${releaseNo}
+<#if breakingMessages?has_content>
+breakingMessages</#if>
+<#if newMessages?has_content>
+New functionality: ${newMessages?size}
+</#if>
+<#if bugMessages?has_content>
+Bug fixes: ${bugMessages?size}
+</#if>
