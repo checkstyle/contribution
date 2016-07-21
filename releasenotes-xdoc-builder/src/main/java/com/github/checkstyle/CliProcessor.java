@@ -60,8 +60,6 @@ public class CliProcessor {
     private static final String OPTION_GENERATE_GPLUS = "generateGplus";
     /** Name for the option 'generateRss'. */
     private static final String OPTION_GENERATE_RSS = "generateRss";
-    /** Name for the option 'generateSf'. */
-    private static final String OPTION_GENERATE_SF = "generateSf";
     /** Name for the option 'generateMlist'. */
     private static final String OPTION_GENERATE_MLIST = "generateMlist";
 
@@ -148,7 +146,6 @@ public class CliProcessor {
             .generateTw(cmdLine.hasOption(OPTION_GENERATE_TW))
             .generateGplus(cmdLine.hasOption(OPTION_GENERATE_GPLUS))
             .generateRss(cmdLine.hasOption(OPTION_GENERATE_RSS))
-            .generateSf(cmdLine.hasOption(OPTION_GENERATE_SF))
             .generateMlist(cmdLine.hasOption(OPTION_GENERATE_MLIST))
             .build();
     }
@@ -171,7 +168,6 @@ public class CliProcessor {
         options.addOption(OPTION_GENERATE_TW, "Whether a twitter post should be generated.");
         options.addOption(OPTION_GENERATE_GPLUS, "Whether a google plus post should be generated.");
         options.addOption(OPTION_GENERATE_RSS, "Whether a RSS post should be generated.");
-        options.addOption(OPTION_GENERATE_SF, "Whether a sourceforge post should be generated.");
         options.addOption(OPTION_GENERATE_MLIST,
             "Whether a mailing list post should be generated.");
         return options;
