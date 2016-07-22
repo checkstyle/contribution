@@ -80,11 +80,11 @@ public final class NotesBuilder {
 
         final Result result = new Result();
 
-        final Set<Integer> processedIssueNumbers = new HashSet<>();
         final Set<RevCommit> commitsForRelease =
             getCommitsBetweenReferences(localRepoPath, startRef, endRef);
         commitsForRelease.removeAll(getIgnoredCommits(commitsForRelease));
 
+        final Set<Integer> processedIssueNumbers = new HashSet<>();
         for (RevCommit commit : commitsForRelease) {
             String commitMessage = commit.getFullMessage();
             if (isRevertCommit(commitMessage)) {
