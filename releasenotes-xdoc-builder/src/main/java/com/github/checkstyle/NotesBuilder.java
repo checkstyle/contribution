@@ -43,6 +43,7 @@ import org.kohsuke.github.GHRepository;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
+import com.google.common.base.Verify;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
@@ -146,6 +147,8 @@ public final class NotesBuilder {
         final Repository repo = builder.findGitDir(path.toFile()).readEnvironment().build();
 
         final ObjectId startCommit = getActualRefObjectId(repo, startRef);
+        Verify.verifyNotNull(startCommit, "Start reference \"" + startRef + "\" is invalid!");
+
         final ObjectId endCommit = getActualRefObjectId(repo, endRef);
         final Iterable<RevCommit> commits =
             new Git(repo).log().addRange(startCommit, endCommit).call();
