@@ -51,8 +51,6 @@ public final class CliOptions {
     private boolean generateGplus;
     /** Whether to generate a post for RSS. */
     private boolean generateRss;
-    /** Whether to generate a post for Sourceforge. */
-    private boolean generateSf;
     /** Whether to generate a post for Mailing List. */
     private boolean generateMlist;
 
@@ -101,10 +99,6 @@ public final class CliOptions {
 
     public boolean isGenerateRss() {
         return generateRss;
-    }
-
-    public boolean isGenerateSf() {
-        return generateSf;
     }
 
     public boolean isGenerateMlist() {
@@ -182,11 +176,6 @@ public final class CliOptions {
             return this;
         }
 
-        public Builder generateSf(boolean genSf) {
-            CliOptions.this.generateSf = genSf;
-            return this;
-        }
-
         public Builder generateMlist(boolean genMlist) {
             CliOptions.this.generateMlist = genMlist;
             return this;
@@ -220,7 +209,6 @@ public final class CliOptions {
             cliOptions.generateTw = CliOptions.this.generateTw;
             cliOptions.generateGplus = CliOptions.this.generateGplus;
             cliOptions.generateRss = CliOptions.this.generateRss;
-            cliOptions.generateSf = CliOptions.this.generateSf;
             cliOptions.generateMlist = CliOptions.this.generateMlist;
 
             return cliOptions;

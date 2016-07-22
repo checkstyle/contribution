@@ -48,8 +48,6 @@ public final class Main {
     private static final String GPLUS_FILENAME = "gplus.txt";
     /** Filename for a generated RSS post. */
     private static final String RSS_FILENAME = "rss.txt";
-    /** Filename for a generated Sourceforge post. */
-    private static final String SOURCEFORGE_FILENAME = "sourceforge.txt";
     /** Filename for a generated Mailing List post. */
     private static final String MLIST_FILENAME = "mailing_list.txt";
 
@@ -63,8 +61,6 @@ public final class Main {
     private static final String GPLUS_TEMPLATE_FILE = "gplus.template";
     /** RSS template file name. */
     private static final String RSS_TEMPLATE_FILE = "rss.template";
-    /** Sourceforge template file name. */
-    private static final String SOURCEFORGE_TEMPLATE_FILE = "sourceforge.template";
     /** Mailing List template file name. */
     private static final String MLIST_TEMPLATE_FILE = "mailing_list.template";
 
@@ -177,10 +173,6 @@ public final class Main {
         if (cliOptions.isGenerateAll() || cliOptions.isGenerateRss()) {
             TemplateProcessor.generateWithFreemarker(templateVariables,
                     outputLocation + RSS_FILENAME, RSS_TEMPLATE_FILE);
-        }
-        if (cliOptions.isGenerateAll() || cliOptions.isGenerateSf()) {
-            TemplateProcessor.generateWithFreemarker(templateVariables,
-                    outputLocation + SOURCEFORGE_FILENAME, SOURCEFORGE_TEMPLATE_FILE);
         }
         if (cliOptions.isGenerateAll() || cliOptions.isGenerateMlist()) {
             TemplateProcessor.generateWithFreemarker(templateVariables,

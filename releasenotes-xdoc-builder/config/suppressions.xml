@@ -6,6 +6,6 @@
 
 <suppressions>
    <suppress checks="UncommentedMain" files="Main.java"/>
-   <suppress checks="CyclomaticComplexity" files="Main.java" lines="157"/>
+   <suppress checks="CyclomaticComplexity" files="Main.java" lines="153"/>
    <suppress checks="JavadocMethod" files="CliOptions.java"/>
 </suppressions>
