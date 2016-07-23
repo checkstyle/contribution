@@ -97,15 +97,13 @@ public final class Main {
             System.out.println(ex.getMessage());
             CliProcessor.printUsage();
         }
-        finally {
-            if (errorCounter == 0) {
-                System.out.println(String.format("%nGeneration succeed!"));
-            }
-            else {
-                System.out.println(String.format("%nGeneration ends with %d errors.",
-                    errorCounter));
-                System.exit(EXIT_WITH_ERRORS_CODE);
-            }
+        if (errorCounter == 0) {
+            System.out.println(String.format("%nExecution succeed!"));
+        }
+        else {
+            System.out.println(String.format("%nGeneration ends with %d errors.",
+                errorCounter));
+            System.exit(EXIT_WITH_ERRORS_CODE);
         }
     }
 
