@@ -121,62 +121,62 @@ public final class CliOptions {
         /** Default constructor. */
         private Builder() { }
 
-        public Builder localRepoPath(String path) {
+        public Builder setLocalRepoPath(String path) {
             CliOptions.this.localRepoPath = path;
             return this;
         }
 
-        public Builder startRef(String ref) {
+        public Builder setStartRef(String ref) {
             CliOptions.this.startRef = ref;
             return this;
         }
 
-        public Builder endRef(String ref) {
+        public Builder setEndRef(String ref) {
             CliOptions.this.endRef = ref;
             return this;
         }
 
-        public Builder releaseNumber(String number) {
+        public Builder setReleaseNumber(String number) {
             CliOptions.this.releaseNumber = number;
             return this;
         }
 
-        public Builder authToken(String token) {
+        public Builder setAuthToken(String token) {
             CliOptions.this.authToken = token;
             return this;
         }
 
-        public Builder outputLocation(String outputLoc) {
+        public Builder setOutputLocation(String outputLoc) {
             CliOptions.this.outputLocation = outputLoc;
             return this;
         }
 
-        public Builder generateAll(boolean genAll) {
+        public Builder setGenerateAll(boolean genAll) {
             CliOptions.this.generateAll = genAll;
             return this;
         }
 
-        public Builder generateXdoc(boolean genXdoc) {
+        public Builder setGenerateXdoc(boolean genXdoc) {
             CliOptions.this.generateXdoc = genXdoc;
             return this;
         }
 
-        public Builder generateTw(boolean genTw) {
+        public Builder setGenerateTw(boolean genTw) {
             CliOptions.this.generateTw = genTw;
             return this;
         }
 
-        public Builder generateGplus(boolean genGplus) {
+        public Builder setGenerateGplus(boolean genGplus) {
             CliOptions.this.generateGplus = genGplus;
             return this;
         }
 
-        public Builder generateRss(boolean genRss) {
+        public Builder setGenerateRss(boolean genRss) {
             CliOptions.this.generateRss = genRss;
             return this;
         }
 
-        public Builder generateMlist(boolean genMlist) {
+        public Builder setGenerateMlist(boolean genMlist) {
             CliOptions.this.generateMlist = genMlist;
             return this;
         }

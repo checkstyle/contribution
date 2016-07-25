@@ -135,18 +135,18 @@ public class CliProcessor {
      */
     public CliOptions getCliOptions() {
         return CliOptions.newBuilder()
-            .localRepoPath(cmdLine.getOptionValue(OPTION_LOCAL_REPO_PATH))
-            .startRef(cmdLine.getOptionValue(OPTION_START_REF))
-            .endRef(cmdLine.getOptionValue(OPTION_END_REF))
-            .releaseNumber(cmdLine.getOptionValue(OPTION_RELEASE_NUMBER))
-            .outputLocation(cmdLine.getOptionValue(OPTION_OUTPUT_LOCATION))
-            .authToken(cmdLine.getOptionValue(OPTION_AUTH_TOKEN))
-            .generateAll(cmdLine.hasOption(OPTION_GENERATE_ALL))
-            .generateXdoc(cmdLine.hasOption(OPTION_GENERATE_XDOC))
-            .generateTw(cmdLine.hasOption(OPTION_GENERATE_TW))
-            .generateGplus(cmdLine.hasOption(OPTION_GENERATE_GPLUS))
-            .generateRss(cmdLine.hasOption(OPTION_GENERATE_RSS))
-            .generateMlist(cmdLine.hasOption(OPTION_GENERATE_MLIST))
+            .setLocalRepoPath(cmdLine.getOptionValue(OPTION_LOCAL_REPO_PATH))
+            .setStartRef(cmdLine.getOptionValue(OPTION_START_REF))
+            .setEndRef(cmdLine.getOptionValue(OPTION_END_REF))
+            .setReleaseNumber(cmdLine.getOptionValue(OPTION_RELEASE_NUMBER))
+            .setOutputLocation(cmdLine.getOptionValue(OPTION_OUTPUT_LOCATION))
+            .setAuthToken(cmdLine.getOptionValue(OPTION_AUTH_TOKEN))
+            .setGenerateAll(cmdLine.hasOption(OPTION_GENERATE_ALL))
+            .setGenerateXdoc(cmdLine.hasOption(OPTION_GENERATE_XDOC))
+            .setGenerateTw(cmdLine.hasOption(OPTION_GENERATE_TW))
+            .setGenerateGplus(cmdLine.hasOption(OPTION_GENERATE_GPLUS))
+            .setGenerateRss(cmdLine.hasOption(OPTION_GENERATE_RSS))
+            .setGenerateMlist(cmdLine.hasOption(OPTION_GENERATE_MLIST))
             .build();
     }
 
