@@ -177,7 +177,7 @@ public class CliProcessor {
     public static void printUsage() {
         final HelpFormatter formatter = new HelpFormatter();
         formatter.setOptionComparator(null);
-        formatter.printHelp("\njava -jar releasenotes-xdoc-builder-[version]-all.jar [options]",
+        formatter.printHelp("\njava -jar releasenotes-builder-[version]-all.jar [options]",
             buildOptions());
     }
 }

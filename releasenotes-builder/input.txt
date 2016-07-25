@@ -1,4 +1,0 @@
-Issue #819: Create xdoc documentation for FileContentsHolder . Author: Andrei Selkin
-infra: macos integration tests . Author: Roman Ivanov
-minor: fixed jgit resource leaks in commit validation . Author: rnveach
-spelling: fix typo . Author: Roman Ivanov
