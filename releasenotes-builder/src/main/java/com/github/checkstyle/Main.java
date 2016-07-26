@@ -65,7 +65,7 @@ public final class Main {
     private static final String MLIST_TEMPLATE_FILE = "mailing_list.template";
 
     /** Exit code returned when execution finishes with errors. */
-    private static final int EXIT_WITH_ERRORS_CODE = -2;
+    private static final int ERROR_EXIT_CODE = -2;
 
     /** Default constructor. */
     private Main() { }
@@ -103,7 +103,7 @@ public final class Main {
         else {
             System.out.println(String.format("%nGeneration ends with %d errors.",
                 errorCounter));
-            System.exit(EXIT_WITH_ERRORS_CODE);
+            System.exit(ERROR_EXIT_CODE);
         }
     }
 
