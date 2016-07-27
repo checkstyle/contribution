@@ -38,6 +38,15 @@ import org.apache.commons.cli.ParseException;
  */
 public class CliProcessor {
 
+    /** Name for the option 'twitterConsumerKey'. */
+    public static final String OPTION_TWITTER_CONSUMER_KEY = "twitterConsumerKey";
+    /** Name for the option 'twitterConsumerSecret'. */
+    public static final String OPTION_TWITTER_CONSUMER_SECRET = "twitterConsumerSecret";
+    /** Name for the option 'twitterAccessToken'. */
+    public static final String OPTION_TWITTER_ACCESS_TOKEN = "twitterAccessToken";
+    /** Name for the option 'twitterAccessTokenSecret'. */
+    public static final String OPTION_TWITTER_ACCESS_TOKEN_SECRET = "twitterAccessTokenSecret";
+
     /** Name for the option 'localRepoPath'. */
     private static final String OPTION_LOCAL_REPO_PATH = "localRepoPath";
     /** Name for the option 'startRef'. */
@@ -60,8 +69,17 @@ public class CliProcessor {
     private static final String OPTION_GENERATE_GPLUS = "generateGplus";
     /** Name for the option 'generateRss'. */
     private static final String OPTION_GENERATE_RSS = "generateRss";
+
     /** Name for the option 'generateMlist'. */
     private static final String OPTION_GENERATE_MLIST = "generateMlist";
+
+    /** Name for the option 'publishAllSocial'. */
+    private static final String OPTION_PUBLISH_ALL_SOCIAL = "publishAllSocial";
+    /** Name for the option 'publishTwit'. */
+    private static final String OPTION_PUBLISH_TWIT = "publishTwit";
+
+    /** Name for the option 'twitterProperties'. */
+    private static final String OPTION_TWITTER_PROPERTIES = "twitterProperties";
 
     /** Command line cmdArgs. */
     private final String[] cmdArgs;
@@ -147,6 +165,14 @@ public class CliProcessor {
             .setGenerateGplus(cmdLine.hasOption(OPTION_GENERATE_GPLUS))
             .setGenerateRss(cmdLine.hasOption(OPTION_GENERATE_RSS))
             .setGenerateMlist(cmdLine.hasOption(OPTION_GENERATE_MLIST))
+            .setPublishAllSocial(cmdLine.hasOption(OPTION_PUBLISH_ALL_SOCIAL))
+            .setPublishTwit(cmdLine.hasOption(OPTION_PUBLISH_TWIT))
+            .setTwitterConsumerKey(cmdLine.getOptionValue(OPTION_TWITTER_CONSUMER_KEY))
+            .setTwitterConsumerSecret(cmdLine.getOptionValue(OPTION_TWITTER_CONSUMER_SECRET))
+            .setTwitterAccessToken(cmdLine.getOptionValue(OPTION_TWITTER_ACCESS_TOKEN))
+            .setTwitterAccessTokenSecret(
+                cmdLine.getOptionValue(OPTION_TWITTER_ACCESS_TOKEN_SECRET))
+            .setTwitterProperties(cmdLine.getOptionValue(OPTION_TWITTER_PROPERTIES))
             .build();
     }
 
@@ -166,10 +192,20 @@ public class CliProcessor {
         options.addOption(OPTION_GENERATE_ALL, "Whether all posts should be generated.");
         options.addOption(OPTION_GENERATE_XDOC, "Whether a xdoc should be generated.");
         options.addOption(OPTION_GENERATE_TW, "Whether a twitter post should be generated.");
-        options.addOption(OPTION_GENERATE_GPLUS, "Whether a google plus post should be generated.");
+        options.addOption(OPTION_GENERATE_GPLUS,
+            "Whether a google plus post should be generated.");
         options.addOption(OPTION_GENERATE_RSS, "Whether a RSS post should be generated.");
         options.addOption(OPTION_GENERATE_MLIST,
             "Whether a mailing list post should be generated.");
+        options.addOption(OPTION_PUBLISH_ALL_SOCIAL, "Whether to publish all social posts");
+        options.addOption(OPTION_PUBLISH_TWIT, "Whether to publish a Twitter post.");
+        options.addOption(OPTION_TWITTER_CONSUMER_KEY, true, "Consumer key for Twitter.");
+        options.addOption(OPTION_TWITTER_CONSUMER_SECRET, true, "Consumer secret for Twitter.");
+        options.addOption(OPTION_TWITTER_ACCESS_TOKEN, true, "Access token for Twitter.");
+        options.addOption(OPTION_TWITTER_ACCESS_TOKEN_SECRET, true,
+            "Access token secret for Twitter.");
+        options.addOption(OPTION_TWITTER_PROPERTIES, true,
+            "Properties for publication on Twitter.");
         return options;
     }
 

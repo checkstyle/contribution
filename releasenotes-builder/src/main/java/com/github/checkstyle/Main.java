@@ -20,6 +20,7 @@
 package com.github.checkstyle;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 
+import com.github.checkstyle.publishers.TwitterPublisher;
 import com.google.common.collect.Multimap;
 import freemarker.template.TemplateException;
 
@@ -75,7 +77,8 @@ public final class Main {
      * @param args command line arguments.
      */
     public static void main(String... args) {
-        int errorCounter = 0;
+        int errorCounter;
+        List<String> errors = null;
         try {
             final CliProcessor cliProcessor = new CliProcessor(args);
             cliProcessor.process();
@@ -89,6 +92,8 @@ public final class Main {
                 errorCounter = notesBuilderResult.getErrorMessages().size();
                 if (errorCounter == 0) {
                     runPostGeneration(notesBuilderResult.getReleaseNotes(), cliOptions);
+                    errors = runPostPublication(cliOptions);
+                    errorCounter = errors.size();
                 }
             }
         }
@@ -103,6 +108,9 @@ public final class Main {
         else {
             System.out.println(String.format("%nGeneration ends with %d errors.",
                 errorCounter));
+            if (errors != null && !errors.isEmpty()) {
+                printListOf(errors);
+            }
             System.exit(ERROR_EXIT_CODE);
         }
     }
@@ -175,6 +183,36 @@ public final class Main {
         if (cliOptions.isGenerateAll() || cliOptions.isGenerateMlist()) {
             TemplateProcessor.generateWithFreemarker(templateVariables,
                     outputLocation + MLIST_FILENAME, MLIST_TEMPLATE_FILE);
+        }
+    }
+
+    /**
+     * Publish social posts.
+     * @param cliOptions command line options.
+     * @return list of publication errors.
+     */
+    private static List<String> runPostPublication(CliOptions cliOptions) {
+        final List<String> errors = new ArrayList<>();
+        if (cliOptions.isPublishAllSocial() || cliOptions.isPublishTwit()) {
+            runTwitterPublication(cliOptions, errors);
+        }
+        return errors;
+    }
+
+    /**
+     * Publish on Twitter.
+     * @param cliOptions command line options.
+     * @param errors list of publication errors.
+     */
+    private static void runTwitterPublication(CliOptions cliOptions, List<String> errors) {
+        final TwitterPublisher twitterPublisher = new TwitterPublisher(TWITTER_FILENAME,
+            cliOptions.getTwitterConsumerKey(), cliOptions.getTwitterConsumerSecret(),
+            cliOptions.getTwitterAccessToken(), cliOptions.getTwitterAccessTokenSecret());
+        try {
+            twitterPublisher.publish();
+        }
+        catch (Exception ex) {
+            errors.add(ex.getMessage());
         }
     }
 

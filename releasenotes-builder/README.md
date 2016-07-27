@@ -19,7 +19,9 @@ Jar file which includes all required dependencies will be located at
 ```
 java -jar releasenotes-builder-1.0-all.jar -localRepoPath <arg> -startRef <arg> [-endRef <arg>] \
      -releaseNumber <arg> [-outputLocation <args>] [-authToken <arg>] \
-     [-generateAll] [-generateTw] [-generateRss] [-generateGplus] [-generateMlist]
+     [-generateAll] [-generateTw] [-generateRss] [-generateGplus] [-generateMlist] \
+     [-publishAllSocial] [-publishTw] [-twitterConsumerKey <arg>] [-twitterConsumerSecret <arg>] \
+     [-twiterAccessToken <arg>] [-twitterAccessTokenSecret <arg>] [-twitterProperties <arg>]
 ```
 
 Release notes builder will do the generation of release notes and report warnings and errors to
@@ -51,6 +53,23 @@ release notes. For example, ```753bc06``` or just tag ```checkstyle-6.12.1``` .
 **generateMlist** - (optional) generate a release notes post to publish on Mailing list. Generated file will be ```mailing_list.txt```.
 
 **generateAll** - (optional) generate all possible posts. Generated files will be at specified output location.
+
+**publishAllSocial** - (optional) publish all possible posts. Posts are read from generated files.
+
+**publishTwit** - (optional) publish on Twitter from ```twitter.txt```.
+
+**twitterConsumerKey** - (optional) consumer key for Twitter.
+
+**twitterConsumerSecret** - (optional) consumer secret for Twitter.
+
+**twiterAccessToken** - (optional) access token for Twitter.
+
+**twitterAccessTokenSecret** - (optional) access token secret for Twitter.
+
+**twitterProperties** - (optional) properties for connection to Twitter.
+
+_**Please, notice!**_
+Options in property files have the same names as in command line and have lower priority.
 
 --------------------
 
