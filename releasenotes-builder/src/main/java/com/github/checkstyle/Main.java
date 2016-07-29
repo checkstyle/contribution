@@ -211,7 +211,8 @@ public final class Main {
     private static void runXdocPublication(CliOptions cliOptions, List<String> errors) {
         final XdocPublisher xdocPublisher = new XdocPublisher(
             cliOptions.getOutputLocation() + XDOC_FILENAME, cliOptions.getLocalRepoPath(),
-            cliOptions.getReleaseNumber(), cliOptions.getAuthToken());
+            cliOptions.getReleaseNumber(), cliOptions.isPublishXdocWithPush(),
+            cliOptions.getAuthToken());
         try {
             xdocPublisher.publish();
         }

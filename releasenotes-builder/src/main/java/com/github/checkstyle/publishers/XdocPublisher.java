@@ -51,12 +51,15 @@ public class XdocPublisher {
 
     /** Placeholder for a new section comment text in xdoc. */
     private static final String PLACEHOLDER_TEXT = "<!-- placeholder for a new section -->";
+
     /** The name of the file to get post text from. */
     private final String localRepoPath;
     /** Path to a local git repository. */
     private final String postFilename;
     /** Release number. */
     private final String releaseNumber;
+    /** Whether to do push. */
+    private final boolean doPush;
     /** Auth token for Github. */
     private final String authToken;
 
@@ -65,13 +68,15 @@ public class XdocPublisher {
      * @param postFilename the name of the file to get post xml from.
      * @param localRepoPath path to a local git repository.
      * @param releaseNumber release number.
+     * @param doPush whether to do push.
      * @param authToken auth token for Github.
      */
     public XdocPublisher(String postFilename, String localRepoPath, String releaseNumber,
-            String authToken) {
+            boolean doPush, String authToken) {
         this.postFilename = postFilename;
         this.localRepoPath = localRepoPath;
         this.releaseNumber = releaseNumber;
+        this.doPush = doPush;
         this.authToken = authToken;
     }
 
@@ -92,11 +97,13 @@ public class XdocPublisher {
         git.commit()
             .setMessage(String.format(Locale.ENGLISH, COMMIT_MESSAGE_TEMPLATE, releaseNumber))
             .call();
-        final CredentialsProvider credentialsProvider =
+        if (doPush) {
+            final CredentialsProvider credentialsProvider =
                 new UsernamePasswordCredentialsProvider(authToken, "");
-        git.push()
-            .setCredentialsProvider(credentialsProvider)
-            .call();
+            git.push()
+                .setCredentialsProvider(credentialsProvider)
+                .call();
+        }
     }
 
     /**

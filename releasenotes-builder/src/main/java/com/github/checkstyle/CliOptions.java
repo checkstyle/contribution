@@ -77,6 +77,8 @@ public final class CliOptions {
 
     /** Whether to publish xdoc. */
     private boolean publishXdoc;
+    /** Whether to publish xdoc with push. */
+    private boolean publishXdocWithPush;
 
     /** Default constructor. */
     private CliOptions() { }
@@ -155,6 +157,10 @@ public final class CliOptions {
 
     public boolean isPublishXdoc() {
         return publishXdoc;
+    }
+
+    public boolean isPublishXdocWithPush() {
+        return publishXdocWithPush;
     }
 
     /**
@@ -273,6 +279,11 @@ public final class CliOptions {
             return this;
         }
 
+        public Builder setPublishXdocWithPush(boolean pubXdocWithPush) {
+            publishXdocWithPush = pubXdocWithPush;
+            return this;
+        }
+
         /**
          * Verify options and set defaults.
          * @return new CliOption instance
@@ -302,11 +313,6 @@ public final class CliOptions {
                 Verify.verifyNotNull(twitterAccessToken, "Access token for Twitter is expected!");
                 Verify.verifyNotNull(twitterAccessTokenSecret,
                     "Access token secret for Twitter is expected!");
-            }
-
-            if (publishXdoc) {
-                Verify.verifyNotNull(authToken, "Auth token should not be null for xdoc "
-                        + "publication");
             }
 
             return getNewCliOptionsInstance();
@@ -369,6 +375,7 @@ public final class CliOptions {
             cliOptions.twitterAccessTokenSecret = twitterAccessTokenSecret;
             cliOptions.twitterProperties = twitterProperties;
             cliOptions.publishXdoc = publishXdoc;
+            cliOptions.publishXdocWithPush = publishXdocWithPush;
             return cliOptions;
         }
     }
