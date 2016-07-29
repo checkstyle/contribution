@@ -77,6 +77,8 @@ public class CliProcessor {
     private static final String OPTION_PUBLISH_ALL_SOCIAL = "publishAllSocial";
     /** Name for the option 'publishTwit'. */
     private static final String OPTION_PUBLISH_TWIT = "publishTwit";
+    /** Name for the option 'publishXdoc'. */
+    private static final String OPTION_PUBLISH_XDOC = "publishXdoc";
 
     /** Name for the option 'twitterProperties'. */
     private static final String OPTION_TWITTER_PROPERTIES = "twitterProperties";
@@ -167,6 +169,7 @@ public class CliProcessor {
             .setGenerateMlist(cmdLine.hasOption(OPTION_GENERATE_MLIST))
             .setPublishAllSocial(cmdLine.hasOption(OPTION_PUBLISH_ALL_SOCIAL))
             .setPublishTwit(cmdLine.hasOption(OPTION_PUBLISH_TWIT))
+            .setPublishXdoc(cmdLine.hasOption(OPTION_PUBLISH_XDOC))
             .setTwitterConsumerKey(cmdLine.getOptionValue(OPTION_TWITTER_CONSUMER_KEY))
             .setTwitterConsumerSecret(cmdLine.getOptionValue(OPTION_TWITTER_CONSUMER_SECRET))
             .setTwitterAccessToken(cmdLine.getOptionValue(OPTION_TWITTER_ACCESS_TOKEN))
@@ -206,6 +209,7 @@ public class CliProcessor {
             "Access token secret for Twitter.");
         options.addOption(OPTION_TWITTER_PROPERTIES, true,
             "Properties for publication on Twitter.");
+        options.addOption(OPTION_PUBLISH_XDOC, "Whether to publish xdoc.");
         return options;
     }
 

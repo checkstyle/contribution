@@ -30,6 +30,7 @@ import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 
 import com.github.checkstyle.publishers.TwitterPublisher;
+import com.github.checkstyle.publishers.XdocPublisher;
 import com.google.common.collect.Multimap;
 import freemarker.template.TemplateException;
 
@@ -193,10 +194,30 @@ public final class Main {
      */
     private static List<String> runPostPublication(CliOptions cliOptions) {
         final List<String> errors = new ArrayList<>();
+        if (cliOptions.isPublishXdoc()) {
+            runXdocPublication(cliOptions, errors);
+        }
         if (cliOptions.isPublishAllSocial() || cliOptions.isPublishTwit()) {
             runTwitterPublication(cliOptions, errors);
         }
         return errors;
+    }
+
+    /**
+     * Publish on xdoc.
+     * @param cliOptions command line options.
+     * @param errors list of publication errors.
+     */
+    private static void runXdocPublication(CliOptions cliOptions, List<String> errors) {
+        final XdocPublisher xdocPublisher = new XdocPublisher(
+            cliOptions.getOutputLocation() + XDOC_FILENAME,
+            cliOptions.getLocalRepoPath(), cliOptions.getReleaseNumber());
+        try {
+            xdocPublisher.publish();
+        }
+        catch (Exception ex) {
+            errors.add(ex.getMessage());
+        }
     }
 
     /**
@@ -205,7 +226,8 @@ public final class Main {
      * @param errors list of publication errors.
      */
     private static void runTwitterPublication(CliOptions cliOptions, List<String> errors) {
-        final TwitterPublisher twitterPublisher = new TwitterPublisher(TWITTER_FILENAME,
+        final TwitterPublisher twitterPublisher = new TwitterPublisher(
+            cliOptions.getOutputLocation() + TWITTER_FILENAME,
             cliOptions.getTwitterConsumerKey(), cliOptions.getTwitterConsumerSecret(),
             cliOptions.getTwitterAccessToken(), cliOptions.getTwitterAccessTokenSecret());
         try {

@@ -62,7 +62,7 @@ public final class CliOptions {
     /** Whether to publish all social posts. */
     private boolean publishAllSocial;
 
-    /** Whether to publish all social posts. */
+    /** Whether to publish on Twitter. */
     private boolean publishTwit;
     /** Consumer key for Twitter. */
     private String twitterConsumerKey;
@@ -74,6 +74,9 @@ public final class CliOptions {
     private String twitterAccessTokenSecret;
     /** Properties for connection to Twitter. */
     private String twitterProperties;
+
+    /** Whether to publish xdoc. */
+    private boolean publishXdoc;
 
     /** Default constructor. */
     private CliOptions() { }
@@ -148,6 +151,10 @@ public final class CliOptions {
 
     public String getTwitterAccessTokenSecret() {
         return twitterAccessTokenSecret;
+    }
+
+    public boolean isPublishXdoc() {
+        return publishXdoc;
     }
 
     /**
@@ -261,6 +268,11 @@ public final class CliOptions {
             return this;
         }
 
+        public Builder setPublishXdoc(boolean pubXdoc) {
+            publishXdoc = pubXdoc;
+            return this;
+        }
+
         /**
          * Verify options and set defaults.
          * @return new CliOption instance
@@ -319,9 +331,10 @@ public final class CliOptions {
                     twitterAccessTokenSecret =
                         props.getProperty(CliProcessor.OPTION_TWITTER_ACCESS_TOKEN_SECRET);
                 }
-            } catch (IOException ex) {
+            }
+            catch (IOException ex) {
                 throw new IllegalStateException("Twitter properties file has access problems"
-                    + " (twitterProperties=" + twitterProperties + ")", ex);
+                    + " (twitterProperties=" + twitterProperties + ')', ex);
             }
         }
 
@@ -350,6 +363,7 @@ public final class CliOptions {
             cliOptions.twitterAccessToken = twitterAccessToken;
             cliOptions.twitterAccessTokenSecret = twitterAccessTokenSecret;
             cliOptions.twitterProperties = twitterProperties;
+            cliOptions.publishXdoc = publishXdoc;
             return cliOptions;
         }
     }
