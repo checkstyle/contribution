@@ -168,7 +168,7 @@ public final class CliOptions {
     /**
      * Class which implements Builder pattern for building CliOptions instance.
      */
-    final class Builder {
+    public final class Builder {
 
         /** Default constructor. */
         private Builder() { }
