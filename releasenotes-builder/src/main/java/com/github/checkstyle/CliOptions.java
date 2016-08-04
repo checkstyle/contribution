@@ -19,6 +19,11 @@
 
 package com.github.checkstyle;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import com.google.common.base.Verify;
 
 /**
@@ -53,6 +58,22 @@ public final class CliOptions {
     private boolean generateRss;
     /** Whether to generate a post for Mailing List. */
     private boolean generateMlist;
+
+    /** Whether to publish all social posts. */
+    private boolean publishAllSocial;
+
+    /** Whether to publish all social posts. */
+    private boolean publishTwit;
+    /** Consumer key for Twitter. */
+    private String twitterConsumerKey;
+    /** Consumer secret for Twitter. */
+    private String twitterConsumerSecret;
+    /** Access token for Twitter. */
+    private String twitterAccessToken;
+    /** Access token secret for Twitter. */
+    private String twitterAccessTokenSecret;
+    /** Properties for connection to Twitter. */
+    private String twitterProperties;
 
     /** Default constructor. */
     private CliOptions() { }
@@ -105,6 +126,30 @@ public final class CliOptions {
         return generateMlist;
     }
 
+    public boolean isPublishAllSocial() {
+        return publishAllSocial;
+    }
+
+    public boolean isPublishTwit() {
+        return publishTwit;
+    }
+
+    public String getTwitterConsumerKey() {
+        return twitterConsumerKey;
+    }
+
+    public String getTwitterConsumerSecret() {
+        return twitterConsumerSecret;
+    }
+
+    public String getTwitterAccessToken() {
+        return twitterAccessToken;
+    }
+
+    public String getTwitterAccessTokenSecret() {
+        return twitterAccessTokenSecret;
+    }
+
     /**
      * Creates a new Builder instance.
      * @return new Builder instance.
@@ -122,95 +167,189 @@ public final class CliOptions {
         private Builder() { }
 
         public Builder setLocalRepoPath(String path) {
-            CliOptions.this.localRepoPath = path;
+            localRepoPath = path;
             return this;
         }
 
         public Builder setStartRef(String ref) {
-            CliOptions.this.startRef = ref;
+            startRef = ref;
             return this;
         }
 
         public Builder setEndRef(String ref) {
-            CliOptions.this.endRef = ref;
+            endRef = ref;
             return this;
         }
 
         public Builder setReleaseNumber(String number) {
-            CliOptions.this.releaseNumber = number;
+            releaseNumber = number;
             return this;
         }
 
         public Builder setAuthToken(String token) {
-            CliOptions.this.authToken = token;
+            authToken = token;
             return this;
         }
 
         public Builder setOutputLocation(String outputLoc) {
-            CliOptions.this.outputLocation = outputLoc;
+            outputLocation = outputLoc;
             return this;
         }
 
         public Builder setGenerateAll(boolean genAll) {
-            CliOptions.this.generateAll = genAll;
+            generateAll = genAll;
             return this;
         }
 
         public Builder setGenerateXdoc(boolean genXdoc) {
-            CliOptions.this.generateXdoc = genXdoc;
+            generateXdoc = genXdoc;
             return this;
         }
 
         public Builder setGenerateTw(boolean genTw) {
-            CliOptions.this.generateTw = genTw;
+            generateTw = genTw;
             return this;
         }
 
         public Builder setGenerateGplus(boolean genGplus) {
-            CliOptions.this.generateGplus = genGplus;
+            generateGplus = genGplus;
             return this;
         }
 
         public Builder setGenerateRss(boolean genRss) {
-            CliOptions.this.generateRss = genRss;
+            generateRss = genRss;
             return this;
         }
 
         public Builder setGenerateMlist(boolean genMlist) {
-            CliOptions.this.generateMlist = genMlist;
+            generateMlist = genMlist;
+            return this;
+        }
+
+        public Builder setPublishAllSocial(boolean pubAllSocial) {
+            publishAllSocial = pubAllSocial;
+            return this;
+        }
+
+        public Builder setPublishTwit(boolean publishTw) {
+            publishTwit = publishTw;
+            return this;
+        }
+
+        public Builder setTwitterConsumerKey(String twConsKey) {
+            twitterConsumerKey = twConsKey;
+            return this;
+        }
+
+        public Builder setTwitterConsumerSecret(String twConsSecret) {
+            twitterConsumerSecret = twConsSecret;
+            return this;
+        }
+
+        public Builder setTwitterAccessToken(String twAccessToken) {
+            twitterAccessToken = twAccessToken;
+            return this;
+        }
+
+        public Builder setTwitterAccessTokenSecret(String twAccessTokenSecret) {
+            twitterAccessTokenSecret = twAccessTokenSecret;
+            return this;
+        }
+
+        public Builder setTwitterProperties(String twProperties) {
+            twitterProperties = twProperties;
             return this;
         }
 
         /**
-         * Returns new CliOption instance.
+         * Verify options and set defaults.
          * @return new CliOption instance
          */
         public CliOptions build() {
-            if (CliOptions.this.endRef == null) {
-                CliOptions.this.endRef = "HEAD";
+            if (endRef == null) {
+                endRef = "HEAD";
             }
-            if (CliOptions.this.outputLocation == null) {
-                CliOptions.this.outputLocation = "";
+            if (outputLocation == null) {
+                outputLocation = "";
             }
             Verify.verifyNotNull(localRepoPath,
                 "Path to a local git repository should not be null!");
             Verify.verifyNotNull(startRef, "Start reference should not be null!");
             Verify.verifyNotNull(releaseNumber, "Release number should not be null!");
 
-            final CliOptions cliOptions = new CliOptions();
-            cliOptions.localRepoPath = CliOptions.this.localRepoPath;
-            cliOptions.startRef = CliOptions.this.startRef;
-            cliOptions.endRef = CliOptions.this.endRef;
-            cliOptions.releaseNumber = CliOptions.this.releaseNumber;
-            cliOptions.outputLocation = CliOptions.this.outputLocation;
-            cliOptions.authToken = CliOptions.this.authToken;
-            cliOptions.generateAll = CliOptions.this.generateAll;
-            cliOptions.generateXdoc = CliOptions.this.generateXdoc;
-            cliOptions.generateTw = CliOptions.this.generateTw;
-            cliOptions.generateGplus = CliOptions.this.generateGplus;
-            cliOptions.generateRss = CliOptions.this.generateRss;
-            cliOptions.generateMlist = CliOptions.this.generateMlist;
+            if ((publishAllSocial || publishTwit)
+                && (twitterConsumerKey == null || twitterConsumerSecret == null
+                    || twitterAccessToken == null || twitterAccessTokenSecret == null)) {
+                Verify.verifyNotNull(twitterProperties, "Properties file for Twitter is expected"
+                    + " if some of the following options are not entered: twitterConsumerKey, "
+                    + "twitterConsumerSecret, twitterAccessToken, twitterAccessTokenSecret.");
+                loadTwitterProperties();
+                Verify.verifyNotNull(twitterConsumerKey, "Consumer key for Twitter is expected!");
+                Verify.verifyNotNull(twitterConsumerSecret,
+                    "Consumer secret for Twitter is expected!");
+                Verify.verifyNotNull(twitterAccessToken, "Access token for Twitter is expected!");
+                Verify.verifyNotNull(twitterAccessTokenSecret,
+                    "Access token secret for Twitter is expected!");
+            }
 
+            return getNewCliOptionsInstance();
+        }
+
+        /**
+         * Load options for Twitter publication from properties if they were not set.
+         */
+        private void loadTwitterProperties() {
+            try (InputStream propStream = new FileInputStream(twitterProperties)) {
+                final Properties props = new Properties();
+                props.load(propStream);
+
+                if (twitterConsumerKey == null) {
+                    twitterConsumerKey =
+                        props.getProperty(CliProcessor.OPTION_TWITTER_CONSUMER_KEY);
+                }
+                if (twitterConsumerSecret == null) {
+                    twitterConsumerSecret =
+                        props.getProperty(CliProcessor.OPTION_TWITTER_CONSUMER_SECRET);
+                }
+                if (twitterAccessToken == null) {
+                    twitterAccessToken =
+                        props.getProperty(CliProcessor.OPTION_TWITTER_ACCESS_TOKEN);
+                }
+                if (twitterAccessTokenSecret == null) {
+                    twitterAccessTokenSecret =
+                        props.getProperty(CliProcessor.OPTION_TWITTER_ACCESS_TOKEN_SECRET);
+                }
+            } catch (IOException ex) {
+                throw new IllegalStateException("Twitter properties file has access problems"
+                    + " (twitterProperties=" + twitterProperties + ")", ex);
+            }
+        }
+
+        /**
+         * Get new CliOptions instance.
+         * @return new CliOptions instance.
+         */
+        private CliOptions getNewCliOptionsInstance() {
+            final CliOptions cliOptions = new CliOptions();
+            cliOptions.localRepoPath = localRepoPath;
+            cliOptions.startRef = startRef;
+            cliOptions.endRef = endRef;
+            cliOptions.releaseNumber = releaseNumber;
+            cliOptions.outputLocation = outputLocation;
+            cliOptions.authToken = authToken;
+            cliOptions.generateAll = generateAll;
+            cliOptions.generateXdoc = generateXdoc;
+            cliOptions.generateTw = generateTw;
+            cliOptions.generateGplus = generateGplus;
+            cliOptions.generateRss = generateRss;
+            cliOptions.generateMlist = generateMlist;
+            cliOptions.publishAllSocial = publishAllSocial;
+            cliOptions.publishTwit = publishTwit;
+            cliOptions.twitterConsumerKey = twitterConsumerKey;
+            cliOptions.twitterConsumerSecret = twitterConsumerSecret;
+            cliOptions.twitterAccessToken = twitterAccessToken;
+            cliOptions.twitterAccessTokenSecret = twitterAccessTokenSecret;
+            cliOptions.twitterProperties = twitterProperties;
             return cliOptions;
         }
     }

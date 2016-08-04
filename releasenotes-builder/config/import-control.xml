@@ -13,6 +13,8 @@
     <allow pkg="org.eclipse.jgit"/>
     <allow pkg="org.kohsuke.github"/>
     <allow pkg="org.thymeleaf"/>
+    <allow pkg="com.github.checkstyle"/>
     <allow pkg="com.google.common"/>
     <allow pkg="freemarker.template"/>
+    <allow pkg="twitter4j"/>
 </import-control>
