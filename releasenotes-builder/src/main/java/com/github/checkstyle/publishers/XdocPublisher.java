@@ -31,6 +31,8 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 /**
  * Class for xdoc publication.
@@ -55,17 +57,22 @@ public class XdocPublisher {
     private final String postFilename;
     /** Release number. */
     private final String releaseNumber;
+    /** Auth token for Github. */
+    private final String authToken;
 
     /**
      * Default constructor.
      * @param postFilename the name of the file to get post xml from.
      * @param localRepoPath path to a local git repository.
      * @param releaseNumber release number.
+     * @param authToken auth token for Github.
      */
-    public XdocPublisher(String postFilename, String localRepoPath, String releaseNumber) {
+    public XdocPublisher(String postFilename, String localRepoPath, String releaseNumber,
+            String authToken) {
         this.postFilename = postFilename;
         this.localRepoPath = localRepoPath;
         this.releaseNumber = releaseNumber;
+        this.authToken = authToken;
     }
 
     /**
@@ -84,6 +91,11 @@ public class XdocPublisher {
             .call();
         git.commit()
             .setMessage(String.format(Locale.ENGLISH, COMMIT_MESSAGE_TEMPLATE, releaseNumber))
+            .call();
+        final CredentialsProvider credentialsProvider =
+                new UsernamePasswordCredentialsProvider(authToken, "");
+        git.push()
+            .setCredentialsProvider(credentialsProvider)
             .call();
     }
 

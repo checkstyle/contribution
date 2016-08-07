@@ -304,6 +304,11 @@ public final class CliOptions {
                     "Access token secret for Twitter is expected!");
             }
 
+            if (publishXdoc) {
+                Verify.verifyNotNull(authToken, "Auth token should not be null for xdoc "
+                        + "publication");
+            }
+
             return getNewCliOptionsInstance();
         }
 
