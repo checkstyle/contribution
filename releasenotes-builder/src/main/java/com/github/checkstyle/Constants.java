@@ -38,6 +38,7 @@ public final class Constants {
 
     /**
      * The array which represents the issue labels for release notes.
+     * @noinspection PublicStaticArrayField
      */
     public static final String[] ISSUE_LABELS;
 

@@ -28,11 +28,11 @@ import org.kohsuke.github.GHIssue;
 public class ReleaseNotesMessage {
 
     /** Issue number. */
-    private int issueNo;
+    private final int issueNo;
     /** Title. */
-    private String title;
+    private final String title;
     /** Author. */
-    private String author;
+    private final String author;
 
     /**
      * Constructs a release notes message for issue.
@@ -77,7 +77,7 @@ public class ReleaseNotesMessage {
         final String actualTitle;
         final String issueTitle = issue.getTitle();
         if (issueTitle.startsWith("Pull")) {
-            actualTitle = issueTitle.substring(issueTitle.indexOf(":") + 2);
+            actualTitle = issueTitle.substring(issueTitle.indexOf(':') + 2);
         }
         else {
             actualTitle = issueTitle;

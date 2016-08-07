@@ -19,9 +19,11 @@
 
 package com.github.checkstyle;
 
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -67,7 +69,8 @@ public final class TemplateProcessor {
 
         final IContext ctx = new Context(Locale.US, variables);
 
-        try (Writer fileWriter = new FileWriter(outputFile)) {
+        try (Writer fileWriter = new OutputStreamWriter(
+                new FileOutputStream(outputFile), StandardCharsets.UTF_8)) {
             engine.process(templateFilename, ctx, fileWriter);
         }
     }
@@ -91,7 +94,8 @@ public final class TemplateProcessor {
         configuration.setClassForTemplateLoading(Main.class, "/" + TEMPLATE_FOLDER_PATH);
 
         final Template template = configuration.getTemplate(templateFilename);
-        try (Writer fileWriter = new FileWriter(outputFile)) {
+        try (Writer fileWriter = new OutputStreamWriter(
+                new FileOutputStream(outputFile), StandardCharsets.UTF_8)) {
             template.process(variables, fileWriter);
         }
     }

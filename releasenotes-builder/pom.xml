@@ -20,6 +20,7 @@
         <maven.plugin.apache.commons.cli.version>1.3.1</maven.plugin.apache.commons.cli.version>
         <maven.plugin.apache.commons.lang.version>2.6</maven.plugin.apache.commons.lang.version>
         <maven.plugin.twitter4j.version>4.0.4</maven.plugin.twitter4j.version>
+        <maven.plugin.jdom.version>2.0.6</maven.plugin.jdom.version>
         <tools.jar.version>1.7.0</tools.jar.version>
         <tools.jar.path>${java.home}/../lib/tools.jar</tools.jar.path>
         <java.version>1.7</java.version>
@@ -71,6 +72,11 @@
             <groupId>org.twitter4j</groupId>
             <artifactId>twitter4j-core</artifactId>
             <version>${maven.plugin.twitter4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jdom</groupId>
+            <artifactId>jdom2</artifactId>
+            <version>${maven.plugin.jdom.version}</version>
         </dependency>
     </dependencies>
 
