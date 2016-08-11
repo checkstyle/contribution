@@ -217,7 +217,7 @@ public final class Main {
             xdocPublisher.publish();
         }
         catch (Exception ex) {
-            errors.add(ex.getMessage());
+            errors.add(ex.toString());
         }
     }
 
@@ -235,7 +235,7 @@ public final class Main {
             twitterPublisher.publish();
         }
         catch (Exception ex) {
-            errors.add(ex.getMessage());
+            errors.add(ex.toString());
         }
     }
 
