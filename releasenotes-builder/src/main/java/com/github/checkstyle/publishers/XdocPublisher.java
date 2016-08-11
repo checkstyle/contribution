@@ -41,7 +41,7 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 public class XdocPublisher {
 
     /** Path to xdoc objective in a local repo. */
-    private static final String PATH_TO_XDOC_IN_REPO = "src/xdocs/releasenotes.xml";
+    private static final String PATH_TO_XDOC_IN_REPO = "/src/xdocs/releasenotes.xml";
 
     /** Template for a commit message. */
     private static final String COMMIT_MESSAGE_TEMPLATE = "doc: release notes %s";
