@@ -6,9 +6,9 @@
 
 <suppressions>
     <suppress checks="ClassDataAbstractionCoupling" files="XdocPublisher.java"/>
-    <suppress checks="CyclomaticComplexity" files="Main.java" lines="160"/>
+    <suppress checks="CyclomaticComplexity" files="Main.java" lines="163"/>
     <suppress checks="CyclomaticComplexity" files="CliOptions.java" lines="309"/>
-    <suppress checks="IllegalCatch" files="Main.java" lines="219, 237"/>
+    <suppress checks="IllegalCatch" files="Main.java" lines="222, 240"/>
     <suppress checks="JavadocMethod" files="CliOptions.java"/>
     <suppress checks="ThrowsCount" files="XdocPublisher.java"/>
     <suppress checks="UncommentedMain" files="Main.java"/>

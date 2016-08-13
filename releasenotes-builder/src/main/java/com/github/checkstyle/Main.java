@@ -79,7 +79,7 @@ public final class Main {
      */
     public static void main(String... args) {
         int errorCounter;
-        List<String> errors = null;
+        List<String> publicationErrors = null;
         try {
             final CliProcessor cliProcessor = new CliProcessor(args);
             cliProcessor.process();
@@ -93,8 +93,7 @@ public final class Main {
                 errorCounter = notesBuilderResult.getErrorMessages().size();
                 if (errorCounter == 0) {
                     runPostGeneration(notesBuilderResult.getReleaseNotes(), cliOptions);
-                    errors = runPostPublication(cliOptions);
-                    errorCounter = errors.size();
+                    publicationErrors = runPostPublication(cliOptions);
                 }
             }
         }
@@ -104,14 +103,18 @@ public final class Main {
             CliProcessor.printUsage();
         }
         if (errorCounter == 0) {
-            System.out.println(String.format("%nExecution succeed!"));
+            if (publicationErrors != null && !publicationErrors.isEmpty()) {
+                System.out.println(String.format("%nPublication ends with %d errors:",
+                        publicationErrors.size()));
+                printListOf(publicationErrors);
+            }
+            else {
+                System.out.println(String.format("%nExecution succeeded!"));
+            }
         }
         else {
             System.out.println(String.format("%nGeneration ends with %d errors.",
                 errorCounter));
-            if (errors != null && !errors.isEmpty()) {
-                printListOf(errors);
-            }
             System.exit(ERROR_EXIT_CODE);
         }
     }
