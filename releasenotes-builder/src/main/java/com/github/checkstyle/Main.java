@@ -30,6 +30,8 @@ import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 
 import com.github.checkstyle.publishers.MailingListPublisher;
+// -@cs[CustomImportOrder] Until https://github.com/checkstyle/checkstyle/issues/3590
+import com.github.checkstyle.publishers.SourceforgeRssPublisher;
 import com.github.checkstyle.publishers.TwitterPublisher;
 import com.github.checkstyle.publishers.XdocPublisher;
 import com.google.common.collect.Multimap;
@@ -161,6 +163,7 @@ public final class Main {
      * @throws IOException if I/O error occurs.
      * @throws TemplateException if an error occurs while generating freemarker template.
      */
+    // -@cs[CyclomaticComplexity] This code is not complicated and is better to keep in one method
     private static void runPostGeneration(Multimap<String, ReleaseNotesMessage> releaseNotes,
             CliOptions cliOptions) throws IOException, TemplateException {
 
@@ -207,6 +210,9 @@ public final class Main {
         if (cliOptions.isPublishAllSocial() || cliOptions.isPublishMlist()) {
             runMailingListPublication(cliOptions, errors);
         }
+        if (cliOptions.isPublishAllSocial() || cliOptions.isPublishSfRss()) {
+            runSfRssPublication(cliOptions, errors);
+        }
         return errors;
     }
 
@@ -223,6 +229,7 @@ public final class Main {
         try {
             xdocPublisher.publish();
         }
+        // -@cs[IllegalCatch] We should execute all publishers, so cannot fail-fast
         catch (Exception ex) {
             errors.add(ex.toString());
         }
@@ -241,6 +248,7 @@ public final class Main {
         try {
             twitterPublisher.publish();
         }
+        // -@cs[IllegalCatch] We should execute all publishers, so cannot fail-fast
         catch (Exception ex) {
             errors.add(ex.toString());
         }
@@ -258,6 +266,25 @@ public final class Main {
         try {
             mailingListPublisher.publish();
         }
+        // -@cs[IllegalCatch] We should execute all publishers, so cannot fail-fast
+        catch (Exception ex) {
+            errors.add(ex.toString());
+        }
+    }
+
+    /**
+     * Publish on RSS.
+     * @param cliOptions command line options.
+     * @param errors list of publication errors.
+     */
+    private static void runSfRssPublication(CliOptions cliOptions, List<String> errors) {
+        final SourceforgeRssPublisher rssPublisher = new SourceforgeRssPublisher(
+                cliOptions.getOutputLocation() + RSS_FILENAME, cliOptions.getSfRssBearerToken(),
+                cliOptions.getReleaseNumber());
+        try {
+            rssPublisher.publish();
+        }
+        // -@cs[IllegalCatch] We should execute all publishers, so cannot fail-fast
         catch (Exception ex) {
             errors.add(ex.toString());
         }

@@ -57,3 +57,19 @@ mlistUsername=username
 mlistPassword=password
 ```
 
+##RSS feed
+```
+java -jar releasenotes-builder-1.0-all.jar -localRepoPath /home/user/opensource/checkstyle -startRef checkstyle-7.2 \
+     -releaseNumber 7.3 -githubAuthToken a0b1234567890ad1234e5678fc9e01234a56d789 -generateSfRss -publishSfRss \
+     -sfRssBearerToken b34f0843c1bcb521eeb4
+```
+or using /home/user/documents/rss.properties
+```
+java -jar releasenotes-builder-1.0-all.jar -localRepoPath /home/user/opensource/checkstyle -startRef checkstyle-7.2 \
+     -releaseNumber 7.3 -githubAuthToken a0b1234567890ad1234e5678fc9e01234a56d789 -generateSfRss -publishSfRss \
+     -sfRssProperties /home/user/documents/rss.properties
+```
+where rss.properties looks like:
+```
+sfRssBearerToken=b34f0843c1bcb521eeb4
+```

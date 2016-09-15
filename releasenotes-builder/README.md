@@ -23,7 +23,8 @@ java -jar releasenotes-builder-1.0-all.jar -localRepoPath <arg> -startRef <arg> 
      [-publishXdoc] [-publishXdocWithPush] \
      [-publishAllSocial] [-publishTwit] [-twitterConsumerKey <arg>] [-twitterConsumerSecret <arg>] \
      [-twiterAccessToken <arg>] [-twitterAccessTokenSecret <arg>] [-twitterProperties <arg>] \
-     [-publishMlist] [-mlistUsername <arg>] [-mlistPassword <arg>] [-mlistProperties <arg>]
+     [-publishMlist] [-mlistUsername <arg>] [-mlistPassword <arg>] [-mlistProperties <arg>] \
+     [-publishSfRss] [-sfRssBearerToken <arg>] [-sfRssProperties <arg>]
 ```
 
 Release notes builder will do the generation of release notes and report warnings and errors to
@@ -83,6 +84,12 @@ release notes. For example, ```753bc06``` or just tag ```checkstyle-6.12.1``` .
 **mlistPassword** - (optional) password key for mailing list.
 
 **mlistProperties** - (optional) path to a properties file for publication to mailing list.
+
+**publishSfRss** - (optional) publish to RSS from ```RSS.txt```.
+
+**sfRssBearerToken** - (optional) bearer token for Sourceforge to publish to RSS.
+
+**sfRssProperties** - (optional) path to a properties file for publication to RSS.
 
 _**Please, notice!**_
 Options in property files have the same names as in command line and have lower priority.
