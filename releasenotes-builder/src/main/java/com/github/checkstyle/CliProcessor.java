@@ -52,6 +52,9 @@ public class CliProcessor {
     /** Name for the option 'mlistPassword'. */
     public static final String OPTION_MLIST_PASSWORD = "mlistPassword";
 
+    /** Name for the option 'sfRssBearerToken'. */
+    public static final String OPTION_SF_RSS_BEARER_TOKEN = "sfRssBearerToken";
+
     /** Name for the option 'localRepoPath'. */
     private static final String OPTION_LOCAL_REPO_PATH = "localRepoPath";
     /** Name for the option 'startRef'. */
@@ -88,11 +91,15 @@ public class CliProcessor {
     private static final String OPTION_PUBLISH_XDOC_WITH_PUSH = "publishXdocWithPush";
     /** Name for the option 'publishMlist'. */
     private static final String OPTION_PUBLISH_MLIST = "publishMlist";
+    /** Name for the option 'publishSfRss'. */
+    private static final String OPTION_PUBLISH_SF_RSS = "publishSfRss";
 
     /** Name for the option 'twitterProperties'. */
     private static final String OPTION_TWITTER_PROPERTIES = "twitterProperties";
     /** Name for the option 'mlistProperties'. */
     private static final String OPTION_MLIST_PROPERTIES = "mlistProperties";
+    /** Name for the option 'sfRssProperties'. */
+    private static final String OPTION_SF_RSS_PROPERTIES = "sfRssProperties";
 
     /** Command line cmdArgs. */
     private final String[] cmdArgs;
@@ -197,6 +204,9 @@ public class CliProcessor {
             .setMlistUsername(cmdLine.getOptionValue(OPTION_MLIST_USERNAME))
             .setMlistPassword(cmdLine.getOptionValue(OPTION_MLIST_PASSWORD))
             .setMlistProperties(cmdLine.getOptionValue(OPTION_MLIST_PROPERTIES))
+            .setPublishSfRss(cmdLine.hasOption(OPTION_PUBLISH_SF_RSS))
+            .setSfBearerToken(cmdLine.getOptionValue(OPTION_SF_RSS_BEARER_TOKEN))
+            .setSfRssProperties(cmdLine.getOptionValue(OPTION_SF_RSS_PROPERTIES))
             .build();
     }
 

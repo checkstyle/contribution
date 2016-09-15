@@ -89,6 +89,13 @@ public final class CliOptions {
     /** Properties to publish to mailing list. */
     private String mlistProperties;
 
+    /** Whether to publish to RSS. */
+    private boolean publishSfRss;
+    /** Bearer token for Sourceforge to publish to RSS. */
+    private String sfRssBearerToken;
+    /** Properties to publish to RSS. */
+    private String sfRssProperties;
+
     /** Default constructor. */
     private CliOptions() { }
 
@@ -182,6 +189,14 @@ public final class CliOptions {
 
     public String getMlistPassword() {
         return mlistPassword;
+    }
+
+    public boolean isPublishSfRss() {
+        return publishSfRss;
+    }
+
+    public String getSfRssBearerToken() {
+        return sfRssBearerToken;
     }
 
     /**
@@ -476,6 +491,39 @@ public final class CliOptions {
         }
 
         /**
+         * Specify to do publication only for RSS.
+         * @param pubRss flag to publish to RSS
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
+        public Builder setPublishSfRss(boolean pubRss) {
+            publishSfRss = pubRss;
+            return this;
+        }
+
+        /**
+         * Specify mailing list properties.
+         * @param token sourceforge bearer token
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
+        public Builder setSfBearerToken(String token) {
+            sfRssBearerToken = token;
+            return this;
+        }
+
+        /**
+         * Specify RSS properties.
+         * @param rssProps mailing list properties
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
+        public Builder setSfRssProperties(String rssProps) {
+            sfRssProperties = rssProps;
+            return this;
+        }
+
+        /**
          * Verify options and set defaults.
          * @return new CliOption instance
          */
@@ -504,8 +552,7 @@ public final class CliOptions {
                     "Access token secret for Twitter is expected!");
             }
 
-            if ((publishAllSocial || publishMlist)
-                && (mlistUsername == null || mlistPassword == null)) {
+            if (shouldLoadMlistProperties()) {
                 Verify.verifyNotNull(mlistProperties, "Properties file for mailing list is "
                     + "expected if some of the following options are not entered: mlistUsername, "
                     + "mlistPassword.");
@@ -514,7 +561,23 @@ public final class CliOptions {
                 Verify.verifyNotNull(mlistPassword, "Password for mailing list is expected!");
             }
 
+            if ((publishAllSocial || publishSfRss) && sfRssBearerToken == null) {
+                Verify.verifyNotNull(sfRssProperties, "Properties file for RSS is expected"
+                        + " if some of the following options are not entered: sfRssBearerToken.");
+                loadSfRssProperties();
+                Verify.verifyNotNull(sfRssBearerToken, "sfRssBearerToken for RSS is expected!");
+            }
             return getNewCliOptionsInstance();
+        }
+
+        /**
+         * Whether Twitter properties should be loaded.
+         * @return true, if Twitter properties should be loaded.
+         */
+        private boolean shouldLoadTwitterProperties() {
+            return (publishAllSocial || publishTwit)
+                    && (twitterConsumerKey == null || twitterConsumerSecret == null
+                    || twitterAccessToken == null || twitterAccessTokenSecret == null);
         }
 
         /**
@@ -549,13 +612,12 @@ public final class CliOptions {
         }
 
         /**
-         * Whether Twitter properties should be loaded.
-         * @return true, if Twitter properties should be loaded.
+         * Whether RSS properties should be loaded.
+         * @return true, if RSS properties should be loaded.
          */
-        private boolean shouldLoadTwitterProperties() {
-            return (publishAllSocial || publishTwit)
-                    && (twitterConsumerKey == null || twitterConsumerSecret == null
-                        || twitterAccessToken == null || twitterAccessTokenSecret == null);
+        private boolean shouldLoadMlistProperties() {
+            return (publishAllSocial || publishMlist)
+                    && (mlistUsername == null || mlistPassword == null);
         }
 
         /**
@@ -576,6 +638,22 @@ public final class CliOptions {
             catch (IOException ex) {
                 throw new IllegalStateException("Mailing list properties file has access problems"
                     + " (mlistProperties=" + mlistProperties + ')', ex);
+            }
+        }
+
+        /**
+         * Load options for RSS publication from properties if they were not set.
+         */
+        private void loadSfRssProperties() {
+            try (InputStream propStream = new FileInputStream(sfRssProperties)) {
+                final Properties props = new Properties();
+                props.load(propStream);
+
+                sfRssBearerToken = props.getProperty(CliProcessor.OPTION_SF_RSS_BEARER_TOKEN);
+            }
+            catch (IOException ex) {
+                throw new IllegalStateException("RSS properties file has access problems"
+                    + " (sfRssProperties=" + sfRssProperties + ')', ex);
             }
         }
 
@@ -610,6 +688,9 @@ public final class CliOptions {
             cliOptions.mlistUsername = mlistUsername;
             cliOptions.mlistPassword = mlistPassword;
             cliOptions.mlistProperties = mlistProperties;
+            cliOptions.publishSfRss = publishSfRss;
+            cliOptions.sfRssBearerToken = sfRssBearerToken;
+            cliOptions.sfRssProperties = sfRssProperties;
             return cliOptions;
         }
 
