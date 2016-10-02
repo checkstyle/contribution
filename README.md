@@ -1,5 +1,6 @@
 [![][travis img]][travis]
 [![][appveyor img]][appveyor]
+[![][teamcity img]][teamcity]
 
 This repository is a support repository some tools that are used in checkstyle development and other
 contributions that are valuable but should not be in [main checkstyle repo](https://github.com/checkstyle/checkstyle)
@@ -18,3 +19,5 @@ directory.
 [license]:LICENSE
 [license img]:https://img.shields.io/badge/license-GNU%20LGPL%20v2.1-blue.svg
 
+[teamcity]:https://teamcity.jetbrains.com/viewType.html?buildTypeId=Checkstyle_ContributionIdeaInspectionsMaster
+[teamcity img]:https://img.shields.io/teamcity/http/teamcity.jetbrains.com/s/Checkstyle_ContributionIdeaInspectionsMaster.svg?label=TeamCity%20inspections
