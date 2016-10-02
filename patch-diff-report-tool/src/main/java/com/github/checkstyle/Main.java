@@ -135,6 +135,7 @@ public final class Main {
      *         on failure to execute stages.
      */
     public static void main(final String... args) throws Exception {
+        int warning;
         System.out.println("patch-diff-report-tool execution started.");
         final CommandLine commandLine = parseCli(args);
         if (commandLine.hasOption(OPTION_HELP)) {
