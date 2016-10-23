@@ -10,6 +10,9 @@
     <!-- do not change severity to 'error', as that will hide errors caused by exceptions -->
     <property name="severity" value="warning"/>
     
+    <!-- BeforeExecutionFileFilters is required for sources of java9 -->
+    <module name="BeforeExecutionExclusionFileFilter" />
+
     <module name="TreeWalker">
          <!-- Example of sevntu.checkstyle Check usage -->
          <!-- <module name="NestedSwitchCheck"/> -->
