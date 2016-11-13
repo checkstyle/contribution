@@ -32,39 +32,39 @@ import java.util.Map;
  * @author attatrol
  *
  */
-public class MergedConfigurationModule {
+public final class MergedConfigurationModule {
 
     /**
      * Module name that contains names of all parents sequentially.
      */
-    private String fullModuleName;
+    private final String fullModuleName;
 
     /**
      * Simple module name.
      */
-    private String simpleModuleName;
+    private final String simpleModuleName;
 
     /**
      * Module properties from the base module.
      * If null then no base module is present.
      */
-    private Map<String, List<String>> baseModuleProperties;
+    private final Map<String, List<String>> baseModuleProperties;
 
     /**
      * Module properties from the patch module.
      * If null then no base module is present.
      */
-    private Map<String, List<String>> patchModuleProperties;
+    private final Map<String, List<String>> patchModuleProperties;
 
     /**
      * Child modules of this module.
      */
-    private List<MergedConfigurationModule> children = new ArrayList<>();
+    private final List<MergedConfigurationModule> children = new ArrayList<>();
 
     /**
      * True if properties from both configuration modules are identical.
      */
-    private boolean hasIdenticalProperties;
+    private final boolean hasIdenticalProperties;
 
     /**
      * Basic ctor, creates instance without any child.

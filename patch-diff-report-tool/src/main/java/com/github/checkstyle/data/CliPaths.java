@@ -25,36 +25,36 @@ import java.nio.file.Path;
  * POJO class that hold input paths.
  * @author attatrol
  */
-public class CliPaths {
+public final class CliPaths {
     /**
      * Path to the first checkstyle-report.xml.
      */
-    private Path baseReportPath;
+    private final Path baseReportPath;
 
     /**
      * Path to the second checkstyle-report.xml.
      */
-    private Path patchReportPath;
+    private final Path patchReportPath;
 
     /**
      * Path to the data, tested by checkstyle.
      */
-    private Path sourcePath;
+    private final Path sourcePath;
 
     /**
      * Path to the result site.
      */
-    private Path resultPath;
+    private final Path resultPath;
 
     /**
      * Path to the data, tested by checkstyle.
      */
-    private Path baseConfigPath;
+    private final Path baseConfigPath;
 
     /**
      * Path to the result site.
      */
-    private Path patchConfigPath;
+    private final Path patchConfigPath;
 
     /**
      * POJO ctor.

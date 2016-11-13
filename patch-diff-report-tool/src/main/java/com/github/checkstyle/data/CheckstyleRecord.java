@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
  * @author attatrol
  *
  */
-public class CheckstyleRecord {
+public final class CheckstyleRecord {
 
     /**
      * It is usual for sources of records to have name that
@@ -44,32 +44,32 @@ public class CheckstyleRecord {
     /**
      * Index of the source.
      */
-    private int index;
+    private final int index;
 
     /**
      * Record line index.
      */
-    private int line;
+    private final int line;
 
     /**
      * Record column index.
      */
-    private int column;
+    private final int column;
 
     /**
      * Severity of this record.
      */
-    private String severity;
+    private final String severity;
 
     /**
      * Name of the check that generated this record.
      */
-    private String source;
+    private final String source;
 
     /**
      * The message.
      */
-    private String message;
+    private final String message;
 
     /**
      * POJO ctor.
@@ -162,7 +162,7 @@ public class CheckstyleRecord {
      *        with this instance.
      * @return true if instances are equal.
      */
-    public final boolean specificEquals(final CheckstyleRecord other) {
+    public boolean specificEquals(final CheckstyleRecord other) {
         return this.line == other.line && this.column == other.column
                 && this.source.equals(other.source)
                 && this.message.equals(other.message);
