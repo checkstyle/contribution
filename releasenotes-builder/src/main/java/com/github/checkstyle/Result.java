@@ -30,7 +30,7 @@ import com.google.common.collect.Multimap;
  * Represents the result of release notes generation.
  * @author Andrei Selkin
  */
-public class Result {
+public final class Result {
 
     /** Error messages. */
     private final List<String> errorMessages;

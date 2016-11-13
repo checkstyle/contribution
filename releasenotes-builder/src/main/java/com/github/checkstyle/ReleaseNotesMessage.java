@@ -25,7 +25,7 @@ import org.kohsuke.github.GHIssue;
  * Represents a release notes message.
  * @author Andrei Selkin
  */
-public class ReleaseNotesMessage {
+public final class ReleaseNotesMessage {
 
     /** Issue number. */
     private final int issueNo;
