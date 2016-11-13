@@ -179,106 +179,232 @@ public final class CliOptions {
         /** Default constructor. */
         private Builder() { }
 
+        /**
+         * Specify Local repository path.
+         * @param path Local repository path
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
         public Builder setLocalRepoPath(String path) {
             localRepoPath = path;
             return this;
         }
 
+        /**
+         * Specify Start git reference.
+         * @param ref Start reference
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
         public Builder setStartRef(String ref) {
             startRef = ref;
             return this;
         }
 
+        /**
+         * Specify End git reference.
+         * @param ref End reference
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
         public Builder setEndRef(String ref) {
             endRef = ref;
             return this;
         }
 
+        /**
+         * Specify release number.
+         * @param number Release Number
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
         public Builder setReleaseNumber(String number) {
             releaseNumber = number;
             return this;
         }
 
+        /**
+         * Specify Auth Token.
+         * @param token Auth Token
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
         public Builder setAuthToken(String token) {
             authToken = token;
             return this;
         }
 
+        /**
+         * Specify Output location.
+         * @param outputLoc Output location
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
         public Builder setOutputLocation(String outputLoc) {
             outputLocation = outputLoc;
             return this;
         }
 
+        /**
+         * Specify flag to generate all.
+         * @param genAll flag to generate all
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
         public Builder setGenerateAll(boolean genAll) {
             generateAll = genAll;
             return this;
         }
 
+        /**
+         * Specify flag to generate xdoc.
+         * @param genXdoc flag to generate xdoc
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
         public Builder setGenerateXdoc(boolean genXdoc) {
             generateXdoc = genXdoc;
             return this;
         }
 
+        /**
+         * Spacify flag to generate twiter post.
+         * @param genTw flag to generate twitt
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
         public Builder setGenerateTw(boolean genTw) {
             generateTw = genTw;
             return this;
         }
 
+        /**
+         * Spacify flag to generate google plus post.
+         * @param genGplus flag to generate google plus
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
         public Builder setGenerateGplus(boolean genGplus) {
             generateGplus = genGplus;
             return this;
         }
 
+        /**
+         * Specify flag to generate RSS post.
+         * @param genRss flag to generate RSS post
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
         public Builder setGenerateRss(boolean genRss) {
             generateRss = genRss;
             return this;
         }
 
+        /**
+         * Spacify flag to generate Mail-list post.
+         * @param genMlist flag to generate mail-list post
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
         public Builder setGenerateMlist(boolean genMlist) {
             generateMlist = genMlist;
             return this;
         }
 
+        /**
+         * Spacify to do publish all social posts.
+         * @param pubAllSocial flag to generate all social posts
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
         public Builder setPublishAllSocial(boolean pubAllSocial) {
             publishAllSocial = pubAllSocial;
             return this;
         }
 
+        /**
+         * Specify to do publish only for twitter.
+         * @param publishTw flag to publish twitt
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
         public Builder setPublishTwit(boolean publishTw) {
             publishTwit = publishTw;
             return this;
         }
 
+        /**
+         * Specify Twitter consumer key.
+         * @param twConsKey twitter consumer key
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
         public Builder setTwitterConsumerKey(String twConsKey) {
             twitterConsumerKey = twConsKey;
             return this;
         }
 
+        /**
+         * Specify Twitter Consumer secret.
+         * @param twConsSecret twitter consumer secret
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
         public Builder setTwitterConsumerSecret(String twConsSecret) {
             twitterConsumerSecret = twConsSecret;
             return this;
         }
 
+        /**
+         * Specify Twitter Access Token.
+         * @param twAccessToken twitter access token
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
         public Builder setTwitterAccessToken(String twAccessToken) {
             twitterAccessToken = twAccessToken;
             return this;
         }
 
+        /**
+         * Specify Access Token Secret.
+         * @param twAccessTokenSecret twitter access token secret
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
         public Builder setTwitterAccessTokenSecret(String twAccessTokenSecret) {
             twitterAccessTokenSecret = twAccessTokenSecret;
             return this;
         }
 
+        /**
+         * Spcify Twitter Properties.
+         * @param twProperties twitter properties
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
         public Builder setTwitterProperties(String twProperties) {
             twitterProperties = twProperties;
             return this;
         }
 
+        /**
+         * Specify to publish Xdoc update.
+         * @param pubXdoc flag to publish xdoc file update
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
         public Builder setPublishXdoc(boolean pubXdoc) {
             publishXdoc = pubXdoc;
             return this;
         }
 
+        /**
+         * Specify to publish xdoc update and do push to remote git.
+         * @param pubXdocWithPush flag to publish xdoc and push to remote repo
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
         public Builder setPublishXdocWithPush(boolean pubXdocWithPush) {
             publishXdocWithPush = pubXdocWithPush;
             return this;
