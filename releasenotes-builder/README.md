@@ -18,9 +18,10 @@ Jar file which includes all required dependencies will be located at
 ## Command line usage
 ```
 java -jar releasenotes-builder-1.0-all.jar -localRepoPath <arg> -startRef <arg> [-endRef <arg>] \
-     -releaseNumber <arg> [-outputLocation <args>] [-authToken <arg>] \
-     [-generateAll] [-generateTw] [-generateRss] [-generateGplus] [-generateMlist] \
-     [-publishAllSocial] [-publishTw] [-twitterConsumerKey <arg>] [-twitterConsumerSecret <arg>] \
+     -releaseNumber <arg> [-outputLocation <args>] [-githubAuthToken <arg>] \
+     [-generateAll] [-generateXdoc] [-generateTwit] [-generateRss] [-generateGplus] [-generateMlist] \
+     [-publishXdoc] [-publishXdocWithPush] \
+     [-publishAllSocial] [-publishTwit] [-twitterConsumerKey <arg>] [-twitterConsumerSecret <arg>] \
      [-twiterAccessToken <arg>] [-twitterAccessTokenSecret <arg>] [-twitterProperties <arg>]
 ```
 
@@ -42,9 +43,11 @@ release notes. For example, ```753bc06``` or just tag ```checkstyle-6.12.1``` .
 **outputLocation** - (optional) the name of an output folder. For example, ```/home/user/releasenotes/```
 . Current folder will be used if not specified (by default).
 
-**authToken** - (optional) the GitHub authentication access token to establish private connection to remote repository. For example, `0f95514f36200ebaadb8f28d8ba54300360a9e90` .
+**githubAuthToken** - (optional) the GitHub authentication access token to establish private connection to remote repository. For example, `0f95514f36200ebaadb8f28d8ba54300360a9e90` .
 
-**generateTw** - (optional) generate a release notes post to publish on Twitter. Generated file will be ```twitter.txt```.
+**generateXdoc** - (optional) generate release notes. Generated file will be ```xdoc.xml```.
+
+**generateTwit** - (optional) generate a release notes post to publish on Twitter. Generated file will be ```twitter.txt```.
 
 **generateRss** - (optional) generate a release notes post to publish on RSS. Generated file will be ```rss.txt```.
 
@@ -54,6 +57,10 @@ release notes. For example, ```753bc06``` or just tag ```checkstyle-6.12.1``` .
 
 **generateAll** - (optional) generate all possible posts. Generated files will be at specified output location.
 
+**publishXdoc** - (optional) Make commit in local checkstyle repo with releasenotes. Notes are read from ```xdoc.xml```.
+
+**publishXdocWithPush** - (optional) Make push of a commit from ```publishXdoc```.
+
 **publishAllSocial** - (optional) publish all possible posts. Posts are read from generated files.
 
 **publishTwit** - (optional) publish on Twitter from ```twitter.txt```.
@@ -62,7 +69,7 @@ release notes. For example, ```753bc06``` or just tag ```checkstyle-6.12.1``` .
 
 **twitterConsumerSecret** - (optional) consumer secret for Twitter.
 
-**twiterAccessToken** - (optional) access token for Twitter.
+**twitterAccessToken** - (optional) access token for Twitter.
 
 **twitterAccessTokenSecret** - (optional) access token secret for Twitter.
 

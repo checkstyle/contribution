@@ -57,14 +57,14 @@ public class CliProcessor {
     private static final String OPTION_RELEASE_NUMBER = "releaseNumber";
     /** Name for the option 'outputFile'. */
     private static final String OPTION_OUTPUT_LOCATION = "outputLocation";
-    /** Name for the option 'authToken'. */
-    private static final String OPTION_AUTH_TOKEN = "authToken";
+    /** Name for the option 'githubAuthToken'. */
+    private static final String OPTION_AUTH_TOKEN = "githubAuthToken";
     /** Name for the option 'generateAll'. */
     private static final String OPTION_GENERATE_ALL = "generateAll";
     /** Name for the option 'generateXdoc'. */
     private static final String OPTION_GENERATE_XDOC = "generateXdoc";
-    /** Name for the option 'generateTw'. */
-    private static final String OPTION_GENERATE_TW = "generateTw";
+    /** Name for the option 'generateTw'it. */
+    private static final String OPTION_GENERATE_TW = "generateTwit";
     /** Name for the option 'generateGplus'. */
     private static final String OPTION_GENERATE_GPLUS = "generateGplus";
     /** Name for the option 'generateRss'. */
