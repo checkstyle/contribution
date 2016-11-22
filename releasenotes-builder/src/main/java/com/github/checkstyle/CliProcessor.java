@@ -47,6 +47,11 @@ public class CliProcessor {
     /** Name for the option 'twitterAccessTokenSecret'. */
     public static final String OPTION_TWITTER_ACCESS_TOKEN_SECRET = "twitterAccessTokenSecret";
 
+    /** Name for the option 'mlistUsername'. */
+    public static final String OPTION_MLIST_USERNAME = "mlistUsername";
+    /** Name for the option 'mlistPassword'. */
+    public static final String OPTION_MLIST_PASSWORD = "mlistPassword";
+
     /** Name for the option 'localRepoPath'. */
     private static final String OPTION_LOCAL_REPO_PATH = "localRepoPath";
     /** Name for the option 'startRef'. */
@@ -59,6 +64,7 @@ public class CliProcessor {
     private static final String OPTION_OUTPUT_LOCATION = "outputLocation";
     /** Name for the option 'githubAuthToken'. */
     private static final String OPTION_AUTH_TOKEN = "githubAuthToken";
+
     /** Name for the option 'generateAll'. */
     private static final String OPTION_GENERATE_ALL = "generateAll";
     /** Name for the option 'generateXdoc'. */
@@ -69,7 +75,6 @@ public class CliProcessor {
     private static final String OPTION_GENERATE_GPLUS = "generateGplus";
     /** Name for the option 'generateRss'. */
     private static final String OPTION_GENERATE_RSS = "generateRss";
-
     /** Name for the option 'generateMlist'. */
     private static final String OPTION_GENERATE_MLIST = "generateMlist";
 
@@ -81,9 +86,13 @@ public class CliProcessor {
     private static final String OPTION_PUBLISH_XDOC = "publishXdoc";
     /** Name for the option 'publishXdocWithPush'. */
     private static final String OPTION_PUBLISH_XDOC_WITH_PUSH = "publishXdocWithPush";
+    /** Name for the option 'publishMlist'. */
+    private static final String OPTION_PUBLISH_MLIST = "publishMlist";
 
     /** Name for the option 'twitterProperties'. */
     private static final String OPTION_TWITTER_PROPERTIES = "twitterProperties";
+    /** Name for the option 'mlistProperties'. */
+    private static final String OPTION_MLIST_PROPERTIES = "mlistProperties";
 
     /** Command line cmdArgs. */
     private final String[] cmdArgs;
@@ -184,6 +193,10 @@ public class CliProcessor {
             .setTwitterAccessTokenSecret(
                 cmdLine.getOptionValue(OPTION_TWITTER_ACCESS_TOKEN_SECRET))
             .setTwitterProperties(cmdLine.getOptionValue(OPTION_TWITTER_PROPERTIES))
+            .setPublishMlist(cmdLine.hasOption(OPTION_PUBLISH_MLIST))
+            .setMlistUsername(cmdLine.getOptionValue(OPTION_MLIST_USERNAME))
+            .setMlistPassword(cmdLine.getOptionValue(OPTION_MLIST_PASSWORD))
+            .setMlistProperties(cmdLine.getOptionValue(OPTION_MLIST_PROPERTIES))
             .build();
     }
 

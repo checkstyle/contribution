@@ -29,6 +29,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 
+import com.github.checkstyle.publishers.MailingListPublisher;
 import com.github.checkstyle.publishers.TwitterPublisher;
 import com.github.checkstyle.publishers.XdocPublisher;
 import com.google.common.collect.Multimap;
@@ -203,6 +204,9 @@ public final class Main {
         if (cliOptions.isPublishAllSocial() || cliOptions.isPublishTwit()) {
             runTwitterPublication(cliOptions, errors);
         }
+        if (cliOptions.isPublishAllSocial() || cliOptions.isPublishMlist()) {
+            runMailingListPublication(cliOptions, errors);
+        }
         return errors;
     }
 
@@ -236,6 +240,23 @@ public final class Main {
             cliOptions.getTwitterAccessToken(), cliOptions.getTwitterAccessTokenSecret());
         try {
             twitterPublisher.publish();
+        }
+        catch (Exception ex) {
+            errors.add(ex.toString());
+        }
+    }
+
+    /**
+     * Publish on mailing list.
+     * @param cliOptions command line options.
+     * @param errors list of publication errors.
+     */
+    private static void runMailingListPublication(CliOptions cliOptions, List<String> errors) {
+        final MailingListPublisher mailingListPublisher = new MailingListPublisher(
+            cliOptions.getOutputLocation() + MLIST_FILENAME, cliOptions.getMlistUsername(),
+            cliOptions.getMlistPassword(), cliOptions.getReleaseNumber());
+        try {
+            mailingListPublisher.publish();
         }
         catch (Exception ex) {
             errors.add(ex.toString());

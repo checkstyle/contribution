@@ -16,5 +16,9 @@
     <allow pkg="com.github.checkstyle"/>
     <allow pkg="com.google.common"/>
     <allow pkg="freemarker.template"/>
-    <allow pkg="twitter4j"/>
+
+    <subpackage name="publishers">
+        <allow pkg="javax.mail"/>
+        <allow pkg="twitter4j"/>
+    </subpackage>
 </import-control>

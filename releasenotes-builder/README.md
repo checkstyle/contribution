@@ -22,7 +22,8 @@ java -jar releasenotes-builder-1.0-all.jar -localRepoPath <arg> -startRef <arg> 
      [-generateAll] [-generateXdoc] [-generateTwit] [-generateRss] [-generateGplus] [-generateMlist] \
      [-publishXdoc] [-publishXdocWithPush] \
      [-publishAllSocial] [-publishTwit] [-twitterConsumerKey <arg>] [-twitterConsumerSecret <arg>] \
-     [-twiterAccessToken <arg>] [-twitterAccessTokenSecret <arg>] [-twitterProperties <arg>]
+     [-twiterAccessToken <arg>] [-twitterAccessTokenSecret <arg>] [-twitterProperties <arg>] \
+     [-publishMlist] [-mlistUsername <arg>] [-mlistPassword <arg>] [-mlistProperties <arg>]
 ```
 
 Release notes builder will do the generation of release notes and report warnings and errors to
@@ -73,7 +74,15 @@ release notes. For example, ```753bc06``` or just tag ```checkstyle-6.12.1``` .
 
 **twitterAccessTokenSecret** - (optional) access token secret for Twitter.
 
-**twitterProperties** - (optional) properties for connection to Twitter.
+**twitterProperties** - (optional) path to a properties file for connection to Twitter.
+
+**publishMlist** - (optional) publish to mailing list from ```mailing_list.txt```.
+
+**mlistUsername** - (optional) username key for mailing list.
+
+**mlistPassword** - (optional) password key for mailing list.
+
+**mlistProperties** - (optional) path to a properties file for publication to mailing list.
 
 _**Please, notice!**_
 Options in property files have the same names as in command line and have lower priority.
