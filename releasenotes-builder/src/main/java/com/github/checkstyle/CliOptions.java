@@ -80,6 +80,15 @@ public final class CliOptions {
     /** Whether to publish xdoc with push. */
     private boolean publishXdocWithPush;
 
+    /** Whether to publish to mailing list. */
+    private boolean publishMlist;
+    /** Username to publish to mailing list. */
+    private String mlistUsername;
+    /** Password to publish to mailing list. */
+    private String mlistPassword;
+    /** Properties to publish to mailing list. */
+    private String mlistProperties;
+
     /** Default constructor. */
     private CliOptions() { }
 
@@ -161,6 +170,18 @@ public final class CliOptions {
 
     public boolean isPublishXdocWithPush() {
         return publishXdocWithPush;
+    }
+
+    public boolean isPublishMlist() {
+        return publishMlist;
+    }
+
+    public String getMlistUsername() {
+        return mlistUsername;
+    }
+
+    public String getMlistPassword() {
+        return mlistPassword;
     }
 
     /**
@@ -378,7 +399,7 @@ public final class CliOptions {
         }
 
         /**
-         * Spcify Twitter Properties.
+         * Specify Twitter Properties.
          * @param twProperties twitter properties
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -411,6 +432,50 @@ public final class CliOptions {
         }
 
         /**
+         * Specify to do publication only for mailing list.
+         * @param pubMlist flag to publish to mailing list
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
+        public Builder setPublishMlist(boolean pubMlist) {
+            publishMlist = pubMlist;
+            return this;
+        }
+
+        /**
+         * Specify username to publish to mailing list.
+         * @param username mailing list username
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
+        public Builder setMlistUsername(String username) {
+            mlistUsername = username;
+            return this;
+        }
+
+        /**
+         * Specify password to publish to mailing list.
+         * @param password mailing list password
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
+        public Builder setMlistPassword(String password) {
+            mlistPassword = password;
+            return this;
+        }
+
+        /**
+         * Specify mailing list properties.
+         * @param mlistProps mailing list properties
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
+        public Builder setMlistProperties(String mlistProps) {
+            mlistProperties = mlistProps;
+            return this;
+        }
+
+        /**
          * Verify options and set defaults.
          * @return new CliOption instance
          */
@@ -426,9 +491,7 @@ public final class CliOptions {
             Verify.verifyNotNull(startRef, "Start reference should not be null!");
             Verify.verifyNotNull(releaseNumber, "Release number should not be null!");
 
-            if ((publishAllSocial || publishTwit)
-                && (twitterConsumerKey == null || twitterConsumerSecret == null
-                    || twitterAccessToken == null || twitterAccessTokenSecret == null)) {
+            if (shouldLoadTwitterProperties()) {
                 Verify.verifyNotNull(twitterProperties, "Properties file for Twitter is expected"
                     + " if some of the following options are not entered: twitterConsumerKey, "
                     + "twitterConsumerSecret, twitterAccessToken, twitterAccessTokenSecret.");
@@ -439,6 +502,16 @@ public final class CliOptions {
                 Verify.verifyNotNull(twitterAccessToken, "Access token for Twitter is expected!");
                 Verify.verifyNotNull(twitterAccessTokenSecret,
                     "Access token secret for Twitter is expected!");
+            }
+
+            if ((publishAllSocial || publishMlist)
+                && (mlistUsername == null || mlistPassword == null)) {
+                Verify.verifyNotNull(mlistProperties, "Properties file for mailing list is "
+                    + "expected if some of the following options are not entered: mlistUsername, "
+                    + "mlistPassword.");
+                loadMlistProperties();
+                Verify.verifyNotNull(mlistUsername, "Username for mailing list is expected!");
+                Verify.verifyNotNull(mlistPassword, "Password for mailing list is expected!");
             }
 
             return getNewCliOptionsInstance();
@@ -476,6 +549,37 @@ public final class CliOptions {
         }
 
         /**
+         * Whether Twitter properties should be loaded.
+         * @return true, if Twitter properties should be loaded.
+         */
+        private boolean shouldLoadTwitterProperties() {
+            return (publishAllSocial || publishTwit)
+                    && (twitterConsumerKey == null || twitterConsumerSecret == null
+                        || twitterAccessToken == null || twitterAccessTokenSecret == null);
+        }
+
+        /**
+         * Load options for mailing list publication from properties if they were not set.
+         */
+        private void loadMlistProperties() {
+            try (InputStream propStream = new FileInputStream(mlistProperties)) {
+                final Properties props = new Properties();
+                props.load(propStream);
+
+                if (mlistUsername == null) {
+                    mlistUsername = props.getProperty(CliProcessor.OPTION_MLIST_USERNAME);
+                }
+                if (mlistPassword == null) {
+                    mlistPassword = props.getProperty(CliProcessor.OPTION_MLIST_PASSWORD);
+                }
+            }
+            catch (IOException ex) {
+                throw new IllegalStateException("Mailing list properties file has access problems"
+                    + " (mlistProperties=" + mlistProperties + ')', ex);
+            }
+        }
+
+        /**
          * Get new CliOptions instance.
          * @return new CliOptions instance.
          */
@@ -502,7 +606,12 @@ public final class CliOptions {
             cliOptions.twitterProperties = twitterProperties;
             cliOptions.publishXdoc = publishXdoc;
             cliOptions.publishXdocWithPush = publishXdocWithPush;
+            cliOptions.publishMlist = publishMlist;
+            cliOptions.mlistUsername = mlistUsername;
+            cliOptions.mlistPassword = mlistPassword;
+            cliOptions.mlistProperties = mlistProperties;
             return cliOptions;
         }
+
     }
 }
