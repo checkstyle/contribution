@@ -24,7 +24,7 @@
         <java.version>1.8</java.version>
         <tools.jar.version>${java.version}.0</tools.jar.version>
         <tools.jar.path>${java.home}/../lib/tools.jar</tools.jar.path>
-        <checkstyle.version>7.2</checkstyle.version>
+        <checkstyle.version>7.3</checkstyle.version>
     </properties>
 
     <dependencies>
