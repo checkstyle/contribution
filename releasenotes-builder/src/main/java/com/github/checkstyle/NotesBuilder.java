@@ -183,7 +183,7 @@ public final class NotesBuilder {
                     commitMessage.substring(lastSpaceIndex + 1, lastPeriodIndex);
 
                 final Optional<RevCommit> revertedCommit = commitsForRelease.stream()
-                    .filter(revCommit -> revertedCommitReference.equals(commit.getName()))
+                    .filter(revCommit -> revertedCommitReference.equals(revCommit.getName()))
                     .findFirst();
 
                 if (revertedCommit.isPresent()) {
