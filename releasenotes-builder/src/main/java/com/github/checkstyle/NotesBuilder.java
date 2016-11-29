@@ -25,9 +25,11 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -41,10 +43,7 @@ import org.kohsuke.github.GHIssueState;
 import org.kohsuke.github.GHLabel;
 import org.kohsuke.github.GHRepository;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
 import com.google.common.base.Verify;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 
 /**
@@ -109,7 +108,8 @@ public final class NotesBuilder {
                 final String issueLabel = getIssueLabelFrom(issue);
                 if (issueLabel.isEmpty()) {
                     final String error = String.format("[ERROR] Issue #%d does not have %s label!",
-                        issueNo, Joiner.on(SEPARATOR).join(Constants.ISSUE_LABELS));
+                        issueNo, Arrays.stream(Constants.ISSUE_LABELS)
+                            .collect(Collectors.joining(SEPARATOR)));
                     result.addError(error);
                 }
                 final Set<RevCommit> issueCommits = getCommitsForIssue(commitsForRelease, issueNo);
@@ -182,17 +182,13 @@ public final class NotesBuilder {
                 final String revertedCommitReference =
                     commitMessage.substring(lastSpaceIndex + 1, lastPeriodIndex);
 
-                final RevCommit revertedCommit = Iterables.tryFind(commitsForRelease,
-                    new Predicate<RevCommit>() {
-                        @Override
-                        public boolean apply(RevCommit commit) {
-                            return revertedCommitReference.equals(commit.getName());
-                        }
-                    }).orNull();
+                final Optional<RevCommit> revertedCommit = commitsForRelease.stream()
+                    .filter(revCommit -> revertedCommitReference.equals(commit.getName()))
+                    .findFirst();
 
-                if (revertedCommit != null) {
+                if (revertedCommit.isPresent()) {
                     ignoredCommits.add(commit);
-                    ignoredCommits.add(revertedCommit);
+                    ignoredCommits.add(revertedCommit.get());
                 }
             }
             else if (isIgnoredCommit(commitMessage)) {
@@ -227,12 +223,8 @@ public final class NotesBuilder {
         }
         else {
             final Ref repoPeeled = repo.peel(referenceObj);
-            if (repoPeeled.getPeeledObjectId() == null) {
-                actualObjectId = referenceObj.getObjectId();
-            }
-            else {
-                actualObjectId = repoPeeled.getPeeledObjectId();
-            }
+            actualObjectId = Optional.ofNullable(repoPeeled.getPeeledObjectId())
+                .orElse(referenceObj.getObjectId());
         }
         return actualObjectId;
     }
@@ -286,7 +278,7 @@ public final class NotesBuilder {
      */
     private static String getAuthorsOf(Set<RevCommit> commits) {
         final Set<String> commitAuthors = findCommitAuthors(commits);
-        return Joiner.on(SEPARATOR).join(commitAuthors.iterator());
+        return commitAuthors.stream().collect(Collectors.joining(SEPARATOR));
     }
 
     /**
@@ -313,20 +305,9 @@ public final class NotesBuilder {
      */
     private static String getIssueLabelFrom(GHIssue issue) throws IOException {
         final Collection<GHLabel> issueLabels = issue.getLabels();
-        final GHLabel label = Iterables.tryFind(issueLabels, new Predicate<GHLabel>() {
-            @Override
-            public boolean apply(GHLabel input) {
-                return Arrays.binarySearch(Constants.ISSUE_LABELS, input.getName()) != -1;
-            }
-            }).orNull();
-
-        final String issueLabelName;
-        if (label == null) {
-            issueLabelName = "";
-        }
-        else {
-            issueLabelName = label.getName();
-        }
-        return issueLabelName;
+        final Optional<GHLabel> label = issueLabels.stream()
+            .filter(input -> Arrays.binarySearch(Constants.ISSUE_LABELS, input.getName()) != -1)
+            .findFirst();
+        return label.map(GHLabel::getName).orElse("");
     }
 }
