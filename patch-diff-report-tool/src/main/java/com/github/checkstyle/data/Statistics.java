@@ -167,7 +167,6 @@ public class Statistics {
      * @param index index of the source.
      */
     public final void incrementFileCount(int index) {
-        this.fileNumBase++;
         if (index == CheckstyleReportsParser.BASE_REPORT_INDEX) {
             this.fileNumBase++;
         }
