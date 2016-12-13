@@ -7,14 +7,9 @@ SEVNTU_DIR="/tmp/sevntu-nightly"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 DATE=`date +%Y-%m-%d`
-FILE="checkstyle-$1-sevntu-$2-all.jar"
+FILE="checkstyle-nightly-sevntu-nightly-$DATE-all.jar"
 
 #############################################
-
-if [ "$#" -ne 2 ]; then
-	echo "Expecting only 2 arguments, checkstyle version and sevntu version"
-	exit 1
-fi
 
 if [ ! -d $CS_DIR ]; then
 	mkdir $CS_DIR
@@ -29,13 +24,13 @@ if [ ! -d "$CS_DIR/checkstyle/.git" ]; then
 else
 	cd checkstyle
 
+	git checkout master
 	git fetch origin
 
 	git reset --hard HEAD
 	git clean -f -d
+	git pull
 fi
-
-git checkout tags/checkstyle-$1
 
 #############################################
 
@@ -52,18 +47,18 @@ if [ ! -d "$SEVNTU_DIR/sevntu.checkstyle/.git" ]; then
 else
 	cd sevntu.checkstyle
 
+	git checkout master
 	git fetch origin
 
-	if [ $(git rev-parse HEAD) == $(git rev-parse @{u}) ]; then
-		echo "No changes in sevntu.checkstyle since last run."
-		exit 1
-	fi
+#	if [ $(git rev-parse HEAD) == $(git rev-parse @{u}) ]; then
+#		echo "No changes in sevntu.checkstyle since last run."
+#		exit 1
+#	fi
 
 	git reset --hard HEAD
 	git clean -f -d
+	git pull
 fi
-
-git checkout tags/v$2
 
 cp -r sevntu-checks/src/main/java $CS_DIR/checkstyle/src/main
 rm sevntu-checks/src/main/resources/checkstyle_packages.xml
@@ -75,4 +70,4 @@ cd $CS_DIR/checkstyle
 
 mvn --batch-mode clean package -Passembly -Dmaven.test.skip=true -Dcheckstyle.ant.skip=true -Dcheckstyle.skip=true -Dpmd.skip=true -Dfindbugs.skip=true -Dcobertura.skip=true -Dforbiddenapis.skip=true
 
-sudo -u www-data cp target/checkstyle-*-all.jar $DIR/$FILE
+sudo -u www-data cp target/checkstyle-*-SNAPSHOT-all.jar $DIR/$FILE

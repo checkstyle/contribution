@@ -36,6 +36,11 @@ No parameters required. Downloads checkstyle's repository and packages the jar f
 download-sevntu.sh
 ------------------
 
+Requires the full version of the checkstyle release as the first parameter, and the full version of the sevntu release as the second parameter.
+
+download-sevntu-nightly.sh
+------------------
+
 No parameters required. Downloads sevntu's and checkstyle's repository and packages the jar from both master branches.
 
 Live Test Version

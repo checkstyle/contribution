@@ -133,7 +133,7 @@ if ($action == "view") {
 	echo "Results:<br />";
 	echo "<div style='border: 1px solid black;' id='cs_results'>";
 
-	$output = shell_exec("java -jar " . $checkstyleFile . ($printTree == "true" ? " -T" : " -c " . $configFile) . " " . $codeFile . " 2>&1");
+	$output = shell_exec("java -jar " . $checkstyleFile . ($printTree == "true" ? " -J" : " -c " . $configFile) . " " . $codeFile . " 2>&1");
 
 	// pretty display
 	echo str_replace("\n", "<br />", str_replace("  ", "&nbsp; ", str_replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;", str_replace($saveDir, "", str_replace($code, "TestClass", str_replace($config, "TestConfig.xml", _sanitizeText($output)))))));
