@@ -32,6 +32,7 @@ INSTALL_MASTER=true
 RUN_MASTER=true
 INSTALL_PULL=true
 RUN_PULL=true
+RUN_REPORTS=true
 USE_CUSTOM_CONFIG=false
 CUSTOM_CONFIG=""
 
@@ -60,8 +61,8 @@ fi
 function parse_arguments {
 	SKIP=true
 
-	while [[ $@ > 0 ]] ; do
-		if $SKIP ; then
+	while [[ $# > 0 ]] ; do
+		if ! $SKIP ; then
 			case "$1" in
 			-skip)
 				case "$2" in
@@ -79,12 +80,19 @@ function parse_arguments {
 					INSTALL_PULL=false
 					RUN_PULL=false
 					;;
+				reports)
+					RUN_REPORTS=false
+					;;
 				esac
 				shift
 				;;
 			-config)
 				USE_CUSTOM_CONFIG=true
 				CUSTOM_CONFIG=$2
+				shift
+				;;
+			-output)
+				FINAL_RESULTS_DIR=$2
 				shift
 				;;
 			esac
@@ -118,6 +126,9 @@ function launch {
 		if [ "$CS_VERSION" != "$TEST_VERSION" ]; then
 			echo "Config version mis-match"
 			exit 1
+		fi
+		if [ ! -d "$SITE_SOURCES_DIR" ]; then
+			mkdir -p $SITE_SOURCES_DIR
 		fi
 
 		while read line ; do
@@ -163,21 +174,37 @@ function launch {
 				fi
 				if [ "$COMMIT_ID" != "" ]; then
 					echo "Reseting $REPO_TYPE sources to commit '$COMMIT_ID'"
-					cd $REPO_SOURCES_DIR
+					cd $GITPATH
 					git fetch origin
 					git reset --hard $COMMIT_ID
 					git clean -f -d
 					cd -
 				else
-					echo "Reseting $REPO_TYPE sources to head"
-					cd $REPO_SOURCES_DIR
+					echo "Reseting GIT $REPO_TYPE sources to head"
+					cd $GITPATH
 					git fetch origin
 					git reset --hard origin/master
 					git clean -f -d
 					cd -
 				fi
 
-				cp $GITPATH $SITE_SOURCES_DIR
+				cp -R $GITPATH/* $SITE_SOURCES_DIR
+			elif [ "$REPO_TYPE" == "hg" ]; then
+				HGPATH=$EXTRA_DIR/$REPO_NAME
+
+				if [ ! -d "$HGPATH" ]; then
+					echo "Cloning $REPO_TYPE repository '${REPO_NAME}' ..."
+					hg clone $REPO_URL $HGPATH
+					echo -e "Cloning $REPO_TYPE repository '$REPO_NAME' - completed"
+				fi
+				if [ "$COMMIT_ID" != "" ]; then
+					echo "Reseting HG $REPO_TYPE sources to commit '$COMMIT_ID'"
+					cd $HGPATH
+					hg up $COMMIT_ID
+					cd -
+				fi
+
+				cp -R $HGPATH/* $SITE_SOURCES_DIR
 			else
 				echo "Unknown RepoType: $REPO_TYPE"
 				exit 1
@@ -280,8 +307,10 @@ function launch {
 					mkdir $TESTER_DIR/$SITE_SAVE_REF_DIR/$REPO_NAME
 				fi
 				rm -rf $TESTER_DIR/$SITE_SAVE_REF_DIR/$REPO_NAME/*
-				mv $SITE_SOURCES_DIR/* $TESTER_DIR/$SITE_SAVE_REF_DIR/$REPO_NAME
 			fi
+
+			cp -r $SITE_SOURCES_DIR/* $TESTER_DIR/$SITE_SAVE_REF_DIR/$REPO_NAME
+			rm -rf $SITE_SOURCES_DIR/*
 
 			echo "Running Launch on $REPO_NAME - completed"
 		done < projects-to-test-on.properties
@@ -310,8 +339,10 @@ if $INSTALL_MASTER ; then
 	if $CONTACTSERVER ; then
 		git fetch origin
 	fi
+
 	git reset --hard HEAD
 	git checkout origin/master
+
 	git clean -f -d
 
 	echo "Installing Master"
@@ -369,71 +400,78 @@ else
 	echo "Skipping Launch PR $1"
 fi
 
-if ! $RUN_MASTER && ! $RUN_PULL ; then
-	echo "Figuring out Reports to run"
+if $RUN_REPORTS ; then
+	if ! $RUN_MASTER && ! $RUN_PULL ; then
+		echo "Figuring out Reports to run"
 
-	while read line ; do
-		[[ "$line" == \#* ]] && continue # Skip lines with comments
-		[[ -z "$line" ]] && continue     # Skip empty lines
-		
-		REPO_NAME=`echo $line | cut -d '|' -f 1`
+		while read line ; do
+			[[ "$line" == \#* ]] && continue # Skip lines with comments
+			[[ -z "$line" ]] && continue     # Skip empty lines
+			
+			REPO_NAME=`echo $line | cut -d '|' -f 1`
 
-		EXTPROJECTS+=($REPO_NAME)
-	done < $TESTER_DIR/projects-to-test-on.properties
-fi
+			EXTPROJECTS+=($REPO_NAME)
+		done < $TESTER_DIR/projects-to-test-on.properties
+	fi
 
-echo "Starting all Reports"
+	echo "Starting all Reports"
 
-if [ ! -d "$FINAL_RESULTS_DIR" ]; then
-	mkdir $FINAL_RESULTS_DIR
-else
-	rm -rf $FINAL_RESULTS_DIR/*
-fi
+	if [ ! -d "$FINAL_RESULTS_DIR" ]; then
+		mkdir $FINAL_RESULTS_DIR
+	else
+		rm -rf $FINAL_RESULTS_DIR/*
+	fi
 
-if [ -f $FINAL_RESULTS_DIR/index.html ] ; then
-	rm $FINAL_RESULTS_DIR/index.html
-fi
-echo "<html><body>" >> $FINAL_RESULTS_DIR/index.html
+	if [ -f $FINAL_RESULTS_DIR/index.html ] ; then
+		rm $FINAL_RESULTS_DIR/index.html
+	fi
+	echo "<html><body>" >> $FINAL_RESULTS_DIR/index.html
 
-for extp in "${EXTPROJECTS[@]}"
-do
-	if [ ! -d "$FINAL_RESULTS_DIR/$extp" ]; then
-		CONFIG=""
-		if $USE_CUSTOM_CONFIG ; then
-			CONFIG=$CUSTOM_CONFIG
+	for extp in "${EXTPROJECTS[@]}"
+	do
+		if [ ! -d "$FINAL_RESULTS_DIR/$extp" ]; then
+			CONFIG=""
+			if $USE_CUSTOM_CONFIG ; then
+				if [[ "$CUSTOM_CONFIG" = /* ]]; then
+					CONFIG=$CUSTOM_CONFIG
+				else
+					CONFIG="$TESTER_DIR/$CUSTOM_CONFIG"
+				fi
+			else
+				CONFIG="$TESTER_DIR/my_checks_$extp.xml"
+
+				if [ ! -f $CONFIG ] ; then
+					CONFIG="$TESTER_DIR/my_checks.xml"
+				fi
+			fi
+
+			echo "java -jar $DIFF_JAR --baseReport $TESTER_DIR/$SITE_SAVE_MASTER_DIR/$extp/checkstyle-result.xml --patchReport $TESTER_DIR/$SITE_SAVE_PULL_DIR/$extp/checkstyle-result.xml --output $FINAL_RESULTS_DIR/$extp --baseConfig $CONFIG --patchConfig $CONFIG --refFiles $TESTER_DIR/$SITE_SAVE_REF_DIR"
+
+			java -jar $DIFF_JAR --baseReport $TESTER_DIR/$SITE_SAVE_MASTER_DIR/$extp/checkstyle-result.xml --patchReport $TESTER_DIR/$SITE_SAVE_PULL_DIR/$extp/checkstyle-result.xml --output $FINAL_RESULTS_DIR/$extp --baseConfig $CONFIG --patchConfig $CONFIG --refFiles $TESTER_DIR/$SITE_SAVE_REF_DIR
+			
+			if [ "$?" != "0" ]
+			then
+				echo "patch-diff-report-tool failed on $extp"
+				exit 1
+			fi
 		else
-			CONFIG="my_checks_$extp.xml"
+			echo "Skipping patch-diff-report-tool for $extp"
+		fi
 
-			if [ ! -f $CONFIG ] ; then
-				CONFIG="my_checks.xml"
+		total=($(grep -Eo 'totalDiff">[0-9]+' $FINAL_RESULTS_DIR/$extp/index.html | grep -Eo '[0-9]+'))
+
+		echo "<a href='$extp/index.html'>$extp</a>" >> $FINAL_RESULTS_DIR/index.html
+		if [ ${#total[@]} != "0" ] ; then
+			if [ ${total[0]} -ne 0 ] ; then
+				echo " (${total[0]})" >> $FINAL_RESULTS_DIR/index.html
 			fi
 		fi
+		echo "<br />" >> $FINAL_RESULTS_DIR/index.html
+	done
 
-		echo "java -jar $DIFF_JAR --baseReport $TESTER_DIR/$SITE_SAVE_MASTER_DIR/$extp/checkstyle-result.xml --patchReport $TESTER_DIR/$SITE_SAVE_PULL_DIR/$extp/checkstyle-result.xml --output $FINAL_RESULTS_DIR/$extp --baseConfig $TESTER_DIR/$CONFIG --patchConfig $TESTER_DIR/$CONFIG --refFiles $TESTER_DIR"
+	echo "</body></html>" >> $FINAL_RESULTS_DIR/index.html
+fi
 
-		java -jar $DIFF_JAR --baseReport $TESTER_DIR/$SITE_SAVE_MASTER_DIR/$extp/checkstyle-result.xml --patchReport $TESTER_DIR/$SITE_SAVE_PULL_DIR/$extp/checkstyle-result.xml --output $FINAL_RESULTS_DIR/$extp --baseConfig $TESTER_DIR/$CONFIG --patchConfig $TESTER_DIR/$CONFIG --refFiles $TESTER_DIR
-		
-		if [ "$?" != "0" ]
-		then
-			echo "patch-diff-report-tool failed on $extp"
-			exit 1
-		fi
-	else
-		echo "Skipping patch-diff-report-tool for $extp"
-	fi
-
-	total=($(grep -Eo 'totalDiff">[0-9]+' $FINAL_RESULTS_DIR/$extp/index.html | grep -Eo '[0-9]+'))
-
-	echo "<a href='$extp/index.html'>$extp</a>" >> $FINAL_RESULTS_DIR/index.html
-	if [ ${#total[@]} != "0" ] ; then
-		if [ ${total[0]} -ne 0 ] ; then
-			echo " (${total[0]})" >> $FINAL_RESULTS_DIR/index.html
-		fi
-	fi
-	echo "<br />" >> $FINAL_RESULTS_DIR/index.html
-done
-
-echo "</body></html>" >> $FINAL_RESULTS_DIR/index.html
 echo "Complete"
 
 exit 0
