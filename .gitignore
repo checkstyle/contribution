@@ -9,4 +9,5 @@ bin
 /checkstyle-tester/repositories
 /checkstyle-tester/target
 /checkstyle-tester/reports
+/checkstyle-tester/tmp_reports
 /qulice/src/main/java/
