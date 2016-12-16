@@ -58,7 +58,6 @@ def generateCheckstyleReport(projectsToTestOn, checkstyleConfig) {
     createWorkDirsIfNotExist(srcDir, reposDir, reportsDir)
 
     def targetDir = 'target'
-    def siteDir = "$targetDir/site"
 
     projects.each {
         project ->
@@ -76,7 +75,7 @@ def generateCheckstyleReport(projectsToTestOn, checkstyleConfig) {
                 cloneRepository(repoName, repoType, repoUrl, commitId, reposDir)
                 copyDir("$reposDir/$repoName", "$srcDir/$repoName")
                 runMavenExecution(srcDir, excludes, checkstyleConfig)
-                postProcessCheckstyleReport(siteDir)
+                postProcessCheckstyleReport(targetDir)
                 deleteDir("$srcDir/$repoName")
                 moveDir(targetDir, "$reportsDir/$repoName")
             }
@@ -207,13 +206,20 @@ def runMavenExecution(srcDir, excludes, checkstyleConfig) {
     println "Running Checkstyle on $srcDir - finished"
 }
 
-def postProcessCheckstyleReport(siteDir) {
+def postProcessCheckstyleReport(targetDir) {
+    def siteDir = "$targetDir/site"
     println 'linking report to index.html'
     new File("$siteDir/index.html").renameTo "$siteDir/_index.html"
     Files.createLink(Paths.get("$siteDir/index.html"), Paths.get("$siteDir/checkstyle.html"))
 
     removeNonReferencedXrefFiles(siteDir)
     removeEmptyDirectories(new File("$siteDir/xref"))
+
+    new AntBuilder().replace(
+        file: "$targetDir/checkstyle-result.xml",
+        token: "checkstyle-tester/src/main/java",
+        value: "checkstyle-tester/repositories"
+    )
 }
 
 def removeNonReferencedXrefFiles(siteDir) {
