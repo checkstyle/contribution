@@ -5,7 +5,7 @@ It consists of two Groovy scripts: launch.groovy and diff.groovy. Thus, in order
 
 ## [launch.groovy] Checkstyle report generation
 
-**launch.groovy** is a script which allows you to generate Checkstyle report over target projects. It uses Maven Checkstyle plugin. In order to use the script you should run the following command in your comman line:
+**launch.groovy** is a script which allows you to generate Checkstyle report over target projects. It invokes Maven Checkstyle plugin. In order to use the script you should run the following command in your command line:
 
 ```
 groovy launch.groovy projects-to-test-on.properties my_check.xml
@@ -33,12 +33,12 @@ Please use `-Dcheckstyle.consoleOutput=true` option if you need to see all Check
 groovy launch.groovy projects-to-test-on.properties my_check.xml -Dcheckstyle.consoleOutput=true
 ```
 
-**Attention:** this project by deafult use released version of Checkstyle and sevntu.checkstyle
-If you you need to use custom(snapshot) versons please update pom.xml to reference that versions ([checkstyle version](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/pom.xml#L29), [sevntu.checkstyle version](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/pom.xml#L34)), and please make sure that custom(newly generated) versions are located in your local maven repo 
+**Attention:** this project by deafult uses released version of Checkstyle and sevntu.checkstyle
+If you you need to use custom (snapshot) versions please update pom.xml to reference that versions ([checkstyle version](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/pom.xml#L29), [sevntu.checkstyle version](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/pom.xml#L34)), and please make sure that custom(newly generated) versions are located in your local maven repo 
+
 ```
 ls  ~/.m2/repository/com/puppycrawl/tools/checkstyle/
 ls  ~/.m2/repository/com/github/sevntu/checkstyle/sevntu-checkstyle-maven-plugin
-
 ```
 
 to build SNAPSHOT version of `checkstyle` please run in his repo
@@ -77,20 +77,28 @@ groovy diff.groovy -r /home/johndoe/projects/checkstyle -b master -p i111-my-fix
 ```
 
 The script receives the following set of command line arguments:
+
 **localGitRepo** (r) - path to the local Checkstyle repository;
+
 **baseBranch** (b) - name of the base branch in local Checkstyle repository (default is master branch);
+
 **patchBranch** (p) - name of the branch with your changes;
+
 **checkstyleCfg** (c) - path to the file with Checkstyle configuration;
+
 **projectsToTestOn** (l) - path to the file which contains the projects which sources will be analyzed by Checkstyle during report generation.
 
 When the script finishes its work the following directory structure will be created in the root of cehckstyle-tester directory:
 
 */repositories* - directory with downloaded projects sources which are specified in projects-to-test-on.properties;
+
 */reports/diff* - directory with diff reports;
-*reports/baseBranch* - directory with Checkstyle reports which are generated with Checkstyle base version (based on base branch);
+
+*reports/baseBranch* - directory with Checkstyle reports which are generated with Checkstyle base version (based on specified base branch);
+
 *reports/patchBranch* - directory with Checkstyle reports which are generated with Checkstyle version that contains your changes (based on specified patch branch).
 
-You will find index.html file in /reports/diff directory. The file represents summary diff report.
+You will find *index.html* file in /reports/diff directory. The file represents summary diff report.
 
 To generate a diff report before and after your changes manually please use the tool
 [https://github.com/attatrol/ahsm](https://github.com/attatrol/ahsm)
@@ -106,7 +114,7 @@ to github pages repo (https://pages.github.com/) to share your report with other
 
 1) please follow instruction from https://pages.github.com/ to create your static web site on github;
 
-2) please copy the whole "target/site" folder to newly created repo. Please rename target/­site/checkstyle.html to target/­site/index.html to let github.io open it by default;
+2) please copy the whole "reports/diff" (if you use diff.groovy script) or "reports" folder (if you use only launch.groovy) to newly created repo;
 
 3) please make sure that report is available as http://YOURUSER.github.io/ ;
 
