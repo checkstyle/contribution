@@ -50,6 +50,7 @@ def generateCheckstyleReport(projectsToTestOn, checkstyleConfig) {
     def REPO_URL_PARAM_NO = 2
     def REPO_COMMIT_ID_PARAM_NO = 3
     def REPO_EXCLUDES_PARAM_NO = 4
+    def SHORT_PARAM_LIST_SIZE = 3
     def FULL_PARAM_LIST_SIZE = 5
 
     def srcDir = "src/main/java"
@@ -66,7 +67,10 @@ def generateCheckstyleReport(projectsToTestOn, checkstyleConfig) {
                 def repoName = params[REPO_NAME_PARAM_NO]
                 def repoType = params[REPO_TYPE_PARAM_NO]
                 def repoUrl = params[REPO_URL_PARAM_NO]
-                def commitId = params[REPO_COMMIT_ID_PARAM_NO]
+                def commitId = ''
+                if (params.length > SHORT_PARAM_LIST_SIZE) {
+                    commitId = params[REPO_COMMIT_ID_PARAM_NO]
+                }
                 def excludes = ''
                 if (params.length == FULL_PARAM_LIST_SIZE) {
                     excludes = params[REPO_EXCLUDES_PARAM_NO]
