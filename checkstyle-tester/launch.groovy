@@ -62,15 +62,16 @@ def generateCheckstyleReport(projectsToTestOn, checkstyleConfig) {
     projects.each {
         project ->
             if (!project.startsWith('#') && !project.isEmpty()) {
-                def params = project.split('\\|')
+                def params = project.split('\\|', -1)
+                if (params.length < FULL_PARAM_LIST_SIZE) {
+                    throw new InvalidPropertiesFormatException("Error: line '$project' in file '$projectsToTestOnFile.name' should have $FULL_PARAM_LIST_SIZE pipe-delimeted sections!")
+                }
+
                 def repoName = params[REPO_NAME_PARAM_NO]
                 def repoType = params[REPO_TYPE_PARAM_NO]
                 def repoUrl = params[REPO_URL_PARAM_NO]
                 def commitId = params[REPO_COMMIT_ID_PARAM_NO]
-                def excludes = ''
-                if (params.length == FULL_PARAM_LIST_SIZE) {
-                    excludes = params[REPO_EXCLUDES_PARAM_NO]
-                }
+                def excludes = params[REPO_EXCLUDES_PARAM_NO]
 
                 cloneRepository(repoName, repoType, repoUrl, commitId, reposDir)
                 copyDir("$reposDir/$repoName", "$srcDir/$repoName")
