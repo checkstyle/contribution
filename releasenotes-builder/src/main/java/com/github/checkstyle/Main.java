@@ -30,7 +30,6 @@ import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
 
 import com.github.checkstyle.publishers.MailingListPublisher;
-// -@cs[CustomImportOrder] Until https://github.com/checkstyle/checkstyle/issues/3590
 import com.github.checkstyle.publishers.SourceforgeRssPublisher;
 import com.github.checkstyle.publishers.TwitterPublisher;
 import com.github.checkstyle.publishers.XdocPublisher;
