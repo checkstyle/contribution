@@ -64,7 +64,7 @@ Follow example how we do this in Windows CI server - https://github.com/checksty
 
 ## [diff.groovy] Diff report generation
 
-In order to generat a compact diff report before and after your changes you can use diff.groovy script which performs all required work automatically. Please run the following command in your command line:
+In order to generate a compact diff report before and after your changes you can use diff.groovy script which performs all required work automatically. Please run the following command in your command line:
 
 ```
 groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle --baseBranch master --patchBranch i111-my-fix --checkstyleCfg my_check.xml --projectsToTestOn projects-to-test-on.properties
