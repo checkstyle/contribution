@@ -56,7 +56,7 @@
 					 but will not take effect on the execution of "mvn checkstyle:checkstyle"  -->
 				<configuration>
 					<enableFilesSummary>false</enableFilesSummary>
-                    <failsOnError>true</failsOnError>
+                    <failsOnError>false</failsOnError>
 				</configuration>
 			</plugin>
           <plugin>
