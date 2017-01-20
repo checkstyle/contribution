@@ -1,7 +1,7 @@
 # CHECKSTYLE-TESTER
 
 checkstyle-tester is a tool for Checkstyle report generation over very [basic set of java projects](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.properties).
-It consists of two Groovy scripts: launch.groovy and diff.groovy. Thus, in order to use the tool make sure you have the Groovy runtime installed on your developer machine.
+It consists of two Groovy scripts: launch.groovy and diff.groovy. Thus, in order to use the tool make sure you have the Groovy runtime installed on your developer machine (min required version is 2.4.8).
 
 ## [launch.groovy] Checkstyle report generation
 
