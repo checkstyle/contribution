@@ -222,8 +222,8 @@ function launch {
 			fi
 
 			echo "Running Checkstyle on $SITE_SOURCES_DIR with config $CONFIG ... with excludes $EXCLUDES"
-			echo "mvn -e --batch-mode clean site -Dcheckstyle.excludes=$EXCLUDES -Dcheckstyle.config.location=$CONFIG -DMAVEN_OPTS=-Xmx3024m"
-			mvn -e --batch-mode clean site -Dcheckstyle.excludes=$EXCLUDES -Dcheckstyle.config.location=$CONFIG -DMAVEN_OPTS=-Xmx3024m
+			echo "mvn -e --batch-mode clean site -Dcheckstyle.excludes=$EXCLUDES -Dcheckstyle.config.location=$CONFIG -Dcheckstyle.failsOnError=false -DMAVEN_OPTS=-Xmx3024m"
+			mvn -e --batch-mode clean site -Dcheckstyle.excludes=$EXCLUDES -Dcheckstyle.config.location=$CONFIG -Dcheckstyle.failsOnError=false -DMAVEN_OPTS=-Xmx3024m
 
 			if [ "$?" != "0" ]
 			then
