@@ -74,6 +74,7 @@ def generateCheckstyleReport(projectsToTestOn, checkstyleConfig) {
                 def excludes = params[REPO_EXCLUDES_PARAM_NO]
 
                 cloneRepository(repoName, repoType, repoUrl, commitId, reposDir)
+                deleteDir(srcDir)
                 copyDir("$reposDir/$repoName", "$srcDir/$repoName")
                 runMavenExecution(srcDir, excludes, checkstyleConfig)
                 postProcessCheckstyleReport(targetDir)
@@ -81,6 +82,9 @@ def generateCheckstyleReport(projectsToTestOn, checkstyleConfig) {
                 moveDir(targetDir, "$reportsDir/$repoName")
             }
     }
+
+    // restore empty_file to make src directory tracked by git
+    Files.createFile(Paths.get("$srcDir/empty_file"))
 }
 
 def createWorkDirsIfNotExist(srcDirPath, repoDirPath, reportsDirPath) {
