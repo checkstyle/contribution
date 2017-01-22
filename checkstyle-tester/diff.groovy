@@ -118,7 +118,7 @@ def hasUnstagedChanges(gitRepo) {
     def gitStatusCmd = "git status".execute(null, gitRepo)
     gitStatusCmd.waitFor()
     def gitStatusOutput = gitStatusCmd.text
-    if (gitStatusOutput.contains("nothing to commit, working directory clean")) {
+    if (gitStatusOutput.contains("nothing to commit")) {
         hasUnstagedChanges = false
     }
     return hasUnstagedChanges
