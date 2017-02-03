@@ -4,46 +4,49 @@ import java.util.regex.Pattern
 
 import static java.lang.System.err
 
-if (areValidCliArgs(args)) {
-    def projectsToTestOn = args[0]
-    def checkstyleCfg = args[1]
-    generateCheckstyleReport(projectsToTestOn, checkstyleCfg)
-}
-else {
-    throw new IllegalArgumentException('Error: invalid command line arguments!')
-}
-
-def areValidCliArgs(args) {
-    def valid = true
-    if (args == null || args.length == 0) {
-        valid = false
+static void main(String[] args) {
+    def cliOptions = getCliOptions(args)
+    if (cliOptions != null && areValidCliOptions(cliOptions)) {
+        generateCheckstyleReport(cliOptions)
     }
     else {
-        def validArgsCount = 2
-        if (args.length == validArgsCount) {
-            def projectsToTestOnFile = new File(args[0])
-            def checkstyleCfgFile = new File(args[1])
-            if (!projectsToTestOnFile.exists()) {
-                err.println "Error: file ${projectsToTestOnFile.getName()} does not exist!"
-                valid = false
-            }
-            else if (!checkstyleCfgFile.exists()) {
-                err.println "Error: file ${checkstyleCfgFile.getName()} does not exist!"
-                valid = false
-            }
-        }
-        else {
-            err.println 'Error: wrong number of command line arguments!'
-            valid = false
-        }
+        throw new IllegalArgumentException('Error: invalid command line arguments!')
+    }
+}
+
+def getCliOptions(args) {
+    def optionsDescLineLength = 120
+    def cli = new CliBuilder(usage:'groovy launch.groovy [options]', header: 'options:', width: optionsDescLineLength)
+    cli.with {
+        c(longOpt: 'checkstyleCfg', args: 1, required: true, argName: 'path', 'Path to checkstyle config file (required)')
+        l(longOpt: 'listOfProjects', args: 1, required: true, argName: 'path', 'Path to file which contains projects to test on (required)')
+        i(longOpt: 'ignoreExceptions', required: false, 'Whether Maven Checkstyle Plugin should ignore exceptions (optional, default is false)')
+    }
+    return cli.parse(args)
+}
+
+def areValidCliOptions(options) {
+    def valid = true
+    def listOfProjectsFile = new File(options.listOfProjects)
+    def checkstyleCfgFile = new File(options.checkstyleCfg)
+    if (!listOfProjectsFile.exists()) {
+        err.println "Error: file ${listOfProjectsFile.getName()} does not exist!"
+        valid = false
+    } else if (!checkstyleCfgFile.exists()) {
+        err.println "Error: file ${checkstyleCfgFile.getName()} does not exist!"
+        valid = false
     }
     return valid
 }
 
-def generateCheckstyleReport(projectsToTestOn, checkstyleConfig) {
+def generateCheckstyleReport(cliOptions) {
     println 'Testing Checkstyle started'
-    def projectsToTestOnFile = new File(projectsToTestOn)
-    def projects = projectsToTestOnFile.readLines()
+
+    def targetDir = 'target'
+    def srcDir = "src/main/java"
+    def reposDir = 'repositories'
+    def reportsDir = 'reports'
+    createWorkDirsIfNotExist(srcDir, reposDir, reportsDir)
 
     def REPO_NAME_PARAM_NO = 0
     def REPO_TYPE_PARAM_NO = 1
@@ -52,19 +55,17 @@ def generateCheckstyleReport(projectsToTestOn, checkstyleConfig) {
     def REPO_EXCLUDES_PARAM_NO = 4
     def FULL_PARAM_LIST_SIZE = 5
 
-    def srcDir = "src/main/java"
-    def reposDir = 'repositories'
-    def reportsDir = 'reports'
-    createWorkDirsIfNotExist(srcDir, reposDir, reportsDir)
-
-    def targetDir = 'target'
+    def checkstyleCfg = cliOptions.checkstyleCfg
+    def ignoreExceptions = cliOptions.ignoreExceptions
+    def listOfProjectsFile = new File(cliOptions.listOfProjects)
+    def projects = listOfProjectsFile.readLines()
 
     projects.each {
         project ->
             if (!project.startsWith('#') && !project.isEmpty()) {
                 def params = project.split('\\|', -1)
                 if (params.length < FULL_PARAM_LIST_SIZE) {
-                    throw new InvalidPropertiesFormatException("Error: line '$project' in file '$projectsToTestOnFile.name' should have $FULL_PARAM_LIST_SIZE pipe-delimeted sections!")
+                    throw new InvalidPropertiesFormatException("Error: line '$project' in file '$listOfProjectsFile.name' should have $FULL_PARAM_LIST_SIZE pipe-delimeted sections!")
                 }
 
                 def repoName = params[REPO_NAME_PARAM_NO]
@@ -76,7 +77,7 @@ def generateCheckstyleReport(projectsToTestOn, checkstyleConfig) {
                 cloneRepository(repoName, repoType, repoUrl, commitId, reposDir)
                 deleteDir(srcDir)
                 copyDir("$reposDir/$repoName", "$srcDir/$repoName")
-                runMavenExecution(srcDir, excludes, checkstyleConfig)
+                runMavenExecution(srcDir, excludes, checkstyleCfg, ignoreExceptions)
                 postProcessCheckstyleReport(targetDir)
                 deleteDir("$srcDir/$repoName")
                 moveDir(targetDir, "$reportsDir/$repoName")
@@ -201,12 +202,15 @@ def deleteDir(dir) {
     new AntBuilder().delete(dir: dir, failonerror: false)
 }
 
-def runMavenExecution(srcDir, excludes, checkstyleConfig) {
+def runMavenExecution(srcDir, excludes, checkstyleConfig, ignoreExceptions) {
     println "Running 'mvn clean' on $srcDir ..."
     def mvnClean = "mvn --batch-mode clean"
     executeCmd(mvnClean)
     println "Running Checkstyle on $srcDir ... with excludes $excludes"
     def mvnSite = "mvn -e --batch-mode site -Dcheckstyle.config.location=$checkstyleConfig -Dcheckstyle.excludes=$excludes -DMAVEN_OPTS=-Xmx3024m"
+    if (ignoreExceptions) {
+        mvnSite = mvnSite + ' -Dcheckstyle.failsOnError=false'
+    }
     executeCmd(mvnSite)
     println "Running Checkstyle on $srcDir - finished"
 }

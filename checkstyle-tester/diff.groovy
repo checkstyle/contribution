@@ -9,7 +9,7 @@ static void main(String[] args) {
         b(longOpt: 'baseBranch', args: 1, argName: 'baseBranch', 'Base branch name. Default is master')
         p(longOpt: 'patchBranch', args: 1, argName: 'patchBranch', 'Name of the patch branch in local git repository')
         c(longOpt: 'checkstyleCfg', args: 1, argName: 'checkstyleCfg', 'Path to checkstyle config file')
-        l(longOpt: 'projectsToTestOn', args: 1, argName: 'projectsToTestOn', 'Path to file which contains projects to test on')
+        l(longOpt: 'listOfProjects', args: 1, argName: 'listOfProjects', 'Path to file which contains projects to test on')
     }
     def options = cli.parse(args)
 
@@ -25,7 +25,7 @@ static void main(String[] args) {
         }
 
         def patchBranch = options.patchBranch
-        def projectsToTestOn = options.projectsToTestOn
+        def listOfProjects = options.listOfProjects
         def checkstyleCfg = options.checkstyleCfg
 
         def reportsDir = 'reports'
@@ -46,8 +46,8 @@ static void main(String[] args) {
             deleteDir(tmpReportsDir)
         }
 
-        generateCheckstyleReport(localGitRepo, baseBranch, checkstyleCfg, projectsToTestOn, tmpMasterReportsDir)
-        generateCheckstyleReport(localGitRepo, patchBranch, checkstyleCfg, projectsToTestOn, tmpPatchReportsDir)
+        generateCheckstyleReport(localGitRepo, baseBranch, checkstyleCfg, listOfProjects, tmpMasterReportsDir)
+        generateCheckstyleReport(localGitRepo, patchBranch, checkstyleCfg, listOfProjects, tmpPatchReportsDir)
         deleteDir(reportsDir)
         moveDir(tmpReportsDir, reportsDir)
         generateDiffReport(reportsDir, masterReportsDir, patchReportsDir, checkstyleCfg)
@@ -67,7 +67,7 @@ def areValidCliArgs(options) {
         if (options.checkstyleCfg
                 && options.localGitRepo
                 && options.patchBranch
-                && options.projectsToTestOn) {
+                && options.listOfProjects) {
             def localGitRepo = new File(options.localGitRepo)
             def patchBranch = options.patchBranch
             def baseBranch = options.baseBranch
@@ -140,7 +140,7 @@ def getCheckstyleVersionFromPomXml(pathToPomXml, xmlTagName) {
     return checkstyleVersion
 }
 
-def generateCheckstyleReport(localGitRepo, branch, checkstyleCfg, projectsToTestOn, destDir) {
+def generateCheckstyleReport(localGitRepo, branch, checkstyleCfg, listOfProjects, destDir) {
     println "Installing Checkstyle artifact ($branch) into local Maven repository ..."
     executeCmd("git checkout $branch", localGitRepo)
 
@@ -151,7 +151,7 @@ def generateCheckstyleReport(localGitRepo, branch, checkstyleCfg, projectsToTest
     }
 
     executeCmd("mvn -Pno-validations clean install", localGitRepo)
-    executeCmd("groovy launch.groovy $projectsToTestOn $checkstyleCfg")
+    executeCmd("groovy launch.groovy --listOfProjects $listOfProjects --checkstyleCfg $checkstyleCfg --ignoreExceptions")
     println "Moving Checkstyle report into $destDir ..."
     moveDir("reports", destDir)
 }
