@@ -8,14 +8,34 @@ It consists of two Groovy scripts: launch.groovy and diff.groovy. Thus, in order
 **launch.groovy** is a script which allows you to generate Checkstyle report over target projects. It invokes Maven Checkstyle plugin. In order to use the script you should run the following command in your command line:
 
 ```
-groovy launch.groovy projects-to-test-on.properties my_check.xml
+groovy launch.groovy --listOfProjects projects-to-test-on.properties --checkstyleCfg my_check.xml
 ```
 
-The script receives two command line arguments:
+or with short command line arguments names:
 
-1) **projects-to-test-on.properties** - path to the file which contains the projects which sources will be analyzed by Checkstyle during report generation;
+```
+groovy launch.groovy -l projects-to-test-on.properties -c my_check.xml
+```
 
-2) **my_check.xml** - path to the file with Checkstyle configuration.
+If you want to force Maven Checkstyle Plugin to ignore exceptions:
+
+```
+groovy launch.groovy --listOfProjects projects-to-test-on.properties --checkstyleCfg my_check.xml --ignoreExceptions
+```
+
+or with short command line arguments names:
+
+```
+groovy launch.groovy -l projects-to-test-on.properties -c my_check.xml -i
+```
+
+The script receives the following command line arguments:
+
+**listOfProjects** (l) - path to the file which contains the projects which sources will be analyzed by Checkstyle during report generation (required);
+
+**checkstyleCfg** (c) - path to the file with Checkstyle configuration (required);
+
+**ignoreExceptions** (i) - whether Checkstyle Maven Plugin should ignore exceptions (optional, default is false).
 
 When the script finishes its work the following directory structure will be created in the root of cehckstyle-tester directory:
 
@@ -67,7 +87,7 @@ Follow example how we do this in Windows CI server - https://github.com/checksty
 In order to generate a compact diff report before and after your changes you can use diff.groovy script which performs all required work automatically. Please run the following command in your command line:
 
 ```
-groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle --baseBranch master --patchBranch i111-my-fix --checkstyleCfg my_check.xml --projectsToTestOn projects-to-test-on.properties
+groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle --baseBranch master --patchBranch i111-my-fix --checkstyleCfg my_check.xml --listOfProjects projects-to-test-on.properties
 ```
 
 or with short command line arguments names:
@@ -86,7 +106,7 @@ The script receives the following set of command line arguments:
 
 **checkstyleCfg** (c) - path to the file with Checkstyle configuration;
 
-**projectsToTestOn** (l) - path to the file which contains the projects which sources will be analyzed by Checkstyle during report generation.
+**listOfProjects** (l) - path to the file which contains the projects which sources will be analyzed by Checkstyle during report generation.
 
 When the script finishes its work the following directory structure will be created in the root of cehckstyle-tester directory:
 
