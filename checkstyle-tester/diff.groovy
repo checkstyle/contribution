@@ -3,30 +3,21 @@ import java.nio.file.Paths
 import static java.lang.System.err
 
 static void main(String[] args) {
-    def cli = new CliBuilder(usage:'groovy diff.groovy [options]')
-    cli.with {
-        r(longOpt: 'localGitRepo', args: 1, argName: 'localGitRepo', 'Path to local git repository')
-        b(longOpt: 'baseBranch', args: 1, argName: 'baseBranch', 'Base branch name. Default is master')
-        p(longOpt: 'patchBranch', args: 1, argName: 'patchBranch', 'Name of the patch branch in local git repository')
-        c(longOpt: 'checkstyleCfg', args: 1, argName: 'checkstyleCfg', 'Path to checkstyle config file')
-        l(longOpt: 'listOfProjects', args: 1, argName: 'listOfProjects', 'Path to file which contains projects to test on')
-    }
-    def options = cli.parse(args)
-
-    if (areValidCliArgs(options)) {
-        def localGitRepo = new File(options.localGitRepo)
+    def cliOptions = getCliOptions(args)
+    if (areValidCliOptions(cliOptions)) {
+        def localGitRepo = new File(cliOptions.localGitRepo)
         if (hasUnstagedChanges(localGitRepo)) {
             throw new IllegalStateException("Error: git repository ${localGitRepo.getPath()} has unstaged changes!")
         }
 
-        def baseBranch = options.baseBranch
+        def baseBranch = cliOptions.baseBranch
         if (!baseBranch) {
             baseBranch = 'master'
         }
 
-        def patchBranch = options.patchBranch
-        def listOfProjects = options.listOfProjects
-        def checkstyleCfg = options.checkstyleCfg
+        def patchBranch = cliOptions.patchBranch
+        def listOfProjects = cliOptions.listOfProjects
+        def checkstyleCfg = cliOptions.checkstyleCfg
 
         def reportsDir = 'reports'
         def masterReportsDir = "$reportsDir/$baseBranch"
@@ -58,29 +49,28 @@ static void main(String[] args) {
     }
 }
 
-def areValidCliArgs(options) {
-    def valid = true
-    if (options == null) {
-        valid = false
+def getCliOptions(args) {
+    def cliOptionsDescLineLength = 120
+    def cli = new CliBuilder(usage:'groovy diff.groovy [options]', header: 'options:', width: cliOptionsDescLineLength)
+    cli.with {
+        r(longOpt: 'localGitRepo', args: 1, required: true, argName: 'localGitRepo', 'Path to local git repository (required)')
+        b(longOpt: 'baseBranch', args: 1, required: false, argName: 'baseBranch', 'Base branch name. Default is master (optional, default is master)')
+        p(longOpt: 'patchBranch', args: 1, required: true, argName: 'patchBranch', 'Name of the patch branch in local git repository (required)')
+        c(longOpt: 'checkstyleCfg', args: 1, required: true, argName: 'checkstyleCfg', 'Path to checkstyle config file (required)')
+        l(longOpt: 'listOfProjects', args: 1, required: true, argName: 'listOfProjects', 'Path to file which contains projects to test on (required)')
     }
-    else {
-        if (options.checkstyleCfg
-                && options.localGitRepo
-                && options.patchBranch
-                && options.listOfProjects) {
-            def localGitRepo = new File(options.localGitRepo)
-            def patchBranch = options.patchBranch
-            def baseBranch = options.baseBranch
-            if (!isValidGitRepo(localGitRepo)
-                    || !isExistingGitBranch(localGitRepo, patchBranch)
-                    || (baseBranch && !isExistingGitBranch(localGitRepo, baseBranch))) {
-                valid = false
-            }
-        }
-        else {
-            err.println 'Error: wrong number of command line arguments!'
-            valid = false
-        }
+    return cli.parse(args)
+}
+
+def areValidCliOptions(cliOptions) {
+    def valid = true
+    def localGitRepo = new File(cliOptions.localGitRepo)
+    def patchBranch = cliOptions.patchBranch
+    def baseBranch = cliOptions.baseBranch
+    if (!isValidGitRepo(localGitRepo)
+           || !isExistingGitBranch(localGitRepo, patchBranch)
+           || baseBranch && !isExistingGitBranch(localGitRepo, baseBranch)) {
+        valid = false
     }
     return valid
 }
