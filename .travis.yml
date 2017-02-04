@@ -19,13 +19,23 @@ matrix:
 
     - jdk: oraclejdk8
       env:
-        - DESC="checkstyle-tester on linux "
+        - DESC="checkstyle-tester (launch.groovy) on linux "
         - CMD1=" git clone https://github.com/checkstyle/checkstyle && cd checkstyle "
         - CMD2=" && mvn clean install -Passembly"
         - CMD3=" "
         - CMD4=" "
-        - CMD5=" && cd ../checkstyle-tester && cp projects-for-travis.properties projects-to-test-on.properties "
-        - CMD6=" && ./launch.sh -Dcheckstyle.config.location=my_check.xml "
+        - CMD5=" && cd ../checkstyle-tester"
+        - CMD6=" && groovy launch.groovy -l projects-for-travis.properties -c my_check.xml -i"
+        - CMD=$CMD1$CMD2$CMD3$CMD4$CMD5$CMD6
+    - jdk: oraclejdk8
+      env:
+        - DESC="checkstyle-tester (diff.groovy) on linux "
+        - CMD1=" git clone https://github.com/checkstyle/checkstyle && cd checkstyle "
+        - CMD2=" && git checkout -b patch-branch"
+        - CMD3=" "
+        - CMD4=" "
+        - CMD5=" && cd ../checkstyle-tester"
+        - CMD6=" && groovy diff.groovy -l projects-for-travis.properties -c my_check.xml -b master -p patch-branch -r ../checkstyle -i"
         - CMD=$CMD1$CMD2$CMD3$CMD4$CMD5$CMD6
     # disable as for now java8 is not supoorted jdk for travis MacOS
     #- os: osx
