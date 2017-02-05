@@ -20,7 +20,7 @@ groovy launch.groovy -l projects-to-test-on.properties -c my_check.xml
 If you want to force Maven Checkstyle Plugin to ignore exceptions:
 
 ```
-groovy launch.groovy --listOfProjects projects-to-test-on.properties --checkstyleCfg my_check.xml --ignoreExceptions
+groovy launch.groovy --listOfProjects projects-to-test-on.properties --config my_check.xml --ignoreExceptions
 ```
 
 or with short command line arguments names:
@@ -33,7 +33,7 @@ The script receives the following command line arguments:
 
 **listOfProjects** (l) - path to the file which contains the projects which sources will be analyzed by Checkstyle during report generation (required);
 
-**checkstyleCfg** (c) - path to the file with Checkstyle configuration (required);
+**config** (c) - path to the file with Checkstyle configuration (required);
 
 **ignoreExceptions** (i) - whether Checkstyle Maven Plugin should ignore exceptions (optional, default is false).
 
@@ -87,7 +87,7 @@ Follow example how we do this in Windows CI server - https://github.com/checksty
 In order to generate a compact diff report before and after your changes you can use diff.groovy script which performs all required work automatically. Please run the following command in your command line:
 
 ```
-groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle --baseBranch master --patchBranch i111-my-fix --checkstyleCfg my_check.xml --listOfProjects projects-to-test-on.properties
+groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle --baseBranch master --patchBranch i111-my-fix --config my_check.xml --listOfProjects projects-to-test-on.properties
 ```
 
 or with short command line arguments names:
@@ -96,15 +96,31 @@ or with short command line arguments names:
 groovy diff.groovy -r /home/johndoe/projects/checkstyle -b master -p i111-my-fix -c my_check.xml -l projects-to-test-on.properties
 ```
 
+If you want to specify different Checkstyle configs for base branch and patch branch use the following command:
+
+```
+groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle --baseBranch master --patchBranch i111-my-fix --baseConfig base_config.xml --patchConfig patch_config.xml --listOfProjects projects-to-test-on.properties
+```
+
+or with short command line arguments names:
+
+```
+groovy diff.groovy -r /home/johndoe/projects/checkstyle -b master -p i111-my-fix -bc base_config.xml -pc patch_config.xml -l projects-to-test-on.properties
+```
+
 The script receives the following set of command line arguments:
 
-**localGitRepo** (r) - path to the local Checkstyle repository;
+**localGitRepo** (r) - path to the local Checkstyle repository (required);
 
-**baseBranch** (b) - name of the base branch in local Checkstyle repository (default is master branch);
+**baseBranch** (b) - name of the base branch in local Checkstyle repository (optional, default is master branch);
 
-**patchBranch** (p) - name of the branch with your changes;
+**patchBranch** (p) - name of the branch with your changes (required);
 
-**checkstyleCfg** (c) - path to the file with Checkstyle configuration;
+**baseConfig** (bc) - path to the base checkstyle configuration file. It will be applied to base branch (required if patchConfig is specified);
+
+**patchConfig** (pc) - path to the patch checkstyle config file. It will be applied to patch branch (required if baseConfig is specified);
+
+**config** (c) - path to the checkstyle config file. It will be applied to base and patch branches (required if baseConfig and patchConfig are not secified);
 
 **listOfProjects** (l) - path to the file which contains the projects which sources will be analyzed by Checkstyle during report generation.
 
