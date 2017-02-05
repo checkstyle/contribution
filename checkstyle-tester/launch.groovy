@@ -18,7 +18,7 @@ def getCliOptions(args) {
     def optionsDescLineLength = 120
     def cli = new CliBuilder(usage:'groovy launch.groovy [options]', header: 'options:', width: optionsDescLineLength)
     cli.with {
-        c(longOpt: 'checkstyleCfg', args: 1, required: true, argName: 'path', 'Path to checkstyle config file (required)')
+        c(longOpt: 'config', args: 1, required: true, argName: 'path', 'Path to checkstyle config file (required)')
         l(longOpt: 'listOfProjects', args: 1, required: true, argName: 'path', 'Path to file which contains projects to test on (required)')
         i(longOpt: 'ignoreExceptions', required: false, 'Whether Maven Checkstyle Plugin should ignore exceptions (optional, default is false)')
     }
@@ -28,7 +28,7 @@ def getCliOptions(args) {
 def areValidCliOptions(options) {
     def valid = true
     def listOfProjectsFile = new File(options.listOfProjects)
-    def checkstyleCfgFile = new File(options.checkstyleCfg)
+    def checkstyleCfgFile = new File(options.config)
     if (!listOfProjectsFile.exists()) {
         err.println "Error: file ${listOfProjectsFile.getName()} does not exist!"
         valid = false
@@ -55,7 +55,7 @@ def generateCheckstyleReport(cliOptions) {
     def REPO_EXCLUDES_PARAM_NO = 4
     def FULL_PARAM_LIST_SIZE = 5
 
-    def checkstyleCfg = cliOptions.checkstyleCfg
+    def checkstyleCfg = cliOptions.config
     def ignoreExceptions = cliOptions.ignoreExceptions
     def listOfProjectsFile = new File(cliOptions.listOfProjects)
     def projects = listOfProjectsFile.readLines()

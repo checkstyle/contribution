@@ -15,6 +15,14 @@ static void main(String[] args) {
             baseBranch = 'master'
         }
 
+        def baseConfig = cliOptions.baseConfig
+        def patchConfig = cliOptions.patchConfig
+        def config = cliOptions.config
+        if (config) {
+            baseConfig = config
+            patchConfig = config
+        }
+
         def patchBranch = cliOptions.patchBranch
         def listOfProjects = cliOptions.listOfProjects
         def checkstyleCfg = cliOptions.checkstyleCfg
@@ -37,11 +45,11 @@ static void main(String[] args) {
             deleteDir(tmpReportsDir)
         }
 
-        generateCheckstyleReport(localGitRepo, baseBranch, checkstyleCfg, listOfProjects, tmpMasterReportsDir)
-        generateCheckstyleReport(localGitRepo, patchBranch, checkstyleCfg, listOfProjects, tmpPatchReportsDir)
+        generateCheckstyleReport(localGitRepo, baseBranch, baseConfig, listOfProjects, tmpMasterReportsDir)
+        generateCheckstyleReport(localGitRepo, patchBranch, patchConfig, listOfProjects, tmpPatchReportsDir)
         deleteDir(reportsDir)
         moveDir(tmpReportsDir, reportsDir)
-        generateDiffReport(reportsDir, masterReportsDir, patchReportsDir, checkstyleCfg)
+        generateDiffReport(reportsDir, masterReportsDir, patchReportsDir, baseConfig, patchConfig)
         generateSummaryIndexHtml(diffDir)
     }
     else {
@@ -53,23 +61,59 @@ def getCliOptions(args) {
     def cliOptionsDescLineLength = 120
     def cli = new CliBuilder(usage:'groovy diff.groovy [options]', header: 'options:', width: cliOptionsDescLineLength)
     cli.with {
-        r(longOpt: 'localGitRepo', args: 1, required: true, argName: 'localGitRepo', 'Path to local git repository (required)')
-        b(longOpt: 'baseBranch', args: 1, required: false, argName: 'baseBranch', 'Base branch name. Default is master (optional, default is master)')
-        p(longOpt: 'patchBranch', args: 1, required: true, argName: 'patchBranch', 'Name of the patch branch in local git repository (required)')
-        c(longOpt: 'checkstyleCfg', args: 1, required: true, argName: 'checkstyleCfg', 'Path to checkstyle config file (required)')
-        l(longOpt: 'listOfProjects', args: 1, required: true, argName: 'listOfProjects', 'Path to file which contains projects to test on (required)')
+        r(longOpt: 'localGitRepo', args: 1, required: true, argName: 'path', 'Path to local git repository (required)')
+        b(longOpt: 'baseBranch', args: 1, required: false, argName: 'branch_name', 'Base branch name. Default is master (optional, default is master)')
+        p(longOpt: 'patchBranch', args: 1, required: true, argName: 'branch_name', 'Name of the patch branch in local git repository (required)')
+        bc(longOpt: 'baseConfig', args: 1, required: false, argName: 'path', 'Path to the base checkstyle config file (required if patchConfig is specified)')
+        pc(longOpt: 'patchConfig', args: 1, required: false, argName: 'path', 'Path to the patch checkstyle config file (required if baseConfig is specified)')
+        c(longOpt: 'config', args: 1, required: false, argName: 'path', 'Path to the checkstyle config file (required if baseConfig and patchConfig are not secified)')
+        l(longOpt: 'listOfProjects', args: 1, required: true, argName: 'path', 'Path to file which contains projects to test on (required)')
     }
     return cli.parse(args)
 }
 
 def areValidCliOptions(cliOptions) {
     def valid = true
+    def baseConfig = cliOptions.baseConfig
+    def patchConfig = cliOptions.patchConfig
+    def config = cliOptions.config
     def localGitRepo = new File(cliOptions.localGitRepo)
     def patchBranch = cliOptions.patchBranch
     def baseBranch = cliOptions.baseBranch
-    if (!isValidGitRepo(localGitRepo)
-           || !isExistingGitBranch(localGitRepo, patchBranch)
-           || baseBranch && !isExistingGitBranch(localGitRepo, baseBranch)) {
+
+    if (!isValidCheckstyleConfigsCombination(config, baseConfig, patchConfig)) {
+        valid = false
+    }
+    else if (!isValidGitRepo(localGitRepo)) {
+        err.println "Error: $localGitRepo is not a valid git repository!"
+        valid = false
+    }
+    else if (!isExistingGitBranch(localGitRepo, patchBranch)) {
+        err.println "Error: $patchBranch is not an exiting git branch!"
+        valid = false
+    }
+    else if (baseBranch && !isExistingGitBranch(localGitRepo, baseBranch)) {
+        err.println "Error: $baseBranch is not an existing git branch!"
+        valid = false
+    }
+
+    return valid
+}
+
+def isValidCheckstyleConfigsCombination(config, baseConfig, patchConfig) {
+    def valid = true
+    if (config && patchConfig
+            || config && baseConfig
+            || config && patchConfig && baseConfig) {
+        err.println "Error: you should specify either \'config\' or \'baseConfig\' and \'patchConfig\'!"
+        valid = false
+    }
+    else if (baseConfig && !patchConfig) {
+        err.println "Error: \'patchConfig\' should be specified!"
+        valid = false
+    }
+    else if (patchConfig && !baseConfig) {
+        err.println "Error: \'baseConfig\' should be specified!"
         valid = false
     }
     return valid
@@ -141,12 +185,12 @@ def generateCheckstyleReport(localGitRepo, branch, checkstyleCfg, listOfProjects
     }
 
     executeCmd("mvn -Pno-validations clean install", localGitRepo)
-    executeCmd("groovy launch.groovy --listOfProjects $listOfProjects --checkstyleCfg $checkstyleCfg --ignoreExceptions")
+    executeCmd("groovy launch.groovy --listOfProjects $listOfProjects --config $checkstyleCfg --ignoreExceptions")
     println "Moving Checkstyle report into $destDir ..."
     moveDir("reports", destDir)
 }
 
-def generateDiffReport(reportsDir, masterReportsDir, patchReportsDir, checkstyleCfg) {
+def generateDiffReport(reportsDir, masterReportsDir, patchReportsDir, baseConfig, patchConfig) {
     def diffToolDir = Paths.get("").toAbsolutePath()
         .getParent()
         .resolve("patch-diff-report-tool")
@@ -164,8 +208,6 @@ def generateDiffReport(reportsDir, masterReportsDir, patchReportsDir, checkstyle
                     def baseReport = "$masterReportsDir/$projectName/checkstyle-result.xml"
                     def patchReport = "$patchReportsDir/$projectName/checkstyle-result.xml"
                     def outputDir = "$reportsDir/diff/$projectName"
-                    def baseConfig = checkstyleCfg
-                    def patchConfig = checkstyleCfg
                     def diffCmd = "java -jar $diffToolJarPath --baseReport $baseReport --patchReport $patchReport --output $outputDir --baseConfig $baseConfig --patchConfig $patchConfig"
                     executeCmd(diffCmd)
                 } else {

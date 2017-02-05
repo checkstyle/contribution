@@ -10,7 +10,7 @@ You have 2 different checkstyle repos, original (base) and forked (patch), for e
 
 4) go to repo folder and execute in console `mvn clean install` <br/>
 5) go to `./contribution/checkstyle-tester` directory, uncomment all/required lines in `projects-to-test-on.properties`, edit  `my_check.xml`<br/>
-6) execute `groovy launch.groovy --listOfProjects projects-to-test-on.properties --checkstyleCfg my_check.xml --ignoreExceptions`<br/>
+6) execute `groovy launch.groovy --listOfProjects projects-to-test-on.properties --config my_check.xml --ignoreExceptions`<br/>
 7) copy `checkstyle-result.xml` from `checkstyle-tester/reports/project-name/` to some other location.<br/>
 
 8) Now execute this utility with 6 command line arguments:<br/>
