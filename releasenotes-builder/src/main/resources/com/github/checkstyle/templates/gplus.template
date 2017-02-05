@@ -1,6 +1,6 @@
 Checkstyle ${releaseNo} - http://checkstyle.sourceforge.net/releasenotes.html#Release_${releaseNo}
 <#if breakingMessages?has_content>
-breakingMessages</#if>
+Breaking backward compatibility: ${breakingMessages?size}</#if>
 <#if newMessages?has_content>
 New functionality: ${newMessages?size}
 </#if>
