@@ -57,6 +57,11 @@ public final class CliPaths {
     private final Path patchConfigPath;
 
     /**
+     * Switch specifying if only short file names should be used with no path.
+     */
+    private final boolean shortFilePaths;
+
+    /**
      * POJO ctor.
      *
      * @param baseReportPath
@@ -71,15 +76,19 @@ public final class CliPaths {
      *        path to the configuration of the base report.
      * @param baseConfigPath
      *        path to the configuration of the patch report.
+     * @param shortFilePaths
+     *           {@code true} if only short file names should be used with no paths.
      */
     public CliPaths(Path baseReportPath, Path patchReportPath,
-            Path refFilesPath, Path outputPath, Path baseConfigPath, Path patchConfigPath) {
+            Path refFilesPath, Path outputPath, Path baseConfigPath, Path patchConfigPath,
+            boolean shortFilePaths) {
         this.baseReportPath = baseReportPath;
         this.patchReportPath = patchReportPath;
         this.refFilesPath = refFilesPath;
         this.outputPath = outputPath;
         this.baseConfigPath = baseConfigPath;
         this.patchConfigPath = patchConfigPath;
+        this.shortFilePaths = shortFilePaths;
     }
 
     public Path getBaseReportPath() {
@@ -104,6 +113,10 @@ public final class CliPaths {
 
     public Path getPatchConfigPath() {
         return patchConfigPath;
+    }
+
+    public boolean isShortFilePaths() {
+        return shortFilePaths;
     }
 
     /**

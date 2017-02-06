@@ -180,7 +180,8 @@ public final class SiteGenerator {
         for (Map.Entry<String, List<CheckstyleRecord>> entry : diffReport.getRecords().entrySet()) {
             final List<CheckstyleRecord> records = entry.getValue();
             String filename = entry.getKey();
-            final String xreference = xrefGenerator.generateXref(filename);
+            final String xreference = xrefGenerator.generateXref(filename,
+                    paths.isShortFilePaths());
             if (refFilesPath != null) {
                 filename = refFilesPath.relativize(Paths.get(filename)).toString();
             }

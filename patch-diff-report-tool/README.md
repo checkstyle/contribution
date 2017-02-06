@@ -21,6 +21,7 @@ You have 2 different checkstyle repos, original (base) and forked (patch), for e
 `--output` - path to store the resulting diff report (optional argument, default: ~/XMLDiffGen_report_yyyy.mm.dd_hh_mm_ss)<br/>
 `--baseConfig` - path to the base checkstyle configuration xml file (optional argument);<br/>
 `--patchConfig` - path to the patch checkstyle configuration xml file (optional argument);<br/>
+`--shortFilePaths` - Option to save report file paths as a shorter version to prevent long paths. This option is useful for Windows users where they are restricted to maximum directory depth.<br />
 `-h` - shows help message.<br/>
 
 

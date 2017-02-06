@@ -45,6 +45,17 @@ class XrefGenerator {
     public static final String ENCODING = "UTF-8";
 
     /**
+     * File extension used for reports.
+     */
+    private static final String FILE_EXTENSION = ".html";
+
+    /**
+     * File counter only to be used with {@code shortFileNames} option in
+     * {@link #getDestinationPath(String, boolean)}.
+     */
+    private static int simpleFileNameCounter;
+
+    /**
      * Maven-jxr package manager.
      */
     private static PackageManager pacman;
@@ -97,13 +108,15 @@ class XrefGenerator {
      *
      * @param name
      *        path to the source file.
+     * @param shortFilePaths
+     *           {@code true} if only short file names should be used with no path.
      * @return relative path to the resulting file.
      * @throws IOException
      *         on maven-jxr internal failure.
      */
-    public final String generateXref(String name) throws IOException {
+    public final String generateXref(String name, boolean shortFilePaths) throws IOException {
         final File sourceFile = new File(name);
-        final Path dest = getDestinationPath(name);
+        final Path dest = getDestinationPath(name, shortFilePaths);
         codeTransform.transform(sourceFile.getAbsolutePath(),
                 dest.toString(), Locale.ENGLISH,
                 ENCODING, ENCODING, "", "", "");
@@ -115,19 +128,29 @@ class XrefGenerator {
      *
      * @param name
      *        java source file path.
+     * @param shortFilePaths
+     *           {@code true} if only short file names should be used with no path.
      * @return full path to the destination of XREF file.
      */
-    private Path getDestinationPath(String name) {
-        final String newName = name + ".html";
-        final Path sourcePath = Paths.get(newName);
+    private Path getDestinationPath(String name, boolean shortFilePaths) {
         final Path destPath;
-        if (relativizationPath == null) {
-            destPath = destinationPath
-            .resolve(sourcePath.subpath(0, sourcePath.getNameCount()));
+
+        if (shortFilePaths) {
+            simpleFileNameCounter++;
+            destPath = Paths
+                    .get(destinationPath + "/File" + simpleFileNameCounter + FILE_EXTENSION);
         }
         else {
-            destPath = destinationPath
-            .resolve(relativizationPath.relativize(sourcePath));
+            final String newName = name + FILE_EXTENSION;
+            final Path sourcePath = Paths.get(newName);
+            if (relativizationPath == null) {
+                destPath = destinationPath
+                    .resolve(sourcePath.subpath(0, sourcePath.getNameCount()));
+            }
+            else {
+                destPath = destinationPath
+                    .resolve(relativizationPath.relativize(sourcePath));
+            }
         }
         return destPath;
     }
