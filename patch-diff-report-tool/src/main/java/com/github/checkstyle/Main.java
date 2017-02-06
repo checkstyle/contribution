@@ -115,6 +115,12 @@ public final class Main {
     private static final String OPTION_PATCH_CONFIG_PATH = "patchConfig";
 
     /**
+     * Name for command line option to save report file paths as a shorter
+     * version to prevent long paths.
+     */
+    private static final String OPTION_SHORT_PATHS = "shortFilePaths";
+
+    /**
      * Name for command line option that shows help message.
      */
     private static final String OPTION_HELP = "h";
@@ -244,6 +250,8 @@ public final class Main {
                 "Path to the checkstyle configuration xml of the base report.");
         options.addOption(null, OPTION_PATCH_CONFIG_PATH, true,
                 "Path to the checkstyle configuration xml of the patch report.");
+        options.addOption(null, OPTION_SHORT_PATHS, false,
+                "Option to save report file paths as a shorter version to prevent long paths.");
         options.addOption(OPTION_HELP, false, "Shows help message, nothing else.");
         return options;
     }
@@ -268,8 +276,9 @@ public final class Main {
         final Path outputPath = getPath(OPTION_OUTPUT_PATH, commandLine, defaultResultPath);
         final Path configBasePath = getPath(OPTION_BASE_CONFIG_PATH, commandLine, null);
         final Path configPatchPath = getPath(OPTION_PATCH_CONFIG_PATH, commandLine, null);
+        final boolean shortFilePaths = commandLine.hasOption(OPTION_SHORT_PATHS);
         return new CliPaths(xmlBasePath, xmlPatchPath, refFilesPath, outputPath, configBasePath,
-                configPatchPath);
+                configPatchPath, shortFilePaths);
     }
 
     /**
