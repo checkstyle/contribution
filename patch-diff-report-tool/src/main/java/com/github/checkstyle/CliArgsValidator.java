@@ -73,13 +73,13 @@ public final class CliArgsValidator {
             throw new IllegalArgumentException(
                     "Both Base and Patch XML report files have the same path.");
         }
-        if (Files.isRegularFile(paths.getResultPath())) {
+        if (Files.isRegularFile(paths.getOutputPath())) {
             throw new IllegalArgumentException("Output path is not a directory: "
-                    + paths.getResultPath());
+                    + paths.getOutputPath());
         }
-        if (paths.getSourcePath() != null && !Files.isDirectory(paths.getSourcePath())) {
-            throw new IllegalArgumentException("Source path is not a directory: "
-                    + paths.getSourcePath());
+        if (paths.getRefFilesPath() != null && !Files.isDirectory(paths.getRefFilesPath())) {
+            throw new IllegalArgumentException("Ref Files path is not a directory: "
+                    + paths.getRefFilesPath());
         }
         if ((paths.getBaseConfigPath() != null) && (paths.getPatchConfigPath() == null)) {
             throw new IllegalArgumentException(

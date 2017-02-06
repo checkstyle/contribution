@@ -17,7 +17,7 @@ You have 2 different checkstyle repos, original (base) and forked (patch), for e
 
 `--baseReport` - path to the base checkstyle-result.xml (required argument);<br/>
 `--patchReport` - path to the patch checkstyle-result.xml (required argument);<br/>
-`--refFiles` - path to the source file under check (optional argument);<br/>
+`--refFiles` - path to the source files under check (optional argument);<br/>
 `--output` - path to store the resulting diff report (optional argument, default: ~/XMLDiffGen_report_yyyy.mm.dd_hh_mm_ss)<br/>
 `--baseConfig` - path to the base checkstyle configuration xml file (optional argument);<br/>
 `--patchConfig` - path to the patch checkstyle configuration xml file (optional argument);<br/>

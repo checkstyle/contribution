@@ -95,14 +95,14 @@ public final class Main {
     private static final String OPTION_PATCH_REPORT_PATH = "patchReport";
 
     /**
-     * Name for command line option "sourcePath".
+     * Name for command line option "refFiles".
      */
-    private static final String OPTION_SOURCE_PATH = "refFiles";
+    private static final String OPTION_REFFILES_PATH = "refFiles";
 
     /**
-     * Name for command line option "resultPath".
+     * Name for command line option "outputPath".
      */
-    private static final String OPTION_RESULT_FOLDER_PATH = "output";
+    private static final String OPTION_OUTPUT_PATH = "output";
 
     /**
      * Name for command line option "baseConfigPath".
@@ -215,14 +215,14 @@ public final class Main {
      *         thrown on failure to perform checks.
      */
     private static void exportResources(CliPaths paths) throws IOException {
-        final Path resultPath = paths.getResultPath();
-        Files.createDirectories(resultPath);
-        FilesystemUtils.createOverwriteDirectory(resultPath.resolve(CSS_FILEPATH));
-        FilesystemUtils.createOverwriteDirectory(resultPath.resolve(XREF_FILEPATH));
+        final Path outputPath = paths.getOutputPath();
+        Files.createDirectories(outputPath);
+        FilesystemUtils.createOverwriteDirectory(outputPath.resolve(CSS_FILEPATH));
+        FilesystemUtils.createOverwriteDirectory(outputPath.resolve(XREF_FILEPATH));
         FilesystemUtils.exportResource("/maven-theme.css",
-                resultPath.resolve(CSS_FILEPATH).resolve("maven-theme.css"));
+                outputPath.resolve(CSS_FILEPATH).resolve("maven-theme.css"));
         FilesystemUtils.exportResource("/maven-base.css",
-                resultPath.resolve(CSS_FILEPATH).resolve("maven-base.css"));
+                outputPath.resolve(CSS_FILEPATH).resolve("maven-base.css"));
     }
 
     /**
@@ -236,9 +236,9 @@ public final class Main {
                 "Path to the base checkstyle-report.xml");
         options.addOption(null, OPTION_PATCH_REPORT_PATH, true,
                 "Path to the patch checkstyle-report.xml");
-        options.addOption(null, OPTION_SOURCE_PATH, true,
+        options.addOption(null, OPTION_REFFILES_PATH, true,
                 "Path to the directory containing source under checkstyle check, optional.");
-        options.addOption(null, OPTION_RESULT_FOLDER_PATH, true,
+        options.addOption(null, OPTION_OUTPUT_PATH, true,
                 "Path to directory where diff results will be stored.");
         options.addOption(null, OPTION_BASE_CONFIG_PATH, true,
                 "Path to the checkstyle configuration xml of the base report.");
@@ -261,14 +261,14 @@ public final class Main {
             throws IllegalArgumentException {
         final Path xmlBasePath = getPath(OPTION_BASE_REPORT_PATH, commandLine, null);
         final Path xmlPatchPath = getPath(OPTION_PATCH_REPORT_PATH, commandLine, null);
-        final Path sourcePath = getPath(OPTION_SOURCE_PATH, commandLine, null);
+        final Path refFilesPath = getPath(OPTION_REFFILES_PATH, commandLine, null);
         final Path defaultResultPath = Paths.get(System.getProperty("user.home"))
                 .resolve("XMLDiffGen_report_" + new SimpleDateFormat("yyyy.MM.dd_HH_mm_ss")
                         .format(Calendar.getInstance().getTime()));
-        final Path resultPath = getPath(OPTION_RESULT_FOLDER_PATH, commandLine, defaultResultPath);
+        final Path outputPath = getPath(OPTION_OUTPUT_PATH, commandLine, defaultResultPath);
         final Path configBasePath = getPath(OPTION_BASE_CONFIG_PATH, commandLine, null);
         final Path configPatchPath = getPath(OPTION_PATCH_CONFIG_PATH, commandLine, null);
-        return new CliPaths(xmlBasePath, xmlPatchPath, sourcePath, resultPath, configBasePath,
+        return new CliPaths(xmlBasePath, xmlPatchPath, refFilesPath, outputPath, configBasePath,
                 configPatchPath);
     }
 

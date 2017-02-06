@@ -39,12 +39,12 @@ public final class CliPaths {
     /**
      * Path to the data, tested by checkstyle.
      */
-    private final Path sourcePath;
+    private final Path refFilesPath;
 
     /**
      * Path to the result site.
      */
-    private final Path resultPath;
+    private final Path outputPath;
 
     /**
      * Path to the data, tested by checkstyle.
@@ -63,9 +63,9 @@ public final class CliPaths {
      *        path to the base checkstyle-report.xml.
      * @param patchReportPath
      *        path to the patch checkstyle-report.xml.
-     * @param sourcePath
+     * @param refFilesPath
      *        path to the data, tested by checkstyle.
-     * @param resultPath
+     * @param outputPath
      *        path to the result site.
      * @param patchConfigPath
      *        path to the configuration of the base report.
@@ -73,11 +73,11 @@ public final class CliPaths {
      *        path to the configuration of the patch report.
      */
     public CliPaths(Path baseReportPath, Path patchReportPath,
-            Path sourcePath, Path resultPath, Path baseConfigPath, Path patchConfigPath) {
+            Path refFilesPath, Path outputPath, Path baseConfigPath, Path patchConfigPath) {
         this.baseReportPath = baseReportPath;
         this.patchReportPath = patchReportPath;
-        this.sourcePath = sourcePath;
-        this.resultPath = resultPath;
+        this.refFilesPath = refFilesPath;
+        this.outputPath = outputPath;
         this.baseConfigPath = baseConfigPath;
         this.patchConfigPath = patchConfigPath;
     }
@@ -90,12 +90,12 @@ public final class CliPaths {
         return patchReportPath;
     }
 
-    public Path getSourcePath() {
-        return sourcePath;
+    public Path getRefFilesPath() {
+        return refFilesPath;
     }
 
-    public Path getResultPath() {
-        return resultPath;
+    public Path getOutputPath() {
+        return outputPath;
     }
 
     public Path getBaseConfigPath() {
