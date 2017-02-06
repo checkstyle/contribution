@@ -84,10 +84,10 @@ public final class SiteGenerator {
         // setup thymeleaf engine
         final TemplateEngine tplEngine = getTemplateEngine();
         // setup xreference generator
-        final XrefGenerator xrefGenerator = new XrefGenerator(paths.getSourcePath(),
-                paths.getResultPath().resolve(Main.XREF_FILEPATH), paths.getResultPath());
+        final XrefGenerator xrefGenerator = new XrefGenerator(paths.getRefFilesPath(),
+                paths.getOutputPath().resolve(Main.XREF_FILEPATH), paths.getOutputPath());
         // html generation
-        final Path sitepath = paths.getResultPath().resolve(SITEPATH);
+        final Path sitepath = paths.getOutputPath().resolve(SITEPATH);
         try (FileWriter writer = new FileWriter(sitepath.toString())) {
             // write statistics
             generateHeader(tplEngine, writer, diffReport.getStatistics(), diffConfiguration);
@@ -176,13 +176,13 @@ public final class SiteGenerator {
             DiffReport diffReport, CliPaths paths, XrefGenerator xrefGenerator) throws IOException {
         final AnchorCounter anchorCounter = new AnchorCounter();
 
-        final Path sourcePath = paths.getSourcePath();
+        final Path refFilesPath = paths.getRefFilesPath();
         for (Map.Entry<String, List<CheckstyleRecord>> entry : diffReport.getRecords().entrySet()) {
             final List<CheckstyleRecord> records = entry.getValue();
             String filename = entry.getKey();
             final String xreference = xrefGenerator.generateXref(filename);
-            if (sourcePath != null) {
-                filename = sourcePath.relativize(Paths.get(filename)).toString();
+            if (refFilesPath != null) {
+                filename = refFilesPath.relativize(Paths.get(filename)).toString();
             }
             generateContent(tplEngine, writer, records, shortenFilename(filename), xreference,
                     anchorCounter);
