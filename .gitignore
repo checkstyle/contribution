@@ -1,5 +1,7 @@
 target
 .settings
+.classpath
+.project
 .checkstyle
 *.iml
 .idea/
