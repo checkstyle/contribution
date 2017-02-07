@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="9.9-SNAPSHOT">
+  <file name="src/test/resources/run/Same1.java">
+  </file>
+  <file name="src/test/resources/run/Same2.java">
+    <error line="5" column="1" severity="warning" message="Same violation."
+      source="Test"/>
+  </file>
+  <file name="src/test/resources/run/BaseOnly1.java">
+    <error line="5" column="1" severity="warning" message="Should appear only in base."
+      source="MyTestCheck"/>
+  </file>
+  <file name="src/test/resources/run/BaseOnly2.java" test="true">
+    <error line="5" column="1" severity="warning" message="File should appear only in base."
+      source="Test" test="true"/>
+  </file>
+  <file name="src/test/resources/run/PatchOnly1.java">
+  </file>
+  <file name="src/test/resources/run/Change1.java">
+    <error line="8" column="2" severity="warning"
+      message="Should appear in base and change in patch. Line same." source="Test"/>
+  </file>
+  <file name="src/test/resources/run/Change2.java">
+    <error line="10" column="1" severity="warning"
+      message="Should appear in base and change in patch. Line change." source="Test"/>
+  </file>
+  <file name="src/test/resources/run/Change3.java">
+    <error line="10" column="1" severity="warning"
+      message="Should appear in base and change in patch. Column change."
+      source="Test"/>
+  </file>
+  <file name="src/test/resources/run/Change4.java">
+    <error line="10" column="1" severity="warning"
+      message="Should appear in base and change in patch. Source change."
+      source="Test1"/>
+  </file>
+</checkstyle>
