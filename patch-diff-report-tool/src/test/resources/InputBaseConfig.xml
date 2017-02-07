@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<module name="Checker">
+  <metadata name="com.atlas-sw.eclipse" value="I like Sydney"/>
+  <property name="charset" value="UTF-8"/>
+  <property name="severity" value="warning"/>
+  <property name="haltOnException" value="false"/>
+
+  <module name="TreeWalker">
+    <module name="MyCheck1">
+    </module>
+    <module name="MyCheck2">
+      <property name="propertyName" value="propertyValue"/>
+    </module>
+    <module name="MyCheck3" test="true">
+      <module name="MyCheck4">
+        <property name="propertyName2" value="propertyValue2a" test="1"/>
+        <property name="propertyName2" value="propertyValue2b"/>
+      </module>
+    </module>
+  </module>
+</module>
