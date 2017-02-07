@@ -87,67 +87,6 @@ public final class FilesystemUtils {
     }
 
     /**
-     * Safely copies files and directories with its content.
-     *
-     * @param source
-     *        path to the existing file.
-     * @param destination
-     *        path to the desired location.
-     * @throws IllegalArgumentException
-     *         thrown on failure to resolve filename conflict.
-     * @throws IOException
-     *         thrown on filesystem error.
-     */
-    public static void copy(Path source, Path destination)
-            throws IllegalArgumentException,
-            IOException {
-        if (Files.isDirectory(source)) {
-            if (Files.exists(destination)) {
-                if (!Files.isDirectory(destination)) {
-                    throw new IllegalArgumentException(String.format(
-                            "fail to copy %s to %s "
-                                    + "because former is not a directory",
-                            source.toString(),
-                            destination.toString()));
-                }
-            }
-            else {
-                Files.createDirectory(destination);
-            }
-            final DirectoryStream<Path> subPaths =
-                Files.newDirectoryStream(source);
-            for (Path path : subPaths) {
-                final Path relativePath = source.relativize(path);
-                copy(path, destination.resolve(relativePath));
-            }
-            subPaths.close();
-
-        }
-        else {
-            Files.copy(source, destination);
-        }
-    }
-
-    /**
-     * Safely copies file, creates destination folder if needed.
-     *
-     * @param source
-     *        path to the file
-     * @param destination
-     *        path to file's destination.
-     * @throws IOException
-     *         thrown on filesystem error.
-     */
-    public static void copyFile(Path source, Path destination)
-            throws IOException {
-        final Path destFolders = destination.getParent();
-        if (Files.notExists(destFolders)) {
-            Files.createDirectories(destFolders);
-        }
-        Files.copy(source, destination);
-    }
-
-    /**
      * Exports a resource embedded into a Jar file to the local file path.
      *
      * @param resourceName

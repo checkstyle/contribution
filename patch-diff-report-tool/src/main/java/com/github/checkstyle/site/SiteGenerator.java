@@ -88,7 +88,8 @@ public final class SiteGenerator {
                 paths.getOutputPath().resolve(Main.XREF_FILEPATH), paths.getOutputPath());
         // html generation
         final Path sitepath = paths.getOutputPath().resolve(SITEPATH);
-        try (FileWriter writer = new FileWriter(sitepath.toString())) {
+        final FileWriter writer = new FileWriter(sitepath.toString());
+        try {
             // write statistics
             generateHeader(tplEngine, writer, diffReport.getStatistics(), diffConfiguration);
             // write parsed content
@@ -96,28 +97,8 @@ public final class SiteGenerator {
             // write html footer
             tplEngine.process("footer", new Context(), writer);
         }
-    }
-
-    /**
-     * Generates configuration report site using thymeleaf.
-     *
-     * @param diffConfiguration
-     *        doubled configuration from both reports.
-     * @param sitepath
-     *        path to the resulting site.
-     * @throws IOException
-     *         on failure to write site to disc.
-     */
-    public static void generateConfigurationReport(MergedConfigurationModule diffConfiguration,
-            Path sitepath) throws IOException {
-        // setup thymeleaf engine
-        final TemplateEngine tplEngine = getTemplateEngine();
-        // form context
-        final Context context = new Context();
-        context.setVariable("config", diffConfiguration);
-        // html generation
-        try (FileWriter writer = new FileWriter(sitepath.toString())) {
-            tplEngine.process("configuration", context, writer);
+        finally {
+            writer.close();
         }
     }
 

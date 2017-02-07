@@ -52,8 +52,4 @@ class AnchorCounter {
         counter++;
     }
 
-    public long getCounter() {
-        return counter;
-    }
-
 }
