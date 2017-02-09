@@ -54,6 +54,11 @@ public class Statistics {
     private int fileNumBase;
 
     /**
+     * Number of unique messages in the base source.
+     */
+    private int uniqueMessagesBase;
+
+    /**
      * Map storing severity numbers for patch source.
      */
     private Map<String, Integer> severityNumPatch = new HashMap<>();
@@ -62,6 +67,11 @@ public class Statistics {
      * Number of files in the patch source.
      */
     private int fileNumPatch;
+
+    /**
+     * Number of unique messages in the patch source.
+     */
+    private int uniqueMessagesPatch;
 
     public final Map<String, Integer> getSeverityNumDiff() {
         return severityNumDiff;
@@ -109,6 +119,10 @@ public class Statistics {
         return fileNumBase;
     }
 
+    public final int getUniqueMessagesBase() {
+        return uniqueMessagesBase;
+    }
+
     /**
      * Getter for total number of severity records for patch source.
      *
@@ -124,6 +138,10 @@ public class Statistics {
 
     public final int getFileNumPatch() {
         return fileNumPatch;
+    }
+
+    public final int getUniqueMessagesPatch() {
+        return uniqueMessagesPatch;
     }
 
     /**
@@ -188,4 +206,17 @@ public class Statistics {
         return names;
     }
 
+    /**
+     * Registers unique message from numbered source.
+     *
+     * @param index index of the source.
+     */
+    public void incrementUniqueMessageCount(int index) {
+        if (index == CheckstyleReportsParser.BASE_REPORT_INDEX) {
+            this.uniqueMessagesBase++;
+        }
+        else if (index == CheckstyleReportsParser.PATCH_REPORT_INDEX) {
+            this.uniqueMessagesPatch++;
+        }
+    }
 }
