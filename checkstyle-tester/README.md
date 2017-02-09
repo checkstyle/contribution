@@ -37,6 +37,8 @@ The script receives the following command line arguments:
 
 **ignoreExceptions** (i) - whether Checkstyle Maven Plugin should ignore exceptions (optional, default is false).
 
+**ignoreExcludes** (g) - whether to ignore excludes specified in the list of projects (optional, default is false).
+
 When the script finishes its work the following directory structure will be created in the root of cehckstyle-tester directory:
 
 */repositories* - directory with downloaded projects sources which are specified in projects-to-test-on.properties;
@@ -84,7 +86,8 @@ Follow example how we do this in Windows CI server - https://github.com/checksty
 
 ## [diff.groovy] Diff report generation
 
-In order to generate a compact diff report before and after your changes you can use diff.groovy script which performs all required work automatically. Please run the following command in your command line:
+In order to generate a compact diff report before and after your changes you can use diff.groovy script which performs all required work automatically. Note, diff.groovy ignores excludes specified in the list of projects file.
+Please execute the following command in your command line to run diff.groovy:
 
 ```
 groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle --baseBranch master --patchBranch i111-my-fix --config my_check.xml --listOfProjects projects-to-test-on.properties
