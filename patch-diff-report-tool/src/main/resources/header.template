@@ -91,7 +91,7 @@
 							<td id="filesBase" th:text=${statistics.fileNumBase}> fileNumBase </td>
 							<td id="totalBase" th:text=${statistics.totalNumBase}> totalNumBase </td>
 							<th:block th:each="name : ${statistics.severityNames}">
-								<td th:text="${statistics.severityNumBase.get(name) != null} ? ${statistics.severityNumBase.get(name)} : '0'"> infoNumBase </td>
+								<td th:id="${name} + @{SeverityNumBase}" th:text="${statistics.severityNumBase.get(name) != null} ? ${statistics.severityNumBase.get(name)} : '0'"> infoNumBase </td>
 							</th:block>
 						</tr>
 						<tr class="a">
@@ -99,7 +99,7 @@
 							<td id="filesPatch" th:text=${statistics.fileNumPatch}> fileNumPatch </td>
 							<td id="totalPatch" th:text=${statistics.totalNumPatch}> totalNumPatch </td>
 							<th:block th:each="name : ${statistics.severityNames}">
-								<td th:text="${statistics.severityNumPatch.get(name) != null} ? ${statistics.severityNumPatch.get(name)} : '0'"> infoNumBase </td>
+								<td th:id="${name} + @{SeverityNumPatch}" th:text="${statistics.severityNumPatch.get(name) != null} ? ${statistics.severityNumPatch.get(name)} : '0'"> infoNumBase </td>
 							</th:block>
 						</tr>
 						<tr class="d">
@@ -107,7 +107,7 @@
 							<td id="filesDiff" th:text=${statistics.fileNumDiff}> fileNumDiff </td>
 							<td id="totalDiff" th:text=${statistics.totalNumDiff}> totalNumDiff </td>
 							<th:block th:each="name : ${statistics.severityNames}">
-								<td th:text="${statistics.severityNumDiff.get(name) != null} ? ${statistics.severityNumDiff.get(name)} : '0'"> infoNumBase </td>
+								<td th:id="${name} + @{SeverityNumDiff}" th:text="${statistics.severityNumDiff.get(name) != null} ? ${statistics.severityNumDiff.get(name)} : '0'"> infoNumBase </td>
 							</th:block>
 						<tr>
 					</table>

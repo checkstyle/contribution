@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="9.9-SNAPSHOT">
+  <file name="src/test/resources/run/PatchOnly1.java">
+    <error line="1" column="1" severity="info" message="Info."
+      source="Test"/>
+    <error line="1" column="1" severity="warning" message="Warning."
+      source="Test"/>
+    <error line="1" column="1" severity="error" message="Error."
+      source="Test"/>
+    <error line="1" column="1" severity="test" message="Test."
+      source="Test"/>
+  </file>
+</checkstyle>

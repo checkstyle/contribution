@@ -151,4 +151,15 @@ public class MainTest extends AbstractTest {
 
         Assert.assertEquals(8, xrefList.length);
     }
+
+    @Test
+    public void testSeverities() throws Exception {
+        final File outputDirectory = folder.getRoot();
+
+        Main.main("-baseReport", VALID_BASE_REPORT_EMPTY, "-patchReport",
+                getPath("InputPatchReportSeverities.xml"), "-output",
+                outputDirectory.getAbsolutePath());
+
+        assertReportOutput(getPath("ExpectedReportSeverities.html"), outputDirectory);
+    }
 }
