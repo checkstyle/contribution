@@ -21,6 +21,7 @@ def getCliOptions(args) {
         c(longOpt: 'config', args: 1, required: true, argName: 'path', 'Path to checkstyle config file (required)')
         l(longOpt: 'listOfProjects', args: 1, required: true, argName: 'path', 'Path to file which contains projects to test on (required)')
         i(longOpt: 'ignoreExceptions', required: false, 'Whether Maven Checkstyle Plugin should ignore exceptions (optional, default is false)')
+        g(longOpt: 'ignoreExcludes', required: false, 'Whether to ignore excludes specified in the list of projects (optional, default is false)')
     }
     return cli.parse(args)
 }
@@ -72,7 +73,11 @@ def generateCheckstyleReport(cliOptions) {
                 def repoType = params[REPO_TYPE_PARAM_NO]
                 def repoUrl = params[REPO_URL_PARAM_NO]
                 def commitId = params[REPO_COMMIT_ID_PARAM_NO]
-                def excludes = params[REPO_EXCLUDES_PARAM_NO]
+
+                def excludes = ""
+                if (!cliOptions.ignoreExcludes) {
+                    excludes = params[REPO_EXCLUDES_PARAM_NO]
+                }
 
                 cloneRepository(repoName, repoType, repoUrl, commitId, reposDir)
                 deleteDir(srcDir)

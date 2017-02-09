@@ -185,7 +185,7 @@ def generateCheckstyleReport(localGitRepo, branch, checkstyleCfg, listOfProjects
     }
 
     executeCmd("mvn -Pno-validations clean install", localGitRepo)
-    executeCmd("groovy launch.groovy --listOfProjects $listOfProjects --config $checkstyleCfg --ignoreExceptions")
+    executeCmd("groovy launch.groovy --listOfProjects $listOfProjects --config $checkstyleCfg --ignoreExceptions --ignoreExcludes")
     println "Moving Checkstyle report into $destDir ..."
     moveDir("reports", destDir)
 }
