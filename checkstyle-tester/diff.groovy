@@ -195,7 +195,7 @@ def generateDiffReport(reportsDir, masterReportsDir, patchReportsDir, baseConfig
         .getParent()
         .resolve("patch-diff-report-tool")
         .toFile()
-    executeCmd("mvn clean package", diffToolDir)
+    executeCmd("mvn clean package -DskipTests", diffToolDir)
     def diffToolJarPath = getPathToDiffToolJar(diffToolDir)
 
     println 'Starting diff report generation ...'
