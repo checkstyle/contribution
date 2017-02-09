@@ -147,6 +147,7 @@ public final class DiffReport {
             for (CheckstyleRecord rec : list) {
                 statistics.addSeverityRecord(rec.getSeverity(),
                         CheckstyleReportsParser.DIFF_REPORT_INDEX);
+                statistics.incrementUniqueMessageCount(rec.getIndex());
             }
         }
     }

@@ -111,6 +111,10 @@
 							</th:block>
 						<tr>
 					</table>
+
+					<br />
+					Number of unique base messages reported below: <span id="uniqueMessagesBase" th:text=${statistics.uniqueMessagesBase}>uniqueMessagesBase</span><br />
+					Number of unique patch messages reported below: <span id="uniqueMessagesPatch" th:text=${statistics.uniqueMessagesPatch}>uniqueMessagesPatch</span><br />
 				</div>
 			</div>
 
