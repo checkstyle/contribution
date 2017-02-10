@@ -177,6 +177,7 @@ def getCheckstyleVersionFromPomXml(pathToPomXml, xmlTagName) {
 def generateCheckstyleReport(localGitRepo, branch, checkstyleCfg, listOfProjects, destDir) {
     println "Installing Checkstyle artifact ($branch) into local Maven repository ..."
     executeCmd("git checkout $branch", localGitRepo)
+    executeCmd("git log -1 --pretty=MSG:%s%nSHA-1:%H", localGitRepo)
 
     def testerCheckstyleVersion = getCheckstyleVersionFromPomXml('./pom.xml', 'checkstyle.version')
     def checkstyleVersionInLocalRepo = getCheckstyleVersionFromPomXml("$localGitRepo/pom.xml", 'version')
