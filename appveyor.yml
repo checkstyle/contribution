@@ -19,17 +19,29 @@ install:
         )
         [System.IO.Compression.ZipFile]::ExtractToDirectory("C:\maven-bin.zip", "C:\maven")
       }
+  - ps: |
+      Add-Type -AssemblyName System.IO.Compression.FileSystem
+      if (!(Test-Path -Path "C:\groovy\groovy-2.4.8" )) {
+        (new-object System.Net.WebClient).DownloadFile(
+          'https://dl.bintray.com/groovy/maven/apache-groovy-binary-2.4.8.zip',
+          'C:\groovy-bin.zip'
+        )
+        [System.IO.Compression.ZipFile]::ExtractToDirectory("C:\groovy-bin.zip", "C:\groovy")
+      }
   - cmd: SET M2_HOME=C:\maven\apache-maven-3.2.5
-  - cmd: SET PATH=%M2_HOME%\bin;%JAVA_HOME%\bin;%PATH%
+  - cmd: SET GROOVY_HOME=C:\groovy\groovy-2.4.8
+  - cmd: SET PATH=%GROOVY_HOME%\bin;%JAVA_HOME%\bin;%M2_HOME%\bin;%PATH%
   - cmd: git config --global core.autocrlf
   - cmd: mvn --version
   - cmd: java -version
+  - cmd: groovy -version
   - cmd: '%CYG_BIN% -qnNdO -R %CYG_ROOT% -s %CYG_MIRROR% -l %CYG_CACHE% -P hg'
 
 cache:
   - C:\maven\apache-maven-3.2.5
   - C:\Users\appveyor\.m2
   - C:\cygwin\var\cache\setup
+  - C:\groovy\groovy-2.4.8
 
 matrix:
   fast_finish: true
@@ -73,6 +85,30 @@ environment:
       CMD7: " && C:\\cygwin\\bin\\bash.exe -lc "
       CMD8: "          \"cd $APPVEYOR_BUILD_FOLDER/checkstyle-tester/ ;"
       CMD9: "               ./launch.sh -Dcheckstyle.config.location=checks-nonjavadoc-error.xml\""
+    - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
+      DESC: "checkstyle-tester (launch.groovy) on guava"
+      CMD1: " git clone -q --depth=10 --branch=master "
+      CMD2: "      https://github.com/checkstyle/checkstyle C:\\projects\\contribution\\checkstyle "
+      CMD3: " && cd checkstyle && mvn clean install -Passembly"
+      CMD4: " "
+      CMD5: " && cd ..\\checkstyle-tester "
+      CMD7: " && groovy launch.groovy -l projects-for-travis.properties -c checks-nonjavadoc-error.xml -i\""
+    - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
+      DESC: "checkstyle-tester (diff.groovy) on guava"
+      CMD1: " git clone -q --depth=10 --branch=master "
+      CMD2: "      https://github.com/checkstyle/checkstyle C:\\projects\\contribution\\checkstyle "
+      CMD3: " && cd checkstyle && git checkout -b patch-branch"
+      CMD4: " "
+      CMD5: " && cd ..\\checkstyle-tester "
+      CMD6: " && groovy diff.groovy -l projects-for-travis.properties -c my_check.xml -b master -p patch-branch -r C:\\projects\\contribution\\checkstyle -i"
+    - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
+      DESC: "checkstyle-tester (diff.groovy with base and patch configs) on guava"
+      CMD1: " git clone -q --depth=10 --branch=master "
+      CMD2: "      https://github.com/checkstyle/checkstyle C:\\projects\\contribution\\checkstyle "
+      CMD3: " && cd checkstyle && git checkout -b patch-branch"
+      CMD4: " "
+      CMD5: " && cd ..\\checkstyle-tester "
+      CMD6: " && groovy diff.groovy -l projects-for-travis.properties -bc my_check.xml -pc my_check.xml -b master -p patch-branch -r C:\\projects\\contribution\\checkstyle -i"
 
 build_script:
   - ps: >
