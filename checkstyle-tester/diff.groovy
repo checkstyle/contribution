@@ -287,11 +287,22 @@ def deleteDir(dir) {
     new AntBuilder().delete(dir: dir, failonerror: false)
 }
 
-def executeCmd(cmd, dir = new File("./")) {
-    def proc = cmd.execute(null, dir)
+def executeCmd(cmd, dir =  new File("").getAbsoluteFile()) {
+    def osSpecificCmd = getOsSpecificCmd(cmd)
+    def proc = osSpecificCmd.execute(null, dir)
     proc.consumeProcessOutput(System.out, System.err)
     proc.waitFor()
     if (proc.exitValue() != 0) {
         throw new GroovyRuntimeException("Error: ${proc.err.text}!")
+    }
+}
+
+def getOsSpecificCmd(cmd) {
+    def osSpecificCmd
+    if (System.properties['os.name'].toLowerCase().contains('windows')) {
+        osSpecificCmd = "cmd /c $cmd"
+    }
+    else {
+        osSpecificCmd = cmd
     }
 }
