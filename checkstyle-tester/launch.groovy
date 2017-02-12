@@ -90,7 +90,7 @@ def generateCheckstyleReport(cliOptions) {
     }
 
     // restore empty_file to make src directory tracked by git
-    Files.createFile(Paths.get("$srcDir/empty_file"))
+    new File("$srcDir/empty_file").createNewFile()
 }
 
 def createWorkDirsIfNotExist(srcDirPath, repoDirPath, reportsDirPath) {
