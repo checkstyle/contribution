@@ -127,6 +127,8 @@ The script receives the following set of command line arguments:
 
 **listOfProjects** (l) - path to the file which contains the projects which sources will be analyzed by Checkstyle during report generation.
 
+**shortFilePaths** (s) - whether to save report file paths as a shorter version to prevent long paths. This option is useful for Windows users where they are restricted to maximum directory depth (optional, default is false).
+
 When the script finishes its work the following directory structure will be created in the root of cehckstyle-tester directory:
 
 */repositories* - directory with downloaded projects sources which are specified in projects-to-test-on.properties;

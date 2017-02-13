@@ -23,6 +23,8 @@ static void main(String[] args) {
             patchConfig = config
         }
 
+        def shortFilePaths = cliOptions.shortFilePaths
+
         def patchBranch = cliOptions.patchBranch
         def listOfProjects = cliOptions.listOfProjects
         def checkstyleCfg = cliOptions.checkstyleCfg
@@ -49,7 +51,7 @@ static void main(String[] args) {
         generateCheckstyleReport(localGitRepo, patchBranch, patchConfig, listOfProjects, tmpPatchReportsDir)
         deleteDir(reportsDir)
         moveDir(tmpReportsDir, reportsDir)
-        generateDiffReport(reportsDir, masterReportsDir, patchReportsDir, baseConfig, patchConfig)
+        generateDiffReport(reportsDir, masterReportsDir, patchReportsDir, baseConfig, patchConfig, shortFilePaths)
         generateSummaryIndexHtml(diffDir)
     }
     else {
@@ -68,6 +70,7 @@ def getCliOptions(args) {
         pc(longOpt: 'patchConfig', args: 1, required: false, argName: 'path', 'Path to the patch checkstyle config file (required if baseConfig is specified)')
         c(longOpt: 'config', args: 1, required: false, argName: 'path', 'Path to the checkstyle config file (required if baseConfig and patchConfig are not secified)')
         l(longOpt: 'listOfProjects', args: 1, required: true, argName: 'path', 'Path to file which contains projects to test on (required)')
+        s(longOpt: 'shortFilePaths', required: false, 'Whether to save report file paths as a shorter version to prevent long paths. (optional, default is false)')
     }
     return cli.parse(args)
 }
@@ -191,7 +194,7 @@ def generateCheckstyleReport(localGitRepo, branch, checkstyleCfg, listOfProjects
     moveDir("reports", destDir)
 }
 
-def generateDiffReport(reportsDir, masterReportsDir, patchReportsDir, baseConfig, patchConfig) {
+def generateDiffReport(reportsDir, masterReportsDir, patchReportsDir, baseConfig, patchConfig, shortFilePaths) {
     def diffToolDir = Paths.get("").toAbsolutePath()
         .getParent()
         .resolve("patch-diff-report-tool")
@@ -210,6 +213,9 @@ def generateDiffReport(reportsDir, masterReportsDir, patchReportsDir, baseConfig
                     def patchReport = "$patchReportsDir/$projectName/checkstyle-result.xml"
                     def outputDir = "$reportsDir/diff/$projectName"
                     def diffCmd = "java -jar $diffToolJarPath --baseReport $baseReport --patchReport $patchReport --output $outputDir --baseConfig $baseConfig --patchConfig $patchConfig"
+                    if (shortFilePaths) {
+                        diffCmd += ' --shortFilePaths'
+                    }
                     executeCmd(diffCmd)
                 } else {
                     throw new FileNotFoundException("Error: patch report for project $projectName is not found!")
