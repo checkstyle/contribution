@@ -51,7 +51,7 @@ matrix:
       env:
         - DESC="codenarc validation for groovy files"
         - CMD1=" cd checkstyle-tester "
-        - CMD2=" && ./codenarc.sh . diff.groovy | grep '(p1=0; p2=20; p3=132)'"
+        - CMD2=" && ./codenarc.sh . diff.groovy"
         - CMD3=" && ./codenarc.sh . launch.groovy | grep '(p1=0; p2=23; p3=110)'"
         - CMD4=" "
         - CMD=$CMD1$CMD2$CMD3$CMD4
