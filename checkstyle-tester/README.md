@@ -149,9 +149,9 @@ ATTENTION:
 you can specify at projects-to-test-on.properties path to local file system if you have some 
 repositories on your local, example: "checkstyle=/home/username/java/git-repos/checkstyle/checkstyle".
 
-DEPLOY: 
+## Deploy Report: 
 
-to github pages repo (https://pages.github.com/) to share your report with other:
+The created report can be deployed to github pages repo (https://pages.github.com/) to share with others:
 
 1) please follow instruction from https://pages.github.com/ to create your static web site on github;
 
