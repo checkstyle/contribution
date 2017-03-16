@@ -8,7 +8,7 @@ It consists of two Groovy scripts: launch.groovy and diff.groovy. Thus, in order
 **launch.groovy** is a script which allows you to generate Checkstyle report over target projects. It invokes Maven Checkstyle plugin. In order to use the script you should run the following command in your command line:
 
 ```
-groovy launch.groovy --listOfProjects projects-to-test-on.properties --checkstyleCfg my_check.xml
+groovy launch.groovy --listOfProjects projects-to-test-on.properties --config my_check.xml
 ```
 
 or with short command line arguments names:
