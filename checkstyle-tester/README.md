@@ -3,6 +3,13 @@
 checkstyle-tester is a tool for Checkstyle report generation over very [basic set of java projects](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.properties).
 It consists of two Groovy scripts: launch.groovy and diff.groovy. Thus, in order to use the tool make sure you have the Groovy runtime installed on your developer machine (min required version is 2.4.8).
 
+Content:
+
+- [Checkstyle report generation](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/README.md#launchgroovy-checkstyle-report-generation)
+- [Diff report generation](https://github.com/checkstyle/contribution/tree/master/checkstyle-tester#diffgroovy-diff-report-generation)
+- [Deploy Report](https://github.com/checkstyle/contribution/tree/master/checkstyle-tester#deploy-report)
+
+
 ## [launch.groovy] Checkstyle report generation
 
 **launch.groovy** is a script which allows you to generate Checkstyle report over target projects. It invokes Maven Checkstyle plugin. In order to use the script you should run the following command in your command line:
