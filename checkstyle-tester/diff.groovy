@@ -250,6 +250,10 @@ def generateSummaryIndexHtml(diffDir) {
 
     summaryIndexHtml << ('<html><body>')
     summaryIndexHtml << ('\n')
+    summaryIndexHtml << ('<h3><span style="color: #ff0000;">')
+    summaryIndexHtml << ('<strong>WARNING: Excludes are ignored by diff.groovy.</strong>')
+    summaryIndexHtml << ('</span></h3>')
+    summaryIndexHtml << ('\n')
     projectsStatistic.each {
         project, diffCount ->
             summaryIndexHtml << ("<a href='$project/index.html'>$project</a>")
