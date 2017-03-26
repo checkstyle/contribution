@@ -40,7 +40,7 @@ The script receives the following command line arguments:
 
 **listOfProjects** (l) - path to the file which contains the projects which sources will be analyzed by Checkstyle during report generation (required);
 
-**config** (c) - path to the file with Checkstyle configuration (required);
+**config** (c) - path to the file with Checkstyle configuration (required). The default config should be changed in order to be appropriate for your use purposes;
 
 **ignoreExceptions** (i) - whether Checkstyle Maven Plugin should ignore exceptions (optional, default is false).
 
@@ -130,7 +130,7 @@ The script receives the following set of command line arguments:
 
 **patchConfig** (pc) - path to the patch checkstyle config file. It will be applied to patch branch (required if baseConfig is specified);
 
-**config** (c) - path to the checkstyle config file. It will be applied to base and patch branches (required if baseConfig and patchConfig are not secified);
+**config** (c) - path to the checkstyle config file. It will be applied to base and patch branches (required if baseConfig and patchConfig are not secified). The default config should be changed in order to be appropriate for your use purposes;
 
 **listOfProjects** (l) - path to the file which contains the projects which sources will be analyzed by Checkstyle during report generation.
 

@@ -6,7 +6,7 @@
 
 <module name = "Checker">
     <property name="charset" value="UTF-8"/>
-    
+
     <!-- do not change severity to 'error', as that will hide errors caused by exceptions -->
     <property name="severity" value="warning"/>
 
@@ -21,9 +21,11 @@
     <module name="TreeWalker">
          <!-- Example of sevntu.checkstyle Check usage -->
          <!-- <module name="NestedSwitchCheck"/> -->
-         
+
          <!-- Example of checkstyle Check usage -->
-         <module name="AbstractClassName"/>
+         <module name="ThrowsCount">
+             <property name="max" value="20000000"/>
+         </module>
     </module>
 <!--
     <module name="SeverityMatchFilter">
