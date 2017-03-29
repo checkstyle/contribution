@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -112,7 +113,12 @@ public final class TemplateProcessor {
         final Map<String, Object> variables = new HashMap<>();
         variables.put("releaseNo", releaseNumber);
         variables.put("breakingMessages", releaseNotes.get(Constants.BREAKING_COMPATIBILITY_LABEL));
-        variables.put("newMessages", releaseNotes.get(Constants.NEW_LABEL));
+
+        final Collection<ReleaseNotesMessage> newMessages =
+            releaseNotes.get(Constants.NEW_FEATURE_LABEL);
+        newMessages.addAll(releaseNotes.get(Constants.MEW_MODULE_LABEL));
+        variables.put("newMessages", newMessages);
+
         variables.put("bugMessages", releaseNotes.get(Constants.BUG_LABEL));
         variables.put("notesMessages", releaseNotes.get(Constants.MISCELLANEOUS_LABEL));
 

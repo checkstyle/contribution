@@ -30,7 +30,9 @@ public final class Constants {
     /** Bug label name. */
     public static final String BUG_LABEL = "bug";
     /** New feature label name. */
-    public static final String NEW_LABEL = "new feature";
+    public static final String NEW_FEATURE_LABEL = "new feature";
+    /** New module label name. */
+    public static final String MEW_MODULE_LABEL = "new module";
     /** Miscellaneous label name. */
     public static final String MISCELLANEOUS_LABEL = "miscellaneous";
     /** Breaking backward compatibility label name. */
@@ -44,7 +46,8 @@ public final class Constants {
 
     static {
         ISSUE_LABELS = new String[] {
-            BREAKING_COMPATIBILITY_LABEL, NEW_LABEL, BUG_LABEL, MISCELLANEOUS_LABEL,
+            BREAKING_COMPATIBILITY_LABEL, NEW_FEATURE_LABEL, BUG_LABEL, MISCELLANEOUS_LABEL,
+            MEW_MODULE_LABEL,
         };
         Arrays.sort(ISSUE_LABELS);
     }
