@@ -306,7 +306,7 @@ public final class NotesBuilder {
     private static String getIssueLabelFrom(GHIssue issue) throws IOException {
         final Collection<GHLabel> issueLabels = issue.getLabels();
         final Optional<GHLabel> label = issueLabels.stream()
-            .filter(input -> Arrays.binarySearch(Constants.ISSUE_LABELS, input.getName()) != -1)
+            .filter(input -> Arrays.binarySearch(Constants.ISSUE_LABELS, input.getName()) >= 0)
             .findFirst();
         return label.map(GHLabel::getName).orElse("");
     }
