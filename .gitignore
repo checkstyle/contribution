@@ -13,3 +13,4 @@ bin
 /checkstyle-tester/reports
 /checkstyle-tester/tmp_reports
 /qulice/src/main/java/
+.DS_Store
