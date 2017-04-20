@@ -43,7 +43,7 @@
 					</dependency>
 				</dependencies>
 	        </plugin>
-			
+
 		</plugins>
 	</build>
 
@@ -76,5 +76,17 @@
 			<url>http://sevntu-checkstyle.github.com/sevntu.checkstyle/maven2</url>
 		</pluginRepository>
 	</pluginRepositories>
+
+    <repositories>
+        <repository>
+            <id>oss.sonatype.org</id>
+            <name>oss.sonatype.org</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
 
 </project>
