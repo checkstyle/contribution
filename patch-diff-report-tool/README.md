@@ -15,7 +15,7 @@ You have 2 different checkstyle repos, original (base) and forked (patch), for e
 
 8) Now execute this utility with 6 command line arguments:<br/>
 
-`--baseReport` - path to the base checkstyle-result.xml (required argument);<br/>
+`--baseReport` - path to the base checkstyle-result.xml (optional argument, if absent then only configuration and violations for patch will be in the report);<br/>
 `--patchReport` - path to the patch checkstyle-result.xml (required argument);<br/>
 `--refFiles` - path to the source files under check (optional argument);<br/>
 `--output` - path to store the resulting diff report (optional argument, default: ~/XMLDiffGen_report_yyyy.mm.dd_hh_mm_ss)<br/>

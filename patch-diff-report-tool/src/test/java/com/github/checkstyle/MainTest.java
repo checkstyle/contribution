@@ -38,10 +38,11 @@ public class MainTest extends AbstractTest {
                 + "This program creates symmetric difference from two"
                 + " checkstyle-result.xml reports\n" + "generated for checkstyle build.\n"
                 + "Command line arguments:\n"
-                + "\t--baseReportPath - path to the base checkstyle-result.xml,"
-                + " obligatory argument;\n"
+                + "\t--baseReportPath - path to the base checkstyle-result.xml (optional, if "
+                + "absent then only configuration and violations for patch will be in the "
+                + "report)\n"
                 + "\t--patchReportPath - path to the patch checkstyle-result.xml,"
-                + " also obligatory argument;\n"
+                + " obligatory argument;\n"
                 + "\t--sourcePath - path to the data under check (optional, if absent"
                 + " then file structure for cross reference files won't be relativized,"
                 + " full paths will be used);\n"
@@ -161,5 +162,20 @@ public class MainTest extends AbstractTest {
                 outputDirectory.getAbsolutePath());
 
         assertReportOutput(getPath("ExpectedReportSeverities.html"), outputDirectory);
+    }
+
+    @Test
+    public void testPatchOnly() throws Exception {
+        final File outputDirectory = folder.getRoot();
+
+        Main.main("-patchReport", VALID_PATCH_REPORT, "-patchConfig", VALID_BASE_CONFIG, "-output",
+                outputDirectory.getAbsolutePath());
+
+        assertReportOutput(getPath("ExpectedReportPatchOnly.html"), outputDirectory);
+    }
+
+    @Test
+    public void testConstructor() throws Exception {
+        assertUtilsClassHasPrivateConstructor(Main.class);
     }
 }

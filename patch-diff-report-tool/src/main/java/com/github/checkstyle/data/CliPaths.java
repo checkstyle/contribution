@@ -120,12 +120,12 @@ public final class CliPaths {
     }
 
     /**
-     * Checks if configuration paths are present.
+     * Checks if the necessary configuration paths are present to display them on the reports.
      *
      * @return true if they are not null.
      */
     public boolean configurationPresent() {
-        return baseConfigPath != null && patchConfigPath != null;
+        return patchConfigPath != null;
     }
 
 }
