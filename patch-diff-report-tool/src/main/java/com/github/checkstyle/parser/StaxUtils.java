@@ -56,11 +56,20 @@ final class StaxUtils {
      */
     public static XMLEventReader createReader(Path xmlFilename)
             throws FileNotFoundException, XMLStreamException {
-        final XMLInputFactory inputFactory = XMLInputFactory.newInstance();
-        // Setup a new eventReader
-        final InputStream inputStream =
-            new FileInputStream(xmlFilename.toFile());
-        return inputFactory.createXMLEventReader(inputStream);
+        final XMLEventReader result;
+
+        if (xmlFilename == null) {
+            result = new EmptyXmlEventReader();
+        }
+        else {
+            final XMLInputFactory inputFactory = XMLInputFactory.newInstance();
+            // Setup a new eventReader
+            final InputStream inputStream =
+                new FileInputStream(xmlFilename.toFile());
+            result = inputFactory.createXMLEventReader(inputStream);
+        }
+
+        return result;
     }
 
 }

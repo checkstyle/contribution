@@ -31,20 +31,9 @@ public class CliArgsValidatorTest extends AbstractTest {
     }
 
     @Test
-    public void testNoBaseReportPath() throws Exception {
-        try {
-            Main.main();
-        }
-        catch (IllegalArgumentException ex) {
-            Assert.assertEquals("obligatory argument --baseReportPath not present, -h for help",
-                    ex.getMessage());
-        }
-    }
-
-    @Test
     public void testNoPatchReportPath() throws Exception {
         try {
-            Main.main("-baseReport", "test");
+            Main.main();
         }
         catch (IllegalArgumentException ex) {
             Assert.assertEquals("obligatory argument --patchReportPath not present, -h for help",
@@ -55,7 +44,7 @@ public class CliArgsValidatorTest extends AbstractTest {
     @Test
     public void testInvalidBaseReportPath() throws Exception {
         try {
-            Main.main("-baseReport", "test", "-patchReport", "test");
+            Main.main("-baseReport", "test", "-patchReport", VALID_BASE_REPORT_EMPTY);
         }
         catch (IllegalArgumentException ex) {
             Assert.assertEquals("Base XML Report file doesn't exist: test", ex.getMessage());
@@ -123,7 +112,7 @@ public class CliArgsValidatorTest extends AbstractTest {
     public void testPatchConfigAlone() throws Exception {
         try {
             Main.main("-baseReport", VALID_BASE_REPORT_EMPTY, "-patchReport",
-                    VALID_PATCH_REPORT_EMPTY, "-patchConfig", "test");
+                    VALID_PATCH_REPORT_EMPTY, "-patchConfig", VALID_BASE_CONFIG);
         }
         catch (IllegalArgumentException ex) {
             Assert.assertEquals(
@@ -136,7 +125,8 @@ public class CliArgsValidatorTest extends AbstractTest {
     public void testInvalidBaseConfig() throws Exception {
         try {
             Main.main("-baseReport", VALID_BASE_REPORT_EMPTY, "-patchReport",
-                    VALID_PATCH_REPORT_EMPTY, "-baseConfig", "test", "-patchConfig", "test");
+                    VALID_PATCH_REPORT_EMPTY, "-baseConfig", "test", "-patchConfig",
+                    VALID_BASE_CONFIG);
         }
         catch (IllegalArgumentException ex) {
             Assert.assertEquals("Base checkstyle configuration xml file is missing: test",
@@ -153,6 +143,19 @@ public class CliArgsValidatorTest extends AbstractTest {
         }
         catch (IllegalArgumentException ex) {
             Assert.assertEquals("Patch checkstyle configuration xml file is missing: test",
+                    ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testBaseConfigWithoutBaseReport() throws Exception {
+        try {
+            Main.main("-patchReport", VALID_PATCH_REPORT_EMPTY, "-baseConfig", VALID_BASE_CONFIG,
+                    "-patchConfig", VALID_BASE_CONFIG);
+        }
+        catch (IllegalArgumentException ex) {
+            Assert.assertEquals(
+                    "Base checkstyle configuration xml path is missing while base configuration path is present.",
                     ex.getMessage());
         }
     }
