@@ -1521,6 +1521,8 @@
     <inspection_tool class="OctalLiteral" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="OnDemandImport" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="OneWayWebMethod" enabled="true" level="WARNING" enabled_by_default="true" />
+    <!-- suppressed till GSoC project completion .... -->
+    <inspection_tool class="OptionalIsPresent" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="OverloadedMethodsWithSameNumberOfParameters" enabled="true" level="WARNING" enabled_by_default="true">
         <option name="ignoreInconvertibleTypes" value="true" />
     </inspection_tool>
@@ -1550,7 +1552,8 @@
     <inspection_tool class="PackageDotHtmlMayBePackageInfo" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="PackageInMultipleModules" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="PackageInfoWithoutPackage" enabled="true" level="ERROR" enabled_by_default="true" />
-    <inspection_tool class="PackageNamingConvention" enabled="true" level="WARNING" enabled_by_default="true">
+    <!-- Disabled till issue with rendering exact list of violation is resolved on TC service -->
+    <inspection_tool class="PackageNamingConvention" enabled="false" level="WARNING" enabled_by_default="false">
         <option name="m_regex" value="[a-z0-9]*" />
         <option name="m_minLength" value="3" />
         <option name="m_maxLength" value="32" />
@@ -1798,6 +1801,10 @@
     <inspection_tool class="SimplifiableIfStatement" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="SimplifiableJUnitAssertion" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="SimplifyNegatedBinaryExpression" enabled="true" level="ERROR" enabled_by_default="true" />
+    <!-- suppressed till GSoC project completion .... -->
+    <inspection_tool class="SimplifyStreamApiCallChains" enabled="false" level="WARNING" enabled_by_default="false" />
+    <!-- suppressed till GSoC project completion .... -->
+    <inspection_tool class="SingleCharAlternation" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="SingleCharacterStartsWith" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="SingleClassImport" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="Singleton" enabled="true" level="WARNING" enabled_by_default="true" />
