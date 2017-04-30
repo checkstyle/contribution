@@ -260,14 +260,14 @@ def removeNonReferencedXrefFiles(siteDir) {
 }
 
 def getFilesReferencedInReport(linesFromIndexHtml) {
-    def pattern = Pattern.compile('.*<td><a href="./xref.*\\.html#L\\d+">.*')
-    def referencedFiles = new ArrayList<String>()
+    def xrefStartIdx = 2
+    def pattern = Pattern.compile('\\./xref/[^<>]+\\.html')
+    def referencedFiles = new HashSet<String>()
     linesFromIndexHtml.each {
         line ->
             def matcher = pattern.matcher(line)
-            if (matcher.matches()) {
-                def filePath = line.substring(line.indexOf("/xref") + 1, line.lastIndexOf('#L'))
-                referencedFiles.add(filePath)
+            if (matcher.find()) {
+                referencedFiles.addAll(matcher.collect { it.substring(xrefStartIdx) })
             }
     }
     return referencedFiles
