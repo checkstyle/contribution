@@ -231,12 +231,16 @@ ruleset {
     ExplicitCallToPowerMethod
     ExplicitCallToRightShiftMethod
     ExplicitCallToXorMethod
-    ExplicitHashMapInstantiation
-    ExplicitHashSetInstantiation
-    ExplicitLinkedHashMapInstantiation
-    ExplicitLinkedListInstantiation
-    ExplicitStackInstantiation
-    ExplicitTreeSetInstantiation
+
+    // Suppressed as these rules make the code hard to understand.
+    // Disabling them helps to have the code more similar to Java.
+    // ExplicitHashMapInstantiation
+    // ExplicitHashSetInstantiation
+    // ExplicitLinkedHashMapInstantiation
+    // ExplicitLinkedListInstantiation
+    // ExplicitStackInstantiation
+    // ExplicitTreeSetInstantiation
+
     GStringAsMapKey
     GStringExpressionWithinString
     GetterMethodCouldBeProperty
@@ -384,7 +388,10 @@ ruleset {
     UnnecessarySelfAssignment
     UnnecessarySemicolon
     UnnecessaryStringInstantiation
-    UnnecessarySubstring
+
+    // Suppressed to avoid weired code and make the code more similar to Java.
+    // UnnecessarySubstring
+
     UnnecessaryTernaryExpression
     UnnecessaryToString
     UnnecessaryTransientModifier
