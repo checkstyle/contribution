@@ -13,4 +13,8 @@
 
     <!-- Tone down the checking for test code -->
     <suppress checks="Javadoc|MultipleStringLiterals|WriteTag|MagicNumber" files=".*[\\/]src[\\/]test[\\/]"/>
+
+    <!-- Until https://github.com/checkstyle/checkstyle/issues/3496 and when we have time to fix this in sevntu-->
+    <suppress id="returnCountMaxOne" files=".*CheckstyleRecord\.java|DiffReport\.java|MergedConfigurationModule\.java"/>
+
 </suppressions>
