@@ -6,4 +6,6 @@
 
 <suppressions>
     <suppress checks="UncommentedMain" files="Main.java"/>
+    <!-- need to be addressed later-->
+    <suppress checks="NPathComplexity" files="Main.java"/>
 </suppressions>
