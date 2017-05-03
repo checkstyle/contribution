@@ -113,7 +113,7 @@ def cloneRepository(repoName, repoType, repoUrl, commitId, srcDir) {
     if (!Files.exists(Paths.get(srcDestinationDir))) {
         def cloneCmd = getCloneCmd(repoType, repoUrl, srcDestinationDir)
         println "Cloning $repoType repository '$repoName' to $srcDestinationDir folder ..."
-        executeCmd(cloneCmd)
+        executeCmdWithRetry(cloneCmd)
         println "Cloning $repoType repository '$repoName' - completed\n"
     }
 
@@ -292,6 +292,28 @@ def executeCmd(cmd, dir =  new File("").getAbsoluteFile()) {
     proc.waitFor()
     if (proc.exitValue() != 0) {
         throw new GroovyRuntimeException("Error: ${proc.err.text}!")
+    }
+}
+
+def executeCmdWithRetry(cmd, dir =  new File("").getAbsoluteFile(), retry = 5) {
+    def osSpecificCmd = getOsSpecificCmd(cmd)
+    def left = retry
+    while (true) {
+        def proc = osSpecificCmd.execute(null, dir)
+        proc.consumeProcessOutput(System.out, System.err)
+        proc.waitFor()
+        left--
+        if (proc.exitValue() != 0) {
+            if (left <= 0) {
+                throw new GroovyRuntimeException("Error: ${proc.err.text}!")
+            }
+            else {
+                Thread.sleep(15000)
+            }
+        }
+        else {
+            break
+        }
     }
 }
 
