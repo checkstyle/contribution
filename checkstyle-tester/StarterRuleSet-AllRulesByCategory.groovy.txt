@@ -92,7 +92,11 @@ ruleset {
     IfStatementCouldBeTernary
     InvertedIfElse
     LongLiteralWithLowerCaseL
-    NoDef
+
+    // def is commonly used in Groovy, as it provides greater flexibility and readability.
+    // The keywoard removes boilerplate explicit type declaration.
+    // NoDef
+
     NoTabCharacter
     ParameterReassignment
     TernaryCouldBeElvis
@@ -220,7 +224,11 @@ ruleset {
     ExplicitCallToAndMethod
     ExplicitCallToCompareToMethod
     ExplicitCallToDivMethod
-    ExplicitCallToEqualsMethod
+
+    // Groovy's `==` operator which is equivalent to 'equals' method from Java makes code weird to
+    // Java contributors. It is better to use direct call of 'equals' method to compare objects.
+    // ExplicitCallToEqualsMethod
+
     ExplicitCallToGetAtMethod
     ExplicitCallToLeftShiftMethod
     ExplicitCallToMinusMethod

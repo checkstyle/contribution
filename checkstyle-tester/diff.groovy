@@ -47,11 +47,18 @@ static void main(String[] args) {
             deleteDir(tmpReportsDir)
         }
 
-        generateCheckstyleReport(localGitRepo, baseBranch, baseConfig, listOfProjects, tmpMasterReportsDir)
+        def toolMode = cliOptions.mode
+        if (!toolMode) {
+            toolMode = 'diff'
+        }
+
+        if ('diff'.equals(toolMode)) {
+            generateCheckstyleReport(localGitRepo, baseBranch, baseConfig, listOfProjects, tmpMasterReportsDir)
+        }
         generateCheckstyleReport(localGitRepo, patchBranch, patchConfig, listOfProjects, tmpPatchReportsDir)
         deleteDir(reportsDir)
         moveDir(tmpReportsDir, reportsDir)
-        generateDiffReport(reportsDir, masterReportsDir, patchReportsDir, baseConfig, patchConfig, shortFilePaths)
+        generateDiffReport(reportsDir, masterReportsDir, patchReportsDir, baseConfig, patchConfig, shortFilePaths, toolMode)
         generateSummaryIndexHtml(diffDir)
     }
     else {
@@ -63,14 +70,26 @@ def getCliOptions(args) {
     def cliOptionsDescLineLength = 120
     def cli = new CliBuilder(usage:'groovy diff.groovy [options]', header: 'options:', width: cliOptionsDescLineLength)
     cli.with {
-        r(longOpt: 'localGitRepo', args: 1, required: true, argName: 'path', 'Path to local git repository (required)')
-        b(longOpt: 'baseBranch', args: 1, required: false, argName: 'branch_name', 'Base branch name. Default is master (optional, default is master)')
-        p(longOpt: 'patchBranch', args: 1, required: true, argName: 'branch_name', 'Name of the patch branch in local git repository (required)')
-        bc(longOpt: 'baseConfig', args: 1, required: false, argName: 'path', 'Path to the base checkstyle config file (required if patchConfig is specified)')
-        pc(longOpt: 'patchConfig', args: 1, required: false, argName: 'path', 'Path to the patch checkstyle config file (required if baseConfig is specified)')
-        c(longOpt: 'config', args: 1, required: false, argName: 'path', 'Path to the checkstyle config file (required if baseConfig and patchConfig are not secified)')
-        l(longOpt: 'listOfProjects', args: 1, required: true, argName: 'path', 'Path to file which contains projects to test on (required)')
-        s(longOpt: 'shortFilePaths', required: false, 'Whether to save report file paths as a shorter version to prevent long paths. (optional, default is false)')
+        r(longOpt: 'localGitRepo', args: 1, required: true, argName: 'path',
+            'Path to local git repository (required)')
+        b(longOpt: 'baseBranch', args: 1, required: false, argName: 'branch_name',
+            'Base branch name. Default is master (optional, default is master)')
+        p(longOpt: 'patchBranch', args: 1, required: true, argName: 'branch_name',
+            'Name of the patch branch in local git repository (required)')
+        bc(longOpt: 'baseConfig', args: 1, required: false, argName: 'path', 'Path to the base ' \
+            + 'checkstyle config file (optional, if absent then the tool will use only ' \
+            + 'patchBranch in case the tool mode is \'single\', otherwise baseBranch ' \
+            + 'will be set to \'master\')')
+        pc(longOpt: 'patchConfig', args: 1, required: false, argName: 'path',
+            'Path to the patch checkstyle config file (required if baseConfig is specified)')
+        c(longOpt: 'config', args: 1, required: false, argName: 'path', 'Path to the checkstyle ' \
+            + 'config file (required if baseConfig and patchConfig are not secified)')
+        l(longOpt: 'listOfProjects', args: 1, required: true, argName: 'path',
+            'Path to file which contains projects to test on (required)')
+        s(longOpt: 'shortFilePaths', required: false, 'Whether to save report file paths' \
+            + ' as a shorter version to prevent long paths. (optional, default is false)')
+        m(longOpt: 'mode', args: 1, required: false, argName: 'mode', 'The mode of the tool:' \
+            + ' \'diff\' or \'single\'. (optional, default is \'diff\')')
     }
     return cli.parse(args)
 }
@@ -80,11 +99,16 @@ def areValidCliOptions(cliOptions) {
     def baseConfig = cliOptions.baseConfig
     def patchConfig = cliOptions.patchConfig
     def config = cliOptions.config
+    def toolMode = cliOptions.mode
     def localGitRepo = new File(cliOptions.localGitRepo)
     def patchBranch = cliOptions.patchBranch
     def baseBranch = cliOptions.baseBranch
 
-    if (!isValidCheckstyleConfigsCombination(config, baseConfig, patchConfig)) {
+    if (toolMode && !('diff'.equals(toolMode) || 'single'.equals(toolMode))) {
+        err.println "Error: Invalid mode: \'$toolMode\'. The mode should be \'single\' or \'diff\'!"
+        valid = false
+    }
+    else if (!isValidCheckstyleConfigsCombination(config, baseConfig, patchConfig, toolMode)) {
         valid = false
     }
     else if (!isValidGitRepo(localGitRepo)) {
@@ -103,20 +127,23 @@ def areValidCliOptions(cliOptions) {
     return valid
 }
 
-def isValidCheckstyleConfigsCombination(config, baseConfig, patchConfig) {
+def isValidCheckstyleConfigsCombination(config, baseConfig, patchConfig, toolMode) {
     def valid = true
-    if (config && patchConfig
-            || config && baseConfig
-            || config && patchConfig && baseConfig) {
-        err.println "Error: you should specify either \'config\' or \'baseConfig\' and \'patchConfig\'!"
+    if (config && (patchConfig || baseConfig)) {
+        err.println "Error: you should specify either \'config\'," \
+            + " or \'baseConfig\' and \'patchConfig\', or \'patchConfig\' only!"
         valid = false
     }
-    else if (baseConfig && !patchConfig) {
+    else if ('diff'.equals(toolMode) && baseConfig && !patchConfig) {
         err.println "Error: \'patchConfig\' should be specified!"
         valid = false
     }
-    else if (patchConfig && !baseConfig) {
+    else if ('diff'.equals(toolMode) && patchConfig && !baseConfig) {
         err.println "Error: \'baseConfig\' should be specified!"
+        valid = false
+    }
+    else if ('single'.equals(toolMode) && (baseConfig || config)) {
+        err.println "Error: \'baseConfig\' and/or \'config\' should not be used in \'single\' mode!"
         valid = false
     }
     return valid
@@ -194,7 +221,7 @@ def generateCheckstyleReport(localGitRepo, branch, checkstyleCfg, listOfProjects
     moveDir("reports", destDir)
 }
 
-def generateDiffReport(reportsDir, masterReportsDir, patchReportsDir, baseConfig, patchConfig, shortFilePaths) {
+def generateDiffReport(reportsDir, masterReportsDir, patchReportsDir, baseConfig, patchConfig, shortFilePaths, toolMode) {
     def diffToolDir = Paths.get("").toAbsolutePath()
         .getParent()
         .resolve("patch-diff-report-tool")
@@ -203,22 +230,27 @@ def generateDiffReport(reportsDir, masterReportsDir, patchReportsDir, baseConfig
     def diffToolJarPath = getPathToDiffToolJar(diffToolDir)
 
     println 'Starting diff report generation ...'
-    Paths.get(masterReportsDir).toFile().eachFile {
+    Paths.get(patchReportsDir).toFile().eachFile {
         fileObj ->
             if (fileObj.isDirectory()) {
                 def projectName = fileObj.getName()
                 def patchReportDir = new File("$patchReportsDir/$projectName")
                 if (patchReportDir.exists()) {
-                    def baseReport = "$masterReportsDir/$projectName/checkstyle-result.xml"
                     def patchReport = "$patchReportsDir/$projectName/checkstyle-result.xml"
                     def outputDir = "$reportsDir/diff/$projectName"
-                    def diffCmd = "java -jar $diffToolJarPath --baseReport $baseReport --patchReport $patchReport --output $outputDir --baseConfig $baseConfig --patchConfig $patchConfig"
+                    def diffCmd = "java -jar $diffToolJarPath --patchReport $patchReport " \
+                        + "--output $outputDir --patchConfig $patchConfig"
+                    if ('diff'.equals(toolMode)) {
+                        def baseReport = "$masterReportsDir/$projectName/checkstyle-result.xml"
+                        diffCmd += " --baseReport $baseReport --baseConfig $baseConfig"
+                    }
                     if (shortFilePaths) {
                         diffCmd += ' --shortFilePaths'
                     }
                     executeCmd(diffCmd)
                 } else {
-                    throw new FileNotFoundException("Error: patch report for project $projectName is not found!")
+                    def exMsg = "Error: patch report for project $projectName is not found!"
+                    throw new FileNotFoundException(exMsg)
                 }
             }
     }
