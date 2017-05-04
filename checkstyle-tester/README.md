@@ -1,109 +1,16 @@
 # CHECKSTYLE-TESTER
 
 checkstyle-tester is a tool for Checkstyle report generation over very [basic set of java projects](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.properties).
-It consists of two Groovy scripts: launch.groovy and diff.groovy. Thus, in order to use the tool make sure you have the Groovy runtime installed on your developer machine (min required version is 2.4.8).
+It consists of one Groovy script: diff.groovy. Thus, in order to use the tool make sure you have the Groovy runtime installed on your developer machine (min required version is 2.4.8).
 
 Content:
 
-- [Checkstyle report generation](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/README.md#launchgroovy-checkstyle-report-generation)
 - [Diff report generation](https://github.com/checkstyle/contribution/tree/master/checkstyle-tester#diffgroovy-diff-report-generation)
 - [Deploy Report](https://github.com/checkstyle/contribution/tree/master/checkstyle-tester#deploy-report)
 
-
-## [launch.groovy] Checkstyle report generation
-
-**launch.groovy** is a script which allows you to generate Checkstyle report over target projects. It invokes Maven Checkstyle plugin. In order to use the script you should run the following command in your command line:
-
-```
-groovy launch.groovy --listOfProjects projects-to-test-on.properties --config my_check.xml
-```
-
-or with short command line arguments names:
-
-```
-groovy launch.groovy -l projects-to-test-on.properties -c my_check.xml
-```
-
-If you want to force Maven Checkstyle Plugin to ignore exceptions:
-
-```
-groovy launch.groovy --listOfProjects projects-to-test-on.properties --config my_check.xml --ignoreExceptions
-```
-
-or with short command line arguments names:
-
-```
-groovy launch.groovy -l projects-to-test-on.properties -c my_check.xml -i
-```
-
-The script receives the following command line arguments:
-
-**listOfProjects** (l) - path to the file which contains the projects which sources will be analyzed by Checkstyle during report generation (required);
-
-**config** (c) - path to the file with Checkstyle configuration (required). The default config should be changed in order to be appropriate for your use purposes;
-
-**ignoreExceptions** (i) - whether Checkstyle Maven Plugin should ignore exceptions (optional, default is false).
-
-**ignoreExcludes** (g) - whether to ignore excludes specified in the list of projects (optional, default is false).
-
-When the script finishes its work the following directory structure will be created in the root of cehckstyle-tester directory:
-
-*/repositories* - directory with downloaded projects sources which are specified in projects-to-test-on.properties;
-
-*/reports* - directory with Checkstyle reports. 
-
-*reports/{repository_name}/site* - directory with Checkstyle report generated for the specific project (repository);
-
-You will find *index.html* file in /reports/{repository_name}/site directory. The file represents the main page of the report.
-
-**First run** should be executed with all rules enabled to make sure that new check does not fail. 
-You may see failure of `TreeWalker` but as long as it is applied for no-compilable sources (test, resources) you don't need to worry about it.  **Second run** shall be done to prove that check is working correctly and for this one select the most accurate repositories.
-
-Please use `-Dcheckstyle.consoleOutput=true` option if you need to see all Checkstyle errors in console, but expect it to print very and very much lines of terminal logs in this case. Launch command in this case will be:
-
-```
-groovy launch.groovy projects-to-test-on.properties my_check.xml -Dcheckstyle.consoleOutput=true
-```
-
-**Attention:** this project by default uses the latest SNAPSHOT version of [Checkstyle](https://github.com/checkstyle/contribution/search?utf8=%E2%9C%93&q=path%3Acheckstyle-tester+filename%3Apom.xml+%22checkstyle.version%22&type=) and the latest released version of [sevntu.checkstyle](https://github.com/checkstyle/contribution/search?utf8=%E2%9C%93&q=path%3Acheckstyle-tester+filename%3Apom.xml+%22sevntu.checkstyle.version%22&type=).
-If you you need to use custom (snapshot) versions please update pom.xml to reference that versions ([checkstyle version](https://github.com/checkstyle/contribution/blob/35d35dfcc48e2022403231e41aac8bf96126acc9/checkstyle-tester/pom.xml#L15), [sevntu.checkstyle version](https://github.com/checkstyle/contribution/blob/35d35dfcc48e2022403231e41aac8bf96126acc9/checkstyle-tester/pom.xml#L16)), and please make sure that custom(newly generated) versions are located in your local maven repo 
-
-```
-ls  ~/.m2/repository/com/puppycrawl/tools/checkstyle/
-ls  ~/.m2/repository/com/github/sevntu/checkstyle/sevntu-checkstyle-maven-plugin
-```
-
-To build SNAPSHOT version of `checkstyle` please run in its folder (local git repository):
-
-```
-mvn clean install -DskipTests -Dcobertura.skip=true -Dfindbugs.skip=true -Dpmd.skip=true
-```
-
-**Attention:** 
-Make sure that the versions of Checkstyle and SevNTU Checkstyle artifacts, which are located in your local Maven repository, corresponds to the versions specified in pom.xml,
-1) otherwise there will be the exception, because maven-checkstyle-plugin will not find the required artifact in the local Maven repository;
-2) you will not see any new/different violations from your changes, especially if you make changes to version X with changed logic and pom.xml specifies version Y. 
-You will not get an exception message and unless you are expecting a specific difference, you may just assume your report is correct when it really isn't.
-launch.groovy has no way to protect against this as branch with change isn't specified.
-
-If you want to validate new check from `sevntu.checkstyle`(https://github.com/sevntu-checkstyle/sevntu.checkstyle) project, 
-before you use "launch.groovy" you need to clone it and deploy to your local maven repo by following command
-
-```
-./deploy.sh --maven
-```
-
-WINDOWS USERS:
-
-*./deploy.sh* can be luanched on Windows OS by usage [https://www.cygwin.com/](Cygwin).
-Preinstall default commands - http://www.appveyor.com/updates/2015/05/30 search for "Installation command used:"
-Follow example how we do this in Windows CI server - https://github.com/checkstyle/checkstyle/blob/master/appveyor.yml#L71 search for matrix item "checkstyle-tester on guava"
-
-=============================================
-
 ## [diff.groovy] Diff report generation
 
-In order to generate a compact diff report before and after your changes you can use diff.groovy script which performs all required work automatically. Note, diff.groovy ignores excludes specified in the list of projects file.
+In order to generate a compact diff report before and/or after your changes you can use diff.groovy script which performs all required work automatically. Note, diff.groovy ignores excludes specified in the list of projects file.
 Please execute the following command in your command line to run diff.groovy:
 
 ```
@@ -128,11 +35,27 @@ or with short command line arguments names:
 groovy diff.groovy -r /home/johndoe/projects/checkstyle -b master -p i111-my-fix -bc base_config.xml -pc patch_config.xml -l projects-to-test-on.properties
 ```
 
+To generate the report only for the patch branch which contains your changes, use the following command:
+
+```
+groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle --patchBranch i111-my-fix --patchConfig patch_config.xml --listOfProjects projects-to-test-on.properties --mode single
+```
+
+or with short command line arguments names:
+
+```
+groovy diff.groovy -r /home/johndoe/projects/checkstyle -p i111-my-fix -pc patch_config.xml -l projects-to-test-on.properties -m single
+```
+
 The script receives the following set of command line arguments:
 
 **localGitRepo** (r) - path to the local Checkstyle repository (required);
 
-**baseBranch** (b) - name of the base branch in local Checkstyle repository (optional, default is master branch);
+**baseBranch** (b) - name of the base branch in local Checkstyle repository (optional, if asent, then the tool will use only patchBranch in case the tool mode is 'single', otherwise baseBrach will be set to 'master');
+
+**mode** (m) - the mode of the tool: 'single' or 'diff' (optional, default is 'diff'. Set this option to 'single' if your patch branch contains changes for any option that can't work on master/base branch. 
+For example, for new properties, new tokens, or new modules. For all other changes, 'diff' mode should be the preferred mode used. Note, that if the mode is 'single', then 'baseBranch', 'baseConfig', and 'config' should not be specified as the tool will finish the execution with the error.
+You must specify 'patchBranch' and 'patchConfig' if the mode is 'single', and 'baseBranch', 'baseConfig', 'patchBranch', and 'patchConfig' if the mode is 'diff');
 
 **patchBranch** (p) - name of the branch with your changes (required);
 
@@ -152,7 +75,7 @@ When the script finishes its work the following directory structure will be crea
 
 */reports/diff* - directory with diff reports;
 
-*reports/baseBranch* - directory with Checkstyle reports which are generated with Checkstyle base version (based on specified base branch);
+*reports/baseBranch* - directory with Checkstyle reports which are generated with Checkstyle base version (based on specified base branch. If the mode is 'single', then the directory will not be created.);
 
 *reports/patchBranch* - directory with Checkstyle reports which are generated with Checkstyle version that contains your changes (based on specified patch branch).
 
