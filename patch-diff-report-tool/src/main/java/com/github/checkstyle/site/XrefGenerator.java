@@ -120,7 +120,11 @@ class XrefGenerator {
         codeTransform.transform(sourceFile.getAbsolutePath(),
                 dest.toString(), Locale.ENGLISH,
                 ENCODING, ENCODING, "", "", "");
-        return sitePath.relativize(dest).toString();
+        String result = sitePath.relativize(dest).toString();
+        if (result.indexOf('\\') != -1) {
+            result = result.replace('\\', '/');
+        }
+        return result;
     }
 
     /**
