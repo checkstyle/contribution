@@ -179,8 +179,15 @@ public final class NotesBuilder {
             if (isRevertCommit(commitMessage)) {
                 final int lastSpaceIndex = commitMessage.lastIndexOf(' ');
                 final int lastPeriodIndex = commitMessage.lastIndexOf('.');
-                final String revertedCommitReference =
-                    commitMessage.substring(lastSpaceIndex + 1, lastPeriodIndex);
+                final String revertedCommitReference;
+                if (lastSpaceIndex > lastPeriodIndex) {
+                    //smth is wrong with commit message, revert commit was changed manually
+                    revertedCommitReference = "nonexistingsha";
+                }
+                else {
+                    revertedCommitReference =
+                            commitMessage.substring(lastSpaceIndex + 1, lastPeriodIndex);
+                }
 
                 final Optional<RevCommit> revertedCommit = commitsForRelease.stream()
                     .filter(revCommit -> revertedCommitReference.equals(revCommit.getName()))
