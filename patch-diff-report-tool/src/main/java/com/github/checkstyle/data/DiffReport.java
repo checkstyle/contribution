@@ -75,17 +75,19 @@ public final class DiffReport {
      */
     public void addRecords(List<CheckstyleRecord> newRecords,
             String filename) {
-        final List<CheckstyleRecord> popped =
-            records.put(filename, newRecords);
-        if (popped != null) {
-            final List<CheckstyleRecord> diff =
-                produceDiff(popped, newRecords);
-            if (diff.isEmpty()) {
-                records.remove(filename);
-            }
-            else {
-                Collections.sort(diff, new PositionOrderComparator());
-                records.put(filename, diff);
+        if (!newRecords.isEmpty()) {
+            final List<CheckstyleRecord> popped =
+                records.put(filename, newRecords);
+            if (popped != null) {
+                final List<CheckstyleRecord> diff =
+                    produceDiff(popped, newRecords);
+                if (diff.isEmpty()) {
+                    records.remove(filename);
+                }
+                else {
+                    Collections.sort(diff, new PositionOrderComparator());
+                    records.put(filename, diff);
+                }
             }
         }
     }
