@@ -175,6 +175,16 @@ public class MainTest extends AbstractTest {
     }
 
     @Test
+    public void testNonCompilableFile() throws Exception {
+        final File outputDirectory = folder.getRoot();
+
+        Main.main("-patchReport", getPath("InputPatchReportNonCompilable.xml"), "-output",
+                outputDirectory.getAbsolutePath());
+
+        assertReportOutput(getPath("ExpectedReportNonCompilable.html"), outputDirectory);
+    }
+
+    @Test
     public void testConstructor() throws Exception {
         assertUtilsClassHasPrivateConstructor(Main.class);
     }
