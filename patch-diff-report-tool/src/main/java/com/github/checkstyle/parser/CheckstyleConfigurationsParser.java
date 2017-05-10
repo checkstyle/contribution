@@ -145,7 +145,7 @@ public final class CheckstyleConfigurationsParser {
                 }
                 //property tag encounter
                 else if (startElementName.equals(PROPERTY_TAG)) {
-                    processPropertyTag(reader, startElement, parent);
+                    processPropertyTag(startElement, parent);
                 }
             }
             if (event.isEndElement()) {
@@ -191,17 +191,13 @@ public final class CheckstyleConfigurationsParser {
     /**
      * Parses single "property" tag.
      *
-     * @param reader
-     *        StAX parser interface.
      * @param startElement
      *        start element of the tag.
      * @param parent
      *        parent module instance.
-     * @throws XMLStreamException
-     *         on internal StAX failure.
      */
-    private static void processPropertyTag(XMLEventReader reader, StartElement startElement,
-            ConfigurationModule parent) throws XMLStreamException {
+    private static void processPropertyTag(StartElement startElement,
+            ConfigurationModule parent) {
         String propertyName = null;
         String propertyValue = null;
         final Iterator<Attribute> attributes = startElement
