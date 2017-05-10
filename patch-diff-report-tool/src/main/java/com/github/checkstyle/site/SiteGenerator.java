@@ -186,12 +186,10 @@ public final class SiteGenerator {
      *        path to xreference file.
      * @param anchorCounter
      *        anchor links provider.
-     * @throws IOException
-     *         on failure to write data on disk or generate xreference file.
      */
     private static void generateContent(TemplateEngine tplEngine, FileWriter writer,
             List<CheckstyleRecord> records, String filename, String xreference,
-            AnchorCounter anchorCounter) throws IOException {
+            AnchorCounter anchorCounter) {
         final Context context = new Context();
         context.setVariable("filename", filename);
         context.setVariable("records", records);
