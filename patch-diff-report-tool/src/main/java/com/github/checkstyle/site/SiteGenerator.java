@@ -150,11 +150,9 @@ public final class SiteGenerator {
      *        CLI paths.
      * @param xrefGenerator
      *        xReference generator.
-     * @throws IOException
-     *         on failure to write data on disk or generate xreference file.
      */
     private static void generateBody(TemplateEngine tplEngine, FileWriter writer,
-            DiffReport diffReport, CliPaths paths, XrefGenerator xrefGenerator) throws IOException {
+            DiffReport diffReport, CliPaths paths, XrefGenerator xrefGenerator) {
         final AnchorCounter anchorCounter = new AnchorCounter();
 
         final Path refFilesPath = paths.getRefFilesPath();

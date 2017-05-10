@@ -18,7 +18,10 @@
 								<td th:text = ${record.severity}> Severity </td>
 								<td th:text = ${record.simpleCuttedSourceName}> Rule </td>
 								<td th:text = ${record.message}> Message </td>
-								<td><a th:href = "${xref} + @{#L} + ${record.line}" th:text = ${record.line}> Line </a></td>
+								<th:block th:switch="${xref}">
+									<td th:case = "null" th:text = ${record.line}> Line </td>
+									<td th:case = "*"><a th:href = "${xref} + @{#L} + ${record.line}" th:text = ${record.line}> Line </a></td>
+								</th:block>
 								<th:block th:switch="${record.column}">
 									<td th:case = "-1"> </td>
 									<td th:case = "*" th:text=${record.column}> column </td>

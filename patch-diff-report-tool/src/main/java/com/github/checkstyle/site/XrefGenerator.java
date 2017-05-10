@@ -20,7 +20,6 @@
 package com.github.checkstyle.site;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Locale;
@@ -111,16 +110,22 @@ class XrefGenerator {
      * @param shortFilePaths
      *           {@code true} if only short file names should be used with no path.
      * @return relative path to the resulting file.
-     * @throws IOException
-     *         on maven-jxr internal failure.
      */
-    public final String generateXref(String name, boolean shortFilePaths) throws IOException {
+    public final String generateXref(String name, boolean shortFilePaths) {
         final File sourceFile = new File(name);
         final Path dest = getDestinationPath(name, shortFilePaths);
-        codeTransform.transform(sourceFile.getAbsolutePath(),
+        String result;
+        try {
+            codeTransform.transform(sourceFile.getAbsolutePath(),
                 dest.toString(), Locale.ENGLISH,
                 ENCODING, ENCODING, "", "", "");
-        return sitePath.relativize(dest).toString();
+            result = sitePath.relativize(dest).toString();
+        }
+        // -@cs[IllegalCatch] We need to catch all exception from JXR
+        catch (Exception ex) {
+            result = null;
+        }
+        return result;
     }
 
     /**

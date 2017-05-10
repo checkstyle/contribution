@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="9.9-SNAPSHOT">
+  <file name="src/test/resources/run/NonCompilable.java">
+    <error line="1" column="1" severity="warning" message="Message."
+      source="Source"/>
+  </file>
+</checkstyle>
