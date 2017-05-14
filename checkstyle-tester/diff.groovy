@@ -5,61 +5,29 @@ import static java.lang.System.err
 static void main(String[] args) {
     def cliOptions = getCliOptions(args)
     if (areValidCliOptions(cliOptions)) {
-        def localGitRepo = new File(cliOptions.localGitRepo)
-        if (hasUnstagedChanges(localGitRepo)) {
-            throw new IllegalStateException("Error: git repository ${localGitRepo.getPath()} has unstaged changes!")
+        def cfg = new Config(cliOptions)
+
+        if (hasUnstagedChanges(cfg.localGitRepo)) {
+            def exMsg = "Error: git repository ${cfg.localGitRepo.path} has unstaged changes!"
+            throw new IllegalStateException(exMsg)
         }
-
-        def baseBranch = cliOptions.baseBranch
-        if (!baseBranch) {
-            baseBranch = 'master'
-        }
-
-        def baseConfig = cliOptions.baseConfig
-        def patchConfig = cliOptions.patchConfig
-        def config = cliOptions.config
-        if (config) {
-            baseConfig = config
-            patchConfig = config
-        }
-
-        def shortFilePaths = cliOptions.shortFilePaths
-
-        def patchBranch = cliOptions.patchBranch
-        def listOfProjects = cliOptions.listOfProjects
-        def checkstyleCfg = cliOptions.checkstyleCfg
-
-        def reportsDir = 'reports'
-        def masterReportsDir = "$reportsDir/$baseBranch"
-        def patchReportsDir = "$reportsDir/$patchBranch"
-
-        def tmpReportsDir = 'tmp_reports'
-        def tmpMasterReportsDir = "$tmpReportsDir/$baseBranch"
-        def tmpPatchReportsDir = "$tmpReportsDir/$patchBranch"
-
-        def diffDir = "$reportsDir/diff"
 
         // Delete work directories to avoid conflicts with previous reports generation
-        if (new File(reportsDir).exists()) {
-            deleteDir(reportsDir)
+        if (new File(cfg.reportsDir).exists()) {
+            deleteDir(cfg.reportsDir)
         }
-        if (new File(tmpReportsDir).exists()) {
-            deleteDir(tmpReportsDir)
-        }
-
-        def toolMode = cliOptions.mode
-        if (!toolMode) {
-            toolMode = 'diff'
+        if (new File(cfg.tmpReportsDir).exists()) {
+            deleteDir(cfg.tmpReportsDir)
         }
 
-        if ('diff'.equals(toolMode)) {
-            generateCheckstyleReport(localGitRepo, baseBranch, baseConfig, listOfProjects, tmpMasterReportsDir)
+        if (cfg.isDiffMode()) {
+            generateCheckstyleReport(cfg.localGitRepo, cfg.baseBranch, cfg.baseConfig, cfg.listOfProjects, cfg.tmpMasterReportsDir)
         }
-        generateCheckstyleReport(localGitRepo, patchBranch, patchConfig, listOfProjects, tmpPatchReportsDir)
-        deleteDir(reportsDir)
-        moveDir(tmpReportsDir, reportsDir)
-        generateDiffReport(reportsDir, masterReportsDir, patchReportsDir, baseConfig, patchConfig, shortFilePaths, toolMode)
-        generateSummaryIndexHtml(diffDir)
+        generateCheckstyleReport(cfg.localGitRepo, cfg.patchBranch, cfg.patchConfig, cfg.listOfProjects, cfg.tmpPatchReportsDir)
+        deleteDir(cfg.reportsDir)
+        moveDir(cfg.tmpReportsDir, cfg.reportsDir)
+        generateDiffReport(cfg.reportsDir, cfg.masterReportsDir, cfg.patchReportsDir, cfg.baseConfig, cfg.patchConfig, cfg.shortFilePaths, cfg.mode)
+        generateSummaryIndexHtml(cfg.diffDir)
     }
     else {
         throw new IllegalArgumentException('Error: invalid command line arguments!')
@@ -199,7 +167,7 @@ def getCheckstyleVersionFromPomXml(pathToPomXml, xmlTagName) {
             }
     }
     if (checkstyleVersion == null) {
-        throw GroovyRuntimeException("Error: cannot get Checkstyle version from $pathToPomXml!")
+        throw new GroovyRuntimeException("Error: cannot get Checkstyle version from $pathToPomXml!")
     }
     return checkstyleVersion
 }
@@ -346,5 +314,70 @@ def getOsSpecificCmd(cmd) {
     }
     else {
         osSpecificCmd = cmd
+    }
+}
+
+class Config {
+    def localGitRepo
+    def shortFilePaths
+    def listOfProjects
+    def mode
+
+    def baseBranch
+    def patchBranch
+
+    def baseConfig
+    def patchConfig
+    def config
+
+    def reportsDir
+    def masterReportsDir
+    def patchReportsDir
+    def tmpReportsDir
+    def tmpMasterReportsDir
+    def tmpPatchReportsDir
+    def diffDir
+
+    Config(cliOptions) {
+        localGitRepo = new File(cliOptions.localGitRepo)
+        shortFilePaths = cliOptions.shortFilePaths
+        listOfProjects = cliOptions.listOfProjects
+
+        mode = cliOptions.mode
+        if (!mode) {
+            mode = 'diff'
+        }
+
+        baseBranch = cliOptions.baseBranch
+        if (!baseBranch) {
+            baseBranch = 'master'
+        }
+        patchBranch = cliOptions.patchBranch
+
+        baseConfig = cliOptions.baseConfig
+        patchConfig = cliOptions.patchConfig
+        config = cliOptions.config
+        if (config) {
+            baseConfig = config
+            patchConfig = config
+        }
+
+        reportsDir = 'reports'
+        masterReportsDir = "$reportsDir/$baseBranch"
+        patchReportsDir = "$reportsDir/$patchBranch"
+
+        tmpReportsDir = 'tmp_reports'
+        tmpMasterReportsDir = "$tmpReportsDir/$baseBranch"
+        tmpPatchReportsDir = "$tmpReportsDir/$patchBranch"
+
+        diffDir = "$reportsDir/diff"
+    }
+
+    def isDiffMode() {
+        return 'diff'.equals(mode)
+    }
+
+    def isSingleMode() {
+        return 'single'.equals(mode)
     }
 }

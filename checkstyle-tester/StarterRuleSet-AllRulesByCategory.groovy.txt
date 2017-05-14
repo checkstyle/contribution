@@ -87,7 +87,11 @@ ruleset {
 
     // rulesets/convention.xml
     ConfusingTernary
-    CouldBeElvis
+
+    // Disabled as the Elvis operator is a very weired language structure. It may lead to potential
+    // bugs and introduce mess in the code. It is better to use traidional if-else block.
+    // CouldBeElvis
+
     HashtableIsObsolete
     IfStatementCouldBeTernary
     InvertedIfElse
@@ -391,7 +395,11 @@ ruleset {
     UnnecessaryPackageReference
     UnnecessaryParenthesesForMethodCallWithClosure
     UnnecessaryPublicModifier
-    UnnecessaryReturnKeyword
+
+    // Disabled as it makes the code unclear. It becomes hard to understand what value
+    // is returned by a method.
+    // UnnecessaryReturnKeyword
+
     UnnecessarySafeNavigationOperator
     UnnecessarySelfAssignment
     UnnecessarySemicolon
