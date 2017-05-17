@@ -21,12 +21,13 @@ static void main(String[] args) {
         }
 
         if (cfg.isDiffMode()) {
-            generateCheckstyleReport(cfg.localGitRepo, cfg.baseBranch, cfg.baseConfig, cfg.listOfProjects, cfg.tmpMasterReportsDir)
+            generateCheckstyleReport(cfg.getCheckstyleToolBaseConfig())
         }
-        generateCheckstyleReport(cfg.localGitRepo, cfg.patchBranch, cfg.patchConfig, cfg.listOfProjects, cfg.tmpPatchReportsDir)
+        generateCheckstyleReport(cfg.getCheckstyleToolPatchConfig())
         deleteDir(cfg.reportsDir)
         moveDir(cfg.tmpReportsDir, cfg.reportsDir)
-        generateDiffReport(cfg.reportsDir, cfg.masterReportsDir, cfg.patchReportsDir, cfg.baseConfig, cfg.patchConfig, cfg.shortFilePaths, cfg.mode)
+
+        generateDiffReport(cfg.getDiffToolConfig())
         generateSummaryIndexHtml(cfg.diffDir)
     }
     else {
@@ -172,24 +173,24 @@ def getCheckstyleVersionFromPomXml(pathToPomXml, xmlTagName) {
     return checkstyleVersion
 }
 
-def generateCheckstyleReport(localGitRepo, branch, checkstyleCfg, listOfProjects, destDir) {
-    println "Installing Checkstyle artifact ($branch) into local Maven repository ..."
-    executeCmd("git checkout $branch", localGitRepo)
-    executeCmd("git log -1 --pretty=MSG:%s%nSHA-1:%H", localGitRepo)
+def generateCheckstyleReport(cfg) {
+    println "Installing Checkstyle artifact ($cfg.branch) into local Maven repository ..."
+    executeCmd("git checkout $cfg.branch", cfg.localGitRepo)
+    executeCmd("git log -1 --pretty=MSG:%s%nSHA-1:%H", cfg.localGitRepo)
 
     def testerCheckstyleVersion = getCheckstyleVersionFromPomXml('./pom.xml', 'checkstyle.version')
-    def checkstyleVersionInLocalRepo = getCheckstyleVersionFromPomXml("$localGitRepo/pom.xml", 'version')
+    def checkstyleVersionInLocalRepo = getCheckstyleVersionFromPomXml("$cfg.localGitRepo/pom.xml", 'version')
     if (testerCheckstyleVersion != checkstyleVersionInLocalRepo) {
         throw new GroovyRuntimeException("Error: config version mis-match!\nCheckstyle version in tester's pom.xml is $testerCheckstyleVersion\nCheckstyle version in local repo is $checkstyleVersionInLocalRepo")
     }
 
-    executeCmd("mvn -Pno-validations clean install", localGitRepo)
-    executeCmd("groovy launch.groovy --listOfProjects $listOfProjects --config $checkstyleCfg --ignoreExceptions --ignoreExcludes")
-    println "Moving Checkstyle report into $destDir ..."
-    moveDir("reports", destDir)
+    executeCmd("mvn -Pno-validations clean install", cfg.localGitRepo)
+    executeCmd("groovy launch.groovy --listOfProjects $cfg.listOfProjects --config $cfg.checkstyleCfg --ignoreExceptions --ignoreExcludes")
+    println "Moving Checkstyle report into $cfg.destDir ..."
+    moveDir("reports", cfg.destDir)
 }
 
-def generateDiffReport(reportsDir, masterReportsDir, patchReportsDir, baseConfig, patchConfig, shortFilePaths, toolMode) {
+def generateDiffReport(cfg) {
     def diffToolDir = Paths.get("").toAbsolutePath()
         .getParent()
         .resolve("patch-diff-report-tool")
@@ -198,21 +199,21 @@ def generateDiffReport(reportsDir, masterReportsDir, patchReportsDir, baseConfig
     def diffToolJarPath = getPathToDiffToolJar(diffToolDir)
 
     println 'Starting diff report generation ...'
-    Paths.get(patchReportsDir).toFile().eachFile {
+    Paths.get(cfg.patchReportsDir).toFile().eachFile {
         fileObj ->
             if (fileObj.isDirectory()) {
                 def projectName = fileObj.getName()
-                def patchReportDir = new File("$patchReportsDir/$projectName")
+                def patchReportDir = new File("$cfg.patchReportsDir/$projectName")
                 if (patchReportDir.exists()) {
-                    def patchReport = "$patchReportsDir/$projectName/checkstyle-result.xml"
-                    def outputDir = "$reportsDir/diff/$projectName"
+                    def patchReport = "$cfg.patchReportsDir/$projectName/checkstyle-result.xml"
+                    def outputDir = "$cfg.reportsDir/diff/$projectName"
                     def diffCmd = "java -jar $diffToolJarPath --patchReport $patchReport " \
-                        + "--output $outputDir --patchConfig $patchConfig"
-                    if ('diff'.equals(toolMode)) {
-                        def baseReport = "$masterReportsDir/$projectName/checkstyle-result.xml"
-                        diffCmd += " --baseReport $baseReport --baseConfig $baseConfig"
+                        + "--output $outputDir --patchConfig $cfg.patchConfig"
+                    if ('diff'.equals(cfg.mode)) {
+                        def baseReport = "$cfg.masterReportsDir/$projectName/checkstyle-result.xml"
+                        diffCmd += " --baseReport $baseReport --baseConfig $cfg.baseConfig"
                     }
-                    if (shortFilePaths) {
+                    if (cfg.shortFilePaths) {
                         diffCmd += ' --shortFilePaths'
                     }
                     executeCmd(diffCmd)
@@ -379,5 +380,37 @@ class Config {
 
     def isSingleMode() {
         return 'single'.equals(mode)
+    }
+
+    def getCheckstyleToolBaseConfig() {
+        return [
+            localGitRepo: localGitRepo,
+            branch: baseBranch,
+            checkstyleCfg: baseConfig,
+            listOfProjects: listOfProjects,
+            destDir: tmpMasterReportsDir
+        ]
+    }
+
+    def getCheckstyleToolPatchConfig() {
+        return [
+            localGitRepo: localGitRepo,
+            branch: patchBranch,
+            checkstyleCfg: patchConfig,
+            listOfProjects: listOfProjects,
+            destDir: tmpPatchReportsDir
+        ]
+    }
+
+    def getDiffToolConfig() {
+        return [
+            reportsDir: reportsDir,
+            masterReportsDir: masterReportsDir,
+            patchReportsDir: patchReportsDir,
+            baseConfig: baseConfig,
+            patchConfig: patchConfig,
+            shortFilePaths: shortFilePaths,
+            mode: mode
+        ]
     }
 }
