@@ -1,31 +1,6 @@
 #!/bin/bash
 
-# ============================================================
-# Custom Options
-# Note: Use full paths
-# ============================================================
-
-MINIMIZE=true
-CONTACTSERVER=true
-
-CHECKSTYLE_DIR=~/opensource/checkstyle
-TESTER_DIR=~/opensource/contribution/checkstyle-tester
-EXTRA_DIR=~/opensource/downloads
-FINAL_RESULTS_DIR=~/opensource/results
-DIFF_JAR=~/opensource/patch-diff-report-tool.jar
-
-# Note: Full paths no longer needed
-
-PULL_REMOTE=pull
-
-SITE_SOURCES_DIR=src/main/java
-SITE_SAVE_MASTER_DIR=savemaster
-SITE_SAVE_PULL_DIR=savepull
-SITE_SAVE_REF_DIR=saverefs
-
-# ============================================================
-# ============================================================
-# ============================================================
+source launch_diff_variables.sh
 
 EXTPROJECTS=()
 INSTALL_MASTER=true
@@ -35,6 +10,9 @@ RUN_PULL=true
 RUN_REPORTS=true
 USE_CUSTOM_CONFIG=false
 CUSTOM_CONFIG=""
+USE_CUSTOM_MASTER=false
+CUSTOM_MASTER=""
+PATCH_ONLY=false
 
 if [ -z "$1" ]; then
 	echo "No parameter supplied!"
@@ -83,7 +61,16 @@ function parse_arguments {
 				reports)
 					RUN_REPORTS=false
 					;;
+				*)
+					echo "Unknown option: $2"
+					exit 1
+					;;
 				esac
+				shift
+				;;
+			-master)
+				USE_CUSTOM_MASTER=true
+				CUSTOM_MASTER=$2
 				shift
 				;;
 			-config)
@@ -94,6 +81,15 @@ function parse_arguments {
 			-output)
 				FINAL_RESULTS_DIR=$2
 				shift
+				;;
+			-patchOnly)
+				PATCH_ONLY=true
+				INSTALL_MASTER=false
+				RUN_MASTER=false
+				;;
+			*)
+				echo "Unknown option: $1"
+				exit 1
 				;;
 			esac
 		else
@@ -113,13 +109,11 @@ function mvn_install {
 }
 
 function launch {
-		cd $TESTER_DIR
-
 		echo "Verifying Launch config ..."
 
 		CS_VERSION="grep 'SNAPSHOT</version>' $CHECKSTYLE_DIR/pom.xml | tail -1 | cut -d '>' -f2 | cut -d '<' -f1"
 		CS_VERSION="$(eval $CS_VERSION)"
-		TEST_VERSION="grep 'SNAPSHOT</checkstyle.version>' pom.xml | tail -1 | cut -d '>' -f2 | cut -d '<' -f1"
+		TEST_VERSION="grep 'SNAPSHOT</checkstyle.version>' $TESTER_DIR/pom.xml | tail -1 | cut -d '>' -f2 | cut -d '<' -f1"
 		TEST_VERSION="$(eval $TEST_VERSION)"
 
 		echo "Config version: $CS_VERSION vs $TEST_VERSION"
@@ -147,13 +141,13 @@ function launch {
 			
 			REPO_SOURCES_DIR=$SITE_SOURCES_DIR/$REPO_NAME
 			
-			if [ ! -d "$EXTRA_DIR" ]; then
-				mkdir $EXTRA_DIR
+			if [ ! -d "$REPOSITORIES_DIR" ]; then
+				mkdir $REPOSITORIES_DIR
 			fi
 			
 			if [ "$REPO_TYPE" == "github" ]; then
 				TARNAME=$(echo $REPO_URL | sed -E 's/\//-/')
-				TARPATH=$EXTRA_DIR/$TARNAME".tar.gz"
+				TARPATH=$REPOSITORIES_DIR/$TARNAME".tar.gz"
 				
 				if [ ! -f "$TARPATH" ]; then
 					echo "Requesting a tar: 'wget https://api.github.com/repos/$REPO_URL/tarball/$COMMIT_ID -O $TARPATH'"
@@ -165,7 +159,7 @@ function launch {
 					echo -e "untar $TARNAME file to $REPO_SOURCES_DIR - completed"
 				fi
 			elif [ "$REPO_TYPE" == "git" ]; then
-				GITPATH=$EXTRA_DIR/$REPO_NAME
+				GITPATH=$REPOSITORIES_DIR/$REPO_NAME
 				
 				if [ ! -d "$GITPATH" ]; then
 					echo "Cloning $REPO_TYPE repository '${REPO_NAME}' ..."
@@ -190,7 +184,7 @@ function launch {
 
 				cp -R $GITPATH/* $SITE_SOURCES_DIR
 			elif [ "$REPO_TYPE" == "hg" ]; then
-				HGPATH=$EXTRA_DIR/$REPO_NAME
+				HGPATH=$REPOSITORIES_DIR/$REPO_NAME
 
 				if [ ! -d "$HGPATH" ]; then
 					echo "Cloning $REPO_TYPE repository '${REPO_NAME}' ..."
@@ -221,10 +215,11 @@ function launch {
 				fi
 			fi
 
-			echo "Running Checkstyle on $SITE_SOURCES_DIR with config $CONFIG ... with excludes $EXCLUDES"
-			echo "mvn -e --batch-mode clean site -Dcheckstyle.excludes=$EXCLUDES -Dcheckstyle.config.location=$CONFIG -Dcheckstyle.failsOnError=false -DMAVEN_OPTS=-Xmx3024m"
-			mvn -e --batch-mode clean site -Dcheckstyle.excludes=$EXCLUDES -Dcheckstyle.config.location=$CONFIG -Dcheckstyle.failsOnError=false -DMAVEN_OPTS=-Xmx3024m
+			cd $TESTER_DIR
 
+			echo "Running Checkstyle on $SITE_SOURCES_DIR with config $CONFIG"
+			echo "mvn -e --batch-mode clean site -Dcheckstyle.config.location=$CONFIG -Dcheckstyle.failsOnError=false -DMAVEN_OPTS=-Xmx3024m"
+			mvn -e --batch-mode clean site -Dcheckstyle.config.location=$CONFIG -Dcheckstyle.failsOnError=false -DMAVEN_OPTS=-Xmx3024m
 			if [ "$?" != "0" ]
 			then
 				echo "Checkstyle failed on $SITE_SOURCES_DIR"
@@ -295,7 +290,7 @@ function launch {
 			fi
 			
 			# change xml paths to save directory
-			sed -i -e "s#$TESTER_DIR/$SITE_SOURCES_DIR#$TESTER_DIR/$SITE_SAVE_REF_DIR/$REPO_NAME#g" target/checkstyle-result.xml
+			sed -i -e "s#$SITE_SOURCES_DIR#$SITE_SAVE_REF_DIR/$REPO_NAME#g" target/checkstyle-result.xml
 			# save files
 			mv target/site $1/$REPO_NAME
 			mv target/*.xml $1/$REPO_NAME
@@ -303,17 +298,17 @@ function launch {
 			if ! containsElement "$REPO_NAME" "${EXTPROJECTS[@]}" ; then
 				EXTPROJECTS+=($REPO_NAME)
 
-				if [ ! -d "$TESTER_DIR/$SITE_SAVE_REF_DIR/$REPO_NAME" ]; then
-					mkdir $TESTER_DIR/$SITE_SAVE_REF_DIR/$REPO_NAME
+				if [ ! -d "$SITE_SAVE_REF_DIR/$REPO_NAME" ]; then
+					mkdir $SITE_SAVE_REF_DIR/$REPO_NAME
 				fi
-				rm -rf $TESTER_DIR/$SITE_SAVE_REF_DIR/$REPO_NAME/*
+				rm -rf $SITE_SAVE_REF_DIR/$REPO_NAME/*
 			fi
 
-			cp -r $SITE_SOURCES_DIR/* $TESTER_DIR/$SITE_SAVE_REF_DIR/$REPO_NAME
+			cp -r $SITE_SOURCES_DIR/* $SITE_SAVE_REF_DIR/$REPO_NAME
 			rm -rf $SITE_SOURCES_DIR/*
 
 			echo "Running Launch on $REPO_NAME - completed"
-		done < projects-to-test-on.properties
+		done < $TESTER_DIR/projects-to-test-on.properties
 }
 
 function containsElement {
@@ -336,12 +331,26 @@ echo "Testing Checkstyle Starting"
 if $INSTALL_MASTER ; then
 	cd $CHECKSTYLE_DIR
 
-	if $CONTACTSERVER ; then
-		git fetch origin
-	fi
+	if $USE_CUSTOM_MASTER ; then
+		if $CONTACTSERVER ; then
+			git fetch $PULL_REMOTE
+		fi
 
-	git reset --hard HEAD
-	git checkout origin/master
+		if [ ! `git rev-parse --verify $PULL_REMOTE/$CUSTOM_MASTER` ] ;
+		then
+			echo "Branch $PULL_REMOTE/$CUSTOM_MASTER doesn't exist"
+			exit 1
+		fi
+
+		git checkout $PULL_REMOTE/$CUSTOM_MASTER
+	else
+		if $CONTACTSERVER ; then
+			git fetch origin
+		fi
+
+		git reset --hard HEAD
+		git checkout origin/master
+	fi
 
 	git clean -f -d
 
@@ -354,8 +363,6 @@ fi
 
 if $RUN_MASTER ; then
 	echo "Starting Master Launcher"
-
-	cd $TESTER_DIR
 
 	rm -rf $SITE_SAVE_MASTER_DIR
 	rm -rf $SITE_SAVE_REF_DIR
@@ -391,8 +398,6 @@ fi
 if $RUN_PULL ; then
 	echo "Starting PR $1 Launcher"
 
-	cd $TESTER_DIR
-
 	rm -rf $SITE_SAVE_PULL_DIR
 
 	launch $SITE_SAVE_PULL_DIR
@@ -426,6 +431,9 @@ if $RUN_REPORTS ; then
 		rm $FINAL_RESULTS_DIR/index.html
 	fi
 	echo "<html><body>" >> $FINAL_RESULTS_DIR/index.html
+	echo "<h3><span style=\"color: #ff0000;\">" >> $FINAL_RESULTS_DIR/index.html
+	echo "<strong>WARNING: Excludes are ignored by diff.groovy.</strong>" >> $FINAL_RESULTS_DIR/index.html
+	echo "</span></h3>" >> $FINAL_RESULTS_DIR/index.html
 
 	for extp in "${EXTPROJECTS[@]}"
 	do
@@ -445,10 +453,16 @@ if $RUN_REPORTS ; then
 				fi
 			fi
 
-			echo "java -jar $DIFF_JAR --baseReport $TESTER_DIR/$SITE_SAVE_MASTER_DIR/$extp/checkstyle-result.xml --patchReport $TESTER_DIR/$SITE_SAVE_PULL_DIR/$extp/checkstyle-result.xml --output $FINAL_RESULTS_DIR/$extp --baseConfig $CONFIG --patchConfig $CONFIG --refFiles $TESTER_DIR/$SITE_SAVE_REF_DIR"
+			if $PATCH_ONLY ; then
+				echo "java -jar $DIFF_JAR --patchReport $SITE_SAVE_PULL_DIR/$extp/checkstyle-result.xml --output $FINAL_RESULTS_DIR/$extp --patchConfig $CONFIG --refFiles $SITE_SAVE_REF_DIR"
 
-			java -jar $DIFF_JAR --baseReport $TESTER_DIR/$SITE_SAVE_MASTER_DIR/$extp/checkstyle-result.xml --patchReport $TESTER_DIR/$SITE_SAVE_PULL_DIR/$extp/checkstyle-result.xml --output $FINAL_RESULTS_DIR/$extp --baseConfig $CONFIG --patchConfig $CONFIG --refFiles $TESTER_DIR/$SITE_SAVE_REF_DIR
-			
+				java -jar $DIFF_JAR --patchReport $SITE_SAVE_PULL_DIR/$extp/checkstyle-result.xml --output $FINAL_RESULTS_DIR/$extp --patchConfig $CONFIG --refFiles $SITE_SAVE_REF_DIR
+			else
+				echo "java -jar $DIFF_JAR --baseReport $SITE_SAVE_MASTER_DIR/$extp/checkstyle-result.xml --patchReport $SITE_SAVE_PULL_DIR/$extp/checkstyle-result.xml --output $FINAL_RESULTS_DIR/$extp --baseConfig $CONFIG --patchConfig $CONFIG --refFiles $SITE_SAVE_REF_DIR"
+
+				java -jar $DIFF_JAR --baseReport $SITE_SAVE_MASTER_DIR/$extp/checkstyle-result.xml --patchReport $SITE_SAVE_PULL_DIR/$extp/checkstyle-result.xml --output $FINAL_RESULTS_DIR/$extp --baseConfig $CONFIG --patchConfig $CONFIG --refFiles $SITE_SAVE_REF_DIR
+			fi
+
 			if [ "$?" != "0" ]
 			then
 				echo "patch-diff-report-tool failed on $extp"
