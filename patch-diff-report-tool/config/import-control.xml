@@ -14,6 +14,7 @@
     <subpackage name="data">
         <allow pkg="com.github.checkstyle.parser.StaxContentParser" />
         <allow pkg="com.github.checkstyle.PreparationUtils" />
+        <allow class="org.thymeleaf.util.StringUtils" />
     </subpackage>
     <subpackage name="site">
         <allow pkg="com.github.checkstyle.PreparationUtils" />

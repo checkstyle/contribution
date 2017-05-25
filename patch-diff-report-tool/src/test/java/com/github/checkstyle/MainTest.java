@@ -175,6 +175,16 @@ public class MainTest extends AbstractTest {
     }
 
     @Test
+    public void testMessages() throws Exception {
+        final File outputDirectory = folder.getRoot();
+
+        Main.main("-patchReport", getPath("InputPatchReportMessages.xml"), "-output",
+                outputDirectory.getAbsolutePath());
+
+        assertReportOutput(getPath("ExpectedReportMessages.html"), outputDirectory);
+    }
+
+    @Test
     public void testNonCompilableFile() throws Exception {
         final File outputDirectory = folder.getRoot();
 
