@@ -22,6 +22,8 @@ package com.github.checkstyle.data;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.thymeleaf.util.StringUtils;
+
 /**
  * POJO, maps into single "error" tag of the XML.
  *
@@ -120,6 +122,10 @@ public final class CheckstyleRecord {
 
     public String getMessage() {
         return message;
+    }
+
+    public String getMessageHtml() {
+        return StringUtils.escapeXml(message).replace("\n", "<br />\n");
     }
 
     public String getSeverity() {
