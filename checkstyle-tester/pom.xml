@@ -32,7 +32,7 @@
 					  <version>${checkstyle.version}</version>
 					</dependency>
 					<dependency>
-						<groupId>com.github.sevntu.checkstyle</groupId>
+						<groupId>com.github.sevntu-checkstyle</groupId>
 						<artifactId>sevntu-checkstyle-maven-plugin</artifactId>
 						<version>${sevntu-checkstyle.version}</version>
 					</dependency>
