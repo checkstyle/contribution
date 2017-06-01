@@ -118,7 +118,7 @@ class XrefGenerator {
         try {
             codeTransform.transform(sourceFile.getAbsolutePath(),
                 dest.toString(), Locale.ENGLISH,
-                ENCODING, ENCODING, "", "", "");
+                ENCODING, ENCODING, null, "", "");
             result = sitePath.relativize(dest).toString();
         }
         // -@cs[IllegalCatch] We need to catch all exception from JXR
