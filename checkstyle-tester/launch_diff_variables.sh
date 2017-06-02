@@ -13,6 +13,7 @@ PULL_REMOTE=pull
 CHECKSTYLE_DIR=~/checkstyle
 SEVNTU_DIR=~/sevntu.checkstyle
 CONTRIBUTION_DIR=~/contribution
+TEMP_DIR=/tmp/launch_diff
 
 TESTER_DIR=$CONTRIBUTION_DIR/checkstyle-tester
 DIFF_JAR=$CONTRIBUTION_DIR/patch-diff-report-tool/target/patch-diff-report-tool-0.1-SNAPSHOT-jar-with-dependencies.jar
