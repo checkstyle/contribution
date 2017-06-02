@@ -94,6 +94,7 @@
                         <configuration>
                             <includeResources>false</includeResources>
                             <includeTestResources>false</includeTestResources>
+                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
                             <configLocation>https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-${checkstyle.version}/config/checkstyle_checks.xml</configLocation>
                             <propertiesLocation>config/checkstyle.properties</propertiesLocation>
                             <failOnViolation>true</failOnViolation>
