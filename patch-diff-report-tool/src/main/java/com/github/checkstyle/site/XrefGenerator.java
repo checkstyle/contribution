@@ -20,6 +20,7 @@
 package com.github.checkstyle.site;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Locale;
@@ -64,10 +65,16 @@ class XrefGenerator {
      */
     private static JavaCodeTransform codeTransform;
 
+    /**
+     * Text XREF file generator.
+     */
+    private static TextTransform textTransform;
+
     static {
         pacman = new PackageManager(new JxrDummyLog(),
                 new FileManager());
         codeTransform = new JavaCodeTransform(pacman);
+        textTransform = new TextTransform();
     }
 
     /**
@@ -119,12 +126,19 @@ class XrefGenerator {
             codeTransform.transform(sourceFile.getAbsolutePath(),
                 dest.toString(), Locale.ENGLISH,
                 ENCODING, ENCODING, null, "", "");
-            result = sitePath.relativize(dest).toString();
         }
-        // -@cs[IllegalCatch] We need to catch all exception from JXR
+        // -@cs[IllegalCatch] We need to catch all exceptions from JXR
         catch (Exception ex) {
-            result = null;
+            try {
+                textTransform.transform(sourceFile.getAbsolutePath(),
+                    dest.toString(), Locale.ENGLISH,
+                    ENCODING, ENCODING);
+            }
+            catch (IOException ignore) {
+                result = null;
+            }
         }
+        result = sitePath.relativize(dest).toString();
         return result;
     }
 

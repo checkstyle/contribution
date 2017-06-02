@@ -192,6 +192,14 @@ public class MainTest extends AbstractTest {
                 outputDirectory.getAbsolutePath());
 
         assertReportOutput(getPath("ExpectedReportNonCompilable.html"), outputDirectory);
+
+        final File xrefFile = new File(outputDirectory,
+                "xref/src/test/resources/run/NonCompilable.java.html");
+
+        assertFileExists("NonCompilable.java.html doesn't exist", xrefFile);
+
+        Assert.assertEquals(getFileContents(new File(getPath("ExpectedXrefNonCompilable.html"))),
+                getFileContents(xrefFile));
     }
 
     @Test
