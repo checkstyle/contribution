@@ -33,10 +33,12 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 import com.github.checkstyle.data.CliPaths;
+import com.github.checkstyle.data.CompareMode;
 import com.github.checkstyle.data.DiffReport;
 import com.github.checkstyle.data.MergedConfigurationModule;
 import com.github.checkstyle.parser.CheckstyleConfigurationsParser;
 import com.github.checkstyle.parser.CheckstyleReportsParser;
+import com.github.checkstyle.parser.CheckstyleTextParser;
 import com.github.checkstyle.site.JxrDummyLog;
 import com.github.checkstyle.site.SiteGenerator;
 
@@ -83,6 +85,11 @@ public final class Main {
      * Name for the CSS files folder.
      */
     public static final Path CSS_FILEPATH = Paths.get("css");
+
+    /**
+     * Name for command line option "compareMode".
+     */
+    private static final String OPTION_COMPARE_MODE = "compareMode";
 
     /**
      * Name for command line option "baseReportPath".
@@ -148,11 +155,20 @@ public final class Main {
         }
         else {
             final CliPaths paths = getCliPaths(commandLine);
+            final DiffReport diffReport;
 
-            // XML parsing stage
-            System.out.println("XML parsing is started.");
-            final DiffReport diffReport = CheckstyleReportsParser.parse(paths.getBaseReportPath(),
-                    paths.getPatchReportPath(), XML_PARSE_PORTION_SIZE);
+            if (paths.getCompareMode() == CompareMode.XML) {
+                // XML parsing stage
+                System.out.println("XML parsing is started.");
+                diffReport = CheckstyleReportsParser.parse(paths.getBaseReportPath(),
+                        paths.getPatchReportPath(), XML_PARSE_PORTION_SIZE);
+            }
+            else {
+                // file parsing stage
+                System.out.println("File parsing is started.");
+                diffReport = CheckstyleTextParser.parse(paths.getBaseReportPath(),
+                        paths.getPatchReportPath());
+            }
 
             // Configuration processing stage.
             MergedConfigurationModule diffConfiguration = null;
@@ -238,6 +254,8 @@ public final class Main {
      */
     private static Options buildOptions() {
         final Options options = new Options();
+        options.addOption(null, OPTION_COMPARE_MODE, true,
+                "Option to control which type of diff comparison to do.");
         options.addOption(null, OPTION_BASE_REPORT_PATH, true,
                 "Path to the base checkstyle-report.xml");
         options.addOption(null, OPTION_PATCH_REPORT_PATH, true,
@@ -267,6 +285,8 @@ public final class Main {
      */
     private static CliPaths parseCliToPojo(CommandLine commandLine)
             throws IllegalArgumentException {
+        final CompareMode compareMode = getCompareMode(OPTION_COMPARE_MODE, commandLine,
+                CompareMode.XML);
         final Path xmlBasePath = getPath(OPTION_BASE_REPORT_PATH, commandLine, null);
         final Path xmlPatchPath = getPath(OPTION_PATCH_REPORT_PATH, commandLine, null);
         final Path refFilesPath = getPath(OPTION_REFFILES_PATH, commandLine, null);
@@ -277,8 +297,31 @@ public final class Main {
         final Path configBasePath = getPath(OPTION_BASE_CONFIG_PATH, commandLine, null);
         final Path configPatchPath = getPath(OPTION_PATCH_CONFIG_PATH, commandLine, null);
         final boolean shortFilePaths = commandLine.hasOption(OPTION_SHORT_PATHS);
-        return new CliPaths(xmlBasePath, xmlPatchPath, refFilesPath, outputPath, configBasePath,
-                configPatchPath, shortFilePaths);
+        return new CliPaths(compareMode, xmlBasePath, xmlPatchPath, refFilesPath, outputPath,
+                configBasePath, configPatchPath, shortFilePaths);
+    }
+
+    /**
+     * Generates compare mode from CLI option.
+     *
+     * @param optionName
+     *        name of the option.
+     * @param commandLine
+     *        parsed CLI.
+     * @param defaultMode
+     *        mode which is used if CLI option is absent.
+     * @return compare mode.
+     */
+    private static CompareMode getCompareMode(String optionName, CommandLine commandLine,
+            CompareMode defaultMode) {
+        final CompareMode result;
+        if (commandLine.hasOption(optionName)) {
+            result = CompareMode.valueOf(commandLine.getOptionValue(optionName).toUpperCase());
+        }
+        else {
+            result = defaultMode;
+        }
+        return result;
     }
 
     /**

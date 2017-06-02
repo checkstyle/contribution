@@ -1,0 +1,4 @@
+Line 1 Same
+Line 2a Different (Patch)
+Line 2b Different (Patch)
+Line 2 Same

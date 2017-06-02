@@ -23,5 +23,6 @@
     </subpackage>
     <subpackage name="parser">
         <allow pkg="javax.xml.stream" />
+        <allow pkg="org.eclipse.jgit.diff" />
     </subpackage>
 </import-control>

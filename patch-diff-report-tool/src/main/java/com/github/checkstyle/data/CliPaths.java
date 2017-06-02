@@ -27,6 +27,11 @@ import java.nio.file.Path;
  */
 public final class CliPaths {
     /**
+     * Option to control which type of diff comparison to do.
+     */
+    private final CompareMode compareMode;
+
+    /**
      * Path to the first checkstyle-report.xml.
      */
     private final Path baseReportPath;
@@ -64,6 +69,8 @@ public final class CliPaths {
     /**
      * POJO ctor.
      *
+     * @param compareMode
+     *        type of diff comparison to do.
      * @param baseReportPath
      *        path to the base checkstyle-report.xml.
      * @param patchReportPath
@@ -79,9 +86,11 @@ public final class CliPaths {
      * @param shortFilePaths
      *           {@code true} if only short file names should be used with no paths.
      */
-    public CliPaths(Path baseReportPath, Path patchReportPath,
+    // -@cs[ParameterNumber] Helper class to pass all CLI attributes around.
+    public CliPaths(CompareMode compareMode, Path baseReportPath, Path patchReportPath,
             Path refFilesPath, Path outputPath, Path baseConfigPath, Path patchConfigPath,
             boolean shortFilePaths) {
+        this.compareMode = compareMode;
         this.baseReportPath = baseReportPath;
         this.patchReportPath = patchReportPath;
         this.refFilesPath = refFilesPath;
@@ -89,6 +98,10 @@ public final class CliPaths {
         this.baseConfigPath = baseConfigPath;
         this.patchConfigPath = patchConfigPath;
         this.shortFilePaths = shortFilePaths;
+    }
+
+    public CompareMode getCompareMode() {
+        return compareMode;
     }
 
     public Path getBaseReportPath() {

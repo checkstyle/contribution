@@ -160,4 +160,49 @@ public class CliArgsValidatorTest extends AbstractTest {
                     ex.getMessage());
         }
     }
+
+    @Test
+    public void testTextBaseConfigGiven() throws Exception {
+        try {
+            Main.main("-compareMode", "text", "-patchReport", VALID_PATCH_REPORT_EMPTY,
+                    "-baseConfig", "test");
+        }
+        catch (IllegalArgumentException ex) {
+            Assert.assertEquals("Checkstyle configuration xml paths do not need to be present for "
+                    + "text mode.", ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testTextPatchConfigGiven() throws Exception {
+        try {
+            Main.main("-compareMode", "text", "-patchReport", VALID_PATCH_REPORT_EMPTY,
+                    "-patchConfig", "test");
+        }
+        catch (IllegalArgumentException ex) {
+            Assert.assertEquals("Checkstyle configuration xml paths do not need to be present for "
+                    + "text mode.", ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testTextInvalidPatchReportPath() throws Exception {
+        try {
+            Main.main("-compareMode", "text", "-patchReport", "test");
+        }
+        catch (IllegalArgumentException ex) {
+            Assert.assertEquals("Patch Report directory doesn't exist: test", ex.getMessage());
+        }
+    }
+
+    @Test
+    public void testTextInvalidBaseReportPath() throws Exception {
+        try {
+            Main.main("-compareMode", "text", "-baseReport", "test", "-patchReport",
+                    VALID_PATCH_DIR);
+        }
+        catch (IllegalArgumentException ex) {
+            Assert.assertEquals("Base Report directory doesn't exist: test", ex.getMessage());
+        }
+    }
 }

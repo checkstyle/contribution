@@ -39,6 +39,9 @@ public abstract class AbstractTest {
     protected static final String VALID_PATCH_REPORT_EMPTY = getPath("InputPatchReportEmpty.xml");
     protected static final String VALID_BASE_CONFIG = getPath("InputBaseConfig.xml");
 
+    protected static final String VALID_BASE_DIR = getPath("runText/base");
+    protected static final String VALID_PATCH_DIR = getPath("runText/patch");
+
     protected static final ByteArrayOutputStream OUT_CONTENT = new ByteArrayOutputStream();
 
     @Rule
@@ -117,7 +120,7 @@ public abstract class AbstractTest {
 
                 // fix for different OS runs as file path is printed in OS'
                 // format. Windows prints with '\' and unix prints with '/'.
-                if (line.contains("<a href = ")) {
+                if (line.contains("<a href = ") || (line.contains("<h3>"))) {
                     line = line.replace("\\", "/");
                 }
 
