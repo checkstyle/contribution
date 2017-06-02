@@ -155,7 +155,8 @@ public class CliArgsValidatorTest extends AbstractTest {
         }
         catch (IllegalArgumentException ex) {
             Assert.assertEquals(
-                    "Base checkstyle configuration xml path is missing while base configuration path is present.",
+                    "Base checkstyle configuration xml path is missing while base configuration "
+                            + "path is present.",
                     ex.getMessage());
         }
     }
