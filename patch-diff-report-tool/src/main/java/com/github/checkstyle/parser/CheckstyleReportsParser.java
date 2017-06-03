@@ -179,7 +179,8 @@ public final class CheckstyleReportsParser {
                 }
                 //error tag encounter
                 else if (startElementName.equals(ERROR_TAG)) {
-                    records.add(parseErrorTag(startElement, diffReport.getStatistics(), index));
+                    records.add(parseErrorTag(startElement, diffReport.getStatistics(), index,
+                            filename));
                 }
             }
             if (event.isEndElement()) {
@@ -203,10 +204,12 @@ public final class CheckstyleReportsParser {
      *        container accumulating statistics.
      * @param index
      *        internal index of the parsed file.
+     * @param filename
+     *        file name.
      * @return parsed data as CheckstyleRecord instance.
      */
     private static CheckstyleRecord parseErrorTag(StartElement startElement,
-            Statistics statistics, int index) {
+            Statistics statistics, int index, String filename) {
         int line = -1;
         int column = -1;
         String source = null;
@@ -239,7 +242,7 @@ public final class CheckstyleReportsParser {
             }
         }
         return new CheckstyleRecord(index,
-                line, column, severity, source, message);
+                line, column, severity, source, message, filename);
 
     }
 

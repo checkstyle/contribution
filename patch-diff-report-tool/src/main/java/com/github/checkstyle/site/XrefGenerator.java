@@ -23,7 +23,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.maven.jxr.JavaCodeTransform;
 import org.apache.maven.jxr.pacman.FileManager;
@@ -48,6 +50,12 @@ class XrefGenerator {
      * File extension used for reports.
      */
     private static final String FILE_EXTENSION = ".html";
+
+    /**
+     * List of file maps for {@code shortFileNames} option in
+     * {@link #getDestinationPath(String, boolean)}.
+     */
+    private static final Map<String, Path> SIMPLE_FILE_NAME_MAP = new HashMap<>();
 
     /**
      * File counter only to be used with {@code shortFileNames} option in
@@ -110,6 +118,13 @@ class XrefGenerator {
     }
 
     /**
+     * Resets contents of the class.
+     */
+    public void reset() {
+        SIMPLE_FILE_NAME_MAP.clear();
+    }
+
+    /**
      * Generates XREF file from source file.
      *
      * @param name
@@ -122,20 +137,22 @@ class XrefGenerator {
         final File sourceFile = new File(name);
         final Path dest = getDestinationPath(name, shortFilePaths);
         String result;
-        try {
-            codeTransform.transform(sourceFile.getAbsolutePath(),
-                dest.toString(), Locale.ENGLISH,
-                ENCODING, ENCODING, null, "", "");
-        }
-        // -@cs[IllegalCatch] We need to catch all exceptions from JXR
-        catch (Exception ex) {
+        if (!dest.toFile().exists()) {
             try {
-                textTransform.transform(sourceFile.getAbsolutePath(),
+                codeTransform.transform(sourceFile.getAbsolutePath(),
                     dest.toString(), Locale.ENGLISH,
-                    ENCODING, ENCODING);
+                    ENCODING, ENCODING, null, "", "");
             }
-            catch (IOException ignore) {
-                result = null;
+            // -@cs[IllegalCatch] We need to catch all exceptions from JXR
+            catch (Exception ex) {
+                try {
+                    textTransform.transform(sourceFile.getAbsolutePath(),
+                        dest.toString(), Locale.ENGLISH,
+                        ENCODING, ENCODING);
+                }
+                catch (IOException ignore) {
+                    result = null;
+                }
             }
         }
         result = sitePath.relativize(dest).toString();
@@ -152,12 +169,18 @@ class XrefGenerator {
      * @return full path to the destination of XREF file.
      */
     private Path getDestinationPath(String name, boolean shortFilePaths) {
-        final Path destPath;
+        Path destPath;
 
         if (shortFilePaths) {
-            simpleFileNameCounter++;
-            destPath = Paths
-                    .get(destinationPath + "/File" + simpleFileNameCounter + FILE_EXTENSION);
+            destPath = SIMPLE_FILE_NAME_MAP.get(name);
+
+            if (destPath == null) {
+                simpleFileNameCounter++;
+                destPath = Paths.get(destinationPath + "/File" + simpleFileNameCounter
+                        + FILE_EXTENSION);
+
+                SIMPLE_FILE_NAME_MAP.put(name, destPath);
+            }
         }
         else {
             final String newName = name + FILE_EXTENSION;
