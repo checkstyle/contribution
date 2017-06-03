@@ -74,6 +74,11 @@ public final class CheckstyleRecord {
     private final String message;
 
     /**
+     * The xref.
+     */
+    private String xref;
+
+    /**
      * POJO ctor.
      *
      * @param index
@@ -86,17 +91,20 @@ public final class CheckstyleRecord {
      *        record severity level.
      * @param source
      *        name of check that generated record.
+     * @param xref
+     *        external file reference.
      * @param message
      *        error message.
      */
     public CheckstyleRecord(int index, int line, int column,
-            String severity, String source, String message) {
+            String severity, String source, String message, String xref) {
         this.index = index;
         this.line = line;
         this.column = column;
         this.severity = severity;
         this.source = source;
         this.message = message;
+        this.xref = xref;
     }
 
     /**
@@ -126,6 +134,14 @@ public final class CheckstyleRecord {
 
     public String getMessageHtml() {
         return StringUtils.escapeXml(message).replace("\n", "<br />\n");
+    }
+
+    public String getXref() {
+        return xref;
+    }
+
+    public void setXref(String xref) {
+        this.xref = xref;
     }
 
     public String getSeverity() {

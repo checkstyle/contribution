@@ -159,12 +159,24 @@ public final class SiteGenerator {
         for (Map.Entry<String, List<CheckstyleRecord>> entry : diffReport.getRecords().entrySet()) {
             final List<CheckstyleRecord> records = entry.getValue();
             String filename = entry.getKey();
-            final String xreference = xrefGenerator.generateXref(filename,
-                    paths.isShortFilePaths());
-            if (refFilesPath != null) {
-                filename = refFilesPath.relativize(Paths.get(filename)).toString();
+
+            xrefGenerator.reset();
+
+            for (CheckstyleRecord record : records) {
+                final String xreference = xrefGenerator.generateXref(record.getXref(),
+                            paths.isShortFilePaths());
+                record.setXref(xreference);
             }
-            generateContent(tplEngine, writer, records, shortenFilename(filename), xreference,
+
+            if (refFilesPath != null) {
+                try {
+                    filename = refFilesPath.relativize(Paths.get(filename)).toString();
+                }
+                catch (IllegalArgumentException ignore) {
+                    // use original file name
+                }
+            }
+            generateContent(tplEngine, writer, records, shortenFilename(filename),
                     anchorCounter);
         }
     }
@@ -180,18 +192,15 @@ public final class SiteGenerator {
      *        checkstyle records for a single file.
      * @param filename
      *        current file name from checkstyle reports.
-     * @param xreference
-     *        path to xreference file.
      * @param anchorCounter
      *        anchor links provider.
      */
     private static void generateContent(TemplateEngine tplEngine, FileWriter writer,
-            List<CheckstyleRecord> records, String filename, String xreference,
+            List<CheckstyleRecord> records, String filename,
             AnchorCounter anchorCounter) {
         final Context context = new Context();
         context.setVariable("filename", filename);
         context.setVariable("records", records);
-        context.setVariable("xref", xreference);
         context.setVariable("anchor", anchorCounter);
         tplEngine.process("content", context, writer);
     }

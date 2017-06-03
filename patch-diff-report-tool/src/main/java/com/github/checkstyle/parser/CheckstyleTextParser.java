@@ -164,15 +164,25 @@ public final class CheckstyleTextParser {
         while (iterator.hasNext()) {
             final JgitDifference diff = iterator.next();
 
+            final String xref;
+
+            if (diff.getIndex() == BASE_REPORT_INDEX) {
+                xref = baseFile.getPath();
+            }
+            else {
+                xref = patchFile.getPath();
+            }
+
             final CheckstyleRecord record = new CheckstyleRecord(diff.getIndex(),
-                    diff.getLineNo() + 1, 1, DEFAULT_SEVERITY, DEFAULT_SOURCE, diff.getLine());
+                    diff.getLineNo() + 1, 1, DEFAULT_SEVERITY, DEFAULT_SOURCE, diff.getLine(),
+                    xref);
 
             statistics.addSeverityRecord(DEFAULT_SEVERITY, diff.getIndex());
 
             records.add(record);
         }
 
-        diffReport.addRecords(records, baseFile.getPath());
+        diffReport.addRecords(records, filePath);
 
         statistics.incrementFileCount(BASE_REPORT_INDEX);
         statistics.incrementFileCount(PATCH_REPORT_INDEX);
@@ -202,17 +212,20 @@ public final class CheckstyleTextParser {
             otherIndex = BASE_REPORT_INDEX;
         }
 
+        final String filePath = reader.next();
+        final String xref = new File(path.toFile(), filePath).getPath();
+
         final Statistics statistics = diffReport.getStatistics();
         final List<CheckstyleRecord> records = new ArrayList<>();
 
         final CheckstyleRecord record = new CheckstyleRecord(otherIndex, 1, 1, DEFAULT_SEVERITY,
-                DEFAULT_SOURCE, "File not found.");
+                DEFAULT_SOURCE, "File not found.", xref);
 
         statistics.addSeverityRecord(DEFAULT_SEVERITY, otherIndex);
 
         records.add(record);
 
-        diffReport.addRecords(records, new File(path.toFile(), reader.next()).getPath());
+        diffReport.addRecords(records, filePath);
 
         statistics.incrementFileCount(index);
     }
