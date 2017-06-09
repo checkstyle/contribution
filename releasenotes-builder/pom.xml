@@ -25,6 +25,7 @@
         <tools.jar.version>${java.version}.0</tools.jar.version>
         <tools.jar.path>${java.home}/../lib/tools.jar</tools.jar.path>
         <checkstyle.version>7.8.1</checkstyle.version>
+        <junit.version>4.12</junit.version>
     </properties>
 
     <dependencies>
@@ -77,6 +78,12 @@
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
             <version>${maven.plugin.javax.mail.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
