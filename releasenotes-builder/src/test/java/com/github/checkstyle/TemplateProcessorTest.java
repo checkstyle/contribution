@@ -24,6 +24,7 @@ public class TemplateProcessorTest {
     private static TemporaryFolder tmpDir;
 
     private static final String THYMELEAF_XDOC_TEMPLATE_FILE = "xdoc_thymeleaf.template";
+    private static final String FREEMARKER_XDOC_TEMPLATE_FILE = "xdoc_freemarker.template";
 
     @BeforeClass
     public static void setup() throws IOException {
@@ -108,6 +109,90 @@ public class TemplateProcessorTest {
         final File actualNotes = tmpDir.newFile("xdoc5.txt");
         TemplateProcessor.generateWithThymeleaf(templateVariables, actualNotes.getAbsolutePath(),
             THYMELEAF_XDOC_TEMPLATE_FILE);
+
+        final String expectedXdoc = getFileContents(getPath("correct_all_sections.txt").toFile());
+        final String actualXdoc = getFileContents(actualNotes);
+
+        assertEquals(expectedXdoc, actualXdoc);
+    }
+
+    @Test
+    public void testGenerateWithFreemarkerOnlyBreakingCompatibilitySection() throws Exception{
+        final Map<String, Object> templateVariables = new HashMap<>();
+        templateVariables.put("releaseNo", "1.0.0");
+        templateVariables.put("breakingMessages", getMockReleasenotesMessages());
+
+        final File actualNotes = tmpDir.newFile("xdoc6.txt");
+        TemplateProcessor.generateWithFreemarker(templateVariables, actualNotes.getAbsolutePath(),
+            FREEMARKER_XDOC_TEMPLATE_FILE);
+
+        final String expectedXdoc =
+            getFileContents(getPath("correct_breaking_compatibility_section.txt").toFile());
+        final String actualXdoc = getFileContents(actualNotes);
+
+        assertEquals(expectedXdoc, actualXdoc);
+    }
+
+    @Test
+    public void testGenerateWithFreemarkerOnlyNewSection() throws Exception{
+        final Map<String, Object> templateVariables = new HashMap<>();
+        templateVariables.put("releaseNo", "1.0.0");
+        templateVariables.put("newMessages", getMockReleasenotesMessages());
+
+        final File actualNotes = tmpDir.newFile("xdoc7.txt");
+        TemplateProcessor.generateWithFreemarker(templateVariables, actualNotes.getAbsolutePath(),
+            FREEMARKER_XDOC_TEMPLATE_FILE);
+
+        final String expectedXdoc = getFileContents(getPath("correct_new_section.txt").toFile());
+        final String actualXdoc = getFileContents(actualNotes);
+
+        assertEquals(expectedXdoc, actualXdoc);
+    }
+
+    @Test
+    public void testGenerateWithFreemarkerOnlyBugSection() throws Exception{
+        final Map<String, Object> templateVariables = new HashMap<>();
+        templateVariables.put("releaseNo", "1.0.0");
+        templateVariables.put("bugMessages", getMockReleasenotesMessages());
+
+        final File actualNotes = tmpDir.newFile("xdoc8.txt");
+        TemplateProcessor.generateWithFreemarker(templateVariables, actualNotes.getAbsolutePath(),
+            FREEMARKER_XDOC_TEMPLATE_FILE);
+
+        final String expectedXdoc = getFileContents(getPath("correct_bug_section.txt").toFile());
+        final String actualXdoc = getFileContents(actualNotes);
+
+        assertEquals(expectedXdoc, actualXdoc);
+    }
+
+    @Test
+    public void testGenerateWithFreemarkerOnlyNotesSection() throws Exception{
+        final Map<String, Object> templateVariables = new HashMap<>();
+        templateVariables.put("releaseNo", "1.0.0");
+        templateVariables.put("notesMessages", getMockReleasenotesMessages());
+
+        final File actualNotes = tmpDir.newFile("xdoc9.txt");
+        TemplateProcessor.generateWithFreemarker(templateVariables, actualNotes.getAbsolutePath(),
+            FREEMARKER_XDOC_TEMPLATE_FILE);
+
+        final String expectedXdoc = getFileContents(getPath("correct_notes_section.txt").toFile());
+        final String actualXdoc = getFileContents(actualNotes);
+
+        assertEquals(expectedXdoc, actualXdoc);
+    }
+
+    @Test
+    public void testGenerateWithFreemarkerAllSections() throws Exception{
+        final Map<String, Object> templateVariables = new HashMap<>();
+        templateVariables.put("releaseNo", "1.0.0");
+        templateVariables.put("breakingMessages", getMockReleasenotesMessages());
+        templateVariables.put("newMessages", getMockReleasenotesMessages());
+        templateVariables.put("bugMessages", getMockReleasenotesMessages());
+        templateVariables.put("notesMessages", getMockReleasenotesMessages());
+
+        final File actualNotes = tmpDir.newFile("xdoc10.txt");
+        TemplateProcessor.generateWithFreemarker(templateVariables, actualNotes.getAbsolutePath(),
+            FREEMARKER_XDOC_TEMPLATE_FILE);
 
         final String expectedXdoc = getFileContents(getPath("correct_all_sections.txt").toFile());
         final String actualXdoc = getFileContents(actualNotes);
