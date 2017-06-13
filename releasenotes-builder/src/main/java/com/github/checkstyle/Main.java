@@ -172,8 +172,8 @@ public final class Main {
                 TemplateProcessor.getTemplateVariables(releaseNotes, releaseNumber);
 
         if (cliOptions.isGenerateAll() || cliOptions.isGenerateXdoc()) {
-            TemplateProcessor.generateWithThymeleaf(templateVariables,
-                    outputLocation + XDOC_FILENAME, THYMELEAF_XDOC_TEMPLATE_FILE);
+            TemplateProcessor.generateWithFreemarker(templateVariables,
+                    outputLocation + XDOC_FILENAME, FREEMARKER_XDOC_TEMPLATE_FILE);
         }
         if (cliOptions.isGenerateAll() || cliOptions.isGenerateTw()) {
             TemplateProcessor.generateWithFreemarker(templateVariables,
