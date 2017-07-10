@@ -20,15 +20,17 @@ static void main(String[] args) {
             deleteDir(cfg.tmpReportsDir)
         }
 
+        def checkstyleBaseReportInfo = null
         if (cfg.isDiffMode()) {
-            generateCheckstyleReport(cfg.getCheckstyleToolBaseConfig())
+            checkstyleBaseReportInfo = generateCheckstyleReport(cfg.getCheckstyleToolBaseConfig())
         }
-        generateCheckstyleReport(cfg.getCheckstyleToolPatchConfig())
+
+        def checkstylePatchReportInfo = generateCheckstyleReport(cfg.getCheckstyleToolPatchConfig())
         deleteDir(cfg.reportsDir)
         moveDir(cfg.tmpReportsDir, cfg.reportsDir)
 
         generateDiffReport(cfg.getDiffToolConfig())
-        generateSummaryIndexHtml(cfg.diffDir)
+        generateSummaryIndexHtml(cfg.diffDir, checkstyleBaseReportInfo, checkstylePatchReportInfo)
     }
     else {
         throw new IllegalArgumentException('Error: invalid command line arguments!')
@@ -188,6 +190,22 @@ def generateCheckstyleReport(cfg) {
     executeCmd("groovy launch.groovy --listOfProjects $cfg.listOfProjects --config $cfg.checkstyleCfg --ignoreExceptions --ignoreExcludes")
     println "Moving Checkstyle report into $cfg.destDir ..."
     moveDir("reports", cfg.destDir)
+
+    return new CheckstyleReportInfo(
+        cfg.branch,
+        getLastCommitSha(cfg.localGitRepo, cfg.branch),
+        getLastCommitMsg(cfg.localGitRepo, cfg.branch)
+    )
+}
+
+def getLastCommitSha(gitRepo, branch) {
+    executeCmd("git checkout $branch", gitRepo)
+    return 'git rev-parse HEAD'.execute(null, gitRepo).text.trim()
+}
+
+def getLastCommitMsg(gitRepo, branch) {
+    executeCmd("git checkout $branch", gitRepo)
+    return 'git log -1 --pretty=%B'.execute(null, gitRepo).text.trim()
 }
 
 def generateDiffReport(cfg) {
@@ -244,7 +262,7 @@ def getPathToDiffToolJar(diffToolDir) {
     return pathToDiffToolJar
 }
 
-def generateSummaryIndexHtml(diffDir) {
+def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo, checkstylePatchReportInfo) {
     println 'Starting creating report summary page ...'
     def projectsStatistic = getProjectsStatistic(diffDir)
     def summaryIndexHtml = new File("$diffDir/index.html")
@@ -254,7 +272,7 @@ def generateSummaryIndexHtml(diffDir) {
     summaryIndexHtml << ('<h3><span style="color: #ff0000;">')
     summaryIndexHtml << ('<strong>WARNING: Excludes are ignored by diff.groovy.</strong>')
     summaryIndexHtml << ('</span></h3>')
-    summaryIndexHtml << ('\n')
+    printReportInfoSection(summaryIndexHtml, checkstyleBaseReportInfo, checkstylePatchReportInfo)
     projectsStatistic.each {
         project, diffCount ->
             summaryIndexHtml << ("<a href='$project/index.html'>$project</a>")
@@ -267,6 +285,25 @@ def generateSummaryIndexHtml(diffDir) {
     summaryIndexHtml << ('</body></html>')
 
     println 'Creating report summary page finished...'
+}
+
+def printReportInfoSection(summaryIndexHtml, checkstyleBaseReportInfo, checkstylePatchReportInfo) {
+    summaryIndexHtml << ('<h6>')
+    if (checkstyleBaseReportInfo) {
+        summaryIndexHtml << "Base branch: $checkstyleBaseReportInfo.branch"
+        summaryIndexHtml << ('<br />')
+        summaryIndexHtml << "Base branch last commit SHA: $checkstyleBaseReportInfo.commitSha"
+        summaryIndexHtml << ('<br />')
+        summaryIndexHtml << "Base branch last commit message: \"$checkstyleBaseReportInfo.commitMsg\""
+        summaryIndexHtml << ('<br />')
+        summaryIndexHtml << ('<br />')
+    }
+    summaryIndexHtml << "Patch branch: $checkstylePatchReportInfo.branch"
+    summaryIndexHtml << ('<br />')
+    summaryIndexHtml << "Patch branch last commit SHA: $checkstylePatchReportInfo.commitSha"
+    summaryIndexHtml << ('<br />')
+    summaryIndexHtml << "Patch branch last commit message: \"$checkstylePatchReportInfo.commitMsg\""
+    summaryIndexHtml << ('</h6>')
 }
 
 def getProjectsStatistic(diffDir) {
@@ -412,5 +449,17 @@ class Config {
             shortFilePaths: shortFilePaths,
             mode: mode
         ]
+    }
+}
+
+class CheckstyleReportInfo {
+    def branch
+    def commitSha
+    def commitMsg
+
+    CheckstyleReportInfo(branch, commitSha, commitMsg) {
+        this.branch = branch
+        this.commitSha = commitSha
+        this.commitMsg = commitMsg
     }
 }
