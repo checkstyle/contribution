@@ -29,31 +29,12 @@
     <property name="severity" value="ignore"/>
     <property name="acceptOnMatch" value="false"/>
   </module>
-  <module name="SuppressionCommentFilter">
-    <!--
-      Use suppressions.xml for suppressions, this is only example.
-      checkFormat will prevent suppression comments from being valid.
-    -->
-    <property name="checkFormat" value="IGNORETHIS"/>
-    <property name="offCommentFormat" value="CSOFF\: .*"/>
-    <property name="onCommentFormat" value="CSON\: .*"/>
-  </module>
   <!--     require separate config file
   <module name="SuppressionFilter">
     <property name="file" value="${checkstyle.suppressions.file}"/>
   </module>
   -->
   <module name="SuppressWarningsFilter"/>
-  <module name="SuppressWithNearbyCommentFilter">
-    <!--
-      Use suppressions.xml for suppressions, this is only example.
-      checkFormat will prevent suppression comments from being valid.
-    -->
-    <property name="checkFormat" value="IGNORETHIS"/>
-    <property name="commentFormat" value="SUPPRESS CHECKSTYLE, (\w+)"/>
-    <property name="messageFormat" value="$1"/>
-    <property name="influenceFormat" value="-1"/>
-  </module>
 
   <!-- Headers -->
   <module name="Header">
@@ -464,6 +445,26 @@
     <module name="WhitespaceAfter"/>
     <module name="WhitespaceAround"/>
 
+    <!-- Filters -->
+    <module name="SuppressionCommentFilter">
+      <!--
+        Use suppressions.xml for suppressions, this is only example.
+        checkFormat will prevent suppression comments from being valid.
+      -->
+      <property name="checkFormat" value="IGNORETHIS"/>
+      <property name="offCommentFormat" value="CSOFF\: .*"/>
+      <property name="onCommentFormat" value="CSON\: .*"/>
+    </module>
+    <module name="SuppressWithNearbyCommentFilter">
+      <!--
+        Use suppressions.xml for suppressions, this is only example.
+        checkFormat will prevent suppression comments from being valid.
+      -->
+      <property name="checkFormat" value="IGNORETHIS"/>
+      <property name="commentFormat" value="SUPPRESS CHECKSTYLE, (\w+)"/>
+      <property name="messageFormat" value="$1"/>
+      <property name="influenceFormat" value="-1"/>
+    </module>
   </module>
 
 </module>
