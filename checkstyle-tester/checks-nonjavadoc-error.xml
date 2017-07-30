@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE module PUBLIC
           "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
-          "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+          "http://checkstyle.sourceforge.net/dtds/configuration_1_3.dtd">
 
 <module name="Checker">
   <!--
@@ -16,9 +16,9 @@
 
   <property name="severity" value="ignore"/>
 
-  <property name="fileExtensions" value="java, properties, xml"/>
+  <property name="fileExtensions" value="java, properties, xml, vm, g, g4, dtd"/>
 
-  <!-- BeforeExecutionFileFilters is required for sources of java9 -->
+  <!-- BeforeExecutionFileFilters is required for sources that are based on java9 -->
   <module name="BeforeExecutionExclusionFileFilter">
       <property name="fileNamePattern" value="module\-info\.java$" />
   </module>
@@ -51,7 +51,8 @@
     -->
   </module>
 
-  <!--  deprecated old Javadoc Checks , too much bugs in them
+  <!-- Javadoc Comments -->
+  <!-- deprecated old Javadoc Checks , too much bugs in them
   <module name="JavadocPackage">
     <property name="allowLegacy" value="false"/>
   </module>
@@ -60,7 +61,7 @@
   <!-- Miscellaneous -->
   <module name="NewlineAtEndOfFile"/>
   <module name="Translation">
-    <property name="requiredTranslations" value="de, fr, fi, es, pt, ja, tr"/>
+    <property name="requiredTranslations" value="de, fr, fi, es, pt, ja, tr, zh"/>
   </module>
   <module name="UniqueProperties"/>
 
@@ -80,17 +81,42 @@
       <property name="message" value="First sentence in a comment should start with a capital letter"/>
   </module>
   -->
-  <!-- we need only one instance of Check
   <module name="RegexpSingleline">
     <property name="format" value="\s+$"/>
     <property name="minimum" value="0"/>
     <property name="maximum" value="0"/>
   </module>
-
+  <!-- we need only one instance of Check
   <module name="RegexpSingleline">
       <property name="format" value="/\*\* +\p{javaLowerCase}"/>
       <property name="fileExtensions" value="java"/>
       <property name="message" value="First sentence in a comment should start with a capital letter"/>
+  </module>
+  <module name="RegexpSingleline">
+    <property name="format" value="^(?!(.*http|import)).{101,}$"/>
+    <property name="fileExtensions" value="g, g4"/>
+    <property name="message" value="Line should not be longer then 100 symbols"/>
+  </module>
+  -->
+  <module name="RegexpOnFilename" />
+  <!-- we need only one instance of Check
+  <module name="RegexpOnFilename">
+      <property name="folderPattern" value="[\\/]src[\\/]\w+[\\/]java[\\/]"/>
+      <property name="fileNamePattern" value="\.java$"/>
+      <property name="match" value="false"/>
+      <message key="regexp.filepath.mismatch" value="Only java files should be located in the ''src/*/java'' folders."/>
+  </module>
+  <module name="RegexpOnFilename">
+      <property name="folderPattern" value="[\\/]src[\\/]xdocs[\\/]"/>
+      <property name="fileNamePattern" value="\.(xml)|(vm)$"/>
+      <property name="match" value="false"/>
+      <message key="regexp.filepath.mismatch" value="All files in the ''src/xdocs'' folder should have the ''xml'' or ''vm'' extension."/>
+  </module>
+  <module name="RegexpOnFilename">
+      <property name="folderPattern" value="[\\/]src[\\/]it[\\/]java[\\/]"/>
+      <property name="fileNamePattern" value="^((\w+Test)|(Base\w+))\.java$"/>
+      <property name="match" value="false"/>
+      <message key="regexp.filepath.mismatch" value="All files in the ''src/it/java'' folder should be named ''*Test.java'' or ''Base*.java''."/>
   </module>
   -->
 
@@ -109,7 +135,13 @@
 
     <!-- Annotations -->
     <module name="AnnotationLocation">
+      <property name="tokens" value="ANNOTATION_DEF"/>
+      <property name="tokens" value="ANNOTATION_FIELD_DEF"/>
       <property name="allowSamelineSingleParameterlessAnnotation" value="false"/>
+    </module>
+    <module name="AnnotationLocation">
+      <property name="tokens" value="PARAMETER_DEF"/>
+      <property name="allowSamelineMultipleAnnotations" value="true"/>
     </module>
     <module name="AnnotationUseStyle"/>
     <module name="MissingDeprecated"/>
@@ -117,7 +149,12 @@
       <property name="javaFiveCompatibility" value="true"/>
     </module>
     <module name="PackageAnnotation"/>
-    <module name="SuppressWarnings"/>
+    <module name="SuppressWarnings">
+        <property name="format" value="^((?!unchecked|deprecation|rawtypes).)*$"/>
+        <message key="suppressed.warning.not.allowed"
+             value="The warning ''{0}'' cannot be suppressed at this location. Only few javac warnings are allowed to suppress. If try to suppress checkstyle/pmd/..... violation please do this in their config file. If you try to suppress IntelliJ IDEA inspection, please use javadoc block tag @noinspection"
+             />
+    </module>
     <module name="SuppressWarningsHolder"/>
 
     <!-- Block Checks -->
@@ -125,6 +162,21 @@
       <property name="allowInSwitchCase" value="true"/>
     </module>
     <module name="EmptyBlock">
+      <property name="tokens" value="LITERAL_CATCH"/>
+      <property name="tokens" value="ARRAY_INIT"/>
+      <property name="tokens" value="LITERAL_DEFAULT"/>
+      <property name="tokens" value="LITERAL_CASE"/>
+      <property name="tokens" value="INSTANCE_INIT"/>
+      <property name="tokens" value="LITERAL_DO"/>
+      <property name="tokens" value="LITERAL_ELSE"/>
+      <property name="tokens" value="LITERAL_FINALLY"/>
+      <property name="tokens" value="LITERAL_FOR"/>
+      <property name="tokens" value="LITERAL_IF"/>
+      <property name="tokens" value="LITERAL_SWITCH"/>
+      <property name="tokens" value="LITERAL_SYNCHRONIZED"/>
+      <property name="tokens" value="LITERAL_TRY"/>
+      <property name="tokens" value="LITERAL_WHILE"/>
+      <property name="tokens" value="STATIC_INIT"/>
       <property name="option" value="text"/>
     </module>
     <module name="EmptyCatchBlock"/>
@@ -132,12 +184,34 @@
       <property name="maxLineLength" value="100"/>
     </module>
     <module name="NeedBraces"/>
+    <module name="NeedBraces">
+      <property name="tokens" value="LAMBDA"/>
+      <property name="allowSingleLineStatement" value="true"/>
+    </module>
     <module name="RightCurly">
+      <property name="tokens" value="METHOD_DEF"/>
+      <property name="tokens" value="CTOR_DEF"/>
+      <property name="tokens" value="CLASS_DEF"/>
+      <property name="tokens" value="INSTANCE_INIT"/>
+      <property name="tokens" value="LITERAL_FOR"/>
+      <property name="tokens" value="STATIC_INIT"/>
+      <property name="tokens" value="LITERAL_WHILE"/>
+      <property name="tokens" value="LITERAL_CATCH"/>
+      <property name="tokens" value="LITERAL_ELSE"/>
+      <property name="tokens" value="LITERAL_FINALLY"/>
+      <property name="tokens" value="LITERAL_IF"/>
+      <property name="tokens" value="LITERAL_TRY"/>
       <property name="option" value="alone"/>
+    </module>
+    <module name="RightCurly">
+      <property name="tokens" value="LITERAL_DO"/>
+      <property name="option" value="same"/>
     </module>
 
     <!-- Class Design -->
-    <module name="DesignForExtension"/>
+    <module name="DesignForExtension">
+      <property name="ignoredAnnotations" value="Override, Test, Before, After, BeforeClass, AfterClass"/>
+    </module>
     <module name="FinalClass"/>
     <module name="HideUtilityClassConstructor"/>
     <module name="InnerTypeLast"/>
@@ -166,10 +240,20 @@
         <property name="ignoreSetter" value="true"/>
         <property name="setterCanReturnItsClass" value="true"/>
     </module>
-    <module name="IllegalCatch"/>
-    <module name="IllegalInstantiation"/>
+    <module name="IllegalCatch">
+        <property name="illegalClassNames" value="java.lang.Exception, java.lang.Throwable, java.lang.RuntimeException, java.lang.NullPointerException"/>
+    </module>
+    <module name="IllegalInstantiation">
+        <property name="classes" value="org.xml.sax.SAXException, org.xml.sax.SAXParseException, org.apache.commons.beanutils.ConversionException,
+            org.antlr.v4.runtime.misc.ParseCancellationException, antlr.RecognitionException, antlr.TokenStreamException, antlr.TokenStreamRecognitionException, antlr.ANTLRException"/>
+    </module>
     <module name="IllegalThrows"/>
-    <module name="IllegalToken"/>
+    <module name="IllegalToken">
+        <property name="tokens" value="LABELED_STAT"/>
+        <property name="tokens" value="LITERAL_NATIVE"/>
+        <property name="tokens" value="LITERAL_VOLATILE"/>
+        <property name="tokens" value="LITERAL_ASSERT"/>
+    </module>
     <module name="IllegalTokenText"/>
     <module name="IllegalType"/>
     <module name="InnerAssignment"/>
@@ -198,15 +282,18 @@
     <module name="OverloadMethodsDeclarationOrder"/>
     <module name="PackageDeclaration"/>
     <module name="ParameterAssignment"/>
+    <module name="RequireThis"/>
+    <!-- extra config for RequireThis module base of missed regression -->
     <module name="RequireThis">
-      <!--
-        we will not use that fanatic validation, extra modifiers pollute a code
-        it is better to use different names for arguments, or expect IDE to highlight field.
-        But this Check will exists as it was created by community demand.
-      -->
-      <property name="severity" value="ignore"/>
+      <property name="validateOnlyOverlapping" value="false"/>
     </module>
-    <module name="ReturnCount"/>
+    <module name="ReturnCount">
+      <property name="maxForVoid" value="0"/>
+    </module>
+    <module name="ReturnCount">
+      <property name="id" value="returnCountMaxOne"/>
+      <property name="max" value="1"/>
+    </module>
     <module name="SimplifyBooleanExpression"/>
     <module name="SimplifyBooleanReturn"/>
     <module name="StringLiteralEquality"/>
@@ -215,12 +302,28 @@
     <module name="UnnecessaryParentheses"/>
     <module name="VariableDeclarationUsageDistance"/>
 
+    <!-- Filters-->
+    <module name="SuppressionCommentFilter">
+      <!--
+        Use suppressions.xml for suppressions, this is only example.
+        checkFormat will prevent suppression comments from being valid.
+      -->
+      <property name="checkFormat" value="IGNORETHIS"/>
+      <property name="offCommentFormat" value="CSOFF\: .*"/>
+      <property name="onCommentFormat" value="CSON\: .*"/>
+    </module>
+    <module name="SuppressWithNearbyCommentFilter">
+      <property name="commentFormat" value="-@cs\[(\w{8,}(\|\w{8,})*)\] \w[\(\)\-\.\'\`\,\:\;\w ]{10,}"/>
+      <property name="checkFormat" value="$1"/>
+      <property name="influenceFormat" value="3"/>
+    </module>
+
     <!-- Imports -->
     <module name="AvoidStarImport"/>
     <module name="AvoidStaticImport"/>
     <module name="CustomImportOrder">
       <property name="customImportOrderRules" value="STATIC###STANDARD_JAVA_PACKAGE###SPECIAL_IMPORTS"/>
-      <property name="specialImportsRegExp" value="org"/>
+      <property name="specialImportsRegExp" value="^org\."/>
       <property name="sortImportsInGroupAlphabetically" value="true"/>
       <property name="separateLineBetweenGroups" value="true"/>
     </module>
@@ -228,10 +331,11 @@
     <!-- require separate config file
     <module name="ImportControl">
       <property name="file" value="${checkstyle.importcontrol.file}"/>
+      <property name="path" value="^.*[\\/]src[\\/]main[\\/].*$"/>
     </module>
     -->
     <module name="ImportOrder">
-      <property name="groups" value="/^javax?\./,org"/>
+      <property name="groups" value="/^java\./,javax,org"/>
       <property name="ordered" value="true"/>
       <property name="separated" value="true"/>
       <property name="option" value="top"/>
@@ -265,6 +369,7 @@
     <!-- deprecated Checks, too much bugs in them
     <module name="JavadocType">
       <property name="authorFormat" value="\S"/>
+      <!-- avoid errors on tag '@noinspection' -->
       <property name="allowUnknownTags" value="true"/>
     </module>
     <module name="JavadocVariable"/>
@@ -290,13 +395,17 @@
         <!-- Default classes are also listed-->
         <property name="excludedClasses" value="boolean, byte, char, double, float, int, long, short,  void, Boolean, Byte, Character, Double, Float, Integer, Long, Short, Void, Object, Class, String, StringBuffer, StringBuilder, ArrayIndexOutOfBoundsException, Exception, RuntimeException, IllegalArgumentException, IllegalStateException, IndexOutOfBoundsException, NullPointerException, Throwable, SecurityException, UnsupportedOperationException, List, ArrayList, Deque, Queue, LinkedList, Set, HashSet, SortedSet, TreeSet, Map, HashMap, SortedMap, TreeMap, DetailsAST, CheckstyleException, UnsupportedEncodingException, BuildException, ConversionException, FileNotFoundException, TestException, Log, Sets, Multimap, TokenStreamRecognitionException, RecognitionException, TokenStreamException, IOException"/>
     </module>
-    <module name="CyclomaticComplexity"/>
+    <module name="CyclomaticComplexity">
+      <property name="switchBlockAsSingleDecisionPoint" value="true"/>
+    </module>
     <module name="JavaNCSS"/>
     <module name="NPathComplexity"/>
 
     <!-- Misc -->
     <module name="ArrayTypeStyle"/>
-    <module name="AvoidEscapedUnicodeCharacters"/>
+    <module name="AvoidEscapedUnicodeCharacters">
+      <property name="allowIfAllCharactersEscaped" value="true"/>
+    </module>
     <module name="CommentsIndentation"/>
     <module name="DescendantToken"/>
     <module name="FileContentsHolder"/>
@@ -312,6 +421,7 @@
       <property name="basicOffset" value="4"/>
       <property name="braceAdjustment" value="0"/>
       <property name="caseIndent" value="4"/>
+      <property name="throwsIndent" value="8"/>
     </module>
     <module name="OuterTypeFilename"/>
     <!-- JavadocAST Checks - disabled due to performance problem
@@ -332,7 +442,7 @@
     <!-- Naming Conventions -->
     <module name="AbbreviationAsWordInName">
       <property name="ignoreFinal" value="false"/>
-      <property name="allowedAbbreviationLength" value="1"/>
+      <property name="allowedAbbreviationLength" value="0"/>
       <property name="allowedAbbreviations" value="AST"/>
     </module>
     <module name="AbstractClassName"/>
@@ -393,6 +503,7 @@
     <module name="EmptyForIteratorPad"/>
     <module name="EmptyLineSeparator">
       <property name="allowNoEmptyLineBetweenFields" value="true"/>
+      <property name="allowMultipleEmptyLinesInsideClassMembers" value="false"/>
     </module>
     <module name="GenericWhitespace"/>
     <module name="MethodParamPad"/>
@@ -407,13 +518,42 @@
       <property name="tokens" value="UNARY_MINUS"/>
       <property name="tokens" value="UNARY_PLUS"/>
       <property name="tokens" value="ARRAY_DECLARATOR"/>
+      <property name="tokens" value="INDEX_OP"/>
+      <property name="tokens" value="METHOD_REF"/>
     </module>
     <module name="NoWhitespaceBefore"/>
     <module name="NoWhitespaceBefore">
       <property name="tokens" value="DOT"/>
+      <property name="tokens" value="METHOD_REF"/>
       <property name="allowLineBreaks" value="true"/>
     </module>
-    <module name="OperatorWrap"/>
+    <module name="OperatorWrap">
+      <property name="tokens" value="QUESTION"/>
+      <property name="tokens" value="COLON"/>
+      <property name="tokens" value="EQUAL"/>
+      <property name="tokens" value="NOT_EQUAL"/>
+      <property name="tokens" value="DIV"/>
+      <property name="tokens" value="PLUS"/>
+      <property name="tokens" value="MINUS"/>
+      <property name="tokens" value="STAR"/>
+      <property name="tokens" value="MOD"/>
+      <property name="tokens" value="SR"/>
+      <property name="tokens" value="BSR"/>
+      <property name="tokens" value="GE"/>
+      <property name="tokens" value="GT"/>
+      <property name="tokens" value="SL"/>
+      <property name="tokens" value="LE"/>
+      <property name="tokens" value="LT"/>
+      <property name="tokens" value="BXOR"/>
+      <property name="tokens" value="BOR"/>
+      <property name="tokens" value="LOR"/>
+      <property name="tokens" value="BAND"/>
+      <property name="tokens" value="LAND"/>
+      <property name="tokens" value="TYPE_EXTENSION_AND"/>
+      <property name="tokens" value="LITERAL_INSTANCEOF"/>
+      <property name="tokens" value="METHOD_REF"/>
+      <property name="option" value="nl"/>
+    </module>
     <module name="OperatorWrap">
       <property name="tokens" value="ASSIGN"/>
       <property name="tokens" value="DIV_ASSIGN"/>
@@ -432,39 +572,25 @@
     <module name="ParenPad"/>
     <module name="SeparatorWrap">
       <property name="tokens" value="DOT"/>
+      <property name="tokens" value="AT"/>
+      <property name="tokens" value="METHOD_REF"/>
       <property name="option" value="nl"/>
     </module>
     <module name="SeparatorWrap">
       <property name="tokens" value="COMMA"/>
+      <property name="tokens" value="RBRACK"/>
+      <property name="tokens" value="ARRAY_DECLARATOR"/>
+      <property name="tokens" value="ELLIPSIS"/>
+      <property name="tokens" value="SEMI"/>
       <property name="option" value="EOL"/>
     </module>
-    <module name="com.puppycrawl.tools.checkstyle.checks.whitespace.SingleSpaceSeparator">
+    <module name="SingleSpaceSeparator">
       <property name="validateComments" value="false"/>
     </module>
     <module name="TypecastParenPad"/>
     <module name="WhitespaceAfter"/>
     <module name="WhitespaceAround"/>
 
-    <!-- Filters -->
-    <module name="SuppressionCommentFilter">
-      <!--
-        Use suppressions.xml for suppressions, this is only example.
-        checkFormat will prevent suppression comments from being valid.
-      -->
-      <property name="checkFormat" value="IGNORETHIS"/>
-      <property name="offCommentFormat" value="CSOFF\: .*"/>
-      <property name="onCommentFormat" value="CSON\: .*"/>
-    </module>
-    <module name="SuppressWithNearbyCommentFilter">
-      <!--
-        Use suppressions.xml for suppressions, this is only example.
-        checkFormat will prevent suppression comments from being valid.
-      -->
-      <property name="checkFormat" value="IGNORETHIS"/>
-      <property name="commentFormat" value="SUPPRESS CHECKSTYLE, (\w+)"/>
-      <property name="messageFormat" value="$1"/>
-      <property name="influenceFormat" value="-1"/>
-    </module>
   </module>
 
 </module>
