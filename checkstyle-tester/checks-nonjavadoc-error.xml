@@ -371,7 +371,7 @@
     <!-- deprecated Checks, too much bugs in them
     <module name="JavadocType">
       <property name="authorFormat" value="\S"/>
-      <!-- avoid errors on tag '@noinspection' -->
+      < !-- avoid errors on tag '@noinspection' -- >
       <property name="allowUnknownTags" value="true"/>
     </module>
     <module name="JavadocVariable"/>
