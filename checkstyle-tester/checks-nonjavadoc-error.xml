@@ -371,7 +371,6 @@
     <!-- deprecated Checks, too much bugs in them
     <module name="JavadocType">
       <property name="authorFormat" value="\S"/>
-      < !-- avoid errors on tag '@noinspection' -- >
       <property name="allowUnknownTags" value="true"/>
     </module>
     <module name="JavadocVariable"/>
@@ -381,7 +380,7 @@
     <module name="SingleLineJavadoc"/>
     <module name="WriteTag"/>
     <module name="SummaryJavadoc"/>
-  -->
+    -->
 
     <!-- Metrics -->
     <module name="BooleanExpressionComplexity">
