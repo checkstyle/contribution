@@ -284,11 +284,9 @@
     <module name="ParameterAssignment"/>
     <module name="RequireThis"/>
     <!-- extra config for RequireThis module base of missed regression -->
-    <!-- disabled till NPE is resolved
     <module name="RequireThis">
       <property name="validateOnlyOverlapping" value="false"/>
     </module>
-    -->
     <module name="ReturnCount">
       <property name="maxForVoid" value="0"/>
     </module>
