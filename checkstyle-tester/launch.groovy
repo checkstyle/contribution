@@ -212,7 +212,7 @@ def runMavenExecution(srcDir, excludes, checkstyleConfig, ignoreExceptions) {
     def mvnClean = "mvn --batch-mode clean"
     executeCmd(mvnClean)
     println "Running Checkstyle on $srcDir ... with excludes $excludes"
-    def mvnSite = "mvn -e --batch-mode site -Dcheckstyle.config.location=$checkstyleConfig -Dcheckstyle.excludes=$excludes -DMAVEN_OPTS=-Xmx2048m"
+    def mvnSite = "MAVEN_OPTS=-Xmx2048m mvn -e --batch-mode site -Dcheckstyle.config.location=$checkstyleConfig -Dcheckstyle.excludes=$excludes"
     if (ignoreExceptions) {
         mvnSite = mvnSite + ' -Dcheckstyle.failsOnError=false'
     }
