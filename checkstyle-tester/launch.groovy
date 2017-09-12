@@ -287,9 +287,7 @@ def removeEmptyDirectories(file) {
 
 def executeCmd(cmd, dir =  new File("").getAbsoluteFile()) {
     def osSpecificCmd = getOsSpecificCmd(cmd)
-    def env = System.getenv().collect { k, v -> "$k=$v" }
-    env.add("MAVEN_OPTS=-Xmx2048m")
-    def proc = osSpecificCmd.execute(env, dir)
+    def proc = osSpecificCmd.execute(null, dir)
     proc.consumeProcessOutput(System.out, System.err)
     proc.waitFor()
     if (proc.exitValue() != 0) {
