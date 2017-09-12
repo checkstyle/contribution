@@ -10,6 +10,18 @@ export EXCLUDES_ACCUM=""
 while read line ; do
     [[ "$line" == \#* ]] && continue # Skip lines with comments
     [[ -z "$line" ]] && continue     # Skip empty lines
+    [[ "$line" == "\r\n" ]] && continue # Skip new lines
+if [[ $line =~ $'\n' ]]; then
+  echo "found new line";
+  continue
+fi
+echo $line|hexdump -v
+len=${#line}
+echo "length is $len"
+if (( $len < 2 )); then
+  echo "line too short";
+  continue
+fi
     
     REPO_NAME=`echo $line | cut -d '|' -f 1`
     REPO_TYPE=`echo $line | cut -d '|' -f 2`
