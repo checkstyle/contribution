@@ -44,7 +44,7 @@ def generateCheckstyleReport(cliOptions) {
     println 'Testing Checkstyle started'
 
     def targetDir = 'target'
-    def srcDir = "src/main/java"
+    def srcDir = getOsSpecificPath("src", "main", "java")
     def reposDir = 'repositories'
     def reportsDir = 'reports'
     createWorkDirsIfNotExist(srcDir, reposDir, reportsDir)
@@ -81,16 +81,16 @@ def generateCheckstyleReport(cliOptions) {
 
                 cloneRepository(repoName, repoType, repoUrl, commitId, reposDir)
                 deleteDir(srcDir)
-                copyDir("$reposDir/$repoName", "$srcDir/$repoName")
+                copyDir(getOsSpecificPath("$reposDir", "$repoName"), getOsSpecificPath("$srcDir", "$repoName"))
                 runMavenExecution(srcDir, excludes, checkstyleCfg, ignoreExceptions)
                 postProcessCheckstyleReport(targetDir)
-                deleteDir("$srcDir/$repoName")
-                moveDir(targetDir, "$reportsDir/$repoName")
+                deleteDir(getOsSpecificPath("$srcDir", "$repoName"))
+                moveDir(targetDir, getOsSpecificPath("$reportsDir", "$repoName"))
             }
     }
 
     // restore empty_file to make src directory tracked by git
-    new File("$srcDir/empty_file").createNewFile()
+    new File(getOsSpecificPath("$srcDir", "empty_file")).createNewFile()
 }
 
 def createWorkDirsIfNotExist(srcDirPath, repoDirPath, reportsDirPath) {
@@ -109,7 +109,7 @@ def createWorkDirsIfNotExist(srcDirPath, repoDirPath, reportsDirPath) {
 }
 
 def cloneRepository(repoName, repoType, repoUrl, commitId, srcDir) {
-    def srcDestinationDir = "$srcDir/$repoName"
+    def srcDestinationDir = getOsSpecificPath("$srcDir", "$repoName")
     if (!Files.exists(Paths.get(srcDestinationDir))) {
         def cloneCmd = getCloneCmd(repoType, repoUrl, srcDestinationDir)
         println "Cloning $repoType repository '$repoName' to $srcDestinationDir folder ..."
@@ -221,18 +221,19 @@ def runMavenExecution(srcDir, excludes, checkstyleConfig, ignoreExceptions) {
 }
 
 def postProcessCheckstyleReport(targetDir) {
-    def siteDir = "$targetDir/site"
+    def siteDir = getOsSpecificPath("$targetDir", "site")
     println 'linking report to index.html'
-    new File("$siteDir/index.html").renameTo "$siteDir/_index.html"
-    Files.createLink(Paths.get("$siteDir/index.html"), Paths.get("$siteDir/checkstyle.html"))
+    new File(getOsSpecificPath("$siteDir", "index.html")).renameTo  getOsSpecificPath("$siteDir", "_index.html")
+    Files.createLink(Paths.get(getOsSpecificPath("$siteDir", "index.html")),
+        Paths.get(getOsSpecificPath("$siteDir", "checkstyle.html")))
 
     removeNonReferencedXrefFiles(siteDir)
-    removeEmptyDirectories(new File("$siteDir/xref"))
+    removeEmptyDirectories(new File(getOsSpecificPath("$siteDir", "xref")))
 
     new AntBuilder().replace(
-        file: "$targetDir/checkstyle-result.xml",
-        token: "checkstyle-tester/src/main/java",
-        value: "checkstyle-tester/repositories"
+        file: getOsSpecificPath("$targetDir", "checkstyle-result.xml"),
+        token: getOsSpecificPath("checkstyle-tester", "src", "main", "java"),
+        value: getOsSpecificPath("checkstyle-tester", "repositories")
     )
 }
 
@@ -242,10 +243,13 @@ def removeNonReferencedXrefFiles(siteDir) {
     def linesFromIndexHtml = Files.readAllLines(Paths.get("$siteDir/index.html"))
     def filesReferencedInReport = getFilesReferencedInReport(linesFromIndexHtml)
 
-    Paths.get("$siteDir/xref").toFile().eachFileRecurse {
+    Paths.get(getOsSpecificPath("$siteDir", "xref")).toFile().eachFileRecurse {
         fileObj ->
             def path = fileObj.getPath()
             path = path.substring(path.indexOf("xref"))
+            if (isWindows()) {
+                path = path.replace("\\", "/")
+            }
             def fileName = fileObj.getName()
             if (fileObj.isFile()
                     && !filesReferencedInReport.contains(path)
@@ -325,4 +329,14 @@ def getOsSpecificCmd(cmd) {
     else {
         osSpecificCmd = cmd
     }
+}
+
+def getOsSpecificPath(String ... name) {
+    def slash = isWindows() ? "\\" : "/"
+    def path = name.join(slash)
+    return path
+}
+
+def isWindows() {
+    return System.properties['os.name'].toLowerCase().contains('windows')
 }
