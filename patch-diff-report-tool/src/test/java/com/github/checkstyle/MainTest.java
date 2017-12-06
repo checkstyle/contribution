@@ -212,6 +212,17 @@ public class MainTest extends AbstractTest {
     }
 
     @Test
+    public void testConfigMessages() throws Exception {
+        final File outputDirectory = folder.getRoot();
+
+        Main.main("-patchReport", getPath("InputPatchReportEmpty.xml"), "-patchConfig",
+                getPath("InputPatchConfigMessages.xml"), "-output",
+                outputDirectory.getAbsolutePath());
+
+        assertReportOutput(getPath("ExpectedReportConfigMessages.html"), outputDirectory);
+    }
+
+    @Test
     public void testConstructor() throws Exception {
         assertUtilsClassHasPrivateConstructor(Main.class);
     }

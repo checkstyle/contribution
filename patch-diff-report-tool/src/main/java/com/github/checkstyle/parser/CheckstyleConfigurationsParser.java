@@ -66,6 +66,16 @@ public final class CheckstyleConfigurationsParser {
     private static final String VALUE_ATTR = "value";
 
     /**
+     * String value for "message" tag.
+     */
+    private static final String MESSAGE_TAG = "message";
+
+    /**
+     * String value for "key" attribute.
+     */
+    private static final String KEY_ATTR = "key";
+
+    /**
      * Private ctor, see parse method.
      */
     private CheckstyleConfigurationsParser() {
@@ -147,6 +157,10 @@ public final class CheckstyleConfigurationsParser {
                 else if (startElementName.equals(PROPERTY_TAG)) {
                     processPropertyTag(startElement, parent);
                 }
+                //message tag encounter
+                else if (startElementName.equals(MESSAGE_TAG)) {
+                    processMessageTag(startElement, parent);
+                }
             }
             if (event.isEndElement()) {
                 final EndElement endElement = event.asEndElement();
@@ -206,6 +220,33 @@ public final class CheckstyleConfigurationsParser {
             final Attribute attribute = attributes.next();
             final String attributeName = attribute.getName().toString();
             if (attributeName.equals(NAME_ATTR)) {
+                propertyName = attribute.getValue();
+            }
+            else if (attributeName.equals(VALUE_ATTR)) {
+                propertyValue = attribute.getValue();
+            }
+        }
+        parent.addProperty(propertyName, propertyValue);
+    }
+
+    /**
+     * Parses single "message" tag.
+     *
+     * @param startElement
+     *        start element of the tag.
+     * @param parent
+     *        parent module instance.
+     */
+    private static void processMessageTag(StartElement startElement,
+            ConfigurationModule parent) {
+        String propertyName = null;
+        String propertyValue = null;
+        final Iterator<Attribute> attributes = startElement
+                .getAttributes();
+        while (attributes.hasNext()) {
+            final Attribute attribute = attributes.next();
+            final String attributeName = attribute.getName().toString();
+            if (attributeName.equals(KEY_ATTR)) {
                 propertyName = attribute.getValue();
             }
             else if (attributeName.equals(VALUE_ATTR)) {
