@@ -39,6 +39,11 @@ public class Statistics {
     private Map<String, Integer> severityNumDiff = new HashMap<>();
 
     /**
+     * Map storing module numbers for difference.
+     */
+    private Map<String, Integer> moduleNumDiff = new HashMap<>();
+
+    /**
      * Number of files in difference.
      */
     private int fileNumDiff;
@@ -47,6 +52,11 @@ public class Statistics {
      * Map storing severity numbers for base source.
      */
     private Map<String, Integer> severityNumBase = new HashMap<>();
+
+    /**
+     * Map storing module numbers for base source.
+     */
+    private Map<String, Integer> moduleNumBase = new HashMap<>();
 
     /**
      * Number of files in the base source.
@@ -62,6 +72,11 @@ public class Statistics {
      * Map storing severity numbers for patch source.
      */
     private Map<String, Integer> severityNumPatch = new HashMap<>();
+
+    /**
+     * Map storing module numbers for patch source.
+     */
+    private Map<String, Integer> moduleNumPatch = new HashMap<>();
 
     /**
      * Number of files in the patch source.
@@ -90,12 +105,20 @@ public class Statistics {
         return totalSeverityNumber;
     }
 
+    public final Map<String, Integer> getModuleNumDiff() {
+        return moduleNumDiff;
+    }
+
     public final int getFileNumDiff() {
         return fileNumDiff;
     }
 
     public final Map<String, Integer> getSeverityNumBase() {
         return severityNumBase;
+    }
+
+    public final Map<String, Integer> getModuleNumBase() {
+        return moduleNumBase;
     }
 
     /**
@@ -113,6 +136,10 @@ public class Statistics {
 
     public final Map<String, Integer> getSeverityNumPatch() {
         return severityNumPatch;
+    }
+
+    public final Map<String, Integer> getModuleNumPatch() {
+        return moduleNumPatch;
     }
 
     public final int getFileNumBase() {
@@ -180,6 +207,32 @@ public class Statistics {
     }
 
     /**
+     * Registers single module record from indexed source.
+     *
+     * @param moduleName value of module record.
+     * @param index index of the source.
+     */
+    public void addModuleRecord(String moduleName, int index) {
+        final Map<String, Integer> moduleRecorder;
+        if (index == CheckstyleReportsParser.BASE_REPORT_INDEX) {
+            moduleRecorder = moduleNumBase;
+        }
+        else if (index == CheckstyleReportsParser.PATCH_REPORT_INDEX) {
+            moduleRecorder = moduleNumPatch;
+        }
+        else {
+            moduleRecorder = moduleNumDiff;
+        }
+        final Integer newNumber = moduleRecorder.get(moduleName);
+        if (newNumber != null) {
+            moduleRecorder.put(moduleName, newNumber + 1);
+        }
+        else {
+            moduleRecorder.put(moduleName, 1);
+        }
+    }
+
+    /**
      * Registers single file from numbered source.
      *
      * @param index index of the source.
@@ -203,6 +256,19 @@ public class Statistics {
         final Set<String> names = new HashSet<>(severityNumDiff.keySet());
         names.addAll(severityNumBase.keySet());
         names.addAll(severityNumPatch.keySet());
+        return names;
+    }
+
+    /**
+     * Getter for all module names encountered during
+     * statistics generation.
+     *
+     * @return module names.
+     */
+    public final Set<String> getModuleNames() {
+        final Set<String> names = new HashSet<>(moduleNumDiff.keySet());
+        names.addAll(moduleNumBase.keySet());
+        names.addAll(moduleNumPatch.keySet());
         return names;
     }
 

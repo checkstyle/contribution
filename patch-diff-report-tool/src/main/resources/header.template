@@ -112,6 +112,36 @@
 						<tr>
 					</table>
 
+					<th:block th:if="${statistics.moduleNames.size} > 0">
+						<br />
+						<table border="0" class="bodyTable">
+							<tr class="a">
+								<th>Report id</th>
+								<th:block th:each="name : ${statistics.moduleNames}">
+									<th th:text="${name}"> moduleName </th>
+								</th:block>
+							</tr>
+							<tr class="b">
+								<td>base</td>
+								<th:block th:each="name : ${statistics.moduleNames}">
+									<td th:id="${name} + @{ModuleNumBase}" th:text="${statistics.moduleNumBase.get(name) != null} ? ${statistics.moduleNumBase.get(name)} : '0'"> moduleNumBase </td>
+								</th:block>
+							</tr>
+							<tr class="a">
+								<td>patch</td>
+								<th:block th:each="name : ${statistics.moduleNames}">
+									<td th:id="${name} + @{ModuleNumPatch}" th:text="${statistics.moduleNumPatch.get(name) != null} ? ${statistics.moduleNumPatch.get(name)} : '0'"> moduleNumPatch </td>
+								</th:block>
+							</tr>
+							<tr class="d">
+								<td>difference</td>
+								<th:block th:each="name : ${statistics.moduleNames}">
+									<td th:id="${name} + @{ModuleNumDiff}" th:text="${statistics.moduleNumDiff.get(name) != null} ? ${statistics.moduleNumDiff.get(name)} : '0'"> moduleNumDiff </td>
+								</th:block>
+							<tr>
+						</table>
+					</th:block>
+
 					<br />
 					Number of unique base messages reported below: <span id="uniqueMessagesBase" th:text=${statistics.uniqueMessagesBase}>uniqueMessagesBase</span><br />
 					Number of unique patch messages reported below: <span id="uniqueMessagesPatch" th:text=${statistics.uniqueMessagesPatch}>uniqueMessagesPatch</span><br />
