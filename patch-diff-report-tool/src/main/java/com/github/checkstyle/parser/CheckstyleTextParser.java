@@ -178,6 +178,7 @@ public final class CheckstyleTextParser {
                     xref);
 
             statistics.addSeverityRecord(DEFAULT_SEVERITY, diff.getIndex());
+            statistics.addModuleRecord(DEFAULT_SOURCE, diff.getIndex());
 
             records.add(record);
         }
@@ -222,6 +223,7 @@ public final class CheckstyleTextParser {
                 DEFAULT_SOURCE, "File not found.", xref);
 
         statistics.addSeverityRecord(DEFAULT_SEVERITY, otherIndex);
+        statistics.addModuleRecord(DEFAULT_SOURCE, otherIndex);
 
         records.add(record);
 

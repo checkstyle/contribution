@@ -236,6 +236,7 @@ public final class CheckstyleReportsParser {
                     break;
                 case SOURCE_ATTR:
                     source = attribute.getValue();
+                    statistics.addModuleRecord(source, index);
                     break;
                 default:
                     break;
