@@ -5,7 +5,6 @@
 # Note: Use full paths
 # ============================================================
 
-MINIMIZE=true
 CONTACTSERVER=true
 
 PULL_REMOTE=pull
@@ -21,9 +20,11 @@ DIFF_JAR=$CONTRIBUTION_DIR/patch-diff-report-tool/target/patch-diff-report-tool-
 REPOSITORIES_DIR=$TESTER_DIR/repositories
 FINAL_RESULTS_DIR=$TESTER_DIR/reports/diff
 
-SITE_SOURCES_DIR=$TESTER_DIR/src/main/java
 SITE_SAVE_MASTER_DIR=$TESTER_DIR/reports/savemaster
 SITE_SAVE_PULL_DIR=$TESTER_DIR/reports/savepull
+
+# to be removed after antlr update
+SITE_SOURCES_DIR=$TESTER_DIR/src/main/java
 SITE_SAVE_REF_DIR=$TESTER_DIR/reports/saverefs
 
 # ============================================================

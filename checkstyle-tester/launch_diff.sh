@@ -3,9 +3,9 @@
 source launch_diff_variables.sh
 
 EXTPROJECTS=()
-INSTALL_MASTER=true
+PACKAGE_MASTER=true
 RUN_MASTER=true
-INSTALL_PULL=true
+PACKAGE_PULL=true
 RUN_PULL=true
 RUN_REPORTS=true
 USE_CUSTOM_CONFIG=false
@@ -27,11 +27,8 @@ if [ "$1" == "clean" ] || [ "$1" == "-clean" ]; then
 	cd $CHECKSTYLE_DIR
 	mvn --batch-mode clean
 	cd $TESTER_DIR
-	rm -rf $SITE_SOURCES_DIR/*
 	rm -rf $SITE_SAVE_MASTER_DIR
 	rm -rf $SITE_SAVE_PULL_DIR
-	rm -rf $SITE_SAVE_REF_DIR
-	mvn --batch-mode clean
 	rm -rf $FINAL_RESULTS_DIR/*
 	exit 0
 fi
@@ -44,18 +41,18 @@ function parse_arguments {
 			case "$1" in
 			-skip)
 				case "$2" in
-				install_master)
-					INSTALL_MASTER=false
+				package_master)
+					PACKAGE_MASTER=false
 					;;
 				master)
-					INSTALL_MASTER=false
+					PACKAGE_MASTER=false
 					RUN_MASTER=false
 					;;
-				install_pull)
-					INSTALL_PULL=false
+				package_pull)
+					PACKAGE_PULL=false
 					;;
 				pull)
-					INSTALL_PULL=false
+					PACKAGE_PULL=false
 					RUN_PULL=false
 					;;
 				reports)
@@ -84,7 +81,7 @@ function parse_arguments {
 				;;
 			-patchOnly)
 				PATCH_ONLY=true
-				INSTALL_MASTER=false
+				PACKAGE_MASTER=false
 				RUN_MASTER=false
 				;;
 			*)
@@ -99,11 +96,11 @@ function parse_arguments {
 	done
 }
 
-function mvn_install {
-	mvn --batch-mode clean install -Dmaven.test.skip=true -Dcheckstyle.ant.skip=true -Dcheckstyle.skip=true -Dpmd.skip=true -Dfindbugs.skip=true -Dcobertura.skip=true -Dforbiddenapis.skip=true -Dxml.skip=true
+function mvn_package {
+	mvn --batch-mode -Pno-validations clean package -Passembly
 
 	if [ $? -ne 0 ]; then
-		echo "Maven Install Failed!"
+		echo "Maven Package Failed!"
 		exit 1
 	fi
 }
@@ -113,21 +110,20 @@ function launch {
 
 		CS_VERSION="grep 'SNAPSHOT</version>' $CHECKSTYLE_DIR/pom.xml | tail -1 | cut -d '>' -f2 | cut -d '<' -f1"
 		CS_VERSION="$(eval $CS_VERSION)"
-		TEST_VERSION="grep 'SNAPSHOT</checkstyle.version>' $TESTER_DIR/pom.xml | tail -1 | cut -d '>' -f2 | cut -d '<' -f1"
-		TEST_VERSION="$(eval $TEST_VERSION)"
 
-		echo "Config version: $CS_VERSION vs $TEST_VERSION"
-		if [ "$CS_VERSION" != "$TEST_VERSION" ]; then
-			echo "Config version mis-match"
+		echo "Config version: $CS_VERSION"
+
+		CS_JAR=$CHECKSTYLE_DIR/target/checkstyle-$CS_VERSION-all.jar
+		if [ ! -f $CS_JAR ] ; then
+			echo "Failed to find Checkstyle JAR: $CS_JAR"
 			exit 1
 		fi
-		if [ ! -d "$SITE_SOURCES_DIR" ]; then
-			mkdir -p $SITE_SOURCES_DIR
+
+		if [ ! -d "$1" ]; then
+			mkdir $1
 		fi
 
 		while read line ; do
-			rm -rf $SITE_SOURCES_DIR/*
-			
 			[[ "$line" == \#* ]] && continue # Skip lines with comments
 			[[ -z "$line" ]] && continue     # Skip empty lines
 			
@@ -139,26 +135,12 @@ function launch {
 			
 			echo "Running Launch on $REPO_NAME ..."
 			
-			REPO_SOURCES_DIR=$SITE_SOURCES_DIR/$REPO_NAME
-			
 			if [ ! -d "$REPOSITORIES_DIR" ]; then
 				mkdir $REPOSITORIES_DIR
 			fi
+			CURRENT_REPO_DIR=""
 			
-			if [ "$REPO_TYPE" == "github" ]; then
-				TARNAME=$(echo $REPO_URL | sed -E 's/\//-/')
-				TARPATH=$REPOSITORIES_DIR/$TARNAME".tar.gz"
-				
-				if [ ! -f "$TARPATH" ]; then
-					echo "Requesting a tar: 'wget https://api.github.com/repos/$REPO_URL/tarball/$COMMIT_ID -O $TARPATH'"
-					wget https://api.github.com/repos/$REPO_URL/tarball/$COMMIT_ID -O $TARPATH
-				fi
-				if [ ! -d "$REPO_SOURCES_DIR" ]; then
-					echo -e "untar $TARNAME file to $REPO_SOURCES_DIR ..."
-					tar -xf $TARPATH -C $SITE_SOURCES_DIR
-					echo -e "untar $TARNAME file to $REPO_SOURCES_DIR - completed"
-				fi
-			elif [ "$REPO_TYPE" == "git" ]; then
+			if [ "$REPO_TYPE" == "git" ]; then
 				GITPATH=$REPOSITORIES_DIR/$REPO_NAME
 				
 				if [ ! -d "$GITPATH" ]; then
@@ -166,7 +148,7 @@ function launch {
 					git clone $REPO_URL $GITPATH
 					echo -e "Cloning $REPO_TYPE repository '$REPO_NAME' - completed"
 				fi
-				if [ "$COMMIT_ID" != "" ]; then
+				if [ "$COMMIT_ID" != "" ] && [ "$COMMIT_ID" != "master" ]; then
 					echo "Reseting $REPO_TYPE sources to commit '$COMMIT_ID'"
 					cd $GITPATH
 					git fetch origin
@@ -182,7 +164,7 @@ function launch {
 					cd -
 				fi
 
-				cp -R $GITPATH/* $SITE_SOURCES_DIR
+				CURRENT_REPO_DIR=$GITPATH
 			elif [ "$REPO_TYPE" == "hg" ]; then
 				HGPATH=$REPOSITORIES_DIR/$REPO_NAME
 
@@ -191,14 +173,14 @@ function launch {
 					hg clone $REPO_URL $HGPATH
 					echo -e "Cloning $REPO_TYPE repository '$REPO_NAME' - completed"
 				fi
-				if [ "$COMMIT_ID" != "" ]; then
+				if [ "$COMMIT_ID" != "" ] && [ "$COMMIT_ID" != "master" ]; then
 					echo "Reseting HG $REPO_TYPE sources to commit '$COMMIT_ID'"
 					cd $HGPATH
 					hg up $COMMIT_ID
 					cd -
 				fi
 
-				cp -R $HGPATH/* $SITE_SOURCES_DIR
+				CURRENT_REPO_DIR=$HGPATH
 			else
 				echo "Unknown RepoType: $REPO_TYPE"
 				exit 1
@@ -215,97 +197,31 @@ function launch {
 				fi
 			fi
 
-			cd $TESTER_DIR
+			if [ ! -d "$1/$REPO_NAME" ]; then
+				mkdir $1/$REPO_NAME
+			fi
 
-			echo "Running Checkstyle on $SITE_SOURCES_DIR with config $CONFIG"
-			echo "mvn -e --batch-mode clean site -Dcheckstyle.config.location=$CONFIG -Dcheckstyle.failsOnError=false -DMAVEN_OPTS=-Xmx3024m"
-			mvn -e --batch-mode clean site -Dcheckstyle.config.location=$CONFIG -Dcheckstyle.failsOnError=false -DMAVEN_OPTS=-Xmx3024m
-			if [ "$?" != "0" ]
+			echo "Running Checkstyle with config $CONFIG ... with excludes $EXCLUDES"
+
+			if [ "$EXCLUDES" == "" ]; then
+				echo "java -Xmx3024m -jar $CS_JAR -c $CONFIG -f xml -o $1/$REPO_NAME/results.xml $CURRENT_REPO_DIR"
+				java -Xmx3024m -jar $CS_JAR -c $CONFIG -f xml -o $1/$REPO_NAME/results.xml $CURRENT_REPO_DIR
+			else
+				echo "java -Xmx3024m -jar $CS_JAR -c $CONFIG -f xml -o $1/$REPO_NAME/results.xml -x '$EXCLUDES' $CURRENT_REPO_DIR"
+				java -Xmx3024m -jar $CS_JAR -c $CONFIG -f xml -o $1/$REPO_NAME/results.xml -x "$EXCLUDES" $CURRENT_REPO_DIR
+			fi
+
+			if [ "$?" == "-2" ]
 			then
-				echo "Checkstyle failed on $SITE_SOURCES_DIR"
+				echo "Checkstyle failed"
 				exit 1
 			else
-				echo "Running Checkstyle on $SITE_SOURCES_DIR - finished"
+				echo "Running Checkstyle - finished"
 			fi
-
-			echo "linking report to index.html"
-			mv target/site/index.html target/site/_index.html
-			ln -s checkstyle.html target/site/index.html 
-
-			if $MINIMIZE ; then
-			echo "Removing non refernced xref files in report ..."
-
-			# to be safe on removal switch folder to "xref"
-			cd target/site/xref
-
-			grep xref ../index.html | grep -v "xref/index.html" |  sed 's/<td><a href=".\/xref\//.\//' | sed -E 's/\.html#L.*/.html'/ | sort | uniq > file.txt
-			# such files are required by https://github.com/attatrol/ahsm tool
-			echo "allclasses-frame.html" >> file.txt
-			echo "index.html" >> file.txt
-			echo "overview-frame.html" >> file.txt
-			echo "overview-summary.html" >> file.txt
-
-			echo "Backuping files that are refenced in report ..."
-			for f in $(cat file.txt) ; do
-				if [ -f "$f" ]
-				then
-					mv "$f" "$f.save"
-				else
-					echo "warning: $f not found."
-				fi
-			done
-
-			echo "Removing all non used html files"
-			find . -name '*.html' | xargs rm
-
-			echo "Restoring from backup.."
-			for f in $(cat file.txt) ; do
-				if [ -f "$f.save" ]
-				then
-					mv "$f.save" "$f"
-				else
-					echo "warning: $f.save not found."
-				fi
-			done
-
-			VIOLATIONS=$(grep '<th>Line</th>' ../index.html | wc -l)
-			XREF_FILES=$(find . -type f -name "*.html" | wc -l)
-			if [[ "$VIOLATIONS" != "0" && "$XREF_FILES" == "0" ]]
-			then
-				echo "Removing all non used html files, report has violations and xref is empty"
-				exit 1
-			fi
-
-			# remove all empty folders
-			find . -type d -empty -delete
-			# return back to original folder
-			cd ../../../
-			fi
-
-			if [ ! -d "$1" ]; then
-				mkdir $1
-			fi
-			if [ ! -d "$SITE_SAVE_REF_DIR" ]; then
-				mkdir $SITE_SAVE_REF_DIR
-			fi
-			
-			# change xml paths to save directory
-			sed -i -e "s#$SITE_SOURCES_DIR#$SITE_SAVE_REF_DIR/$REPO_NAME#g" target/checkstyle-result.xml
-			# save files
-			mv target/site $1/$REPO_NAME
-			mv target/*.xml $1/$REPO_NAME
 
 			if ! containsElement "$REPO_NAME" "${EXTPROJECTS[@]}" ; then
 				EXTPROJECTS+=($REPO_NAME)
-
-				if [ ! -d "$SITE_SAVE_REF_DIR/$REPO_NAME" ]; then
-					mkdir $SITE_SAVE_REF_DIR/$REPO_NAME
-				fi
-				rm -rf $SITE_SAVE_REF_DIR/$REPO_NAME/*
 			fi
-
-			cp -r $SITE_SOURCES_DIR/* $SITE_SAVE_REF_DIR/$REPO_NAME
-			rm -rf $SITE_SOURCES_DIR/*
 
 			echo "Running Launch on $REPO_NAME - completed"
 		done < $TESTER_DIR/projects-to-test-on.properties
@@ -328,7 +244,7 @@ parse_arguments "$@"
 
 echo "Testing Checkstyle Starting"
 
-if $INSTALL_MASTER ; then
+if $PACKAGE_MASTER ; then
 	cd $CHECKSTYLE_DIR
 
 	if $USE_CUSTOM_MASTER ; then
@@ -354,9 +270,9 @@ if $INSTALL_MASTER ; then
 
 	git clean -f -d
 
-	echo "Installing Master"
+	echo "Packaging Master"
 
-	mvn_install
+	mvn_package
 else
 	echo "Skipping Install Master"
 fi
@@ -365,17 +281,16 @@ if $RUN_MASTER ; then
 	echo "Starting Master Launcher"
 
 	rm -rf $SITE_SAVE_MASTER_DIR
-	rm -rf $SITE_SAVE_REF_DIR
 
 	launch $SITE_SAVE_MASTER_DIR
 else
 	echo "Skipping Launch Master"
 fi
 
-if $INSTALL_PULL ; then
+if $PACKAGE_PULL ; then
 	cd $CHECKSTYLE_DIR
 
-	echo "Checking out and Installing PR $1"
+	echo "Checking out and Packaging PR $1"
 
 	if $CONTACTSERVER ; then
 		git fetch $PULL_REMOTE
@@ -390,7 +305,7 @@ if $INSTALL_PULL ; then
 	git checkout $PULL_REMOTE/$1
 	git clean -f -d
 
-	mvn_install
+	mvn_package
 else
 	echo "Skipping Install PR $1"
 fi
@@ -427,13 +342,46 @@ if $RUN_REPORTS ; then
 		rm -rf $FINAL_RESULTS_DIR/*
 	fi
 
-	if [ -f $FINAL_RESULTS_DIR/index.html ] ; then
-		rm $FINAL_RESULTS_DIR/index.html
+	OUTPUT_FILE="$FINAL_RESULTS_DIR/index.html"
+
+	if [ -f $OUTPUT_FILE ] ; then
+		rm $OUTPUT_FILE
 	fi
-	echo "<html><body>" >> $FINAL_RESULTS_DIR/index.html
-	echo "<h3><span style=\"color: #ff0000;\">" >> $FINAL_RESULTS_DIR/index.html
-	echo "<strong>WARNING: Excludes are ignored by diff.groovy.</strong>" >> $FINAL_RESULTS_DIR/index.html
-	echo "</span></h3>" >> $FINAL_RESULTS_DIR/index.html
+	echo "<html><body>" >> $OUTPUT_FILE
+	echo "<h3><span style=\"color: #ff0000;\">" >> $OUTPUT_FILE
+	echo "<strong>WARNING: Excludes are ignored by diff.groovy.</strong>" >> $OUTPUT_FILE
+	echo "</span></h3>" >> $OUTPUT_FILE
+
+	if $RUN_MASTER ; then
+		if $USE_CUSTOM_MASTER ; then
+			REMOTE="$PULL_REMOTE/$CUSTOM_MASTER"
+		else
+			REMOTE="origin/master"
+		fi
+
+		cd $CHECKSTYLE_DIR
+		HASH=$(git rev-parse $REMOTE)
+		MSG=$(git log $REMOTE -1 --pretty=%B)
+
+		echo "<h6>" >> $OUTPUT_FILE
+		echo "Base branch: $REMOTE<br />" >> $OUTPUT_FILE
+		echo "Base branch last commit SHA: $HASH<br />" >> $OUTPUT_FILE
+		echo "Base branch last commit message: $MSG<br />" >> $OUTPUT_FILE
+		echo "</h6>" >> $OUTPUT_FILE
+	fi
+	if $RUN_PULL ; then
+		REMOTE="$PULL_REMOTE/$1"
+
+		cd $CHECKSTYLE_DIR
+		HASH=$(git rev-parse $REMOTE)
+		MSG=$(git log $REMOTE -1 --pretty=%B)
+
+		echo "<h6>" >> $OUTPUT_FILE
+		echo "Patch branch: $REMOTE<br />" >> $OUTPUT_FILE
+		echo "Patch branch last commit SHA: $HASH<br />" >> $OUTPUT_FILE
+		echo "Patch branch last commit message: $MSG<br />" >> $OUTPUT_FILE
+		echo "</h6>" >> $OUTPUT_FILE
+	fi
 
 	for extp in "${EXTPROJECTS[@]}"
 	do
@@ -454,13 +402,13 @@ if $RUN_REPORTS ; then
 			fi
 
 			if $PATCH_ONLY ; then
-				echo "java -jar $DIFF_JAR --patchReport $SITE_SAVE_PULL_DIR/$extp/checkstyle-result.xml --output $FINAL_RESULTS_DIR/$extp --patchConfig $CONFIG --refFiles $SITE_SAVE_REF_DIR"
+				echo "java -jar $DIFF_JAR --patchReport $SITE_SAVE_PULL_DIR/$extp/results.xml --output $FINAL_RESULTS_DIR/$extp --patchConfig $CONFIG --refFiles $REPOSITORIES_DIR/$extp"
 
-				java -jar $DIFF_JAR --patchReport $SITE_SAVE_PULL_DIR/$extp/checkstyle-result.xml --output $FINAL_RESULTS_DIR/$extp --patchConfig $CONFIG --refFiles $SITE_SAVE_REF_DIR
+				java -jar $DIFF_JAR --patchReport $SITE_SAVE_PULL_DIR/$extp/results.xml --output $FINAL_RESULTS_DIR/$extp --patchConfig $CONFIG --refFiles $REPOSITORIES_DIR/$extp
 			else
-				echo "java -jar $DIFF_JAR --baseReport $SITE_SAVE_MASTER_DIR/$extp/checkstyle-result.xml --patchReport $SITE_SAVE_PULL_DIR/$extp/checkstyle-result.xml --output $FINAL_RESULTS_DIR/$extp --baseConfig $CONFIG --patchConfig $CONFIG --refFiles $SITE_SAVE_REF_DIR"
+				echo "java -jar $DIFF_JAR --baseReport $SITE_SAVE_MASTER_DIR/$extp/results.xml --patchReport $SITE_SAVE_PULL_DIR/$extp/results.xml --output $FINAL_RESULTS_DIR/$extp --baseConfig $CONFIG --patchConfig $CONFIG --refFiles $REPOSITORIES_DIR/$extp"
 
-				java -jar $DIFF_JAR --baseReport $SITE_SAVE_MASTER_DIR/$extp/checkstyle-result.xml --patchReport $SITE_SAVE_PULL_DIR/$extp/checkstyle-result.xml --output $FINAL_RESULTS_DIR/$extp --baseConfig $CONFIG --patchConfig $CONFIG --refFiles $SITE_SAVE_REF_DIR
+				java -jar $DIFF_JAR --baseReport $SITE_SAVE_MASTER_DIR/$extp/results.xml --patchReport $SITE_SAVE_PULL_DIR/$extp/results.xml --output $FINAL_RESULTS_DIR/$extp --baseConfig $CONFIG --patchConfig $CONFIG --refFiles $REPOSITORIES_DIR/$extp
 			fi
 
 			if [ "$?" != "0" ]
@@ -474,16 +422,16 @@ if $RUN_REPORTS ; then
 
 		total=($(grep -Eo 'totalDiff">[0-9]+' $FINAL_RESULTS_DIR/$extp/index.html | grep -Eo '[0-9]+'))
 
-		echo "<a href='$extp/index.html'>$extp</a>" >> $FINAL_RESULTS_DIR/index.html
+		echo "<a href='$extp/index.html'>$extp</a>" >> $OUTPUT_FILE
 		if [ ${#total[@]} != "0" ] ; then
 			if [ ${total[0]} -ne 0 ] ; then
-				echo " (${total[0]})" >> $FINAL_RESULTS_DIR/index.html
+				echo " (${total[0]})" >> $OUTPUT_FILE
 			fi
 		fi
-		echo "<br />" >> $FINAL_RESULTS_DIR/index.html
+		echo "<br />" >> $OUTPUT_FILE
 	done
 
-	echo "</body></html>" >> $FINAL_RESULTS_DIR/index.html
+	echo "</body></html>" >> $OUTPUT_FILE
 fi
 
 echo "Complete"
