@@ -89,6 +89,18 @@ ATTENTION:
 you can specify at projects-to-test-on.properties path to local file system if you have some 
 repositories on your local, example: "checkstyle=/home/username/java/git-repos/checkstyle/checkstyle".
 
+## Testing sevntu checks:
+build sevntu checks and sevntu maven plugin by:
+```
+cd sevntu-checks
+mvn  -Pno-validations clean install
+cd ../sevntu-checkstyle-maven-plugin/
+mvn clean install
+``` 
+Sevntu it is already referenced at https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/pom.xml#L16 .
+Change config file to reference your  Check - https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/my_check.xml#L22 .
+Run checkstyle-tester as described in README.
+
 ## Deploy Report: 
 
 The created report can be deployed to github pages repo (https://pages.github.com/) to share with others:
