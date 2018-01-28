@@ -180,17 +180,11 @@ def generateCheckstyleReport(cfg) {
     executeCmd("git checkout $cfg.branch", cfg.localGitRepo)
     executeCmd("git log -1 --pretty=MSG:%s%nSHA-1:%H", cfg.localGitRepo)
 
-    def testerCheckstyleVersion = getCheckstyleVersionFromPomXml('./pom.xml', 'checkstyle.version')
-    def checkstyleVersionInLocalRepo = getCheckstyleVersionFromPomXml("$cfg.localGitRepo/pom.xml", 'version')
-    if (testerCheckstyleVersion != checkstyleVersionInLocalRepo) {
-        throw new GroovyRuntimeException("Error: config version mis-match!\n\
-                Checkstyle version in tester's pom.xml is $testerCheckstyleVersion\n\
-                Checkstyle version in local repo is $checkstyleVersionInLocalRepo")
-    }
+    def checkstyleVersion = getCheckstyleVersionFromPomXml("$cfg.localGitRepo/pom.xml", 'version')
 
     executeCmd("mvn -Pno-validations clean install", cfg.localGitRepo)
-    executeCmd("groovy launch.groovy --listOfProjects $cfg.listOfProjects \
-            --config $cfg.checkstyleCfg --ignoreExceptions --ignoreExcludes")
+    executeCmd("""groovy launch.groovy --listOfProjects $cfg.listOfProjects
+            --config $cfg.checkstyleCfg --ignoreExceptions --ignoreExcludes --checkstyleVersion $checkstyleVersion""")
     println "Moving Checkstyle report into $cfg.destDir ..."
     moveDir("reports", cfg.destDir)
 
@@ -228,8 +222,8 @@ def generateDiffReport(cfg) {
                 if (patchReportDir.exists()) {
                     def patchReport = "$cfg.patchReportsDir/$projectName/checkstyle-result.xml"
                     def outputDir = "$cfg.reportsDir/diff/$projectName"
-                    def diffCmd = "java -jar $diffToolJarPath --patchReport $patchReport \
-                        --output $outputDir --patchConfig $cfg.patchConfig"
+                    def diffCmd = """java -jar $diffToolJarPath --patchReport $patchReport
+                        --output $outputDir --patchConfig $cfg.patchConfig"""
                     if ('diff'.equals(cfg.mode)) {
                         def baseReport = "$cfg.masterReportsDir/$projectName/checkstyle-result.xml"
                         diffCmd += " --baseReport $baseReport --baseConfig $cfg.baseConfig"
