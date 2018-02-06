@@ -1,6 +1,6 @@
-import java.nio.file.Paths
-
 import static java.lang.System.err
+
+import java.nio.file.Paths
 
 static void main(String[] args) {
     def cliOptions = getCliOptions(args)
@@ -22,14 +22,14 @@ static void main(String[] args) {
 
         def checkstyleBaseReportInfo = null
         if (cfg.isDiffMode()) {
-            checkstyleBaseReportInfo = generateCheckstyleReport(cfg.getCheckstyleToolBaseConfig())
+            checkstyleBaseReportInfo = generateCheckstyleReport(cfg.checkstyleToolBaseConfig)
         }
 
-        def checkstylePatchReportInfo = generateCheckstyleReport(cfg.getCheckstyleToolPatchConfig())
+        def checkstylePatchReportInfo = generateCheckstyleReport(cfg.checkstyleToolPatchConfig)
         deleteDir(cfg.reportsDir)
         moveDir(cfg.tmpReportsDir, cfg.reportsDir)
 
-        generateDiffReport(cfg.getDiffToolConfig())
+        generateDiffReport(cfg.diffToolConfig)
         generateSummaryIndexHtml(cfg.diffDir, checkstyleBaseReportInfo, checkstylePatchReportInfo)
     }
     else {
@@ -126,12 +126,12 @@ def isValidGitRepo(gitRepoDir) {
         def gitStatusCmd = "git status".execute(null, gitRepoDir)
         gitStatusCmd.waitFor()
         if (gitStatusCmd.exitValue() != 0) {
-            err.println "Error: \'${gitRepoDir.getPath()}\' is not a git repository!"
+            err.println "Error: \'${gitRepoDir.path}\' is not a git repository!"
             valid = false
         }
     }
     else {
-        err.println "Error: \'${gitRepoDir.getPath()}\' does not exist or it is not a directory!"
+        err.println "Error: \'${gitRepoDir.path}\' does not exist or it is not a directory!"
         valid = false
     }
     return valid
@@ -142,7 +142,7 @@ def isExistingGitBranch(gitRepo, branchName) {
     def gitRevParseCmd = "git rev-parse --verify $branchName".execute(null, gitRepo)
     gitRevParseCmd.waitFor()
     if (gitRevParseCmd.exitValue() != 0) {
-        err.println "Error: git repository ${gitRepo.getPath()} does not have a branch with name \'$branchName\'!"
+        err.println "Error: git repository ${gitRepo.path} does not have a branch with name \'$branchName\'!"
         exist = false
     }
     return exist
@@ -183,11 +183,14 @@ def generateCheckstyleReport(cfg) {
     def testerCheckstyleVersion = getCheckstyleVersionFromPomXml('./pom.xml', 'checkstyle.version')
     def checkstyleVersionInLocalRepo = getCheckstyleVersionFromPomXml("$cfg.localGitRepo/pom.xml", 'version')
     if (testerCheckstyleVersion != checkstyleVersionInLocalRepo) {
-        throw new GroovyRuntimeException("Error: config version mis-match!\nCheckstyle version in tester's pom.xml is $testerCheckstyleVersion\nCheckstyle version in local repo is $checkstyleVersionInLocalRepo")
+        throw new GroovyRuntimeException("Error: config version mis-match!\n\
+                Checkstyle version in tester's pom.xml is $testerCheckstyleVersion\n\
+                Checkstyle version in local repo is $checkstyleVersionInLocalRepo")
     }
 
     executeCmd("mvn -Pno-validations clean install", cfg.localGitRepo)
-    executeCmd("groovy launch.groovy --listOfProjects $cfg.listOfProjects --config $cfg.checkstyleCfg --ignoreExceptions --ignoreExcludes")
+    executeCmd("groovy launch.groovy --listOfProjects $cfg.listOfProjects \
+            --config $cfg.checkstyleCfg --ignoreExceptions --ignoreExcludes")
     println "Moving Checkstyle report into $cfg.destDir ..."
     moveDir("reports", cfg.destDir)
 
@@ -210,7 +213,7 @@ def getLastCommitMsg(gitRepo, branch) {
 
 def generateDiffReport(cfg) {
     def diffToolDir = Paths.get("").toAbsolutePath()
-        .getParent()
+        .parent
         .resolve("patch-diff-report-tool")
         .toFile()
     executeCmd("mvn clean package -DskipTests", diffToolDir)
@@ -220,13 +223,13 @@ def generateDiffReport(cfg) {
     Paths.get(cfg.patchReportsDir).toFile().eachFile {
         fileObj ->
             if (fileObj.isDirectory()) {
-                def projectName = fileObj.getName()
+                def projectName = fileObj.name
                 def patchReportDir = new File("$cfg.patchReportsDir/$projectName")
                 if (patchReportDir.exists()) {
                     def patchReport = "$cfg.patchReportsDir/$projectName/checkstyle-result.xml"
                     def outputDir = "$cfg.reportsDir/diff/$projectName"
-                    def diffCmd = "java -jar $diffToolJarPath --patchReport $patchReport " \
-                        + "--output $outputDir --patchConfig $cfg.patchConfig"
+                    def diffCmd = "java -jar $diffToolJarPath --patchReport $patchReport \
+                        --output $outputDir --patchConfig $cfg.patchConfig"
                     if ('diff'.equals(cfg.mode)) {
                         def baseReport = "$cfg.masterReportsDir/$projectName/checkstyle-result.xml"
                         diffCmd += " --baseReport $baseReport --baseConfig $cfg.baseConfig"
@@ -245,14 +248,14 @@ def generateDiffReport(cfg) {
 }
 
 def getPathToDiffToolJar(diffToolDir) {
-    def targetDir = diffToolDir.getAbsolutePath() + '/target/'
+    def targetDir = diffToolDir.absolutePath + '/target/'
     def pathToDiffToolJar
     Paths.get(targetDir).toFile().eachFile {
         fileObj ->
             def jarPattern = "patch-diff-report-tool-.*.jar-with-dependencies.jar"
-            def fileName = fileObj.getName()
+            def fileName = fileObj.name
             if (fileName.matches(jarPattern)) {
-                pathToDiffToolJar = fileObj.getAbsolutePath()
+                pathToDiffToolJar = fileObj.absolutePath
                 return true
             }
     }
@@ -311,12 +314,13 @@ def getProjectsStatistic(diffDir) {
     Paths.get(diffDir).toFile().eachFile {
         fileObjf ->
             if (fileObjf.isDirectory()) {
-                def projectName = fileObjf.getName()
-                def indexHtmlFile = new File(fileObjf.getAbsolutePath() + '/index.html')
+                def projectName = fileObjf.name
+                def indexHtmlFile = new File(fileObjf.absolutePath + '/index.html')
                 indexHtmlFile.eachLine {
                     line ->
                         if (line.matches(".*totalDiff\">[0-9]+.*")) {
-                            def totalDiff = Integer.valueOf(line.substring(line.indexOf('>') + 1, line.lastIndexOf('<')))
+                            def totalDiff = Integer.valueOf(line.substring(line.indexOf('>') + 1,
+                                    line.lastIndexOf('<')))
                             projectsStatistic.put(projectName, totalDiff)
                         }
                 }
@@ -335,7 +339,7 @@ def deleteDir(dir) {
     new AntBuilder().delete(dir: dir, failonerror: false)
 }
 
-def executeCmd(cmd, dir =  new File("").getAbsoluteFile()) {
+def executeCmd(cmd, dir = new File("").absoluteFile) {
     def osSpecificCmd = getOsSpecificCmd(cmd)
     def proc = osSpecificCmd.execute(null, dir)
     proc.consumeProcessOutput(System.out, System.err)
@@ -425,7 +429,7 @@ class Config {
             branch: baseBranch,
             checkstyleCfg: baseConfig,
             listOfProjects: listOfProjects,
-            destDir: tmpMasterReportsDir
+            destDir: tmpMasterReportsDir,
         ]
     }
 
@@ -435,7 +439,7 @@ class Config {
             branch: patchBranch,
             checkstyleCfg: patchConfig,
             listOfProjects: listOfProjects,
-            destDir: tmpPatchReportsDir
+            destDir: tmpPatchReportsDir,
         ]
     }
 
@@ -447,7 +451,7 @@ class Config {
             baseConfig: baseConfig,
             patchConfig: patchConfig,
             shortFilePaths: shortFilePaths,
-            mode: mode
+            mode: mode,
         ]
     }
 }

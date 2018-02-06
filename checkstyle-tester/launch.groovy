@@ -1,8 +1,8 @@
+import static java.lang.System.err
+
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.regex.Pattern
-
-import static java.lang.System.err
 
 static void main(String[] args) {
     def cliOptions = getCliOptions(args)
@@ -31,10 +31,10 @@ def areValidCliOptions(options) {
     def listOfProjectsFile = new File(options.listOfProjects)
     def checkstyleCfgFile = new File(options.config)
     if (!listOfProjectsFile.exists()) {
-        err.println "Error: file ${listOfProjectsFile.getName()} does not exist!"
+        err.println "Error: file ${listOfProjectsFile.name} does not exist!"
         valid = false
     } else if (!checkstyleCfgFile.exists()) {
-        err.println "Error: file ${checkstyleCfgFile.getName()} does not exist!"
+        err.println "Error: file ${checkstyleCfgFile.name} does not exist!"
         valid = false
     }
     return valid
@@ -49,12 +49,12 @@ def generateCheckstyleReport(cliOptions) {
     def reportsDir = 'reports'
     createWorkDirsIfNotExist(srcDir, reposDir, reportsDir)
 
-    def REPO_NAME_PARAM_NO = 0
-    def REPO_TYPE_PARAM_NO = 1
-    def REPO_URL_PARAM_NO = 2
-    def REPO_COMMIT_ID_PARAM_NO = 3
-    def REPO_EXCLUDES_PARAM_NO = 4
-    def FULL_PARAM_LIST_SIZE = 5
+    final REPO_NAME_PARAM_NO = 0
+    final REPO_TYPE_PARAM_NO = 1
+    final REPO_URL_PARAM_NO = 2
+    final REPO_COMMIT_ID_PARAM_NO = 3
+    final REPO_EXCLUDES_PARAM_NO = 4
+    final FULL_PARAM_LIST_SIZE = 5
 
     def checkstyleCfg = cliOptions.config
     def ignoreExceptions = cliOptions.ignoreExceptions
@@ -245,12 +245,12 @@ def removeNonReferencedXrefFiles(siteDir) {
 
     Paths.get(getOsSpecificPath("$siteDir", "xref")).toFile().eachFileRecurse {
         fileObj ->
-            def path = fileObj.getPath()
+            def path = fileObj.path
             path = path.substring(path.indexOf("xref"))
             if (isWindows()) {
                 path = path.replace("\\", "/")
             }
-            def fileName = fileObj.getName()
+            def fileName = fileObj.name
             if (fileObj.isFile()
                     && !filesReferencedInReport.contains(path)
                     && 'stylesheet.css' != fileName
