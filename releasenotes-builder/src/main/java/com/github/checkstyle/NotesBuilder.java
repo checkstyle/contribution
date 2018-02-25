@@ -141,7 +141,7 @@ public final class NotesBuilder {
      * @noinspection ResultOfMethodCallIgnored
      */
     private static Set<RevCommit> getCommitsBetweenReferences(String repoPath, String startRef,
-                                                              String endRef) throws IOException, GitAPIException {
+            String endRef) throws IOException, GitAPIException {
 
         final FileRepositoryBuilder builder = new FileRepositoryBuilder();
         final Path path = Paths.get(repoPath);
