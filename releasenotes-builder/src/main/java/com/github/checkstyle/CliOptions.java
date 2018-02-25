@@ -526,6 +526,7 @@ public final class CliOptions {
         /**
          * Verify options and set defaults.
          * @return new CliOption instance
+         * @noinspection ResultOfMethodCallIgnored
          */
         public CliOptions build() {
             if (endRef == null) {
