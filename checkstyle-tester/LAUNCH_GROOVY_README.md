@@ -64,7 +64,7 @@ ls  ~/.m2/repository/com/github/sevntu/checkstyle/sevntu-checkstyle-maven-plugin
 To build SNAPSHOT version of `checkstyle` please run in its folder (local git repository):
 
 ```
-mvn clean install -DskipTests -Dcobertura.skip=true -Dfindbugs.skip=true -Dpmd.skip=true
+mvn clean install -DskipTests -Djacoco.skip=true -Dfindbugs.skip=true -Dpmd.skip=true
 ```
 
 **Attention:** 
