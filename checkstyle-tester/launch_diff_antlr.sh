@@ -54,7 +54,7 @@ function parse_arguments {
 }
 
 function mvn_package {
-	mvn --batch-mode clean package -Passembly -Dmaven.test.skip=true -Dcheckstyle.ant.skip=true -Dcheckstyle.skip=true -Dpmd.skip=true -Dfindbugs.skip=true -Dcobertura.skip=true -Dforbiddenapis.skip=true -Dxml.skip=true
+	mvn --batch-mode clean package -Passembly -Dmaven.test.skip=true -Dcheckstyle.ant.skip=true -Dcheckstyle.skip=true -Dpmd.skip=true -Dfindbugs.skip=true -Djacoco.skip=true -Dforbiddenapis.skip=true -Dxml.skip=true
 
 	if [ $? -ne 0 ]; then
 		echo "Maven Package Failed!"

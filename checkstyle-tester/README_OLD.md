@@ -27,7 +27,7 @@ ls  ~/.m2/repository/com/github/sevntu/checkstyle/sevntu-checkstyle-maven-plugin
 
 to build SNAPSHOT version of `checkstyle` please run in his repo
 ```
-mvn clean install -DskipTests -Dcobertura.skip=true -Dfindbugs.skip=true -Dpmd.skip=true
+mvn clean install -DskipTests -Djacoco.skip=true -Dfindbugs.skip=true -Dpmd.skip=true
 ```
 
 If you want to validate new check from `sevntu.checkstyle`(https://github.com/sevntu-checkstyle/sevntu.checkstyle) project, 
