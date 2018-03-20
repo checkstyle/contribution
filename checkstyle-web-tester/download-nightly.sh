@@ -35,6 +35,6 @@ else
 	git pull
 fi
 
-mvn --batch-mode clean package -Passembly -Dmaven.test.skip=true -Dcheckstyle.ant.skip=true -Dcheckstyle.skip=true -Dpmd.skip=true -Dfindbugs.skip=true -Djacoco.skip=true -Dforbiddenapis.skip=true
+mvn --batch-mode clean package -Passembly -Dmaven.test.skip=true -Dcheckstyle.ant.skip=true -Dcheckstyle.skip=true -Dpmd.skip=true -Dspotbugs.skip=true -Djacoco.skip=true -Dforbiddenapis.skip=true
 
 sudo -u www-data cp target/checkstyle-*-SNAPSHOT-all.jar $DIR/$FILE
