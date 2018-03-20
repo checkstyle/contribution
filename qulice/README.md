@@ -11,7 +11,7 @@ We do that because we want to use Qulice's custom checks for Checkstyle.
 
 Build and install Checkstyle:
 ```
-mvn clean install -DskipTests -Djacoco.skip=true -Dfindbugs.skip=true -Dpmd.skip=true
+mvn clean install -DskipTests -Djacoco.skip=true -Dspotbugs.skip=true -Dpmd.skip=true
 ```
 
 Launch command for testing Checkstyle project against Qulice's custom config:
