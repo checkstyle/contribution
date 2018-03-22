@@ -88,6 +88,7 @@ public final class NotesBuilder {
         for (RevCommit commit : commitsForRelease) {
             String commitMessage = commit.getFullMessage();
             if (isRevertCommit(commitMessage)) {
+                System.out.println(commitMessage);
                 final int firstQuoteIndex = commitMessage.indexOf('"');
                 final int lastQuoteIndex = commitMessage.lastIndexOf('"');
                 commitMessage = commitMessage.substring(firstQuoteIndex, lastQuoteIndex);
@@ -163,7 +164,9 @@ public final class NotesBuilder {
      * @return true if a commit message starts with the 'Revert' word.
      */
     private static boolean isRevertCommit(String commitMessage) {
-        return commitMessage.startsWith("Revert");
+        return commitMessage.startsWith("Revert")
+                && commitMessage.indexOf('"') != -1
+                && commitMessage.lastIndexOf('"') == commitMessage.length() - 1;
     }
 
     /**
