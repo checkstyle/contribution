@@ -162,7 +162,8 @@ public final class Main {
      * @throws IOException if I/O error occurs.
      * @throws TemplateException if an error occurs while generating freemarker template.
      */
-    // -@cs[CyclomaticComplexity] This code is not complicated and is better to keep in one method
+    // -@cs[CyclomaticComplexity|NPathComplexity] This code is not complicated and is better to
+    // keep in one method
     private static void runPostGeneration(Multimap<String, ReleaseNotesMessage> releaseNotes,
             CliOptions cliOptions) throws IOException, TemplateException {
 
