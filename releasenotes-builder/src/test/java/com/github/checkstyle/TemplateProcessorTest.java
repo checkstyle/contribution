@@ -1,3 +1,22 @@
+////////////////////////////////////////////////////////////////////////////////
+// checkstyle: Checks Java source code for adherence to a set of rules.
+// Copyright (C) 2001-2018 the original author or authors.
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+////////////////////////////////////////////////////////////////////////////////
+
 package com.github.checkstyle;
 
 import static org.junit.Assert.assertEquals;
@@ -33,7 +52,7 @@ public class TemplateProcessorTest {
     }
 
     @Test
-    public void testGenerateWithThymeleafOnlyBreakingCompatibilitySection() throws Exception{
+    public void testGenerateWithThymeleafOnlyBreakingCompatibilitySection() throws Exception {
         final Map<String, Object> templateVariables = new HashMap<>();
         templateVariables.put("releaseNo", "1.0.0");
         templateVariables.put("breakingMessages", getMockReleasenotesMessages());
@@ -50,7 +69,7 @@ public class TemplateProcessorTest {
     }
 
     @Test
-    public void testGenerateWithThymeleafOnlyNewSection() throws Exception{
+    public void testGenerateWithThymeleafOnlyNewSection() throws Exception {
         final Map<String, Object> templateVariables = new HashMap<>();
         templateVariables.put("releaseNo", "1.0.0");
         templateVariables.put("newMessages", getMockReleasenotesMessages());
@@ -66,7 +85,7 @@ public class TemplateProcessorTest {
     }
 
     @Test
-    public void testGenerateWithThymeleafOnlyBugSection() throws Exception{
+    public void testGenerateWithThymeleafOnlyBugSection() throws Exception {
         final Map<String, Object> templateVariables = new HashMap<>();
         templateVariables.put("releaseNo", "1.0.0");
         templateVariables.put("bugMessages", getMockReleasenotesMessages());
@@ -82,7 +101,7 @@ public class TemplateProcessorTest {
     }
 
     @Test
-    public void testGenerateWithThymeleafOnlyNotesSection() throws Exception{
+    public void testGenerateWithThymeleafOnlyNotesSection() throws Exception {
         final Map<String, Object> templateVariables = new HashMap<>();
         templateVariables.put("releaseNo", "1.0.0");
         templateVariables.put("notesMessages", getMockReleasenotesMessages());
@@ -98,7 +117,7 @@ public class TemplateProcessorTest {
     }
 
     @Test
-    public void testGenerateWithThymeleafAllSections() throws Exception{
+    public void testGenerateWithThymeleafAllSections() throws Exception {
         final Map<String, Object> templateVariables = new HashMap<>();
         templateVariables.put("releaseNo", "1.0.0");
         templateVariables.put("breakingMessages", getMockReleasenotesMessages());
@@ -117,7 +136,7 @@ public class TemplateProcessorTest {
     }
 
     @Test
-    public void testGenerateWithFreemarkerOnlyBreakingCompatibilitySection() throws Exception{
+    public void testGenerateWithFreemarkerOnlyBreakingCompatibilitySection() throws Exception {
         final Map<String, Object> templateVariables = new HashMap<>();
         templateVariables.put("releaseNo", "1.0.0");
         templateVariables.put("breakingMessages", getMockReleasenotesMessages());
@@ -134,7 +153,7 @@ public class TemplateProcessorTest {
     }
 
     @Test
-    public void testGenerateWithFreemarkerOnlyNewSection() throws Exception{
+    public void testGenerateWithFreemarkerOnlyNewSection() throws Exception {
         final Map<String, Object> templateVariables = new HashMap<>();
         templateVariables.put("releaseNo", "1.0.0");
         templateVariables.put("newMessages", getMockReleasenotesMessages());
@@ -150,7 +169,7 @@ public class TemplateProcessorTest {
     }
 
     @Test
-    public void testGenerateWithFreemarkerOnlyBugSection() throws Exception{
+    public void testGenerateWithFreemarkerOnlyBugSection() throws Exception {
         final Map<String, Object> templateVariables = new HashMap<>();
         templateVariables.put("releaseNo", "1.0.0");
         templateVariables.put("bugMessages", getMockReleasenotesMessages());
@@ -166,7 +185,7 @@ public class TemplateProcessorTest {
     }
 
     @Test
-    public void testGenerateWithFreemarkerOnlyNotesSection() throws Exception{
+    public void testGenerateWithFreemarkerOnlyNotesSection() throws Exception {
         final Map<String, Object> templateVariables = new HashMap<>();
         templateVariables.put("releaseNo", "1.0.0");
         templateVariables.put("notesMessages", getMockReleasenotesMessages());
@@ -182,7 +201,7 @@ public class TemplateProcessorTest {
     }
 
     @Test
-    public void testGenerateWithFreemarkerAllSections() throws Exception{
+    public void testGenerateWithFreemarkerAllSections() throws Exception {
         final Map<String, Object> templateVariables = new HashMap<>();
         templateVariables.put("releaseNo", "1.0.0");
         templateVariables.put("breakingMessages", getMockReleasenotesMessages());
@@ -225,7 +244,7 @@ public class TemplateProcessorTest {
     }
 
     private static GHIssue getMockGithubIssue(int issueNo, String issueTitle)
-        throws IllegalAccessException, NoSuchFieldException {
+            throws IllegalAccessException, NoSuchFieldException {
         final GHIssue issue = new GHIssue();
 
         final Field title = issue.getClass().getDeclaredField("title");
