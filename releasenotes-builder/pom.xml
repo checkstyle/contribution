@@ -153,9 +153,8 @@
                             <configLocation>https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-${checkstyle.version}/config/checkstyle_checks.xml</configLocation>
                             <propertiesLocation>config/checkstyle.properties</propertiesLocation>
                             <failOnViolation>true</failOnViolation>
-                            <logViolationsToConsole>true</logViolationsToConsole>
-                            <maxAllowedViolations>0</maxAllowedViolations>
-                            <violationSeverity>error</violationSeverity>
+                            <linkXRef>false</linkXRef>
+                            <sourceDirectory>${project.basedir}/src</sourceDirectory>
                         </configuration>
                     </execution>
                 </executions>
