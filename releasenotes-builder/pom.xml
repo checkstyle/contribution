@@ -156,8 +156,6 @@
                             <logViolationsToConsole>true</logViolationsToConsole>
                             <maxAllowedViolations>0</maxAllowedViolations>
                             <violationSeverity>error</violationSeverity>
-                            <outputFileFormat>xml</outputFileFormat>
-                            <outputFile>${project.build.directory}/checkstyle/checkstyle-report.xml</outputFile>
                         </configuration>
                     </execution>
                 </executions>
