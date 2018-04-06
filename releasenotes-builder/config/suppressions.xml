@@ -10,4 +10,8 @@
     <suppress checks="MethodCount" files="CliOptions.java"/>
     <!-- need to be addressed later-->
     <suppress checks="NPathComplexity" files="Main.java"/>
+
+    <!-- Tone down the checking for test code -->
+    <suppress message="Missing a Javadoc comment|Missing package-info.java file|Expected @throws tag for|missing @author tag" files=".*[\\/]src[\\/]test[\\/]"/>
+    <suppress checks="MultipleStringLiterals" files=".*[\\/]src[\\/]test[\\/]"/>
 </suppressions>

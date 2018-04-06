@@ -210,6 +210,7 @@ public final class CliOptions {
     /**
      * Class which implements Builder pattern for building CliOptions instance.
      */
+    // -@cs[MethodCount] Builders must contain 1 method per field
     public final class Builder {
 
         /** Default constructor. */
