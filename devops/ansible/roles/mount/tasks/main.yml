@@ -1,0 +1,57 @@
+---
+
+- name: Gather partition info about "{{ device2mount }}"
+  parted:
+    device: "{{ device2mount }}"
+    label: gpt
+    number: 1
+    state: info
+  register: state_before_run
+
+- name: Create a partition on "{{ device2mount }}"
+  parted:
+    device: "{{ device2mount }}"
+    label: gpt
+    number: 1
+    state: present
+  when: state_before_run.partitions | length == 0
+  register: create_partition
+
+- name: Get partition name
+  shell: lsblk -n "{{ device2mount }}" | tail -n -1 | awk '{print $1}' | tr -d '\200-\377`-'
+  when: ( state_before_run.partitions | length == 1 ) or ( create_partition.partitions | length == 1 )
+  register: partition_name
+  changed_when: false
+
+# DY: TODO: Check if existing FS has the same type as desired
+
+- name: Mount XFS partition /dev/{{ partition_name.stdout }}
+  mount:
+    path: "{{ d2m_mount_point }}"
+    src: "/dev/{{ partition_name.stdout }}"
+    fstype: xfs
+    state: mounted
+    opts: "{{ d2m_mount_opts | default(omit) }}"
+  when: d2m_fstype == 'xfs'
+  ignore_errors: true
+
+- name: Create or extend {{ d2m_fstype }} filesystem on "{{ partition_name.stdout }}"
+  filesystem:
+    fstype: "{{ d2m_fstype }}"
+    dev: "/dev/{{ partition_name.stdout }}"
+    resizefs: yes
+
+- name: Mount up device "{{ device2mount }}"
+  mount:
+    path: "{{ d2m_mount_point }}"
+    src: "/dev/{{ partition_name.stdout }}"
+    fstype: "{{ d2m_fstype }}"
+    opts: "{{ d2m_mount_opts | default(omit) }}"
+    state: mounted
+
+- name: Create a folder to symlink to
+  file:
+    src: "{{ d2m_mount_point }}"
+    dest: "{{ d2m_symlink_path }}"
+    state: link
+  when: d2m_symlink_path is defined

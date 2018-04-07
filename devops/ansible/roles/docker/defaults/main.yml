@@ -1,0 +1,6 @@
+---
+
+docker_version: "1.13.1"
+docker_py_version: "1.7.0"
+
+users_to_append_to_docker_group: []

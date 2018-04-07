@@ -1,0 +1,5 @@
+---
+
+device2mount: '/dev/xvdb'
+d2m_fstype: 'ext4'
+d2m_mount_point: '/mnt/external_drive'

@@ -1,0 +1,9 @@
+/var/lib/docker/containers/*/*-json.log {
+    rotate {{ docker_logrotate_max_log_files_per_container | default(10) }}
+    copytruncate
+    missingok
+    notifempty
+    compress
+    maxsize {{ docker_logrotate_max_log_file_size | default('10M') }}
+    create 0644 root root
+}

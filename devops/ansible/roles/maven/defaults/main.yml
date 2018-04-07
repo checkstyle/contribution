@@ -1,0 +1,11 @@
+---
+# Maven version number
+maven_version: 3.3.9
+
+# Mirror where to dowload Maven redistributable package from
+maven_mirror: "http://archive.apache.org/dist/maven/binaries/"
+
+# Use a cow in templates in favor of {{ ansible_managed }}
+maven_with_cow: true
+
+maven_download_dir: /opt

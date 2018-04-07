@@ -1,0 +1,13 @@
+---
+# Ulimits
+
+limits:
+  - domain: 'jenkins'
+    limit_item: 'nproc'
+    limit_type: '-'
+    value: '62835'
+  - domain: 'jenkins'
+    limit_item: 'nofile'
+    limit_type: '-'
+    value: '64000'
+

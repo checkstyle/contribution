@@ -1,0 +1,63 @@
+---
+
+# Ulimit configuration examples
+#limits:
+#  - { domain: 'root', limit_item: 'nofile', limit_type: '-', value: '65535'}
+#  - { domain: 'root', limit_item: 'nproc', limit_type: '-', value: '65535'}
+#
+# Items list (what can be set)
+#
+#  - core - limits the core file size (KB)
+#  - data - max data size (KB)
+#  - fsize - maximum filesize (KB)
+#  - memlock - max locked-in-memory address space (KB)
+#  - nofile - max number of open files
+#  - rss - max resident set size (KB)
+#  - stack - max stack size (KB)
+#  - cpu - max CPU time (MIN)
+#  - nproc - max number of processes
+#  - as - address space limit (KB)
+#  - maxlogins - max number of logins for this user
+#  - maxsyslogins - max number of logins on the system
+#  - priority - the priority to run user process with
+#  - locks - max number of file locks the user can hold
+#  - sigpending - max number of pending signals
+#  - msgqueue - max memory used by POSIX message queues (bytes)
+#  - nice - max nice priority allowed to raise to values: [-20, 19]
+#  - rtprio - max realtime priority
+#  - chroot - change root to directory (Debian-specific)
+
+# Kernel options examples
+#kernel_opts:
+#  - { name: 'kernel.yama.ptrace_scope', value: '0' }
+#  - { name: 'vm.max_map_count', value: '262144' }
+
+# Packages list
+packages_debian:
+  # Monitoring and debugging
+  - htop
+  - iotop
+  - tcpdump
+  - iftop
+  - traceroute
+  - netcat
+  # Useful utils
+  - vim
+  - mc
+  - pwgen
+  - unzip
+  - jq
+
+packages_rhel_and_centos:
+  # Monitoring and debugging
+  - htop
+  - iotop
+  - tcpdump
+  - traceroute
+  # Useful utils
+  - vim
+  - mc
+  - unzip
+  - jq
+
+packages: "{{ packages_debian if (ansible_distribution in ['Debian','Ubuntu']) else packages_rhel_and_centos }}"

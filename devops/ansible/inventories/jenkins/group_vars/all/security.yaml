@@ -1,0 +1,6 @@
+---
+# Security
+
+security_autoupdate_enabled: false
+security_sudoers_passwordless: []
+

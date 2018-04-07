@@ -1,0 +1,6 @@
+---
+# Mounting EBS for Jenkins home
+
+device2mount: '/dev/xvdb'
+d2m_mount_point: '/mnt/ebs_disk'
+d2m_symlink_path: '/var/lib/jenkins'

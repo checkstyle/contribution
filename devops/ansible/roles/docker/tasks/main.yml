@@ -1,0 +1,35 @@
+---
+
+- debug: msg="Install / ensure docker {{ docker_version }} ..."
+  when: "{{ docker_version is defined }}"
+
+- name: Check if docker is already installed
+  sudo: yes
+  shell: docker --version | awk '{for (i=0; i<=NF; i++){if ($i == "version"){print $(i+1);exit}}}' | tr -d ','
+  register: installed_docker_version_check
+  failed_when: false
+  changed_when: false
+
+- set_fact: 
+    installed_docker_version: "{{ installed_docker_version_check.stdout }}"
+
+- debug: msg="Currently installed docker version is {{ installed_docker_version }} while we are going to install version {{ docker_version }}"
+  when: "{{ ( installed_docker_version | length > 0 ) and ( not installed_docker_version == docker_version ) }}"
+
+- name: Gather ansible_* facts from host
+  setup: filter="ansible_*"
+  when: "{{ not ( ansible_distribution_release is defined ) }}"
+
+- include: install_docker.yml
+  when: ( installed_docker_version != docker_version ) or ( force_install_docker | default(false) | bool )
+
+- name: add users to docker group
+  user: name="{{ item }}" group=docker append=yes
+  tags: [ 'add_users_to_docker_group' ]
+  sudo: yes
+  with_items: "{{ users_to_append_to_docker_group | default([]) }}"
+
+- name: Configure docker container logs rotation
+  template: src=logrotate-containers dest=/etc/logrotate.d/docker-containers group=root owner=root mode=0644
+  become: yes
+  tags: [ 'logrotate' ]

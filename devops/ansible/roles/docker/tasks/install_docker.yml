@@ -1,0 +1,8 @@
+---
+
+- name: Gather ansible_distribution fact from host
+  setup: filter="ansible_distribution*"
+  when: "{{ not ( ansible_distribution is defined ) }}"
+
+- include: ubuntu/main.yml
+  when: "{{ ansible_distribution == 'Ubuntu' }}"

@@ -1,0 +1,32 @@
+---
+# Jenkins customization
+
+jenkins_admin_password: "{{ secret_jenkins_admin_password }}"
+
+jenkins_version: "2.19"
+
+#jenkins_plugins_state: latest
+jenkins_package_state: present
+#jenkins_plugins:
+#  - extensible-choice-parameter
+#  - extended-choice-parameter
+#  - rebuild
+#  - global-build-stats
+#  - jobgenerator
+#  - greenballs
+#  - disable-failed-job
+#  - embeddable-build-status
+#  - Exclusion
+#  - ghprb
+#  - extended-read-permission
+#  - postbuild-task
+#  - jobConfigHistory
+#  - workflow-aggregator
+#  - parameterized-trigger
+#  - jira
+#  - copyartifact
+#  - build-pipeline-plugin
+#  - delivery-pipeline-plugin
+#  - nodejs
+#  - publish-over-ssh
+

@@ -1,0 +1,11 @@
+---
+all:
+  children:
+    jenkins:
+      children:
+        jenkins-master:
+          hosts:
+            jenkins.checkstyle.org:
+  vars:
+    ansible_connection: ssh
+    ansible_ssh_user: ubuntu
