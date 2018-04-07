@@ -1,0 +1,20 @@
+---
+maven_supported_platforms:
+  - Archlinux
+  - Debian
+  - RedHat
+  - Suse
+  - Linuxmint
+
+# path for ansible to store downloaded or templated data
+local_ansible_data_path: '/usr/local/src/ansible/data'
+remote_ansible_data_path: "{{ local_ansible_data_path }}"
+
+# base installation directory for any Maven distribution
+maven_install_dir: '/opt/maven'
+
+# mvn binary gets symlinked into {{ maven_bin_path }}
+maven_bin_path: '/usr/local/bin'
+
+# filename of Maven redistributable package
+maven_redis_filename: "apache-maven-{{ maven_version }}-bin.tar.gz"

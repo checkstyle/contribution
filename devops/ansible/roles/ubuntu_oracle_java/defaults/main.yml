@@ -1,0 +1,21 @@
+---
+
+# Home
+jvm_folder: '/usr/lib/jvm'
+java_home: "{{ jvm_folder }}/oracle-{{ java_package }}-{{ java_major }}"
+
+# Java version
+java_major: 8
+java_minor: 161
+java_build: '12'
+java_package: jdk
+# sha256
+checksum: '6dbc56a0e3310b69e91bb64db63a485bd7b6a8083f08e48047276380a0e2021e'
+# URL
+pkg_token: '2f38c3b165be4555a1fa6e98c45e0808'
+java_version: "{{ java_major }}u{{ java_minor }}"
+oracle_url: "http://download.oracle.com/otn-pub/java/{{ java_package }}"
+pkg_path: "{{ java_version }}-b{{ java_build }}"
+pkg_name: "{{ java_package }}-{{ java_version }}-linux-x64.tar.gz"
+pkg_full_path: "{{ pkg_path }}/{{ pkg_token }}/{{ pkg_name }}"
+package_url: "{{ oracle_url }}/{{ pkg_full_path }}"

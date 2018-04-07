@@ -1,0 +1,41 @@
+---
+
+- name: Add GPG key for docker-engine package
+  apt_key: keyserver=hkp://p80.pool.sks-keyservers.net:80 id=58118E89F3A912897C070ADBF76221572C52609D
+  sudo: yes
+
+- name: Add Docker apt repo
+  apt_repository: repo="deb https://apt.dockerproject.org/repo ubuntu-{{ ansible_distribution_release }} main"
+  sudo: yes
+
+- name: update apt cache
+  apt: update_cache=yes
+  sudo: yes
+
+- name: Ensure there is no outdated lxc-docker apt packages installed
+  apt: name=lxc-docker* state=absent purge=yes
+  sudo: yes
+  failed_when: false
+
+- name: Install Docker packages
+  apt: name="{{ item }}"
+  with_items:
+    - "linux-image-extra-virtual"
+    - "docker-engine={{ docker_apt_package_version | default(docker_version + '-0~ubuntu-' + ansible_distribution_release) }}"
+  sudo: yes
+
+- name: Gather ansible_kernel fact from host
+  setup: filter="ansible_kernel"
+  when: "{{ not ( ansible_kernel is defined ) }}"
+
+- name: Install recommended Docker apt packages
+  apt: name="{{ item }}"
+  with_items:
+    - "{{ linux_image_extra_apt_package | default('linux-image-extra-' + ansible_kernel) }}"
+  sudo: yes
+  ignore_errors: yes
+
+- name: Install docker-py (it is needed by Ansible docker module)
+  pip: name=docker-py version={{ docker_py_version }}
+  tags: install_docker_py_package
+  sudo: yes

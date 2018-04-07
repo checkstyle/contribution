@@ -1,0 +1,45 @@
+---
+
+# Set hostname
+- name: Gather ansible_default_ipv4 fact from host
+  setup: filter="ansible_default_ipv4"
+  when: not ( ansible_default_ipv4 is defined )
+
+- name: Ensure hostname set
+  hostname:
+    name: "{{ inventory_hostname }}"
+  when: not inventory_hostname|match('(\d{1,3}\.){3}\d{1,3}')
+
+- name: Ensure hostname is in /etc/hosts
+  lineinfile:
+    dest: /etc/hosts
+    regexp: "^{{ ansible_default_ipv4.address }}.+$"
+    line: "{{ ansible_default_ipv4.address }} {{ ansible_nodename }} {{ ansible_hostname }}"
+
+- include: debian.yml
+  when: ansible_distribution in ['Debian','Ubuntu']
+
+- name: Install general packages
+  package:
+    name: "{{ item }}"
+    state: installed
+    install_recommends: "{{ 'no' if (ansible_distribution in ['Debian','Ubuntu']) else omit }}"
+  with_items: "{{ packages }}"
+  when: packages is defined
+
+# Ulimits and kernel options
+- name: Set Kernel Options
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+  with_items: "{{ kernel_opts }}"
+  when: kernel_opts is defined
+
+- name: Set PAM Limits
+  pam_limits:
+    domain: "{{ item.domain }}"
+    limit_item: "{{ item.limit_item }}"
+    limit_type: "{{ item.limit_type }}"
+    value: "{{ item.value }}"
+  with_items: "{{ limits }}"
+  when: limits is defined

@@ -1,0 +1,35 @@
+---
+
+- name: Jenkins setup
+  any_errors_fatal: yes
+  hosts: all
+  become: yes
+  become_method: sudo
+  tasks:
+    - import_role: name=swap
+      tags: swap
+
+    - import_role: name=common
+      tags: common
+
+    - import_role: name=security
+      tags: security
+
+    - import_role: name=chrony
+      tags: ['ntp', 'chrony']
+
+    - import_role: name=ubuntu_oracle_java
+      tags: java
+
+    - import_role: name=jenkins
+      tags: jenkins
+
+    - import_role: name=docker
+      tags: docker
+
+    - import_role: name=nginx
+      tags: nginx
+
+# We configure Jenkins to auto-download the proper version of Maven automatically instead
+#    - import_role: name=maven
+#      tags: maven

@@ -1,0 +1,43 @@
+---
+
+- name: Get Java
+  get_url:
+    url: "{{ package_url }}"
+    headers: 'Cookie: oraclelicense=accept-securebackup-cookie'
+    dest: "/opt/{{ pkg_name }}"
+    checksum: "sha256:{{ checksum }}"
+
+- name: Unpack Java
+  unarchive:
+    src: "/opt/{{ pkg_name }}"
+    dest: "/opt"
+    copy: no
+
+- name: Create a folder for jvms
+  file:
+    path: "{{ jvm_folder }}"
+    state: directory
+
+- name: Create symlik to jvm home dir
+  file:
+    src: "/opt/{{ java_package }}1.{{ java_major }}.0_{{ java_minor }}"
+    dest: "{{ java_home }}"
+    state: link
+    force: yes
+
+- name: Set JAVA_HOME for system
+  template:
+    src: java_home.sh.j2
+    dest: /etc/profile.d/java_home.sh
+    mode: 0644
+
+- name: Set java in alternatives
+  alternatives:
+    name: java
+    path: "{{ java_home }}/bin/java"
+    link: /usr/bin/java
+
+- name: Delete downloaded Java archive
+  file:
+    path: "/opt/{{ pkg_name }}"
+    state: absent

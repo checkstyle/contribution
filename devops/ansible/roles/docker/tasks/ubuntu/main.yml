@@ -1,0 +1,11 @@
+---
+
+- include: install_docker.yml
+
+- name: Enable Docker service
+  service: name=docker enabled=yes
+  tags: [ 'docker_enable' ]
+
+- name: Ensure Docker service is started
+  service: name=docker state=started
+  sudo: yes

@@ -1,0 +1,51 @@
+---
+
+- name: Gather the ansible_swaptotal_mb fact from host
+  setup: filter="ansible_swaptotal_mb"
+  when: not ( ansible_swaptotal_mb is defined ) 
+
+- name: Create swap file
+  sudo: yes
+  command: dd if=/dev/zero of={{ swap_file_path | default(default_swap_file_path) }} bs=1024 count={{ swap_file_size_mb | default(default_swap_file_size_mb) }}k
+           creates="{{ swap_file_path | default(default_swap_file_path) }}"
+  tags: swap.file.create
+
+- name: Change swap file permissions
+  file: path="{{ swap_file_path | default(default_swap_file_path) }}" owner=root group=root mode=0600
+  sudo: yes
+  tags: swap.file.permissions
+
+- name: "Check swap file type"
+  sudo: yes
+  shell: ip addr show eth0 | awk '/inet/ {print $2}' | cut -d/ -f1 | head -n +1 && file {{ swap_file_path | default(default_swap_file_path) }}
+  tags: swap.file.mkswap
+  register: swapfile
+
+- name: Make swap file
+  sudo: yes
+  command: "sudo mkswap {{ swap_file_path | default(default_swap_file_path) }}"
+  tags: swap.file.mkswap
+  when: swapfile.stdout.find('swap file') == -1
+
+- name: Write swap entry in fstab
+  sudo: yes
+  mount: name=none src={{ swap_file_path | default(default_swap_file_path) }} fstype=swap opts=sw passno=0 dump=0 state=present
+  tags: swap.fstab
+
+- name: Mount swap
+  sudo: yes
+  command: "swapon {{ swap_file_path | default(default_swap_file_path) }}"
+  tags: swap.file.swapon
+  when: ansible_swaptotal_mb < 1
+
+- name: Configure swappiness parameter for current session
+  sudo: yes
+  shell: sysctl vm.swappiness={{ swappiness | default(default_swappiness) }}
+  tags: swap.swappiness
+  when: ansible_swaptotal_mb > 1
+
+- name: Configure swappiness parameter for permanent use
+  sudo: yes
+  sysctl:
+    name: vm.swappiness
+    value: "1"

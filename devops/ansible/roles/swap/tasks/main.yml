@@ -1,0 +1,13 @@
+---
+
+# Enforce the presence of 'swap_file_size_mb' parameter
+- set_fact:
+    swap_file_size_mb: "{{ swap_file_size_mb | default('0') }}"
+
+- include: add_swap.yml
+  when: "{{ swap_file_size_mb | int > 0 }}"
+
+- name: Ensure swap is disabled
+  shell: swapoff -a
+  ignore_errors: yes
+  when: "{{ swap_file_size_mb | int == 0 }}"

@@ -1,0 +1,6 @@
+---
+
+default_swap_file_path: "/swapfile"
+default_swappiness: 1
+
+swap_file_size_mb: 2000
