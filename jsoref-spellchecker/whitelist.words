@@ -57,28 +57,27 @@ Ahmadov
 akhil
 Akshita
 alberto
-aleksey (Aleksey, aleksey)
+aleksey
 alex
 Alexey
 allchecks
 allclasses
 allowfullscreen
 alot
-ambig (Ambig, ambig)
+ambig
 Amessages
 andreyselkin
 Angol
 Anirvan
-Annon
 annotationlocation
 annotationonsameline
 annotationusestyle
 ano
-anoninner (ANONINNER, Anoninner, anoninner)
+anoninner
 anoninnerlength
 antfile
 antlib
-antlr (ANTLR, Antlr, antlr)
+antlr
 ANTLRv
 Antrl
 antrun
@@ -86,13 +85,13 @@ anttask
 anudeepti
 ANull
 Aop
-api (Api, api)
+api
 apidocs
 apirefs
 apogeum
 APooch
 apos
-applet (APPLET, applet)
+applet
 appname
 appveyor
 APRV
@@ -105,14 +104,14 @@ Arity
 Arquillian
 arrayb
 arrayc
-arraycopy (Arraycopy, arraycopy)
+arraycopy
 arrayinit
 arraylist
 arraytrailingcomma
 arraytypestyle
 arrlist
 Artem
-asd (ASD, asd)
+asd
 asda
 ASDF
 ASF
@@ -124,19 +123,19 @@ ASTNo
 astprinter
 asttreestringprinter
 Asun
-atclause (Atclause, atclause, atclauses)
+atclause
 atclauseorder
 ATest
 AThis
 atid
 ation
-atlassian (Atlassian, atlassian)
+atlassian
 attatrol
-attlist (ATTLIST, attlist)
+attlist
 attname
-attr (ATTR, Attr, attr, attrs)
+attr
 au
-auckenthaler (Auckenthaler, auckenthaler)
+auckenthaler
 Augner
 AUnicode
 Aurimas
@@ -152,23 +151,23 @@ avoidinlineconditionals
 avoidnestedblocks
 avoidstarimport
 avoidstaticimport
-awt (AWT, awt)
+awt
 backend
-backport (Backport, backport, backported)
+backport
 Backquote
 BADN
 badpackage
 baf
-bailliez (Bailliez, bailliez)
+bailliez
 Balazs
 Baranchikov
-baratali (Baratali, baratali)
+baratali
 barataliba
 Barowski
-basedir (Basedir, basedir)
-basefont (BASEFONT, Basefont, basefont)
+basedir
+basefont
 basetag
-baz (Baz, baz)
+baz
 bba
 bbb
 BBBB
@@ -180,8 +179,8 @@ bbd
 bbe
 bbf
 BBG
-bc (Bc, bc, bcs)
-bca (BCA, bca)
+bc
+bca
 bcb
 bcc
 bce
@@ -196,7 +195,7 @@ bdd
 bdf
 bdo
 bea
-beanutils (Beanutils, beanutils)
+beanutils
 beb
 Bechter
 beforeexecutionexclusionfilefilter
@@ -212,24 +211,24 @@ bfe
 bff
 Bhavik
 bintray
-bitbucket (Bitbucket, bitbucket)
-bitset (Bitset, bitset, bitsets)
+bitbucket
+bitset
 bizmailov
 Bj
 bjrke
-blabla (Blabla, blabla)
+blabla
 blablabla
 blag
 blalba
 ble
-bleh (Bleh, bleh)
+bleh
 Blic
 blockandinlinetags
 blockcommentposition
 blockcommentstyle
 blockindentation
 blockquote
-blog (Blog, blog)
+blog
 blogspot
 Bludov
 bluej
@@ -244,7 +243,7 @@ bountysource
 bracesareused
 Brosius
 bschneider
-bsr (BSR, bsr, BSRs)
+bsr
 Bsubscribe
 BTest
 buf
@@ -256,10 +255,10 @@ Bunsubscribe
 bw
 BXOR
 bykey
-bytecode (Bytecode, bytecode)
+bytecode
 caa
 cac
-cachefile (Cachefile, cachefile)
+cachefile
 cae
 CAFEBABE
 callstack
@@ -284,7 +283,7 @@ ccd
 cce
 ccf
 CClass
-ccomment (CComment, ccomment, CComments)
+ccomment
 cct
 CCustom
 cda
@@ -292,11 +291,11 @@ CDATA
 cdb
 cdc
 cdd
-cde (CDE, cde)
+cde
 cdfd
 Cdi
 cea
-ceb (CEB, ceb)
+ceb
 cec
 ced
 cef
@@ -306,13 +305,13 @@ cfb
 cfc
 cfe
 cff
-cfg (Cfg, cfg)
+cfg
 Cfml
 Cfoo
 cfz
 cgi
 Chalupa
-charset (CHARSET, Charset, charset, Charsets)
+charset
 CHDBACBF
 CHDBEFIF
 CHDCBAHA
@@ -336,16 +335,16 @@ checkchmod
 checkconfig
 checkouting
 checkscope
-checkstyle (CHECKSTYLE, Checkstyle, checkstyle, checkstyles, Checkstyle's, checkstyle's)
+checkstyle
 checkstyleanttask
 checkstylecompilation
 checkstyletask
 checkutils
-chmod (CHMOD, chmod)
+chmod
 chr
-chrono (Chrono, chrono)
+chrono
 Chulovskyy
-ci (ci, CIs)
+ci
 CInput
 circleci
 Claas
@@ -353,28 +352,28 @@ Claira
 classdataabstractioncoupling
 CLASSDEF
 classfanoutcomplexity
-classloader (Classloader, classloader)
-classname (Classname, classname)
-classpath (Classpath, classpath)
+classloader
+classname
+classpath
 classpathref
 classtypeparametername
-clazz (Clazz, clazz)
+clazz
 clemens
 Clientjunk
 clirr
 Cloneable
 clp
-clss (Clss, clss)
+clss
 cmdline
 cmm
-cmp (CMP, cmp)
+cmp
 cmt
 cn
 CNAME
 Cnt
 CNull
-cobertura (Cobertura, cobertura)
-codacy (Codacy, codacy)
+cobertura
+codacy
 codeanalyzers
 codebase
 codeclimate
@@ -382,31 +381,30 @@ codeconv
 codeconventions
 codeconvtoc
 codecov
-codehaus (Codehaus, codehaus)
+codehaus
 codeselectorpresentation
-codeship (Codeship, codeship)
+codeship
 codesize
 Coene
-colgroup (COLGROUP, Colgroup, colgroup)
+colgroup
 columnlimit
 Combobox
 commandline
-commentig
 commentsindentation
 commerical
 comparand
 Compiletime
 Comspace
 Comuzzi
-concat (Concat, concat)
-config (CONFIG, Config, config, Configs, configs)
+concat
+config
 configurationloader
 configwarn
 Connell's
 Constantinides
 constantname
 Contextualizable
-contextualization (Contextualization, contextualization)
+contextualization
 contextualized
 Contextualizing
 COORDS
@@ -417,28 +415,28 @@ covariantequals
 COVEREDRATIO
 cpio
 cpovirk
-cpp (Cpp, cpp)
-crlf (Crlf, crlf)
-cron (Cron, cron)
+cpp
+crlf
+cron
 Crory
 crossplatform
 Csabo
 CSOFF
 CSON
-css (Css, css)
+css
 csssdfsd
 CStyle
-csv (CSV, Csv, csv)
-ctor (CTOR, Ctor, ctor, Ctors, ctors)
-ctx (Ctx, ctx)
+csv
+ctor
+ctx
 Cushon
 customimportorder
 customlink
 CVE
-cvs (CVS, cvs)
+cvs
 CWhatever
 Cxl
-cyclomatic (Cyclomatic, cyclomatic)
+cyclomatic
 cyclomaticcomplexity
 cygwin
 cz
@@ -449,7 +447,7 @@ dac
 daf
 Daniil
 daniilyar
-danil (Danil, danil)
+danil
 Dantu
 Darguments
 dasa
@@ -471,7 +469,7 @@ dda
 ddb
 ddc
 ddd
-dddd (DDDD, dddd)
+dddd
 DDDDD
 DDDDDD
 dde
@@ -491,14 +489,14 @@ dennislundberg
 DENORMALIZER
 Depedency
 Deque
-deref (DEREF, Deref, deref)
+deref
 descendanttoken
 descr
 Deserializable
 designforextension
 Desjardins
 DEST
-destfile (DESTFILE, Destfile, destfile)
+destfile
 detailast
 detailnodetreestringprinter
 Dexec
@@ -518,7 +516,7 @@ Dgui
 Diachenko
 DIDIER
 dirname
-distelli (Distelli, distelli)
+distelli
 Dittgen
 Djacoco
 dkomanov
@@ -532,7 +530,7 @@ Dobratz
 dobratzp
 doccheck
 Dockter
-doclet (Doclet, doclet)
+doclet
 DOCTYPE
 Dodero
 Dodini
@@ -545,7 +543,7 @@ DOTALL
 doubletag
 Dpmd
 Dpuppycrawl
-dropdown (Dropdown, dropdown)
+dropdown
 drydock
 Dskip
 dsm
@@ -555,7 +553,7 @@ dst
 Dtest
 Dubinin
 Dudkin
-duh (Duh, duh)
+duh
 Dumitriu
 Duser
 Dxml
@@ -581,7 +579,7 @@ ecc
 ecd
 ece
 ecf
-ecj (ECJ, ecj)
+ecj
 eclemma
 eclipsecommunityawards
 ected
@@ -612,14 +610,14 @@ Efremenkov
 Eikou
 einige
 ej
-ejb (EJB, Ejb, ejb)
+ejb
 elasticsearch
 ele
 elementdef
-elist (ELIST, elist)
+elist
 Elliotte
-emacs (Emacs, emacs)
-emptyblock (emptyblock, emptyblocks)
+emacs
+emptyblock
 emptycatchblock
 emptyforinitializerpad
 emptyforiteratorpad
@@ -628,11 +626,11 @@ emptystatement
 emptytag
 Emtpy
 endeavours
-endline (Endline, endline)
+endline
 ent
-enum (ENUM, Enum, enum, ENUMS, Enums, enums)
+enum
 enumer
-eol (EOL, Eol, eol)
+eol
 eot
 equalsavoidnull
 equalshashcode
@@ -654,15 +652,15 @@ Exceptiontest
 executablestatementcount
 executon
 explicitinitialization
-expr (EXPR, Expr, expr)
+expr
 exra
 Externalizable
 faa
 faf
 fakehttps
 fallsthrough
-fallthrough (Fallthrough, fallthrough)
-fallthru (FALLTHRU, Fallthru, fallthru)
+fallthrough
+fallthru
 Fannotation
 favicon
 fba
@@ -693,34 +691,34 @@ FDCF
 fdd
 fde
 Fdesign
-fdf (FDF, fdf)
+fdf
 fea
 featuretested
 feb
-fef (FEF, fef)
+fef
 Feng
 ffb
 ffc
 ffd
 ffe
-fff (FFF, fff)
+fff
 FFFD
 FFFE
-ffff (FFFF, ffff)
+ffff
 ffffoooo
 Fheader
 fht
 fielddescription
-fieldname (Fieldname, fieldname)
+fieldname
 fieldset
 fieldtype
 filebasic
 filechooser
-filefilters (Filefilters, filefilters)
+filefilters
 filehandles
 filelength
 filepath
-fileset (FILESET, Fileset, fileset, filesets)
+fileset
 filesetcheck
 filestructure
 filesystem
@@ -729,10 +727,10 @@ filetabcharacter
 filetext
 Fimports
 finalclass
-finalizer (Finalizer, finalizer, Finalizers, finalizers)
+finalizer
 finallocalvariable
 finalparameters
-findbugs (Findbugs, findbugs)
+findbugs
 Findentation
 finetuning
 firefox
@@ -741,7 +739,7 @@ FIXME
 Fjava
 Fjavadoc
 Flas
-flattr (Flattr, flattr)
+flattr
 flowtested
 Flushables
 Fmain
@@ -750,19 +748,19 @@ Fmodifier
 Fnaming
 foid
 Fooable
-fooo (FOOO, fooo)
+fooo
 foooo
 Fooooo
-fooooooo (Fooooooo, fooooooo)
+fooooooo
 foooooooooboolean
-fooooooooooooooo (Fooooooooooooooo, fooooooooooooooo)
+fooooooooooooooo
 foooooooooooooooooooooooooooooooooooooooooo
 fooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 foooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
 forbiddenapis
-foreach (Foreach, foreach)
+foreach
 Fpuppycrawl
-fq (FQ, fq)
+fq
 fqian
 fqn
 freedomsponsors
@@ -775,11 +773,11 @@ fsc
 Fsizes
 Ftl
 Ftools
-ftp (Ftp, ftp)
+ftp
 ftpclient
 fullident
 fullname
-func (Func, func)
+func
 Fwhitespace
 Fx
 fzvx
@@ -797,19 +795,19 @@ GGG
 gh
 gibbs
 Giorgos
-github (Github, github, github's)
+github
 githubusercontent
 gitignore
 Gjs
 gmail
-google (GOOGLE, Google, google, Google's)
+google
 googleapis
 googleblog
 googleecommon
 googlegroups
 govstrangefolder
 gplus
-gradle (Gradle, gradle)
+gradle
 gradlew
 graphis
 Grenner
@@ -817,26 +815,26 @@ grep
 grepped
 Grigorii
 grp
-gtk (GTK, gtk)
+gtk
 Gubins
 gui
-gwt (GWT, Gwt, gwt)
+gwt
 gwtproject
 gx
 gyqnaznr
 gz
-hadoop (HADOOP, Hadoop, hadoop)
+hadoop
 hamcrest
-hardcoded (Hardcoded, hardcoded)
-hashcode (HASHCODE, Hashcode, hashcode)
+hardcoded
+hashcode
 hashset
-hashtable (Hashtable, hashtable)
-hbase (Hbase, hbase)
+hashtable
+hbase
 hcoles
 Headerjava
 Hejl
 hellohellohellohellohellohellohellohellohellohellohellohellohellohello
-herbie (HERBIE, herbie)
+herbie
 herokuapp
 HEXDIGIT
 hh
@@ -847,15 +845,15 @@ hipparchus
 hne
 Homepage
 horizontalwhitespace
-href (HREF, href)
+href
 HStore
 htag
 htdocs
-html (HTML, Html, html)
+html
 htmlbook
 HTMLJS
 htmlunit
-http (HTTP, Http, http, https)
+http
 hurz
 i'mcomment
 iae
@@ -870,11 +868,11 @@ ico
 ICONIFIED
 ICU
 idarmans
-identificator (Identificator, identificator)
+identificator
 identifiernames
 Idref
 idubinin
-idx (Idx, idx)
+idx
 ieo
 ietf
 Ifc
@@ -893,9 +891,9 @@ illegaltoken
 illegaltokentext
 illegaltype
 Imag
-img (IMG, Img, img)
+img
 iml
-impl (Impl, impl, Impls)
+impl
 importcontrol
 importcontrolloader
 importcontroltest
@@ -908,21 +906,21 @@ Incompatabilities
 Indentc
 indentcontinuationlines
 Inet
-infinispan (INFINISPAN, infinispan)
+infinispan
 ingerit
-initialiser (initialiser, initialisers)
+initialiser
 inlining
 innerassignment
-innerclass (Innerclass, innerclass)
+innerclass
 INNERR
 innertypelast
 Inpection
 Inpu
-instanceof (INSTANCEOF, Instanceof, instanceof)
+instanceof
 inteiro
 Intelli
-intellij (Intellij, intellij)
-intercell (Intercell, intercell)
+intellij
+intercell
 interfaceistype
 interfacetypeparametername
 invalidformat
@@ -930,8 +928,8 @@ invalidinherit
 ioe
 ioffset
 ipc
-ipv (IPv, Ipv, ipv)
-isindex (ISINDEX, Isindex, isindex)
+ipv
+isindex
 Isotalo
 isrutf
 isset
@@ -943,16 +941,15 @@ ivanov
 IWhatever
 iws
 Izmailov
-jacoco (Jacoco, jacoco)
+jacoco
 Jajawah
 Jakub
-jarchitect (JArchitect, jarchitect)
+jarchitect
 jarfile
 Jarmo
 Jaron
-javabeans
-javac (Javac, javac)
-javadoc (JAVADOC, Javadoc, javadoc, Javadocs, javadocs, Javadoc'd, javadoc's)
+javac
+javadoc
 javadocdetailnodeparser
 javadocmethod
 javadocpackage
@@ -963,7 +960,7 @@ javadoctagcontinuationindentation
 javadoctags
 javadoctype
 javadocvariable
-javaee (Javaee, javaee)
+javaee
 javaguide
 javall
 javamail
@@ -984,21 +981,21 @@ JCheck
 JCombo
 JComponent
 jcp
-jdbc (JDBC, jdbc)
+jdbc
 JDE
-jdee (JDEE, jdee)
-jdepend (JDepend, jdepend)
-jdk (JDK, Jdk, jdk, JDKs)
+jdee
+jdepend
+jdk
 jdt
-jedit (JEdit, jedit)
-jenkins (JENKINS, jenkins)
+jedit
+jenkins
 jeremymanson
 jetbrains
 JFile
 JFrame
-jgit (JGit, jgit)
+jgit
 jgrasp
-jgroups (JGroups, jgroups)
+jgroups
 jguru
 jira
 jis
@@ -1006,11 +1003,10 @@ jjva
 jkl
 JLabel
 Jlo
-jls (JLS, Jls, jls)
+jls
 JMenu
-jndi (JNDI, jndi)
+jndi
 Jochen
-JOOL
 JOption
 Jord
 Jpa
@@ -1018,7 +1014,7 @@ JPanel
 jpeg
 jpf
 jpg
-jprofiler (JProfiler, jprofiler)
+jprofiler
 jq
 jqno
 jquery
@@ -1032,21 +1028,21 @@ Jsf
 jshiell
 JSJ
 jslint
-jsni (JSNI, jsni)
-json (Json, json)
+jsni
+json
 jsoref
-jsp (JSP, Jsp, jsp)
+jsp
 JSplit
-jsr (JSR, jsr)
+jsr
 JTable
 JText
 JToggle
 JTool
-jtree (JTree, jtree, JTree's)
-junit (JUnit, Junit, junit, JUnit's, junit's)
-jvm (JVM, jvm)
+jtree
+junit
+jvm
 jxr
-kailasam (Kailasam, kailasam)
+kailasam
 Kaj
 Kautler
 kazachka
@@ -1058,7 +1054,7 @@ KDoc
 Keppler
 Kets
 kevinb
-keygen (KEYGEN, Keygen, keygen)
+keygen
 Killianey
 Koedderitzsch
 konstantinos
@@ -1079,29 +1075,29 @@ lbaeumer
 lbc
 LBRACK
 lbt
-lcms (LCMS, lcms)
-lcurly (LCURLY, LCurly, Lcurly, lcurly)
-ldap (LDAP, ldap)
+lcms
+lcurly
+ldap
 leftcurly
-len (LEN, len)
+len
 Lerman
-lexer (Lexer, lexer)
+lexer
 lexp
-lgpl (LGPL, lgpl)
+lgpl
 Lgroup
 lharris
 LHSOf
 Liangchen
 libexec
-lifecycle (Lifecycle, lifecycle)
-linebreak (linebreak, Linebreaks, linebreaks)
+lifecycle
+linebreak
 linecolumn
 linelect
 linelength
-linkcheck (Linkcheck, linkcheck, linkcheck's)
-linkplain (LINKPLAIN, linkplain)
+linkcheck
+linkplain
 linksource
-linux (Linux, linux)
+linux
 liscju
 Lisetskii
 Lisetskiy
@@ -1118,7 +1114,7 @@ LNOT
 localctx
 localfinalvariablename
 localhost
-localvariablename (localvariablename, localvariablenames)
+localvariablename
 Loewner
 Loggable
 lombok
@@ -1126,8 +1122,8 @@ Looo
 Looooong
 Loooooong
 Loooooooooo
-loooooooooong (Loooooooooong, loooooooooong)
-loooooooooooong (Loooooooooooong, loooooooooooong)
+loooooooooong
+loooooooooooong
 Looooooooooooo
 loooooooooooooong
 Looooooooooooooo
@@ -1140,10 +1136,10 @@ Loooooooooooooooooooo
 Loooooooooooooooooooooooooooooooo
 Lopatin
 Loughran
-lparen (LPAREN, Lparen, lparen)
+lparen
 lpb
 lpl
-lucene (LUCENE, lucene)
+lucene
 lui
 luiframework
 Luolc
@@ -1156,12 +1152,12 @@ madbean
 magicnumber
 Maikel
 mailhost
-mailto (Mailto, mailto)
+mailto
 mainframemodel
 Maksim
 Mandrikov
 mapred
-marazmatic (MARAZMATIC, marazmatic)
+marazmatic
 Mariia
 Massol
 Matsubara
@@ -1179,18 +1175,18 @@ MENFORCER
 mert
 messg
 messi
-metadata (METADATA, Metadata, metadata)
+metadata
 Metallica
 methodcount
 methodlength
-methodname (methodname, methodnames)
+methodname
 Methodof
 methodparampad
 methodtypeparametername
 mez
 MEZk
 Micha
-microsoft (Microsoft, microsoft)
+microsoft
 migh
 Mikhailov
 minimalistic
@@ -1206,7 +1202,7 @@ mkdir
 mkordas
 MLINKCHECK
 mockfile
-mockito (Mockito, mockito)
+mockito
 modifiedcontrolvariable
 modifierorder
 Mohnen
@@ -1218,7 +1214,7 @@ moradan
 Morais
 Mosin
 Motlin
-mov (mov, Moved, moved)
+mov
 moz
 MRELEASE
 MSITE
@@ -1227,16 +1223,16 @@ mstudman
 MTAGLIST
 mue
 multicharacter
-multiline (MULTILINE, Multiline, multiline, multilines)
+multiline
 Multimap
 multiplestringliterals
 multiplevariabledeclarations
 Multiset
 mutableexception
-mvc (MVC, mvc)
+mvc
 mvn
 mvnstyle
-mycheckstyle (Mycheckstyle, mycheckstyle)
+mycheckstyle
 mycompany
 mycompanychecks
 mycustom
@@ -1260,12 +1256,12 @@ NAMEFILE
 nameofcompany
 nameofdivision
 nameofproject
-namespace (Namespace, namespace, NAMESPACES, Namespaces, namespaces)
-nano (Nano, nano, Nanos, nanos)
+namespace
+nano
 nbactions
 nbia
 nbsp
-ncss (NCSS, Ncss, ncss)
+ncss
 ndex
 needbraces
 Nejman
@@ -1275,7 +1271,7 @@ NEQ
 nestedfordepth
 nestedifdepth
 nestedtrydepth
-nesterenko (Nesterenko, nesterenko)
+nesterenko
 netbeans
 newbies
 newdomain
@@ -1286,7 +1282,7 @@ Niederhauser
 Nikhil
 Niklas
 nio
-nlow (NLOW, Nlow, nlow)
+nlow
 NMTOKEN
 NN
 NNN
@@ -1296,7 +1292,7 @@ NNNNNN
 NNNNNNN
 Nnum
 noarch
-noarg (NOARG, Noarg, noarg)
+noarg
 nobr
 Nobuyuki
 noclone
@@ -1320,12 +1316,12 @@ NONGROUP
 NONJAVA
 nonjavadoc
 NONMAGIC
-nonnull (NONNULL, nonnull)
+nonnull
 nonvalidating
 Noordhuis
 noparentfile
 noscript
-nospace (NOSPACE, Nospace, nospace)
+nospace
 Nothin
 notjava
 NOTNULL
@@ -1334,9 +1330,9 @@ nowhitespaceafter
 nowhitespacebefore
 nowildcard
 nowrap
-npath (NPATH, NPath, Npath, npath)
+npath
 npathcomplexity
-npe (NPE, Npe, npe)
+npe
 nsf
 NTFS
 nts
@@ -1363,7 +1359,7 @@ onetoplevel
 onetoplevelclass
 onevariableperline
 Onstine
-oo (Oo, oo, oos)
+oo
 OOL
 oong
 ooo
@@ -1377,14 +1373,14 @@ ooooooooooooong
 ooooooooooooooooooooong
 oooooooooooooooooooooooooooooooooooooooo
 ooooooooooooooooooooooooooooooooooooooooooong
-openjdk (OPENJDK, openjdk)
+openjdk
 opensymphony
 operatorwrap
 optimisation
 Optimizable
 oraclejdk
 orderingandspacing
-orekit (Orekit, orekit)
+orekit
 organizationname
 Orgorgan
 orm
@@ -1392,14 +1388,14 @@ Osgi
 Osipov
 Ospite
 oss
-osx (OSX, osx)
+osx
 outertypefilename
 outertypenumber
-outter (Outter, outter)
+outter
 ove
 overloadmethodsdeclarationorder
 overloadsplit
-overridable (Overridable, overridable)
+overridable
 Overriden
 OVERRIDERS
 packageannotation
@@ -1407,11 +1403,11 @@ packagedeclaration
 packagediffdirectory
 packageinfo
 packagelist
-packagename (packagename, packagenames)
+packagename
 packagenamesloader
 packageobjectfactory
 packagestate
-packge (packge, packges)
+packge
 packifc
 packpack
 packpriv
@@ -1424,7 +1420,7 @@ Palaga
 Papaioannou
 paraception
 parameterassignment
-parametername (parametername, parameternames)
+parametername
 parameternumber
 paramnum
 parenpad
@@ -1443,11 +1439,11 @@ pex
 pgjdbc
 Pgpg
 pguyot
-php (PHP, php)
+php
 pid
 pietern
 piotr
-pitest (Pitest, pitest)
+pitest
 pitesttyle
 Piyush
 pjdbc
@@ -1458,21 +1454,21 @@ pkginfo
 pkx
 plaf
 Platinsky
-plugin (Plugin, plugin, plugins, Plugin's, plugin's)
-pmd (PMD, Pmd, pmd)
+plugin
+pmd
 pmdruleset
 PModel
 pn
 png
 Pno
 Pointcut
-pojo (POJO, Pojo, pojo)
+pojo
 Popup
 Portela
-posix (Posix, posix)
+posix
 Postgresql
 Povirk
-powermock (Powermock, powermock)
+powermock
 poyrazus
 ppackage
 pprivate
@@ -1484,7 +1480,7 @@ preformatted
 prefs
 Priimak
 printf
-println (Println, println)
+println
 priva
 Privat
 programpractice
@@ -1492,7 +1488,7 @@ propertycachefile
 propertyfile
 prot
 PROTECTE
-protonpack (PROTONPACK, protonpack)
+protonpack
 pubconstr
 pubifc
 PUBLI
@@ -1503,7 +1499,7 @@ pubpub
 puppycrawl
 pw
 pwd
-px (Px, px)
+px
 py
 qa
 qalab
@@ -1520,7 +1516,7 @@ Rathgeb
 rawtypes
 rb
 RBRACK
-rcurly (RCURLY, Rcurly, rcurly)
+rcurly
 RDD
 rdiachenko
 RDz
@@ -1528,15 +1524,15 @@ README
 Readonly
 rebased
 rebasing
-redbook (Redbook, redbook, Redbooks, redbooks)
+redbook
 redhillconsulting
 redundantimport
 redundantmodifier
-refactor (Refactor, refactor, Refactored, refactored)
-refactoring (Refactoring, refactoring, refactorings)
-refid (Refid, refid)
-regex (REGEX, Regex, regex)
-regexp (REGEXP, Regexp, regexp, Regexps, regexps)
+refactor
+refactoring
+refid
+regex
+regexp
 regexpheader
 regexpmultiline
 regexponfilename
@@ -1546,7 +1542,7 @@ regionserver
 regxexp
 Reiz
 relativized
-releasenotes (Releasenotes, releasenotes)
+releasenotes
 remoting
 requirethis
 RESIZABLE
@@ -1569,8 +1565,8 @@ romani
 romanivanov
 Ronge
 Rootsmorejunk
-rowset (Rowset, rowset)
-rparen (RPAREN, RParen, Rparen, rparen)
+rowset
+rparen
 Rpc
 rpmfind
 rq
@@ -1579,23 +1575,23 @@ Rrridden
 RRRR
 rsa
 RSPEC
-rss (Rss, rss)
+rss
 rtcontrol
 ru
-ruleset (ruleset, rulesets)
+ruleset
 Rusak
 Ruslan
 rw
 ryly
 Ryszard
 sabaka
-sagar (Sagar, sagar)
+sagar
 Saideep
 Sameline
 sasd
 SATO
 sbe
-sbt (SBT, sbt)
+sbt
 scache
 schattenparker
 Schl
@@ -1615,11 +1611,11 @@ separatorwrap
 Sergiu
 Serializer
 sermojohn
-servlet (SERVLET, Servlet, servlet)
+servlet
 SETPOINT
 setprop
 setx
-sevntu (Sevntu, sevntu)
+sevntu
 sflogo
 sharang
 shengchen
@@ -1640,25 +1636,25 @@ Sikhovets
 Simplifiable
 simplifybooleanexpression
 simplifybooleanreturn
-singleline (SINGLELINE, Singleline, singleline)
+singleline
 singlelined
 singlelinejavadoc
 singlespaceseparator
 sirdis
 Sitnikov
-sivakumar (Sivakumar, sivakumar)
+sivakumar
 sjq
 Skytt
 Skytta
 slava
 Slawinski
-slf (SLF, Slf, slf)
-slist (SLIST, SList, Slist, slist, SLISTs)
-smalltalk (Smalltalk, smalltalk)
+slf
+slist
+smalltalk
 smalltalker
 smckay
 Smt
-smth (Smth, smth)
+smth
 snf
 solaris
 solr
@@ -1671,7 +1667,7 @@ someotherthing
 someotherting
 sonarcloud
 sonarjava
-sonarqube (Sonarqube, sonarqube)
+sonarqube
 sonarsource
 sonatype
 Sonneveld
@@ -1681,7 +1677,7 @@ Soref
 Sotuyo
 sourcefile
 sourceforce
-sourceforge (SOURCEFORGE, sourceforge)
+sourceforge
 sourcepath
 sourcesets
 spacebar
@@ -1689,21 +1685,21 @@ SPDX
 specialescape
 spellchecker
 spi
-spliterator (Spliterator, spliterator, Spliterators)
-spotbugs (Spotbugs, spotbugs)
+spliterator
+spotbugs
 spotbugsreports
 springframework
 sqale
 sqe
-sql (Sql, sql)
-src (Src, src)
+sql
+src
 Srivastava
 ssel
 ssh
-ssl (SSL, ssl)
-sss (sss, ssss)
+ssl
+sss
 stackexchange
-stackoverflow (STACKOVERFLOW, Stackoverflow, stackoverflow)
+stackoverflow
 stackoverflowerror
 Stacktrace
 Stafusa
@@ -1716,16 +1712,16 @@ stemp
 Steneker
 stevewall
 sthref
-stmt (STMT, Stmt, stmt, Stmts)
+stmt
 Stotesbery
 streamapi
 strictexception
-strictfp (STRICTFP, strictfp)
+strictfp
 stringbuffer
 stringliteralequality
 Studman
 styleguide
-stylesheet (stylesheet, stylesheets)
+stylesheet
 Subbu
 subdir
 subelements
@@ -1734,7 +1730,7 @@ subkrish
 subscope
 substitude
 sudo
-sukhodolsky (Sukhodolsky, sukhodolsky)
+sukhodolsky
 summaryjavadoc
 sunsecure
 superclasses
@@ -1751,7 +1747,7 @@ suppresswarningsfilter
 suppresswarningsholder
 suppresswithnearbycommentfilter
 suppresswithplaintextcommentfilter
-svg (SVG, svg)
+svg
 svn
 sxpath
 sysprop
@@ -1760,11 +1756,11 @@ systemtests
 Szczepanik
 taab
 Taglib
-taglist (Taglist, taglist)
+taglist
 Takahashi
 Tamm
-taskdef (taskdef, taskdefs)
-tbody (TBODY, tbody)
+taskdef
+tbody
 tcr
 td
 teamcity
@@ -1783,15 +1779,15 @@ TEXCEPTION
 textlevel
 Tf
 Tfo
-tfoot (TFOOT, tfoot)
-thead (THEAD, thead)
+tfoot
+thead
 theqaguy
 thesummaryfragment
 thetaphi
 Thielke
-thirdparty (THIRDPARTY, thirdparty)
+thirdparty
 threadsafe
-throwable (Throwable, throwable, Throwables, throwables)
+throwable
 throwscount
 Thymeleaf
 Tibeyev
@@ -1802,13 +1798,13 @@ tmp
 tnarake
 tobject
 toc
-todo (TODO, Todo, todo)
+todo
 todocomment
 tok
-tokenizer (Tokenizer, tokenizer)
+tokenizer
 tokenks
 tokennizer
-tokentype (tokentype, tokentypes)
+tokentype
 tolist
 Tomaw
 toolongpackagetotestcoveragegooglesjavastylerule
@@ -1819,7 +1815,7 @@ transx
 transy
 Travic
 treelayout
-treewalker (TREEWALKER, Treewalker, treewalker, Treewalker's)
+treewalker
 TRequest
 Trie
 tschneeberger
@@ -1831,7 +1827,7 @@ Turkin
 Tvs
 tw
 typecastparenpad
-typename (typename, typenames)
+typename
 typeof
 typeresolution
 Typesafe
@@ -1881,7 +1877,7 @@ uaafc
 uaafd
 uaafe
 uaaff
-uab (uab, uabed)
+uab
 uaba
 uabaa
 uabab
@@ -1923,7 +1919,7 @@ uabfc
 uabfd
 uabfe
 uabff
-uac (uac, uaced)
+uac
 uaca
 uacaa
 uacab
@@ -1965,7 +1961,7 @@ uacfc
 uacfd
 uacfe
 uacff
-uad (uad, uaded)
+uad
 uada
 uadaa
 uadab
@@ -2050,7 +2046,7 @@ uaefc
 uaefd
 uaefe
 uaeff
-uaf (uaf, uafed)
+uaf
 uafa
 uafaa
 uafab
@@ -2092,7 +2088,7 @@ uaffc
 uaffd
 uaffe
 uafff
-ub (ub, ubed)
+ub
 uba
 ubaa
 ubaaa
@@ -2136,7 +2132,7 @@ ubafc
 ubafd
 ubafe
 ubaff
-ubb (ubb, ubbed)
+ubb
 ubba
 ubbaa
 ubbab
@@ -2219,7 +2215,7 @@ ubcfc
 ubcfd
 ubcfe
 ubcff
-ubd (ubd, ubded)
+ubd
 ubda
 ubdaa
 ubdab
@@ -2304,7 +2300,7 @@ ubefd
 ubefe
 ubeff
 uber
-ubf (ubf, ubfed)
+ubf
 ubfa
 ubfaa
 ubfab
@@ -2346,7 +2342,7 @@ ubffc
 ubffd
 ubffe
 ubfff
-ubuntu (Ubuntu, ubuntu)
+Ubuntu
 uca
 ucaa
 ucaaa
@@ -2390,7 +2386,7 @@ ucafc
 ucafd
 ucafe
 ucaff
-ucb (ucb, ucbed)
+ucb
 ucba
 ucbaa
 ucbab
@@ -2432,7 +2428,7 @@ ucbfc
 ucbfd
 ucbfe
 ucbff
-ucc (ucc, ucced)
+ucc
 ucca
 uccaa
 uccab
@@ -2474,7 +2470,7 @@ uccfc
 uccfd
 uccfe
 uccff
-ucd (ucd, ucded)
+ucd
 ucda
 ucdaa
 ucdab
@@ -2558,7 +2554,7 @@ ucefc
 ucefd
 ucefe
 uceff
-ucf (ucf, ucfed)
+ucf
 ucfa
 ucfaa
 ucfab
@@ -2600,7 +2596,7 @@ ucffc
 ucffd
 ucffe
 ucfff
-ud (ud, uded)
+ud
 uda
 udaa
 udaaa
@@ -2644,7 +2640,7 @@ udafc
 udafd
 udafe
 udaff
-udb (udb, udbed)
+udb
 udba
 udbaa
 udbab
@@ -2686,7 +2682,7 @@ udbfc
 udbfd
 udbfe
 udbff
-udc (udc, udced)
+udc
 udca
 udcaa
 udcab
@@ -2728,7 +2724,7 @@ udcfc
 udcfd
 udcfe
 udcff
-udd (udd, udded)
+udd
 udda
 uddaa
 uddab
@@ -2812,7 +2808,7 @@ udefc
 udefd
 udefe
 udeff
-udf (udf, udfed)
+udf
 udfa
 udfaa
 udfab
@@ -2898,7 +2894,7 @@ ueafc
 ueafd
 ueafe
 ueaff
-ueb (ueb, uebed)
+ueb
 ueba
 uebaa
 uebab
@@ -2940,7 +2936,7 @@ uebfc
 uebfd
 uebfe
 uebff
-uec (uec, ueced)
+uec
 ueca
 uecaa
 uecab
@@ -2982,7 +2978,7 @@ uecfc
 uecfd
 uecfe
 uecff
-ued (ued, ueded)
+ued
 ueda
 uedaa
 uedab
@@ -3067,7 +3063,7 @@ ueefc
 ueefd
 ueefe
 ueeff
-uef (uef, uefed)
+uef
 uefa
 uefaa
 uefab
@@ -3109,7 +3105,7 @@ ueffc
 ueffd
 ueffe
 uefff
-uf (uf, ufed)
+uf
 ufa
 ufaa
 ufaaa
@@ -3153,7 +3149,7 @@ ufafc
 ufafd
 ufafe
 ufaff
-ufb (ufb, ufbed)
+ufb
 ufba
 ufbaa
 ufbab
@@ -3195,7 +3191,7 @@ ufbfc
 ufbfd
 ufbfe
 ufbff
-ufc (ufc, ufced)
+ufc
 ufca
 ufcaa
 ufcab
@@ -3237,7 +3233,7 @@ ufcfc
 ufcfd
 ufcfe
 ufcff
-ufd (ufd, ufded)
+ufd
 ufda
 ufdaa
 ufdab
@@ -3321,7 +3317,7 @@ ufefc
 ufefd
 ufefe
 ufeff
-uff (uff, uffed)
+uff
 uffa
 uffaa
 uffab
@@ -3369,14 +3365,14 @@ umd
 UML
 Ummm
 uname
-uncomment (Uncomment, uncomment, Uncommented, uncommented)
+uncomment
 uncommentedmain
 Unconstructable
-undelete (Undelete, undelete)
+undelete
 Unic
-unicode (UNICODE, Unicode, unicode)
+unicode
 Uninstantiable
-uniq (Uniq, uniq)
+uniq
 uniqueproperties
 Unitless
 unnecessaryparentheses
@@ -3391,16 +3387,16 @@ Upadhyay
 uppercased
 upperell
 upsss
-uri (URI, uri, uris)
-url (URL, Url, url, URLs, Urls, urls)
+uri
+url
 userguide
-username (USERNAME, username)
+username
 usr
 UTests
-utf (UTF, Utf, utf)
+utf
 Utkarsh
 uu
-uuid (UUID, uuid)
+uuid
 uuml
 uuuu
 uuuuu
@@ -3410,13 +3406,13 @@ vaano
 valeria
 Validator
 VALUEEEE
-vararg (Vararg, vararg, Varargs, varargs)
+vararg
 variabledeclarationusagedistance
 variabledistance
 varray
 Varun
 vasilyeva
-vasylieva (Vasylieva, vasylieva)
+vasylieva
 vavr
 vboolean
 vbyte
@@ -3425,7 +3421,7 @@ vdouble
 Veach
 vecna
 Velde
-versioning (Versioning, versioning)
+versioning
 verticalwhitespace
 Vetrenko
 Veyor
@@ -3439,7 +3435,7 @@ Vivek
 VK
 vlad
 Vladislav
-vladlis (Vladlis, vladlis)
+vladlis
 vlist
 vlong
 vm
@@ -3459,16 +3455,16 @@ VVVVVVV
 Wagland
 wanadoo
 Warni
-wbr (WBR, Wbr, wbr)
+wbr
 Weakento
 Webflow
-weblogic (Weblogic, weblogic)
+weblogic
 webmvc
-website (Website, website)
+website
 webtoolkit
 Weimer
 Wellformedness
-wercker (WERCKER, Wercker, wercker)
+wercker
 weven
 wget
 wherejavadocused
@@ -3480,7 +3476,7 @@ whitelist
 whitespaceafter
 whitespacearound
 Whups
-wiki (Wiki, wiki)
+wiki
 wikipedia
 wiktionary
 WInput
@@ -3489,8 +3485,7 @@ woff
 Wojtech
 wontfix
 wordpress
-workaround (Workaround, workaround)
-workflow
+workaround
 workflows
 writetag
 writingchecks
@@ -3508,10 +3503,10 @@ Xandy
 xargs
 XAs
 xdc
-xdoc (XDOC, XDoc, Xdoc, xdoc, XDocs, Xdocs, xdocs)
+xdoc
 xdocspagetitle
 xe
-xerces (Xerces, xerces)
+xerces
 xf
 xfeff
 xfff
@@ -3526,7 +3521,7 @@ Xhenseval
 XHTML
 Xiao
 XInclude
-xml (XML, Xml, xml)
+xml
 xmlcatalog
 XMLHTTP
 xmllogger
@@ -3536,26 +3531,26 @@ xmlstarlet
 xmlvalidate
 Xms
 Xmx
-xpath (XPATH, XPath, Xpath, xpath)
+xpath
 xpathfilter
 xpathmapper
 xpathquerygenerator
 xsd
 xsi
-xsl (XSL, xsl)
+xsl
 Xslt
 xsltproc
 XSO
 xtr
-xwiki (XWiki, xwiki)
+xwiki
 xwork
 XXXX
 XXXXX
-xxxxxx (XXXXXX, xxxxxx)
+xxxxxx
 XXXXXXX
 xxxxxxxxxx
 XXXXXXXXXXXXXXXXXXXXXXXXXXXX
-xy (Xy, xy)
+xy
 XYzz
 XZ
 Yaml
@@ -3573,13 +3568,13 @@ Yuriy
 Yusuke
 YYLEX
 YYY
-yyyy (YYYY, yyyy)
+yyyy
 YYYYY
 YYYYYY
 Yz
 Yzz
 zenigata
-zf (ZF, zf)
+zf
 zh
 zhangduo
 Zhigunov
