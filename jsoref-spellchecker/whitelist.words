@@ -384,7 +384,6 @@ codecov
 codehaus
 codeselectorpresentation
 codeship
-codesize
 codestyle
 Coene
 colgroup
@@ -1187,7 +1186,7 @@ methodtypeparametername
 mez
 MEZk
 Micha
-microsoft
+Microsoft
 migh
 Mikhailov
 minimalistic
@@ -1336,7 +1335,6 @@ npath
 npathcomplexity
 npe
 nsf
-NTFS
 nts
 nullanalysis
 NULLCHECK
@@ -1717,7 +1715,6 @@ sthref
 stmt
 Stotesbery
 streamapi
-strictexception
 strictfp
 stringbuffer
 stringliteralequality
@@ -1831,7 +1828,6 @@ tw
 typecastparenpad
 typename
 typeof
-typeresolution
 Typesafe
 typevariablenames
 tzouw
@@ -3383,7 +3379,6 @@ Unproxyable
 unrealwork
 Unregister
 unsubscribe
-unusedcode
 unusedimports
 Upadhyay
 uppercased
