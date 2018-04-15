@@ -385,6 +385,7 @@ codehaus
 codeselectorpresentation
 codeship
 codesize
+codestyle
 Coene
 colgroup
 columnlimit
@@ -1228,6 +1229,7 @@ Multimap
 multiplestringliterals
 multiplevariabledeclarations
 Multiset
+multithreading
 mutableexception
 mvc
 mvn
@@ -1740,6 +1742,7 @@ supertype
 suppressioncommentfilter
 suppressionfilter
 suppressionsloader
+suppressionsstringprinter
 suppressionxpathfilter
 suppresswarnings
 suppresswarningsfilter
