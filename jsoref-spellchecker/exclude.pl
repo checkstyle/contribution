@@ -4,9 +4,9 @@
 # output is null delimited to match input
 $/="\0";
 my @excludes=qw(
-  /images/
-  /src/it/resources/
-  /src/test/resources/
+  (^|/)images/
+  ^src/it/resources/
+  ^src/test/resources/
   /messages.*_..\.properties$
   /.*_..\.translation[^/]*$
 );
