@@ -68,11 +68,7 @@ matrix:
     - jdk: oraclejdk8
       env:
         - DESC="jsoref-spellchecker"
-        - CMD1=" git clone https://github.com/checkstyle/checkstyle && cd checkstyle && mkdir -p .ci-temp/contribution"
-        - CMD2=" && cp -r ../jsoref-spellchecker .ci-temp/contribution"
-        - CMD3=" "
-        - CMD4=" && export skipFetchRepo=true && ./.ci/test-spelling-unknown-words.sh"
-        - CMD=$CMD1$CMD2$CMD3$CMD4
+        - CMD="./.ci/travis.sh jsoref-spellchecker"
     # disable as for now java8 is not supoorted jdk for travis MacOS
     #- os: osx
     #  env:
