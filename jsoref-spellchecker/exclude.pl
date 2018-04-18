@@ -8,6 +8,8 @@ my @excludes=qw(
   ^src/it/resources/
   ^src/test/resources/
   /messages.*_..\.properties$
+  /releasenotes_old\.xml$
+  /releasenotes\.xml$
   /.*_..\.translation[^/]*$
 );
 my $exclude = join "|", @excludes;
