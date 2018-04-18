@@ -65,10 +65,6 @@ matrix:
         - CMD3=" && ./codenarc.sh . launch.groovy > launch.log && cat launch.log && grep '(p1=0; p2=20; p3=1)' launch.log"
         - CMD4=" "
         - CMD=$CMD1$CMD2$CMD3$CMD4
-    - jdk: oraclejdk8
-      env:
-        - DESC="jsoref-spellchecker"
-        - CMD="./.ci/travis.sh jsoref-spellchecker"
     # disable as for now java8 is not supoorted jdk for travis MacOS
     #- os: osx
     #  env:
