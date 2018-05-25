@@ -115,9 +115,9 @@ build_script:
   - ps: get-content appveyor.cmd
   # We need to use cmd there as ps1 is failing each time error output appear from any command line
   - appveyor.cmd
-  - echo "Size of caches (bytes):"
-  - Get-ChildItem -Recurse 'C:\maven\apache-maven-3.2.5' | Measure-Object -Property Length -Sum
-  - Get-ChildItem -Recurse 'C:\groovy\groovy-2.4.8' | Measure-Object -Property Length -Sum
-  - Get-ChildItem -Recurse 'C:\cygwin\var\cache\setup' | Measure-Object -Property Length -Sum
-  - Get-ChildItem -Recurse 'C:\Users\appveyor\.m2' | Measure-Object -Property Length -Sum
+  - ps: echo "Size of caches (bytes):"
+  - ps: Get-ChildItem -Recurse 'C:\maven\apache-maven-3.2.5' | Measure-Object -Property Length -Sum
+  - ps: Get-ChildItem -Recurse 'C:\groovy\groovy-2.4.8' | Measure-Object -Property Length -Sum
+  - ps: Get-ChildItem -Recurse 'C:\cygwin\var\cache\setup' | Measure-Object -Property Length -Sum
+  - ps: Get-ChildItem -Recurse 'C:\Users\appveyor\.m2' | Measure-Object -Property Length -Sum
   
