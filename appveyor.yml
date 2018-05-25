@@ -39,9 +39,9 @@ install:
 
 cache:
   - C:\maven\apache-maven-3.2.5
-  - C:\Users\appveyor\.m2
-  - C:\cygwin\var\cache\setup
   - C:\groovy\groovy-2.4.8
+  - C:\cygwin\var\cache\setup
+  - C:\Users\appveyor\.m2
 
 matrix:
   fast_finish: true
@@ -115,3 +115,9 @@ build_script:
   - ps: get-content appveyor.cmd
   # We need to use cmd there as ps1 is failing each time error output appear from any command line
   - appveyor.cmd
+  - echo "Size of caches (bytes):"
+  - Get-ChildItem -Recurse 'C:\maven\apache-maven-3.2.5' | Measure-Object -Property Length -Sum
+  - Get-ChildItem -Recurse 'C:\groovy\groovy-2.4.8' | Measure-Object -Property Length -Sum
+  - Get-ChildItem -Recurse 'C:\cygwin\var\cache\setup' | Measure-Object -Property Length -Sum
+  - Get-ChildItem -Recurse 'C:\Users\appveyor\.m2' | Measure-Object -Property Length -Sum
+  
