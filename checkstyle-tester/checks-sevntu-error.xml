@@ -201,5 +201,12 @@
           <property name="ignoredClassNameFormat" value="UnsupportedOperationException"/>
         </module>
         <module name="com.github.sevntu.checkstyle.checks.coding.ReturnCountExtendedCheck" />
+        <module name="com.github.sevntu.checkstyle.checks.design.CheckstyleTestMakeupCheck"/>
+        <module name="com.github.sevntu.checkstyle.checks.coding.ForbidCertainMethodCheck">
+          <property name="methodName" value="assert(True|False)"/>
+          <property name="argumentCount" value="1"/>
+        </module>
+        <module name="com.github.sevntu.checkstyle.checks.coding.MoveVariableInsideIfCheck" />
+        <module name="com.github.sevntu.checkstyle.checks.coding.RequireFailForTryCatchInJunitCheck" />
     </module>
 </module>
