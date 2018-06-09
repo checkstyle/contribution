@@ -62,7 +62,7 @@ matrix:
         - DESC="codenarc validation for groovy files"
         - CMD1=" cd checkstyle-tester "
         - CMD2=" && ./codenarc.sh . diff.groovy > diff.log && cat diff.log && grep '(p1=0; p2=8; p3=0)' diff.log"
-        - CMD3=" && ./codenarc.sh . launch.groovy > launch.log && cat launch.log && grep '(p1=0; p2=20; p3=1)' launch.log"
+        - CMD3=" && ./codenarc.sh . launch.groovy > launch.log && cat launch.log && grep '(p1=0; p2=21; p3=1)' launch.log"
         - CMD4=" "
         - CMD=$CMD1$CMD2$CMD3$CMD4
     # disable as for now java8 is not supoorted jdk for travis MacOS

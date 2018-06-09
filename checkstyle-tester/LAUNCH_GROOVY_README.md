@@ -36,6 +36,8 @@ The script receives the following command line arguments:
 
 **checkstyleVersion** (cv) - what version of Checkstyle to use (optional, default the latest snapshot).
 
+**sevntuVersion** (sv) - what version of Sevntu to use (optional, default the latest release).
+
 When the script finishes its work the following directory structure will be created in the root of cehckstyle-tester directory:
 
 */repositories* - directory with downloaded projects sources which are specified in projects-to-test-on.properties;

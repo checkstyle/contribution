@@ -24,6 +24,8 @@ def getCliOptions(args) {
         g(longOpt: 'ignoreExcludes', required: false, 'Whether to ignore excludes specified in the list of projects (optional, default is false)')
         cv(longOpt: 'checkstyleVersion', args: 1, required: false,
             'What version of Checkstyle to use (optional, default the latest snapshot)')
+        sv(longOpt: 'sevntuVersion', args: 1, required: false,
+            'What version of Sevntu to use (optional, default the latest release)')
     }
     return cli.parse(args)
 }
@@ -60,6 +62,7 @@ def generateCheckstyleReport(cliOptions) {
 
     def checkstyleCfg = cliOptions.config
     def checkstyleVersion = cliOptions.checkstyleVersion
+    def sevntuVersion = cliOptions.sevntuVersion
     def ignoreExceptions = cliOptions.ignoreExceptions
     def listOfProjectsFile = new File(cliOptions.listOfProjects)
     def projects = listOfProjectsFile.readLines()
@@ -85,7 +88,7 @@ def generateCheckstyleReport(cliOptions) {
                 cloneRepository(repoName, repoType, repoUrl, commitId, reposDir)
                 deleteDir(srcDir)
                 copyDir(getOsSpecificPath("$reposDir", "$repoName"), getOsSpecificPath("$srcDir", "$repoName"))
-                runMavenExecution(srcDir, excludes, checkstyleCfg, ignoreExceptions, checkstyleVersion)
+                runMavenExecution(srcDir, excludes, checkstyleCfg, ignoreExceptions, checkstyleVersion, sevntuVersion)
                 postProcessCheckstyleReport(targetDir)
                 deleteDir(getOsSpecificPath("$srcDir", "$repoName"))
                 moveDir(targetDir, getOsSpecificPath("$reportsDir", "$repoName"))
@@ -210,7 +213,7 @@ def deleteDir(dir) {
     new AntBuilder().delete(dir: dir, failonerror: false)
 }
 
-def runMavenExecution(srcDir, excludes, checkstyleConfig, ignoreExceptions, checkstyleVersion) {
+def runMavenExecution(srcDir, excludes, checkstyleConfig, ignoreExceptions, checkstyleVersion, sevntuVersion) {
     println "Running 'mvn clean' on $srcDir ..."
     def mvnClean = "mvn --batch-mode clean"
     executeCmd(mvnClean)
@@ -218,6 +221,9 @@ def runMavenExecution(srcDir, excludes, checkstyleConfig, ignoreExceptions, chec
     def mvnSite = "mvn -e --batch-mode site -Dcheckstyle.config.location=$checkstyleConfig -Dcheckstyle.excludes=$excludes"
     if (checkstyleVersion) {
         mvnSite = mvnSite + " -Dcheckstyle.version=$checkstyleVersion"
+    }
+    if (sevntuVersion) {
+        mvnSite = mvnSite + " -Dsevntu-checkstyle.version=$sevntuVersion"
     }
     if (ignoreExceptions) {
         mvnSite = mvnSite + ' -Dcheckstyle.failsOnError=false'
