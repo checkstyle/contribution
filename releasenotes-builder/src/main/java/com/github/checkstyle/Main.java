@@ -58,8 +58,6 @@ public final class Main {
 
     /** FreeMarker xdoc template file name. */
     private static final String FREEMARKER_XDOC_TEMPLATE_FILE = "xdoc_freemarker.template";
-    /** Thymeleaf xdoc template file name. */
-    private static final String THYMELEAF_XDOC_TEMPLATE_FILE = "xdoc_thymeleaf.template";
     /** Twitter template file name. */
     private static final String TWITTER_TEMPLATE_FILE = "twitter.template";
     /** Google Plus template file name. */

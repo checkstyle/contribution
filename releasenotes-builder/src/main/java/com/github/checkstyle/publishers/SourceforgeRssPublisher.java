@@ -102,7 +102,7 @@ public class SourceforgeRssPublisher {
      * @return number of posts in RSS feed or -1 if number is not found in response.
      * @throws IOException in case of problems with connection or InputStream.
      */
-    private int getPostsCount() throws IOException {
+    private static int getPostsCount() throws IOException {
         final HttpURLConnection conn = (HttpURLConnection) new URL(POST_URL).openConnection();
         final BufferedReader br = new BufferedReader(
                 new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
