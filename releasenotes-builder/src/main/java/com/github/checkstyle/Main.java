@@ -42,9 +42,6 @@ import freemarker.template.TemplateException;
  */
 public final class Main {
 
-    /** A path to remote checkstyle repository. */
-    private static final String REMOTE_REPO_PATH = "checkstyle/checkstyle";
-
     /** Filename for a generated xdoc. */
     private static final String XDOC_FILENAME = "xdoc.xml";
     /** Filename for a generated Twitter post. */
@@ -144,7 +141,7 @@ public final class Main {
             connection = GitHub.connectUsingOAuth(authToken);
         }
 
-        final GHRepository remoteRepo = connection.getRepository(REMOTE_REPO_PATH);
+        final GHRepository remoteRepo = connection.getRepository(cliOptions.getRemoteRepoPath());
         final Result result = NotesBuilder.buildResult(remoteRepo, localRepoPath, startRef, endRef);
         if (result.hasWarnings()) {
             printListOf(result.getWarningMessages());

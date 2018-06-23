@@ -17,7 +17,8 @@ Jar file which includes all required dependencies will be located at
 
 ## Command line usage
 ```
-java -jar releasenotes-builder-1.0-all.jar -localRepoPath <arg> -startRef <arg> [-endRef <arg>] \
+java -jar releasenotes-builder-1.0-all.jar -localRepoPath <arg> \
+     -remoteRepoPath <arg> -startRef <arg> [-endRef <arg>] \
      -releaseNumber <arg> [-outputLocation <args>] [-githubAuthToken <arg>] \
      [-generateAll] [-generateXdoc] [-generateTwit] [-generateRss] [-generateGplus] [-generateMlist] \
      [-publishXdoc] [-publishXdocWithPush] \
@@ -33,6 +34,8 @@ standard out in plain format.
 Command line options are:
 
 **localRepoPath** - path to the local git repository. For example,  ```/home/user/checkstyle``` .
+
+**remoteRepoPath** - path to the remote github repository. For example, ```checkstyle/checkstyle``` .
 
 **startRef** - specifies the commit reference or tag from which to start the generation of
 release notes. For example, ```753bc06``` or just tag ```checkstyle-6.12.1``` .
@@ -102,5 +105,6 @@ The following example demonstrates how to generate releasenotes.xml for checksty
 
 ```
 java -jar releasenotes-builder-1.0-all.jar -localRepoPath /home/user/checkstyle/ \
+    -remoteRepoPath checkstyle/checkstyle \
     -startRef checkstyle-6.12.1 -releaseNumber 6.13 -generateAll
 ```

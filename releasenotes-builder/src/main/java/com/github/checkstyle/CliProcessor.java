@@ -57,6 +57,8 @@ public class CliProcessor {
 
     /** Name for the option 'localRepoPath'. */
     private static final String OPTION_LOCAL_REPO_PATH = "localRepoPath";
+    /** Name for the option 'remoteRepoPath'. */
+    private static final String OPTION_REMOTE_REPO_PATH = "remoteRepoPath";
     /** Name for the option 'startRef'. */
     private static final String OPTION_START_REF = "startRef";
     /** Name for the option 'endRef'. */
@@ -157,6 +159,9 @@ public class CliProcessor {
                     localGitRepositoryPath));
             }
         }
+        if (!cmdLine.hasOption(OPTION_REMOTE_REPO_PATH)) {
+            result.add("Remote repository path has not been specified!");
+        }
         if (!cmdLine.hasOption(OPTION_START_REF)) {
             result.add("Start reference has not been specified!");
         }
@@ -179,6 +184,7 @@ public class CliProcessor {
     public CliOptions getCliOptions() {
         return CliOptions.newBuilder()
             .setLocalRepoPath(cmdLine.getOptionValue(OPTION_LOCAL_REPO_PATH))
+            .setRemoteRepoPath(cmdLine.getOptionValue(OPTION_REMOTE_REPO_PATH))
             .setStartRef(cmdLine.getOptionValue(OPTION_START_REF))
             .setEndRef(cmdLine.getOptionValue(OPTION_END_REF))
             .setReleaseNumber(cmdLine.getOptionValue(OPTION_RELEASE_NUMBER))
@@ -217,6 +223,7 @@ public class CliProcessor {
     private static Options buildOptions() {
         final Options options = new Options();
         options.addOption(OPTION_LOCAL_REPO_PATH, true, "Path to a local git repository.");
+        options.addOption(OPTION_REMOTE_REPO_PATH, true, "Path to a remote github repository.");
         options.addOption(OPTION_START_REF, true, "Start reference to grab commits from.");
         options.addOption(OPTION_END_REF, true, "End reference to stop grabbing the commits.");
         options.addOption(OPTION_RELEASE_NUMBER, true, "Release number.");
