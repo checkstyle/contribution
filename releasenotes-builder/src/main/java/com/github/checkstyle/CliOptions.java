@@ -35,6 +35,8 @@ public final class CliOptions {
 
     /** Path to a local git repository. */
     private String localRepoPath;
+    /** Path to remote github repository. */
+    private String remoteRepoPath;
     /** Start reference. */
     private String startRef;
     /** End reference. */
@@ -101,6 +103,10 @@ public final class CliOptions {
 
     public String getLocalRepoPath() {
         return localRepoPath;
+    }
+
+    public String getRemoteRepoPath() {
+        return remoteRepoPath;
     }
 
     public String getStartRef() {
@@ -223,6 +229,17 @@ public final class CliOptions {
          */
         public Builder setLocalRepoPath(String path) {
             localRepoPath = path;
+            return this;
+        }
+
+        /**
+         * Specify Remote repository path.
+         * @param path Remote repository path
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
+        public Builder setRemoteRepoPath(String path) {
+            remoteRepoPath = path;
             return this;
         }
 
@@ -537,6 +554,8 @@ public final class CliOptions {
             }
             Verify.verifyNotNull(localRepoPath,
                 "Path to a local git repository should not be null!");
+            Verify.verifyNotNull(remoteRepoPath,
+                    "Path to a remote github repository should not be null!");
             Verify.verifyNotNull(startRef, "Start reference should not be null!");
             Verify.verifyNotNull(releaseNumber, "Release number should not be null!");
 
@@ -662,9 +681,11 @@ public final class CliOptions {
          * Get new CliOptions instance.
          * @return new CliOptions instance.
          */
+        // -@cs[ExecutableStatementCount] long list of options being assigned to single instance
         private CliOptions getNewCliOptionsInstance() {
             final CliOptions cliOptions = new CliOptions();
             cliOptions.localRepoPath = localRepoPath;
+            cliOptions.remoteRepoPath = remoteRepoPath;
             cliOptions.startRef = startRef;
             cliOptions.endRef = endRef;
             cliOptions.releaseNumber = releaseNumber;
