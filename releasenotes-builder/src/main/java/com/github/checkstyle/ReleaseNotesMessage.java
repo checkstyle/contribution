@@ -73,7 +73,7 @@ public final class ReleaseNotesMessage {
      * @param issue issue object.
      * @return actual title of issue or pull request which is represented as an issue.
      */
-    private String getActualTitle(GHIssue issue) {
+    private static String getActualTitle(GHIssue issue) {
         final String actualTitle;
         final String issueTitle = issue.getTitle();
         if (issueTitle.startsWith("Pull")) {
