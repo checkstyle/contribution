@@ -42,97 +42,12 @@ public class TemplateProcessorTest {
 
     private static TemporaryFolder tmpDir;
 
-    private static final String THYMELEAF_XDOC_TEMPLATE_FILE = "xdoc_thymeleaf.template";
     private static final String FREEMARKER_XDOC_TEMPLATE_FILE = "xdoc_freemarker.template";
 
     @BeforeClass
     public static void setup() throws IOException {
         tmpDir = new TemporaryFolder();
         tmpDir.create();
-    }
-
-    @Test
-    public void testGenerateWithThymeleafOnlyBreakingCompatibilitySection() throws Exception {
-        final Map<String, Object> templateVariables = new HashMap<>();
-        templateVariables.put("releaseNo", "1.0.0");
-        templateVariables.put("breakingMessages", getMockReleasenotesMessages());
-
-        final File actualNotes = tmpDir.newFile("xdoc1.txt");
-        TemplateProcessor.generateWithThymeleaf(templateVariables, actualNotes.getAbsolutePath(),
-            THYMELEAF_XDOC_TEMPLATE_FILE);
-
-        final String expectedXdoc =
-            getFileContents(getPath("correct_breaking_compatibility_section.txt").toFile());
-        final String actualXdoc = getFileContents(actualNotes);
-
-        assertEquals(expectedXdoc, actualXdoc);
-    }
-
-    @Test
-    public void testGenerateWithThymeleafOnlyNewSection() throws Exception {
-        final Map<String, Object> templateVariables = new HashMap<>();
-        templateVariables.put("releaseNo", "1.0.0");
-        templateVariables.put("newMessages", getMockReleasenotesMessages());
-
-        final File actualNotes = tmpDir.newFile("xdoc2.txt");
-        TemplateProcessor.generateWithThymeleaf(templateVariables, actualNotes.getAbsolutePath(),
-            THYMELEAF_XDOC_TEMPLATE_FILE);
-
-        final String expectedXdoc = getFileContents(getPath("correct_new_section.txt").toFile());
-        final String actualXdoc = getFileContents(actualNotes);
-
-        assertEquals(expectedXdoc, actualXdoc);
-    }
-
-    @Test
-    public void testGenerateWithThymeleafOnlyBugSection() throws Exception {
-        final Map<String, Object> templateVariables = new HashMap<>();
-        templateVariables.put("releaseNo", "1.0.0");
-        templateVariables.put("bugMessages", getMockReleasenotesMessages());
-
-        final File actualNotes = tmpDir.newFile("xdoc3.txt");
-        TemplateProcessor.generateWithThymeleaf(templateVariables, actualNotes.getAbsolutePath(),
-            THYMELEAF_XDOC_TEMPLATE_FILE);
-
-        final String expectedXdoc = getFileContents(getPath("correct_bug_section.txt").toFile());
-        final String actualXdoc = getFileContents(actualNotes);
-
-        assertEquals(expectedXdoc, actualXdoc);
-    }
-
-    @Test
-    public void testGenerateWithThymeleafOnlyNotesSection() throws Exception {
-        final Map<String, Object> templateVariables = new HashMap<>();
-        templateVariables.put("releaseNo", "1.0.0");
-        templateVariables.put("notesMessages", getMockReleasenotesMessages());
-
-        final File actualNotes = tmpDir.newFile("xdoc4.txt");
-        TemplateProcessor.generateWithThymeleaf(templateVariables, actualNotes.getAbsolutePath(),
-            THYMELEAF_XDOC_TEMPLATE_FILE);
-
-        final String expectedXdoc = getFileContents(getPath("correct_notes_section.txt").toFile());
-        final String actualXdoc = getFileContents(actualNotes);
-
-        assertEquals(expectedXdoc, actualXdoc);
-    }
-
-    @Test
-    public void testGenerateWithThymeleafAllSections() throws Exception {
-        final Map<String, Object> templateVariables = new HashMap<>();
-        templateVariables.put("releaseNo", "1.0.0");
-        templateVariables.put("breakingMessages", getMockReleasenotesMessages());
-        templateVariables.put("newMessages", getMockReleasenotesMessages());
-        templateVariables.put("bugMessages", getMockReleasenotesMessages());
-        templateVariables.put("notesMessages", getMockReleasenotesMessages());
-
-        final File actualNotes = tmpDir.newFile("xdoc5.txt");
-        TemplateProcessor.generateWithThymeleaf(templateVariables, actualNotes.getAbsolutePath(),
-            THYMELEAF_XDOC_TEMPLATE_FILE);
-
-        final String expectedXdoc = getFileContents(getPath("correct_all_sections.txt").toFile());
-        final String actualXdoc = getFileContents(actualNotes);
-
-        assertEquals(expectedXdoc, actualXdoc);
     }
 
     @Test
