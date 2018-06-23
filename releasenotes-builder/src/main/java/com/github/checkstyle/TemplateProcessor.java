@@ -29,12 +29,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import org.thymeleaf.TemplateEngine;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.context.IContext;
-import org.thymeleaf.templateresolver.AbstractConfigurableTemplateResolver;
-import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
-
 import com.google.common.collect.Multimap;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -42,7 +36,7 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 
 /**
- * Util class to generate release notes output file with FreeMarker or Thymeleaf template engines.
+ * Util class to generate release notes output file with FreeMarker template engines.
  * @author Andrei Selkin
  */
 public final class TemplateProcessor {
@@ -52,29 +46,6 @@ public final class TemplateProcessor {
 
     /** Default constructor. */
     private TemplateProcessor() { }
-
-    /**
-     * Generates output file with release notes using Thymeleaf.
-     * @param variables the map which represents template variables.
-     * @param outputFile output file.
-     * @param templateFilename template name.
-     * @throws IOException if I/O error occurs.
-     */
-    public static void generateWithThymeleaf(Map<String, Object> variables, String outputFile,
-            String templateFilename) throws IOException {
-
-        final TemplateEngine engine = new TemplateEngine();
-        final AbstractConfigurableTemplateResolver resolver = new ClassLoaderTemplateResolver();
-        resolver.setPrefix(TEMPLATE_FOLDER_PATH);
-        engine.setTemplateResolver(resolver);
-
-        final IContext ctx = new Context(Locale.US, variables);
-
-        try (Writer fileWriter = new OutputStreamWriter(
-                new FileOutputStream(outputFile), StandardCharsets.UTF_8)) {
-            engine.process(templateFilename, ctx, fileWriter);
-        }
-    }
 
     /**
      * Generates output file with release notes using FreeMarker.
