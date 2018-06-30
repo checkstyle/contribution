@@ -1,3 +1,4 @@
+  <#escape x as x?html>
     <section name="Release ${releaseNo}">
       <#if breakingMessages?has_content>
       <p>Breaking backward compatibility:</p>
@@ -40,3 +41,4 @@
         </ul>
       </#if>
     </section>
+  </#escape>

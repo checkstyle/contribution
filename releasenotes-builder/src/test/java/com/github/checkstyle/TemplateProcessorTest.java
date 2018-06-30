@@ -155,6 +155,11 @@ public class TemplateProcessorTest {
             new ReleaseNotesMessage(issue2, "Author 6, Author 7");
         messages.add(msgWithIssueNoWithMultipleAuthors);
 
+        final GHIssue issue3 = getMockGithubIssue(123, "Mock issue title 5 ==> test");
+        final ReleaseNotesMessage msgWithIssueWithHtml =
+            new ReleaseNotesMessage(issue3, "Author 6, Author 7");
+        messages.add(msgWithIssueWithHtml);
+
         return messages;
     }
 
