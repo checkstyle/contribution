@@ -1,3 +1,4 @@
+  
     <section name="Release 1.0.0">
       <p>Bug fixes:</p>
         <ul>
@@ -12,6 +13,9 @@
           </li>
           <li>
             Mock issue title 4. Author: Author 6, Author 7 <a href="https://github.com/checkstyle/checkstyle/issues/123">#123</a>
+          </li>
+          <li>
+            Mock issue title 5 ==&gt; test. Author: Author 6, Author 7 <a href="https://github.com/checkstyle/checkstyle/issues/123">#123</a>
           </li>
         </ul>
     </section>
