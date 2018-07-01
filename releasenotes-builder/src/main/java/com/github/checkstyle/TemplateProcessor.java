@@ -79,13 +79,16 @@ public final class TemplateProcessor {
     /**
      * Returns the map which represents template variables.
      * @param releaseNotes release notes map.
+     * @param remoteRepoPath remote repository path.
      * @param releaseNumber release number.
      * @return the map which represents template variables.
      */
     public static Map<String, Object> getTemplateVariables(
-        Multimap<String, ReleaseNotesMessage> releaseNotes, String releaseNumber) {
+            Multimap<String, ReleaseNotesMessage> releaseNotes, String remoteRepoPath,
+            String releaseNumber) {
 
         final Map<String, Object> variables = new HashMap<>();
+        variables.put("remoteRepoPath", remoteRepoPath);
         variables.put("releaseNo", releaseNumber);
         variables.put("breakingMessages", releaseNotes.get(Constants.BREAKING_COMPATIBILITY_LABEL));
 
