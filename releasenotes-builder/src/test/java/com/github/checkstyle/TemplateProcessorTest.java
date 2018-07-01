@@ -53,6 +53,7 @@ public class TemplateProcessorTest {
     @Test
     public void testGenerateWithFreemarkerOnlyBreakingCompatibilitySection() throws Exception {
         final Map<String, Object> templateVariables = new HashMap<>();
+        templateVariables.put("remoteRepoPath", "checkstyle/checkstyle");
         templateVariables.put("releaseNo", "1.0.0");
         templateVariables.put("breakingMessages", getMockReleasenotesMessages());
 
@@ -70,6 +71,7 @@ public class TemplateProcessorTest {
     @Test
     public void testGenerateWithFreemarkerOnlyNewSection() throws Exception {
         final Map<String, Object> templateVariables = new HashMap<>();
+        templateVariables.put("remoteRepoPath", "checkstyle/checkstyle");
         templateVariables.put("releaseNo", "1.0.0");
         templateVariables.put("newMessages", getMockReleasenotesMessages());
 
@@ -86,6 +88,7 @@ public class TemplateProcessorTest {
     @Test
     public void testGenerateWithFreemarkerOnlyBugSection() throws Exception {
         final Map<String, Object> templateVariables = new HashMap<>();
+        templateVariables.put("remoteRepoPath", "checkstyle/checkstyle");
         templateVariables.put("releaseNo", "1.0.0");
         templateVariables.put("bugMessages", getMockReleasenotesMessages());
 
@@ -102,6 +105,7 @@ public class TemplateProcessorTest {
     @Test
     public void testGenerateWithFreemarkerOnlyNotesSection() throws Exception {
         final Map<String, Object> templateVariables = new HashMap<>();
+        templateVariables.put("remoteRepoPath", "checkstyle/checkstyle");
         templateVariables.put("releaseNo", "1.0.0");
         templateVariables.put("notesMessages", getMockReleasenotesMessages());
 
@@ -118,6 +122,7 @@ public class TemplateProcessorTest {
     @Test
     public void testGenerateWithFreemarkerAllSections() throws Exception {
         final Map<String, Object> templateVariables = new HashMap<>();
+        templateVariables.put("remoteRepoPath", "checkstyle/checkstyle");
         templateVariables.put("releaseNo", "1.0.0");
         templateVariables.put("breakingMessages", getMockReleasenotesMessages());
         templateVariables.put("newMessages", getMockReleasenotesMessages());

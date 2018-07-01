@@ -161,10 +161,11 @@ public final class Main {
     private static void runPostGeneration(Multimap<String, ReleaseNotesMessage> releaseNotes,
             CliOptions cliOptions) throws IOException, TemplateException {
 
+        final String remoteRepoPath = cliOptions.getRemoteRepoPath();
         final String releaseNumber = cliOptions.getReleaseNumber();
         final String outputLocation = cliOptions.getOutputLocation();
-        final Map<String, Object> templateVariables =
-                TemplateProcessor.getTemplateVariables(releaseNotes, releaseNumber);
+        final Map<String, Object> templateVariables = TemplateProcessor.getTemplateVariables(
+                releaseNotes, releaseNumber, remoteRepoPath);
 
         if (cliOptions.isGenerateAll() || cliOptions.isGenerateXdoc()) {
             TemplateProcessor.generateWithFreemarker(templateVariables,
