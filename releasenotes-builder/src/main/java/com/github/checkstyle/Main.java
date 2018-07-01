@@ -19,10 +19,17 @@
 
 package com.github.checkstyle;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.cli.ParseException;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -40,6 +47,7 @@ import freemarker.template.TemplateException;
  * Class for command line usage.
  * @author Andrei Selkin
  */
+//-@cs[ClassDataAbstractionCoupling] No way to split this up right now.
 public final class Main {
 
     /** Filename for a generated xdoc. */
@@ -54,15 +62,20 @@ public final class Main {
     private static final String MLIST_FILENAME = "mailing_list.txt";
 
     /** FreeMarker xdoc template file name. */
-    private static final String FREEMARKER_XDOC_TEMPLATE_FILE = "xdoc_freemarker.template";
+    private static final String FREEMARKER_XDOC_TEMPLATE_FILE =
+        "/com/github/checkstyle/templates/xdoc_freemarker.template";
     /** Twitter template file name. */
-    private static final String TWITTER_TEMPLATE_FILE = "twitter.template";
+    private static final String TWITTER_TEMPLATE_FILE =
+        "/com/github/checkstyle/templates/twitter.template";
     /** Google Plus template file name. */
-    private static final String GPLUS_TEMPLATE_FILE = "gplus.template";
+    private static final String GPLUS_TEMPLATE_FILE =
+        "/com/github/checkstyle/templates/gplus.template";
     /** RSS template file name. */
-    private static final String RSS_TEMPLATE_FILE = "rss.template";
+    private static final String RSS_TEMPLATE_FILE =
+        "/com/github/checkstyle/templates/rss.template";
     /** Mailing List template file name. */
-    private static final String MLIST_TEMPLATE_FILE = "mailing_list.template";
+    private static final String MLIST_TEMPLATE_FILE =
+        "/com/github/checkstyle/templates/mailing_list.template";
 
     /** Exit code returned when execution finishes with errors. */
     private static final int ERROR_EXIT_CODE = -2;
@@ -167,25 +180,66 @@ public final class Main {
                 TemplateProcessor.getTemplateVariables(releaseNotes, releaseNumber);
 
         if (cliOptions.isGenerateAll() || cliOptions.isGenerateXdoc()) {
+            final String template = loadTemplate(cliOptions.getXdocTemplate(),
+                    FREEMARKER_XDOC_TEMPLATE_FILE);
+
             TemplateProcessor.generateWithFreemarker(templateVariables,
-                    outputLocation + XDOC_FILENAME, FREEMARKER_XDOC_TEMPLATE_FILE);
+                    outputLocation + XDOC_FILENAME, template);
         }
         if (cliOptions.isGenerateAll() || cliOptions.isGenerateTw()) {
+            final String template = loadTemplate(cliOptions.getTwitterTemplate(),
+                    TWITTER_TEMPLATE_FILE);
+
             TemplateProcessor.generateWithFreemarker(templateVariables,
-                    outputLocation + TWITTER_FILENAME, TWITTER_TEMPLATE_FILE);
+                    outputLocation + TWITTER_FILENAME, template);
         }
         if (cliOptions.isGenerateAll() || cliOptions.isGenerateGplus()) {
+            final String template = loadTemplate(cliOptions.getGplusTemplate(),
+                    GPLUS_TEMPLATE_FILE);
+
             TemplateProcessor.generateWithFreemarker(templateVariables,
-                    outputLocation + GPLUS_FILENAME, GPLUS_TEMPLATE_FILE);
+                    outputLocation + GPLUS_FILENAME, template);
         }
         if (cliOptions.isGenerateAll() || cliOptions.isGenerateRss()) {
+            final String template = loadTemplate(cliOptions.getRssTemplate(),
+                    RSS_TEMPLATE_FILE);
+
             TemplateProcessor.generateWithFreemarker(templateVariables,
-                    outputLocation + RSS_FILENAME, RSS_TEMPLATE_FILE);
+                    outputLocation + RSS_FILENAME, template);
         }
         if (cliOptions.isGenerateAll() || cliOptions.isGenerateMlist()) {
+            final String template = loadTemplate(cliOptions.getMlistTemplate(),
+                    MLIST_TEMPLATE_FILE);
+
             TemplateProcessor.generateWithFreemarker(templateVariables,
-                    outputLocation + MLIST_FILENAME, MLIST_TEMPLATE_FILE);
+                    outputLocation + MLIST_FILENAME, template);
         }
+    }
+
+    /**
+     * Loads a template file to a string, otherwise a resource template if the file isn't supplied.
+     * @param fileName The path of the optional file to load.
+     * @param defaultResource The path of the resource to load if there is no file.
+     * @return The contents of the template.
+     * @throws FileNotFoundException if the supplied file can't be found.
+     */
+    private static String loadTemplate(String fileName, String defaultResource)
+            throws FileNotFoundException {
+        final InputStream inputStream;
+
+        if (fileName == null) {
+            inputStream = Main.class.getClassLoader().getResourceAsStream(defaultResource);
+
+            if (inputStream == null) {
+                throw new IllegalStateException("Failed to find resource: " + defaultResource);
+            }
+        }
+        else {
+            inputStream = new FileInputStream(fileName);
+        }
+
+        return new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
+                .lines().parallel().collect(Collectors.joining(System.lineSeparator()));
     }
 
     /**

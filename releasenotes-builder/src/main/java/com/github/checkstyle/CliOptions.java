@@ -61,6 +61,17 @@ public final class CliOptions {
     /** Whether to generate a post for Mailing List. */
     private boolean generateMlist;
 
+    /** File location for xdoc template. */
+    private String xdocTemplate;
+    /** File location for twitter template. */
+    private String twitterTemplate;
+    /** File location for google plus template. */
+    private String gplusTemplate;
+    /** File location for rss template. */
+    private String rssTemplate;
+    /** File location for mailing list template. */
+    private String mlistTemplate;
+
     /** Whether to publish all social posts. */
     private boolean publishAllSocial;
 
@@ -151,6 +162,26 @@ public final class CliOptions {
 
     public boolean isGenerateMlist() {
         return generateMlist;
+    }
+
+    public String getXdocTemplate() {
+        return xdocTemplate;
+    }
+
+    public String getTwitterTemplate() {
+        return twitterTemplate;
+    }
+
+    public String getGplusTemplate() {
+        return gplusTemplate;
+    }
+
+    public String getRssTemplate() {
+        return rssTemplate;
+    }
+
+    public String getMlistTemplate() {
+        return mlistTemplate;
     }
 
     public boolean isPublishAllSocial() {
@@ -361,6 +392,61 @@ public final class CliOptions {
          */
         public Builder setGenerateMlist(boolean genMlist) {
             generateMlist = genMlist;
+            return this;
+        }
+
+        /**
+         * Specify xdoc template.
+         * @param xdocTemp xdoc template
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
+        public Builder setXdocTemplate(String xdocTemp) {
+            xdocTemplate = xdocTemp;
+            return this;
+        }
+
+        /**
+         * Specify twitter template.
+         * @param twitterTemp twitter template
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
+        public Builder setTwitterTemplate(String twitterTemp) {
+            twitterTemplate = twitterTemp;
+            return this;
+        }
+
+        /**
+         * Specify google plus template.
+         * @param gplusTemp google plus template
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
+        public Builder setGplusTemplate(String gplusTemp) {
+            gplusTemplate = gplusTemp;
+            return this;
+        }
+
+        /**
+         * Specify rss template.
+         * @param rssTemp rss template
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
+        public Builder setRssTemplate(String rssTemp) {
+            rssTemplate = rssTemp;
+            return this;
+        }
+
+        /**
+         * Specify mailing list template.
+         * @param mlistTemp mailing list template
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
+        public Builder setMlistTemplate(String mlistTemp) {
+            mlistTemplate = mlistTemp;
             return this;
         }
 
@@ -697,6 +783,11 @@ public final class CliOptions {
             cliOptions.generateGplus = generateGplus;
             cliOptions.generateRss = generateRss;
             cliOptions.generateMlist = generateMlist;
+            cliOptions.xdocTemplate = xdocTemplate;
+            cliOptions.twitterTemplate = twitterTemplate;
+            cliOptions.gplusTemplate = gplusTemplate;
+            cliOptions.rssTemplate = rssTemplate;
+            cliOptions.mlistTemplate = mlistTemplate;
             cliOptions.publishAllSocial = publishAllSocial;
             cliOptions.publishTwit = publishTwit;
             cliOptions.twitterConsumerKey = twitterConsumerKey;

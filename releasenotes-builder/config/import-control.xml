@@ -14,6 +14,7 @@
     <allow pkg="org.kohsuke.github"/>
     <allow pkg="com.github.checkstyle"/>
     <allow pkg="com.google.common"/>
+    <allow pkg="freemarker.cache"/>
     <allow pkg="freemarker.template"/>
 
     <subpackage name="publishers">

@@ -83,6 +83,17 @@ public class CliProcessor {
     /** Name for the option 'generateMlist'. */
     private static final String OPTION_GENERATE_MLIST = "generateMlist";
 
+    /** Name for the option 'xdocTemplate'. */
+    private static final String OPTION_XDOC_TEMPLATE = "xdocTemplate";
+    /** Name for the option 'twitterTemplate'. */
+    private static final String OPTION_TWITTER_TEMPLATE = "twitterTemplate";
+    /** Name for the option 'gplusTemplate'. */
+    private static final String OPTION_GPLUS_TEMPLATE = "gplusTemplate";
+    /** Name for the option 'rssTemplate'. */
+    private static final String OPTION_RSS_TEMPLATE = "rssTemplate";
+    /** Name for the option 'xdocTemplate'. */
+    private static final String OPTION_MLIST_TEMPLATE = "mlistTemplate";
+
     /** Name for the option 'publishAllSocial'. */
     private static final String OPTION_PUBLISH_ALL_SOCIAL = "publishAllSocial";
     /** Name for the option 'publishTwit'. */
@@ -149,6 +160,8 @@ public class CliProcessor {
      * Does validation of command line options.
      * @return list of violations.
      */
+    // -@cs[CyclomaticComplexity|NPathComplexity] This code is not complicated and is better to
+    // keep in one method
     private List<String> validateCli() {
         final List<String> result = new ArrayList<>();
 
@@ -173,6 +186,36 @@ public class CliProcessor {
                 && cmdLine.getOptionValue(OPTION_AUTH_TOKEN) == null) {
             result.add("Auth token should not be null for xdoc publication with push.");
         }
+        if (cmdLine.hasOption(OPTION_XDOC_TEMPLATE)) {
+            final String path = cmdLine.getOptionValue(OPTION_XDOC_TEMPLATE);
+            if (!Files.isRegularFile(Paths.get(path))) {
+                result.add(String.format("Could not find xdoc template '%s'!", path));
+            }
+        }
+        if (cmdLine.hasOption(OPTION_TWITTER_TEMPLATE)) {
+            final String path = cmdLine.getOptionValue(OPTION_TWITTER_TEMPLATE);
+            if (!Files.isRegularFile(Paths.get(path))) {
+                result.add(String.format("Could not find twitter template '%s'!", path));
+            }
+        }
+        if (cmdLine.hasOption(OPTION_GPLUS_TEMPLATE)) {
+            final String path = cmdLine.getOptionValue(OPTION_GPLUS_TEMPLATE);
+            if (!Files.isRegularFile(Paths.get(path))) {
+                result.add(String.format("Could not find google plus template '%s'!", path));
+            }
+        }
+        if (cmdLine.hasOption(OPTION_RSS_TEMPLATE)) {
+            final String path = cmdLine.getOptionValue(OPTION_RSS_TEMPLATE);
+            if (!Files.isRegularFile(Paths.get(path))) {
+                result.add(String.format("Could not find rss template '%s'!", path));
+            }
+        }
+        if (cmdLine.hasOption(OPTION_MLIST_TEMPLATE)) {
+            final String path = cmdLine.getOptionValue(OPTION_MLIST_TEMPLATE);
+            if (!Files.isRegularFile(Paths.get(path))) {
+                result.add(String.format("Could not find mailing list template '%s'!", path));
+            }
+        }
 
         return result;
     }
@@ -196,6 +239,11 @@ public class CliProcessor {
             .setGenerateGplus(cmdLine.hasOption(OPTION_GENERATE_GPLUS))
             .setGenerateRss(cmdLine.hasOption(OPTION_GENERATE_RSS))
             .setGenerateMlist(cmdLine.hasOption(OPTION_GENERATE_MLIST))
+            .setXdocTemplate(cmdLine.getOptionValue(OPTION_XDOC_TEMPLATE))
+            .setTwitterTemplate(cmdLine.getOptionValue(OPTION_TWITTER_TEMPLATE))
+            .setGplusTemplate(cmdLine.getOptionValue(OPTION_GPLUS_TEMPLATE))
+            .setRssTemplate(cmdLine.getOptionValue(OPTION_RSS_TEMPLATE))
+            .setMlistTemplate(cmdLine.getOptionValue(OPTION_MLIST_TEMPLATE))
             .setPublishAllSocial(cmdLine.hasOption(OPTION_PUBLISH_ALL_SOCIAL))
             .setPublishTwit(cmdLine.hasOption(OPTION_PUBLISH_TWIT))
             .setPublishXdoc(cmdLine.hasOption(OPTION_PUBLISH_XDOC))
@@ -238,6 +286,11 @@ public class CliProcessor {
         options.addOption(OPTION_GENERATE_RSS, "Whether a RSS post should be generated.");
         options.addOption(OPTION_GENERATE_MLIST,
             "Whether a mailing list post should be generated.");
+        options.addOption(OPTION_XDOC_TEMPLATE, true, "Path to xdoc template");
+        options.addOption(OPTION_TWITTER_TEMPLATE, true, "Path to twitter template");
+        options.addOption(OPTION_GPLUS_TEMPLATE, true, "Path to google plus template");
+        options.addOption(OPTION_RSS_TEMPLATE, true, "Path to rss template");
+        options.addOption(OPTION_MLIST_TEMPLATE, true, "Path to mailing list template");
         options.addOption(OPTION_PUBLISH_ALL_SOCIAL, "Whether to publish all social posts");
         options.addOption(OPTION_PUBLISH_TWIT, "Whether to publish a Twitter post.");
         options.addOption(OPTION_TWITTER_CONSUMER_KEY, true, "Consumer key for Twitter.");

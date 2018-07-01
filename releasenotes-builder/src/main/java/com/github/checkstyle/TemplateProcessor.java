@@ -30,6 +30,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.google.common.collect.Multimap;
+import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -41,8 +42,8 @@ import freemarker.template.TemplateExceptionHandler;
  */
 public final class TemplateProcessor {
 
-    /** Path to the template folder. */
-    private static final String TEMPLATE_FOLDER_PATH = "com/github/checkstyle/templates/";
+    /** Internal template name. */
+    private static final String TEMPLATE_NAME = "template";
 
     /** Default constructor. */
     private TemplateProcessor() { }
@@ -51,21 +52,24 @@ public final class TemplateProcessor {
      * Generates output file with release notes using FreeMarker.
      * @param variables the map which represents template variables.
      * @param outputFile output file.
-     * @param templateFilename template name.
+     * @param templateContents the contents of the template.
      * @throws IOException if I/O error occurs.
      * @throws TemplateException if an error occurs while generating freemarker template.
      */
     public static void generateWithFreemarker(Map<String, Object> variables, String outputFile,
-            String templateFilename) throws IOException, TemplateException {
+            String templateContents) throws IOException, TemplateException {
 
         final Configuration configuration = new Configuration(Configuration.VERSION_2_3_22);
         configuration.setDefaultEncoding("UTF-8");
         configuration.setLocale(Locale.US);
         configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         configuration.setNumberFormat("0.######");
-        configuration.setClassForTemplateLoading(Main.class, "/" + TEMPLATE_FOLDER_PATH);
 
-        final Template template = configuration.getTemplate(templateFilename);
+        final StringTemplateLoader loader = new StringTemplateLoader();
+        loader.putTemplate(TEMPLATE_NAME, templateContents);
+        configuration.setTemplateLoader(loader);
+
+        final Template template = configuration.getTemplate(TEMPLATE_NAME);
         try (Writer fileWriter = new OutputStreamWriter(
                 new FileOutputStream(outputFile), StandardCharsets.UTF_8)) {
             template.process(variables, fileWriter);
