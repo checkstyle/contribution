@@ -19,6 +19,7 @@
 
 package com.github.checkstyle;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
 
 import java.io.BufferedReader;
@@ -42,12 +43,15 @@ public class TemplateProcessorTest {
 
     private static TemporaryFolder tmpDir;
 
-    private static final String FREEMARKER_XDOC_TEMPLATE_FILE = "xdoc_freemarker.template";
+    private static String templateContents;
 
     @BeforeClass
     public static void setup() throws IOException {
         tmpDir = new TemporaryFolder();
         tmpDir.create();
+
+        templateContents = new String(
+                Files.readAllBytes(getResource("templates/xdoc_freemarker.template")), UTF_8);
     }
 
     @Test
@@ -58,7 +62,7 @@ public class TemplateProcessorTest {
 
         final File actualNotes = tmpDir.newFile("xdoc6.txt");
         TemplateProcessor.generateWithFreemarker(templateVariables, actualNotes.getAbsolutePath(),
-            FREEMARKER_XDOC_TEMPLATE_FILE);
+            templateContents);
 
         final String expectedXdoc =
             getFileContents(getPath("correct_breaking_compatibility_section.txt").toFile());
@@ -75,7 +79,7 @@ public class TemplateProcessorTest {
 
         final File actualNotes = tmpDir.newFile("xdoc7.txt");
         TemplateProcessor.generateWithFreemarker(templateVariables, actualNotes.getAbsolutePath(),
-            FREEMARKER_XDOC_TEMPLATE_FILE);
+            templateContents);
 
         final String expectedXdoc = getFileContents(getPath("correct_new_section.txt").toFile());
         final String actualXdoc = getFileContents(actualNotes);
@@ -91,7 +95,7 @@ public class TemplateProcessorTest {
 
         final File actualNotes = tmpDir.newFile("xdoc8.txt");
         TemplateProcessor.generateWithFreemarker(templateVariables, actualNotes.getAbsolutePath(),
-            FREEMARKER_XDOC_TEMPLATE_FILE);
+            templateContents);
 
         final String expectedXdoc = getFileContents(getPath("correct_bug_section.txt").toFile());
         final String actualXdoc = getFileContents(actualNotes);
@@ -107,7 +111,7 @@ public class TemplateProcessorTest {
 
         final File actualNotes = tmpDir.newFile("xdoc9.txt");
         TemplateProcessor.generateWithFreemarker(templateVariables, actualNotes.getAbsolutePath(),
-            FREEMARKER_XDOC_TEMPLATE_FILE);
+            templateContents);
 
         final String expectedXdoc = getFileContents(getPath("correct_notes_section.txt").toFile());
         final String actualXdoc = getFileContents(actualNotes);
@@ -126,7 +130,7 @@ public class TemplateProcessorTest {
 
         final File actualNotes = tmpDir.newFile("xdoc10.txt");
         TemplateProcessor.generateWithFreemarker(templateVariables, actualNotes.getAbsolutePath(),
-            FREEMARKER_XDOC_TEMPLATE_FILE);
+            templateContents);
 
         final String expectedXdoc = getFileContents(getPath("correct_all_sections.txt").toFile());
         final String actualXdoc = getFileContents(actualNotes);
@@ -195,6 +199,11 @@ public class TemplateProcessorTest {
         }
 
         return result.toString();
+    }
+
+    private static Path getResource(String fileName) {
+        return Paths.get("src/main/resources/com/github/checkstyle/" + fileName)
+            .toAbsolutePath();
     }
 
     private static Path getPath(String fileName) {
