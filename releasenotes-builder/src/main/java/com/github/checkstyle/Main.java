@@ -63,19 +63,19 @@ public final class Main {
 
     /** FreeMarker xdoc template file name. */
     private static final String FREEMARKER_XDOC_TEMPLATE_FILE =
-        "/com/github/checkstyle/templates/xdoc_freemarker.template";
+        "com/github/checkstyle/templates/xdoc_freemarker.template";
     /** Twitter template file name. */
     private static final String TWITTER_TEMPLATE_FILE =
-        "/com/github/checkstyle/templates/twitter.template";
+        "com/github/checkstyle/templates/twitter.template";
     /** Google Plus template file name. */
     private static final String GPLUS_TEMPLATE_FILE =
-        "/com/github/checkstyle/templates/gplus.template";
+        "com/github/checkstyle/templates/gplus.template";
     /** RSS template file name. */
     private static final String RSS_TEMPLATE_FILE =
-        "/com/github/checkstyle/templates/rss.template";
+        "com/github/checkstyle/templates/rss.template";
     /** Mailing List template file name. */
     private static final String MLIST_TEMPLATE_FILE =
-        "/com/github/checkstyle/templates/mailing_list.template";
+        "com/github/checkstyle/templates/mailing_list.template";
 
     /** Exit code returned when execution finishes with errors. */
     private static final int ERROR_EXIT_CODE = -2;
