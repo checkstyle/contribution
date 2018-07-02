@@ -35,12 +35,10 @@ install:
   - cmd: mvn --version
   - cmd: java -version
   - cmd: groovy -version
-  - cmd: '%CYG_BIN% -qnNdO -R %CYG_ROOT% -s %CYG_MIRROR% -l %CYG_CACHE% -P hg'
 
 cache:
   - C:\maven\apache-maven-3.2.5
   - C:\groovy\groovy-2.4.8
-  - C:\cygwin\var\cache\setup
   - C:\Users\appveyor\.m2
 
 matrix:
@@ -48,10 +46,6 @@ matrix:
 
 environment:
   global:
-    CYG_BIN: C:\cygwin\setup-x86.exe
-    CYG_ROOT: C:\cygwin
-    CYG_CACHE: C:\cygwin\var\cache\setup
-    CYG_MIRROR: http://cygwin.mirror.constant.com
     CMD1: " "
     CMD2: " "
     CMD3: " "
@@ -118,6 +112,5 @@ build_script:
   - ps: echo "Size of caches (bytes):"
   - ps: Get-ChildItem -Recurse 'C:\maven\apache-maven-3.2.5' | Measure-Object -Property Length -Sum
   - ps: Get-ChildItem -Recurse 'C:\groovy\groovy-2.4.8' | Measure-Object -Property Length -Sum
-  - ps: Get-ChildItem -Recurse 'C:\cygwin\var\cache\setup' | Measure-Object -Property Length -Sum
   - ps: Get-ChildItem -Recurse 'C:\Users\appveyor\.m2' | Measure-Object -Property Length -Sum
-  
+
