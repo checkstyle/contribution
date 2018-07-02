@@ -79,12 +79,4 @@
 		</plugins>
 	</reporting>
 
-	<pluginRepositories>
-		<pluginRepository>
-			<id>sevntu-maven</id>
-			<name>sevntu-maven</name>
-			<url>http://sevntu-checkstyle.github.com/sevntu.checkstyle/maven2</url>
-		</pluginRepository>
-	</pluginRepositories>
-
 </project>
