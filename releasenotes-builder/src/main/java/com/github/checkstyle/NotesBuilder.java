@@ -166,7 +166,7 @@ public final class NotesBuilder {
     private static boolean isRevertCommit(String commitMessage) {
         return commitMessage.startsWith("Revert")
                 && commitMessage.indexOf('"') != -1
-                && commitMessage.lastIndexOf('"') == commitMessage.length() - 1;
+                && commitMessage.lastIndexOf('"', commitMessage.lastIndexOf('"') + 1) != -1;
     }
 
     /**
