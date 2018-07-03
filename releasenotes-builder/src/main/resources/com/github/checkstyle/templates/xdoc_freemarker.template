@@ -1,4 +1,5 @@
   <#escape x as x?html>
+    <div class="releaseDate">${todaysDate}</div>
     <section name="Release ${releaseNo}">
       <#if breakingMessages?has_content>
       <p>Breaking backward compatibility:</p>
