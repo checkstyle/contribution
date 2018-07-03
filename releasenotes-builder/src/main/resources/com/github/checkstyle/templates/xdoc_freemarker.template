@@ -5,7 +5,9 @@
         <ul>
         <#list breakingMessages as message>
           <li>
-            ${message.title}. Author: ${message.author}<#if message.issueNo != -1> <a href="https://github.com/${remoteRepoPath}/issues/${message.issueNo}">#${message.issueNo}</a></#if>
+            ${message.title}.
+            Author: ${message.author}<#if message.issueNo != -1>
+            <a href="https://github.com/${remoteRepoPath}/issues/${message.issueNo}">#${message.issueNo}</a></#if>
           </li>
         </#list>
         </ul>
@@ -15,7 +17,9 @@
         <ul>
           <#list newMessages as message>
           <li>
-            ${message.title}. Author: ${message.author}<#if message.issueNo != -1> <a href="https://github.com/${remoteRepoPath}/issues/${message.issueNo}">#${message.issueNo}</a></#if>
+            ${message.title}.
+            Author: ${message.author}<#if message.issueNo != -1>
+            <a href="https://github.com/${remoteRepoPath}/issues/${message.issueNo}">#${message.issueNo}</a></#if>
           </li>
           </#list>
         </ul>
@@ -25,7 +29,9 @@
         <ul>
           <#list bugMessages as message>
           <li>
-            ${message.title}. Author: ${message.author}<#if message.issueNo != -1> <a href="https://github.com/${remoteRepoPath}/issues/${message.issueNo}">#${message.issueNo}</a></#if>
+            ${message.title}.
+            Author: ${message.author}<#if message.issueNo != -1>
+            <a href="https://github.com/${remoteRepoPath}/issues/${message.issueNo}">#${message.issueNo}</a></#if>
           </li>
           </#list>
         </ul>
@@ -35,7 +41,9 @@
         <ul>
           <#list notesMessages as message>
           <li>
-            ${message.title}. Author: ${message.author}<#if message.issueNo != -1> <a href="https://github.com/${remoteRepoPath}/issues/${message.issueNo}">#${message.issueNo}</a></#if>
+            ${message.title}.
+            Author: ${message.author}<#if message.issueNo != -1>
+            <a href="https://github.com/${remoteRepoPath}/issues/${message.issueNo}">#${message.issueNo}</a></#if>
           </li>
           </#list>
         </ul>

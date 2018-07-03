@@ -27,6 +27,12 @@ import org.kohsuke.github.GHIssue;
  */
 public final class ReleaseNotesMessage {
 
+    /** Max size of line. */
+    private static final int MAX_TITLE_LINE_SIZE = 70;
+
+    /** Converted size of html character. */
+    private static final int HTML_CHAR_SIZE = 5;
+
     /** Issue number. */
     private final int issueNo;
     /** Title. */
@@ -52,7 +58,7 @@ public final class ReleaseNotesMessage {
      */
     public ReleaseNotesMessage(String title, String author) {
         issueNo = -1;
-        this.title = title;
+        this.title = split(title);
         this.author = author;
     }
 
@@ -82,6 +88,72 @@ public final class ReleaseNotesMessage {
         else {
             actualTitle = issueTitle;
         }
-        return actualTitle;
+        return split(actualTitle);
+    }
+
+    /**
+     * Splits the given string by the max line size into multiple lines.
+     * @param str The string to examine.
+     * @return The split string.
+     */
+    // -@cs[CyclomaticComplexity|ExecutableStatementCount] Can't be split apart easily.
+    private static String split(String str) {
+        final int length = str.length();
+        final StringBuilder sb = new StringBuilder(length);
+        int index = 0;
+        int splitStart = index;
+        int outPosition = 0;
+        int lastSpacePosition = -1;
+        int lastSpaceOutPosition = -1;
+
+        while (index < length) {
+            final char ch = str.charAt(index);
+            final int charSize;
+
+            if (ch == '>' || ch == '<' || ch == '&' || ch == '\'' || ch == '"') {
+                charSize = HTML_CHAR_SIZE;
+            }
+            else {
+                charSize = 1;
+            }
+
+            outPosition += charSize;
+
+            if (outPosition > MAX_TITLE_LINE_SIZE) {
+                if (lastSpacePosition == -1) {
+                    sb.append(str.substring(splitStart, index - 1));
+                    sb.append("-");
+
+                    splitStart = index - 1;
+                    outPosition = 0;
+                }
+                else {
+                    sb.append(str.substring(splitStart, lastSpacePosition));
+                    splitStart = lastSpacePosition + 1;
+                    outPosition -= lastSpaceOutPosition;
+                }
+
+                sb.append(System.lineSeparator());
+                lastSpacePosition = -1;
+                lastSpaceOutPosition = -1;
+            }
+            else if (ch == ' ') {
+                if (splitStart == index) {
+                    splitStart++;
+                }
+                else {
+                    lastSpacePosition = index;
+                    lastSpaceOutPosition = outPosition;
+                }
+            }
+
+            index++;
+        }
+
+        if (splitStart != index) {
+            sb.append(str.substring(splitStart));
+        }
+
+        return sb.toString();
     }
 }

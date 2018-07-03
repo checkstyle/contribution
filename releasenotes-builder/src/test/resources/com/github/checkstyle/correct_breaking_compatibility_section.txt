@@ -3,19 +3,33 @@
       <p>Breaking backward compatibility:</p>
         <ul>
           <li>
-            Mock issue title 1. Author: Author 1
+            Mock issue title 1.
+            Author: Author 1
           </li>
           <li>
-            Mock issue title 2. Author: Author 3, Author 4
+            Mock issue title 2.
+            Author: Author 3, Author 4
           </li>
           <li>
-            Mock issue title 3. Author: Author 5 <a href="https://github.com/checkstyle/checkstyle/issues/123">#123</a>
+            Mock issue title 3.
+            Author: Author 5
+            <a href="https://github.com/checkstyle/checkstyle/issues/123">#123</a>
           </li>
           <li>
-            Mock issue title 4. Author: Author 6, Author 7 <a href="https://github.com/checkstyle/checkstyle/issues/123">#123</a>
+            Mock issue title 4.
+            Author: Author 6, Author 7
+            <a href="https://github.com/checkstyle/checkstyle/issues/123">#123</a>
           </li>
           <li>
-            Mock issue title 5 ==&gt; test. Author: Author 6, Author 7 <a href="https://github.com/checkstyle/checkstyle/issues/123">#123</a>
+            Mock issue title 5 ==&gt; test.
+            Author: Author 6, Author 7
+            <a href="https://github.com/checkstyle/checkstyle/issues/123">#123</a>
+          </li>
+          <li>
+            Mock issue title 6
+L12345678901234567890123456789012345678901234567890123456789012345678-
+90ooooooooooooooooooooooooooooooooooooooooooooooooong&#39;&quot;.
+            Author: Author 1
           </li>
         </ul>
     </section>

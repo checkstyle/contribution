@@ -169,6 +169,11 @@ public class TemplateProcessorTest {
             new ReleaseNotesMessage(issue3, "Author 6, Author 7");
         messages.add(msgWithIssueWithHtml);
 
+        final ReleaseNotesMessage msgWithLongLine = new ReleaseNotesMessage(
+            "Mock issue title 6 L123456789012345678901234567890123456789012345678901234567890"
+                + "1234567890ooooooooooooooooooooooooooooooooooooooooooooooooong'\"", "Author 1");
+        messages.add(msgWithLongLine);
+
         return messages;
     }
 
