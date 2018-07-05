@@ -17,7 +17,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.github.checkstyle;
+package com.github.checkstyle.github;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -42,7 +42,11 @@ import org.kohsuke.github.GHIssue;
 import org.kohsuke.github.GHIssueState;
 import org.kohsuke.github.GHLabel;
 import org.kohsuke.github.GHRepository;
+import org.kohsuke.github.GitHub;
 
+import com.github.checkstyle.globals.Constants;
+import com.github.checkstyle.globals.ReleaseNotesMessage;
+import com.github.checkstyle.globals.Result;
 import com.google.common.base.Verify;
 import com.google.common.collect.Sets;
 
@@ -67,19 +71,21 @@ public final class NotesBuilder {
 
     /**
      * Forms release notes as a map.
-     * @param remoteRepo git remote repository object.
      * @param localRepoPath path to local git repository.
+     * @param authToken the authorization token.
+     * @param remoteRepoPath path to remote git repository.
      * @param startRef start reference.
      * @param endRef end reference.
      * @return a map which represents release notes.
      * @throws IOException if an I/O error occurs.
      * @throws GitAPIException if an error occurs when accessing Git API.
      */
-    public static Result buildResult(GHRepository remoteRepo, String localRepoPath,
+    public static Result buildResult(String localRepoPath, String authToken, String remoteRepoPath,
         String startRef, String endRef) throws IOException, GitAPIException {
 
         final Result result = new Result();
 
+        final GHRepository remoteRepo = createRemoteRepo(authToken, remoteRepoPath);
         final Set<RevCommit> commitsForRelease =
             getCommitsBetweenReferences(localRepoPath, startRef, endRef);
         commitsForRelease.removeAll(getIgnoredCommits(commitsForRelease));
@@ -129,6 +135,26 @@ public final class NotesBuilder {
             }
         }
         return result;
+    }
+
+    /**
+     * Creates the connection to the remote repository.
+     * @param authToken the authorization token.
+     * @param remoteRepoPath path to remote git repository.
+     * @return the remote repository object.
+     * @throws IOException if an I/O error occurs.
+     */
+    private static GHRepository createRemoteRepo(String authToken, String remoteRepoPath)
+            throws IOException {
+        final GitHub connection;
+        if (authToken == null) {
+            connection = GitHub.connectAnonymously();
+        }
+        else {
+            connection = GitHub.connectUsingOAuth(authToken);
+        }
+
+        return connection.getRepository(remoteRepoPath);
     }
 
     /**
