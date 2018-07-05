@@ -1,25 +1,51 @@
 <?xml version="1.0"?>
 <!DOCTYPE import-control PUBLIC
-        "-//Puppy Crawl//DTD Import Control 1.1//EN"
-        "http://www.puppycrawl.com/dtds/import_control_1_1.dtd">
+    "-//Checkstyle//DTD ImportControl Configuration 1.4//EN"
+    "https://checkstyle.org/dtds/import_control_1_4.dtd">
 
 <import-control pkg="com.github.checkstyle">
+  <allow pkg="com.github.checkstyle.github" local-only="true"/>
+  <allow pkg="com.github.checkstyle.globals"/>
+  <allow pkg="com.github.checkstyle.publishers" local-only="true"/>
+  <allow pkg="com.github.checkstyle.templates" local-only="true"/>
+
+  <allow class="com.google.common.collect.Multimap"/>
+  <allow class="java.io.IOException"/>
+  <allow pkg="java.nio"/>
+  <allow pkg="java.util"/>
+  <allow pkg="org.apache.commons.cli" local-only="true"/>
+  <allow class="org.eclipse.jgit.api.errors.GitAPIException" local-only="true"/>
+  <allow class="freemarker.template.TemplateException" local-only="true"/>
+
+  <file name="CliOptions">
     <allow pkg="java.io"/>
-    <allow pkg="java.net"/>
-    <allow pkg="java.nio"/>
-    <allow pkg="java.text"/>
-    <allow pkg="java.util"/>
-    <allow pkg="org.apache.commons.cli"/>
-    <allow pkg="org.apache.commons.lang"/>
+    <allow class="com.google.common.base.Verify"/>
+  </file>
+
+  <subpackage name="github">
+    <allow class="com.google.common.base.Verify"/>
+    <allow class="com.google.common.collect.Sets"/>
     <allow pkg="org.eclipse.jgit"/>
     <allow pkg="org.kohsuke.github"/>
-    <allow pkg="com.github.checkstyle"/>
-    <allow pkg="com.google.common"/>
+  </subpackage>
+
+  <subpackage name="globals">
+    <allow class="com.google.common.collect.ArrayListMultimap"/>
+    <allow class="org.kohsuke.github.GHIssue"/>
+  </subpackage>
+
+  <subpackage name="publishers">
+    <allow pkg="java.io"/>
+    <allow pkg="java.net"/>
+    <allow pkg="javax.mail"/>
+    <allow pkg="org.eclipse.jgit"/>
+    <allow pkg="twitter4j"/>
+  </subpackage>
+
+  <subpackage name="templates">
     <allow pkg="freemarker.cache"/>
     <allow pkg="freemarker.template"/>
-
-    <subpackage name="publishers">
-        <allow pkg="javax.mail"/>
-        <allow pkg="twitter4j"/>
-    </subpackage>
+    <allow pkg="java.io"/>
+    <allow class="java.text.SimpleDateFormat"/>
+  </subpackage>
 </import-control>

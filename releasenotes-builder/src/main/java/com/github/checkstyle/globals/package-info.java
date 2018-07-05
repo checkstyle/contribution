@@ -18,6 +18,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Contains classes for publishing release notes.
+ * Contains global classes for release notes generation.
  */
-package com.github.checkstyle.publishers;
+package com.github.checkstyle.globals;

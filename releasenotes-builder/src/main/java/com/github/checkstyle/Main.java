@@ -19,27 +19,22 @@
 
 package com.github.checkstyle;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.commons.cli.ParseException;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GitHub;
 
+import com.github.checkstyle.github.NotesBuilder;
+import com.github.checkstyle.globals.ReleaseNotesMessage;
+import com.github.checkstyle.globals.Result;
 import com.github.checkstyle.publishers.MailingListPublisher;
 import com.github.checkstyle.publishers.SourceforgeRssPublisher;
 import com.github.checkstyle.publishers.TwitterPublisher;
 import com.github.checkstyle.publishers.XdocPublisher;
+import com.github.checkstyle.templates.TemplateProcessor;
 import com.google.common.collect.Multimap;
 import freemarker.template.TemplateException;
 
@@ -47,7 +42,6 @@ import freemarker.template.TemplateException;
  * Class for command line usage.
  * @author Andrei Selkin
  */
-//-@cs[ClassDataAbstractionCoupling] No way to split this up right now.
 public final class Main {
 
     /** Filename for a generated xdoc. */
@@ -99,7 +93,7 @@ public final class Main {
             }
             else {
                 final CliOptions cliOptions = cliProcessor.getCliOptions();
-                final Result notesBuilderResult = runNotesBuilder(cliOptions);
+                final Result notesBuilderResult = runGithubNotesBuilder(cliOptions);
                 errorCounter = notesBuilderResult.getErrorMessages().size();
                 if (errorCounter == 0) {
                     runPostGeneration(notesBuilderResult.getReleaseNotes(), cliOptions);
@@ -136,24 +130,17 @@ public final class Main {
      * @throws IOException if an I/O error occurs.
      * @throws GitAPIException if an error occurs while accessing GitHub API.
      */
-    private static Result runNotesBuilder(CliOptions cliOptions)
+    private static Result runGithubNotesBuilder(CliOptions cliOptions)
             throws IOException, GitAPIException {
 
         final String localRepoPath = cliOptions.getLocalRepoPath();
+        final String authToken = cliOptions.getAuthToken();
+        final String remoteRepoPath = cliOptions.getRemoteRepoPath();
         final String startRef = cliOptions.getStartRef();
         final String endRef = cliOptions.getEndRef();
-        final String authToken = cliOptions.getAuthToken();
 
-        final GitHub connection;
-        if (authToken == null) {
-            connection = GitHub.connectAnonymously();
-        }
-        else {
-            connection = GitHub.connectUsingOAuth(authToken);
-        }
-
-        final GHRepository remoteRepo = connection.getRepository(cliOptions.getRemoteRepoPath());
-        final Result result = NotesBuilder.buildResult(remoteRepo, localRepoPath, startRef, endRef);
+        final Result result = NotesBuilder.buildResult(localRepoPath, authToken, remoteRepoPath,
+                startRef, endRef);
         if (result.hasWarnings()) {
             printListOf(result.getWarningMessages());
         }
@@ -181,66 +168,30 @@ public final class Main {
                 releaseNotes, releaseNumber, remoteRepoPath);
 
         if (cliOptions.isGenerateAll() || cliOptions.isGenerateXdoc()) {
-            final String template = loadTemplate(cliOptions.getXdocTemplate(),
-                    FREEMARKER_XDOC_TEMPLATE_FILE);
-
             TemplateProcessor.generateWithFreemarker(templateVariables,
-                    outputLocation + XDOC_FILENAME, template);
+                    outputLocation + XDOC_FILENAME, cliOptions.getXdocTemplate(),
+                    FREEMARKER_XDOC_TEMPLATE_FILE);
         }
         if (cliOptions.isGenerateAll() || cliOptions.isGenerateTw()) {
-            final String template = loadTemplate(cliOptions.getTwitterTemplate(),
-                    TWITTER_TEMPLATE_FILE);
-
             TemplateProcessor.generateWithFreemarker(templateVariables,
-                    outputLocation + TWITTER_FILENAME, template);
+                    outputLocation + TWITTER_FILENAME, cliOptions.getTwitterTemplate(),
+                    TWITTER_TEMPLATE_FILE);
         }
         if (cliOptions.isGenerateAll() || cliOptions.isGenerateGplus()) {
-            final String template = loadTemplate(cliOptions.getGplusTemplate(),
-                    GPLUS_TEMPLATE_FILE);
-
             TemplateProcessor.generateWithFreemarker(templateVariables,
-                    outputLocation + GPLUS_FILENAME, template);
+                    outputLocation + GPLUS_FILENAME, cliOptions.getGplusTemplate(),
+                    GPLUS_TEMPLATE_FILE);
         }
         if (cliOptions.isGenerateAll() || cliOptions.isGenerateRss()) {
-            final String template = loadTemplate(cliOptions.getRssTemplate(),
-                    RSS_TEMPLATE_FILE);
-
             TemplateProcessor.generateWithFreemarker(templateVariables,
-                    outputLocation + RSS_FILENAME, template);
+                    outputLocation + RSS_FILENAME, cliOptions.getRssTemplate(),
+                    RSS_TEMPLATE_FILE);
         }
         if (cliOptions.isGenerateAll() || cliOptions.isGenerateMlist()) {
-            final String template = loadTemplate(cliOptions.getMlistTemplate(),
-                    MLIST_TEMPLATE_FILE);
-
             TemplateProcessor.generateWithFreemarker(templateVariables,
-                    outputLocation + MLIST_FILENAME, template);
+                    outputLocation + MLIST_FILENAME, cliOptions.getMlistTemplate(),
+                    MLIST_TEMPLATE_FILE);
         }
-    }
-
-    /**
-     * Loads a template file to a string, otherwise a resource template if the file isn't supplied.
-     * @param fileName The path of the optional file to load.
-     * @param defaultResource The path of the resource to load if there is no file.
-     * @return The contents of the template.
-     * @throws FileNotFoundException if the supplied file can't be found.
-     */
-    private static String loadTemplate(String fileName, String defaultResource)
-            throws FileNotFoundException {
-        final InputStream inputStream;
-
-        if (fileName == null) {
-            inputStream = Main.class.getClassLoader().getResourceAsStream(defaultResource);
-
-            if (inputStream == null) {
-                throw new IllegalStateException("Failed to find resource: " + defaultResource);
-            }
-        }
-        else {
-            inputStream = new FileInputStream(fileName);
-        }
-
-        return new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
-                .lines().parallel().collect(Collectors.joining(System.lineSeparator()));
     }
 
     /**

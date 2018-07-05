@@ -18,6 +18,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Contains classes for publishing release notes.
+ * Contains classes for retrieving github issues.
  */
-package com.github.checkstyle.publishers;
+package com.github.checkstyle.github;

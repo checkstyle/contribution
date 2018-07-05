@@ -17,10 +17,15 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ////////////////////////////////////////////////////////////////////////////////
 
-package com.github.checkstyle;
+package com.github.checkstyle.templates;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -30,7 +35,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.github.checkstyle.globals.Constants;
+import com.github.checkstyle.globals.ReleaseNotesMessage;
 import com.google.common.collect.Multimap;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
@@ -42,6 +50,7 @@ import freemarker.template.TemplateExceptionHandler;
  * Util class to generate release notes output file with FreeMarker template engines.
  * @author Andrei Selkin
  */
+//-@cs[ClassDataAbstractionCoupling] No way to split this up right now.
 public final class TemplateProcessor {
 
     /** Internal template name. */
@@ -54,12 +63,13 @@ public final class TemplateProcessor {
      * Generates output file with release notes using FreeMarker.
      * @param variables the map which represents template variables.
      * @param outputFile output file.
-     * @param templateContents the contents of the template.
+     * @param templateFileName the optional file name of the template.
+     * @param defaultResource the resource file name to use if no file name was given.
      * @throws IOException if I/O error occurs.
      * @throws TemplateException if an error occurs while generating freemarker template.
      */
     public static void generateWithFreemarker(Map<String, Object> variables, String outputFile,
-            String templateContents) throws IOException, TemplateException {
+            String templateFileName, String defaultResource) throws IOException, TemplateException {
 
         final Configuration configuration = new Configuration(Configuration.VERSION_2_3_22);
         configuration.setDefaultEncoding("UTF-8");
@@ -68,7 +78,7 @@ public final class TemplateProcessor {
         configuration.setNumberFormat("0.######");
 
         final StringTemplateLoader loader = new StringTemplateLoader();
-        loader.putTemplate(TEMPLATE_NAME, templateContents);
+        loader.putTemplate(TEMPLATE_NAME, loadTemplate(templateFileName, defaultResource));
         configuration.setTemplateLoader(loader);
 
         final Template template = configuration.getTemplate(TEMPLATE_NAME);
@@ -76,6 +86,32 @@ public final class TemplateProcessor {
                 new FileOutputStream(outputFile), StandardCharsets.UTF_8)) {
             template.process(variables, fileWriter);
         }
+    }
+
+    /**
+     * Loads a template file to a string, otherwise a resource template if the file isn't supplied.
+     * @param fileName The path of the optional file to load.
+     * @param defaultResource The path of the resource to load if there is no file.
+     * @return The contents of the template.
+     * @throws FileNotFoundException if the supplied file can't be found.
+     */
+    private static String loadTemplate(String fileName, String defaultResource)
+            throws FileNotFoundException {
+        final InputStream inputStream;
+
+        if (fileName == null) {
+            inputStream = Template.class.getClassLoader().getResourceAsStream(defaultResource);
+
+            if (inputStream == null) {
+                throw new IllegalStateException("Failed to find resource: " + defaultResource);
+            }
+        }
+        else {
+            inputStream = new FileInputStream(fileName);
+        }
+
+        return new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
+                .lines().parallel().collect(Collectors.joining(System.lineSeparator()));
     }
 
     /**
