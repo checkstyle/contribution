@@ -1,0 +1,38 @@
+  
+    <div class="releaseDate">XX.XX.XXXX</div>
+    <section name="Release 1.0.0">
+      <p>Breaking backward compatibility:</p>
+        <ul>
+          <li>
+            Title 1.
+            Author: Author 1
+          </li>
+        </ul>
+      <p>New:</p>
+        <ul>
+          <li>
+            Title 2.
+            Author: Author 2
+            <a href="https://github.com/checkstyle/checkstyle/issues/2">#2</a>
+          </li>
+          <li>
+            Title 5.
+            Author: Author 5
+          </li>
+        </ul>
+      <p>Bug fixes:</p>
+        <ul>
+          <li>
+            Title 3.
+            Author: Author 3
+          </li>
+        </ul>
+      <p>Notes:</p>
+        <ul>
+          <li>
+            Title 4.
+            Author: Author 4
+            <a href="https://github.com/checkstyle/checkstyle/issues/4">#4</a>
+          </li>
+        </ul>
+    </section>

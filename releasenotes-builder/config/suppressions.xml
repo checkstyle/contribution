@@ -8,12 +8,11 @@
     <suppress checks="UncommentedMain" files="Main.java"/>
     <!-- this is a builder, there to much methods to get its options -->
     <suppress checks="MethodCount" files="CliOptions.java"/>
-    <!-- need to be addressed later-->
-    <suppress checks="NPathComplexity" files="Main.java"/>
 
     <!-- Tone down the checking for test code -->
     <suppress message="Missing a Javadoc comment|Missing package-info.java file|Expected @throws tag for|missing @author tag" files=".*[\\/]src[\\/]test[\\/]"/>
     <suppress checks="MultipleStringLiterals" files=".*[\\/]src[\\/]test[\\/]"/>
     <suppress checks="AvoidStaticImport" files=".*[\\/]src[\\/]test[\\/]"/>
     <suppress checks="WriteTag" files=".*[\\/]src[\\/]test[\\/]"/>
+    <suppress checks="MagicNumber" files=".*[\\/]src[\\/]test[\\/]"/>
 </suppressions>
