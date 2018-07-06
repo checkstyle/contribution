@@ -1,0 +1,4 @@
+Checkstyle 1.0.0 - http://checkstyle.sourceforge.net/releasenotes.html#Release_1.0.0
+Breaking backward compatibility: 1
+New functionality: 2
+Bug fixes: 1

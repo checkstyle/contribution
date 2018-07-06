@@ -20,22 +20,13 @@
 package com.github.checkstyle;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.cli.ParseException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 import com.github.checkstyle.github.NotesBuilder;
-import com.github.checkstyle.globals.ReleaseNotesMessage;
 import com.github.checkstyle.globals.Result;
-import com.github.checkstyle.publishers.MailingListPublisher;
-import com.github.checkstyle.publishers.SourceforgeRssPublisher;
-import com.github.checkstyle.publishers.TwitterPublisher;
-import com.github.checkstyle.publishers.XdocPublisher;
-import com.github.checkstyle.templates.TemplateProcessor;
-import com.google.common.collect.Multimap;
 import freemarker.template.TemplateException;
 
 /**
@@ -43,33 +34,6 @@ import freemarker.template.TemplateException;
  * @author Andrei Selkin
  */
 public final class Main {
-
-    /** Filename for a generated xdoc. */
-    private static final String XDOC_FILENAME = "xdoc.xml";
-    /** Filename for a generated Twitter post. */
-    private static final String TWITTER_FILENAME = "twitter.txt";
-    /** Filename for a generated Google Plus post. */
-    private static final String GPLUS_FILENAME = "gplus.txt";
-    /** Filename for a generated RSS post. */
-    private static final String RSS_FILENAME = "rss.txt";
-    /** Filename for a generated Mailing List post. */
-    private static final String MLIST_FILENAME = "mailing_list.txt";
-
-    /** FreeMarker xdoc template file name. */
-    private static final String FREEMARKER_XDOC_TEMPLATE_FILE =
-        "com/github/checkstyle/templates/xdoc_freemarker.template";
-    /** Twitter template file name. */
-    private static final String TWITTER_TEMPLATE_FILE =
-        "com/github/checkstyle/templates/twitter.template";
-    /** Google Plus template file name. */
-    private static final String GPLUS_TEMPLATE_FILE =
-        "com/github/checkstyle/templates/gplus.template";
-    /** RSS template file name. */
-    private static final String RSS_TEMPLATE_FILE =
-        "com/github/checkstyle/templates/rss.template";
-    /** Mailing List template file name. */
-    private static final String MLIST_TEMPLATE_FILE =
-        "com/github/checkstyle/templates/mailing_list.template";
 
     /** Exit code returned when execution finishes with errors. */
     private static final int ERROR_EXIT_CODE = -2;
@@ -96,8 +60,8 @@ public final class Main {
                 final Result notesBuilderResult = runGithubNotesBuilder(cliOptions);
                 errorCounter = notesBuilderResult.getErrorMessages().size();
                 if (errorCounter == 0) {
-                    runPostGeneration(notesBuilderResult.getReleaseNotes(), cliOptions);
-                    publicationErrors = runPostPublication(cliOptions);
+                    publicationErrors = MainProcess.run(notesBuilderResult.getReleaseNotes(),
+                            cliOptions);
                 }
             }
         }
@@ -148,146 +112,6 @@ public final class Main {
             printListOf(result.getErrorMessages());
         }
         return result;
-    }
-
-    /**
-     * Generate posts and write them to files.
-     * @param releaseNotes map of realeasenotes messages.
-     * @param cliOptions command line options.
-     * @throws IOException if I/O error occurs.
-     * @throws TemplateException if an error occurs while generating freemarker template.
-     */
-    // -@cs[CyclomaticComplexity] This code is not complicated and is better to keep in one method
-    private static void runPostGeneration(Multimap<String, ReleaseNotesMessage> releaseNotes,
-            CliOptions cliOptions) throws IOException, TemplateException {
-
-        final String remoteRepoPath = cliOptions.getRemoteRepoPath();
-        final String releaseNumber = cliOptions.getReleaseNumber();
-        final String outputLocation = cliOptions.getOutputLocation();
-        final Map<String, Object> templateVariables = TemplateProcessor.getTemplateVariables(
-                releaseNotes, releaseNumber, remoteRepoPath);
-
-        if (cliOptions.isGenerateAll() || cliOptions.isGenerateXdoc()) {
-            TemplateProcessor.generateWithFreemarker(templateVariables,
-                    outputLocation + XDOC_FILENAME, cliOptions.getXdocTemplate(),
-                    FREEMARKER_XDOC_TEMPLATE_FILE);
-        }
-        if (cliOptions.isGenerateAll() || cliOptions.isGenerateTw()) {
-            TemplateProcessor.generateWithFreemarker(templateVariables,
-                    outputLocation + TWITTER_FILENAME, cliOptions.getTwitterTemplate(),
-                    TWITTER_TEMPLATE_FILE);
-        }
-        if (cliOptions.isGenerateAll() || cliOptions.isGenerateGplus()) {
-            TemplateProcessor.generateWithFreemarker(templateVariables,
-                    outputLocation + GPLUS_FILENAME, cliOptions.getGplusTemplate(),
-                    GPLUS_TEMPLATE_FILE);
-        }
-        if (cliOptions.isGenerateAll() || cliOptions.isGenerateRss()) {
-            TemplateProcessor.generateWithFreemarker(templateVariables,
-                    outputLocation + RSS_FILENAME, cliOptions.getRssTemplate(),
-                    RSS_TEMPLATE_FILE);
-        }
-        if (cliOptions.isGenerateAll() || cliOptions.isGenerateMlist()) {
-            TemplateProcessor.generateWithFreemarker(templateVariables,
-                    outputLocation + MLIST_FILENAME, cliOptions.getMlistTemplate(),
-                    MLIST_TEMPLATE_FILE);
-        }
-    }
-
-    /**
-     * Publish social posts.
-     * @param cliOptions command line options.
-     * @return list of publication errors.
-     */
-    private static List<String> runPostPublication(CliOptions cliOptions) {
-        final List<String> errors = new ArrayList<>();
-        if (cliOptions.isPublishXdoc()) {
-            runXdocPublication(cliOptions, errors);
-        }
-        if (cliOptions.isPublishAllSocial() || cliOptions.isPublishTwit()) {
-            runTwitterPublication(cliOptions, errors);
-        }
-        if (cliOptions.isPublishAllSocial() || cliOptions.isPublishMlist()) {
-            runMailingListPublication(cliOptions, errors);
-        }
-        if (cliOptions.isPublishAllSocial() || cliOptions.isPublishSfRss()) {
-            runSfRssPublication(cliOptions, errors);
-        }
-        return errors;
-    }
-
-    /**
-     * Publish on xdoc.
-     * @param cliOptions command line options.
-     * @param errors list of publication errors.
-     */
-    private static void runXdocPublication(CliOptions cliOptions, List<String> errors) {
-        final XdocPublisher xdocPublisher = new XdocPublisher(
-            cliOptions.getOutputLocation() + XDOC_FILENAME, cliOptions.getLocalRepoPath(),
-            cliOptions.getReleaseNumber(), cliOptions.isPublishXdocWithPush(),
-            cliOptions.getAuthToken());
-        try {
-            xdocPublisher.publish();
-        }
-        // -@cs[IllegalCatch] We should execute all publishers, so cannot fail-fast
-        catch (Exception ex) {
-            errors.add(ex.toString());
-        }
-    }
-
-    /**
-     * Publish on Twitter.
-     * @param cliOptions command line options.
-     * @param errors list of publication errors.
-     */
-    private static void runTwitterPublication(CliOptions cliOptions, List<String> errors) {
-        final TwitterPublisher twitterPublisher = new TwitterPublisher(
-            cliOptions.getOutputLocation() + TWITTER_FILENAME,
-            cliOptions.getTwitterConsumerKey(), cliOptions.getTwitterConsumerSecret(),
-            cliOptions.getTwitterAccessToken(), cliOptions.getTwitterAccessTokenSecret());
-        try {
-            twitterPublisher.publish();
-        }
-        // -@cs[IllegalCatch] We should execute all publishers, so cannot fail-fast
-        catch (Exception ex) {
-            errors.add(ex.toString());
-        }
-    }
-
-    /**
-     * Publish on mailing list.
-     * @param cliOptions command line options.
-     * @param errors list of publication errors.
-     */
-    private static void runMailingListPublication(CliOptions cliOptions, List<String> errors) {
-        final MailingListPublisher mailingListPublisher = new MailingListPublisher(
-            cliOptions.getOutputLocation() + MLIST_FILENAME, cliOptions.getMlistUsername(),
-            cliOptions.getMlistPassword(), cliOptions.getReleaseNumber());
-        try {
-            mailingListPublisher.publish();
-        }
-        // -@cs[IllegalCatch] We should execute all publishers, so cannot fail-fast
-        catch (Exception ex) {
-            errors.add(ex.toString());
-        }
-    }
-
-    /**
-     * Publish on RSS.
-     * @param cliOptions command line options.
-     * @param errors list of publication errors.
-     */
-    private static void runSfRssPublication(CliOptions cliOptions, List<String> errors) {
-        final SourceforgeRssPublisher rssPublisher = new SourceforgeRssPublisher(
-                cliOptions.getOutputLocation() + RSS_FILENAME, cliOptions.getSfRssBearerToken(),
-                cliOptions.getReleaseNumber());
-        try {
-            rssPublisher.publish();
-        }
-        // -@cs[IllegalCatch] We should execute all publishers, so cannot fail-fast
-        catch (Exception ex) {
-            errors.add(ex.toString());
-        }
     }
 
     /**

@@ -134,7 +134,7 @@ public final class TemplateProcessor {
 
         final Collection<ReleaseNotesMessage> newMessages =
             releaseNotes.get(Constants.NEW_FEATURE_LABEL);
-        newMessages.addAll(releaseNotes.get(Constants.MEW_MODULE_LABEL));
+        newMessages.addAll(releaseNotes.get(Constants.NEW_MODULE_LABEL));
         variables.put("newMessages", newMessages);
 
         variables.put("bugMessages", releaseNotes.get(Constants.BUG_LABEL));
