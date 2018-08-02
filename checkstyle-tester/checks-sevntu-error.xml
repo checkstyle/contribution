@@ -90,6 +90,7 @@
         <module name="com.github.sevntu.checkstyle.checks.coding.AvoidNotShortCircuitOperatorsForBooleanCheck"/>
         <module name="com.github.sevntu.checkstyle.checks.coding.RedundantReturnCheck"/>
         <module name="com.github.sevntu.checkstyle.checks.coding.WhitespaceBeforeArrayInitializerCheck"/>
+        <module name="com.github.sevntu.checkstyle.checks.coding.EnumTrailingCommaCheck" />
         <module name="com.github.sevntu.checkstyle.checks.design.InnerClassCheck"/>
         <module name="com.github.sevntu.checkstyle.checks.naming.EnumValueNameCheck">
             <property name="format" value="^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$"/>
