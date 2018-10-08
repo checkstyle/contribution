@@ -327,9 +327,7 @@ public final class NotesBuilder {
         final Set<String> commitAuthors = new HashSet<>();
         for (RevCommit commit : commits) {
             final String author = commit.getAuthorIdent().getName();
-            if (!commitAuthors.contains(author)) {
-                commitAuthors.add(author);
-            }
+            commitAuthors.add(author);
         }
         return commitAuthors;
     }
