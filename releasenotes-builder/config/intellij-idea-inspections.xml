@@ -1984,6 +1984,7 @@
                 <option value="deprecation" />
                 <option value="unchecked" />
                 <option value="rawtypes" />
+                <option value="InconsistentLineSeparators" />
             </list>
         </option>
     </inspection_tool>
