@@ -306,7 +306,7 @@ public class TemplateProcessorTest {
     }
 
     private static ReleaseNotesMessage createReleaseNotesMessage(int number, String title,
-            String author) throws IllegalAccessException, NoSuchFieldException, SecurityException {
+            String author) throws IllegalAccessException, NoSuchFieldException {
         final GHIssue issue = new GHIssue();
 
         final Field titleField = issue.getClass().getDeclaredField("title");
