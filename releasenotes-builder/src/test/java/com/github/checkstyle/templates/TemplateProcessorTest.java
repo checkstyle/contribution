@@ -28,6 +28,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -138,11 +139,11 @@ public class TemplateProcessorTest {
     public void testGenerateAll() throws Exception {
         final List<String> errors = MainProcess.run(
             createNotes(
-                Arrays.asList(createReleaseNotesMessage("Title 1", "Author 1")),
-                Arrays.asList(createReleaseNotesMessage(2, "Title 2", "Author 2")),
-                Arrays.asList(createReleaseNotesMessage("Title 3", "Author 3")),
-                Arrays.asList(createReleaseNotesMessage(4, "Title 4", "Author 4")),
-                Arrays.asList(createReleaseNotesMessage("Title 5", "Author 5"))
+                Collections.singletonList(createReleaseNotesMessage("Title 1", "Author 1")),
+                Collections.singletonList(createReleaseNotesMessage(2, "Title 2", "Author 2")),
+                Collections.singletonList(createReleaseNotesMessage("Title 3", "Author 3")),
+                Collections.singletonList(createReleaseNotesMessage(4, "Title 4", "Author 4")),
+                Collections.singletonList(createReleaseNotesMessage("Title 5", "Author 5"))
             ), createBaseCliOptions().setGenerateAll(true).build());
 
         Assert.assertEquals("no errors", 0, errors.size());

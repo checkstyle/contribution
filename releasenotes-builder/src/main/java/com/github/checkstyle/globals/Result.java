@@ -70,7 +70,7 @@ public final class Result {
     }
 
     public Multimap<String, ReleaseNotesMessage> getReleaseNotes() {
-        return releaseNotes;
+        return ArrayListMultimap.create(releaseNotes);
     }
 
     /**

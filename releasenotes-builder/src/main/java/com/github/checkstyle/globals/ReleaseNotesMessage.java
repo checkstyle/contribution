@@ -121,14 +121,14 @@ public final class ReleaseNotesMessage {
 
             if (outPosition > MAX_TITLE_LINE_SIZE) {
                 if (lastSpacePosition == -1) {
-                    sb.append(str.substring(splitStart, index - 1));
+                    sb.append(str, splitStart, index - 1);
                     sb.append("-");
 
                     splitStart = index - 1;
                     outPosition = 0;
                 }
                 else {
-                    sb.append(str.substring(splitStart, lastSpacePosition));
+                    sb.append(str, splitStart, lastSpacePosition);
                     splitStart = lastSpacePosition + 1;
                     outPosition -= lastSpaceOutPosition;
                 }
