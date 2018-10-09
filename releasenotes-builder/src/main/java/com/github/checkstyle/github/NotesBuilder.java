@@ -59,9 +59,7 @@ public final class NotesBuilder {
     /** Array elements separator. */
     private static final String SEPARATOR = ", ";
 
-    /** Regexp pattern for ignoring commit messages.
-     * @noinspection InconsistentLineSeparators
-     * */
+    /** Regexp pattern for ignoring commit messages. */
     private static final Pattern IGNORED_COMMIT_MESSAGES_PATTERN =
         Pattern.compile("^\\[maven-release-plugin].*[\r\n]?$|"
             + "^update to ([0-9]|\\.)+-SNAPSHOT[\r\n]?$|"

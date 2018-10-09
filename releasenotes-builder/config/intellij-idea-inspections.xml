@@ -1007,7 +1007,8 @@
     <inspection_tool class="IncompatibleMask" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="IncompatibleMaskJS" enabled="true" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="InconsistentLanguageLevel" enabled="true" level="ERROR" enabled_by_default="true" />
-    <inspection_tool class="InconsistentLineSeparators" enabled="true" level="ERROR" enabled_by_default="true" />
+    <!-- till https://youtrack.jetbrains.com/issue/IDEA-200207 -->
+    <inspection_tool class="InconsistentLineSeparators" enabled="false" level="ERROR" enabled_by_default="true" />
     <inspection_tool class="InconsistentResourceBundle" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="IncorrectOnMessageMethodsInspection" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="IncrementDecrementResultUsedJS" enabled="true" level="ERROR" enabled_by_default="true" />
@@ -1984,7 +1985,6 @@
                 <option value="deprecation" />
                 <option value="unchecked" />
                 <option value="rawtypes" />
-                <option value="InconsistentLineSeparators" />
             </list>
         </option>
     </inspection_tool>
