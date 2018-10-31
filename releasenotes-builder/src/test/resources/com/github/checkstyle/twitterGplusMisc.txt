@@ -1,2 +1,2 @@
-Checkstyle 1.0.0 - http://checkstyle.sourceforge.net/releasenotes.html#Release_1.0.0
+Checkstyle 1.0.0 - https://checkstyle.org/releasenotes.html#Release_1.0.0
 

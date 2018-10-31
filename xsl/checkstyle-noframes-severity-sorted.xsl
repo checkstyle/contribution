@@ -12,7 +12,7 @@
 <!--  * Sorts primarily by #error, secondarily by #warning, tertiary by #info       -->
 <!--  * Compatible with windows path names (converts '\' to '/' for html anchor)    -->
 <!--                                                                                -->
-<!-- Part of the Checkstyle distribution found at http://checkstyle.sourceforge.net -->
+<!-- Part of the Checkstyle distribution found at https://checkstyle.org -->
 <!-- Usage (generates checkstyle_report.html):                                      -->
 <!--    <checkstyle failonviolation="false" config="${check.config}">               -->
 <!--      <fileset dir="${src.dir}" includes="**/*.java"/>                          -->
@@ -90,7 +90,7 @@
         <td class="text-align:right"><h2>CheckStyle Audit</h2></td>
         </tr>
         <tr>
-        <td class="text-align:right">Designed for use with <a href='http://checkstyle.sourceforge.net/'>CheckStyle</a> and <a href='http://jakarta.apache.org'>Ant</a>.</td>
+        <td class="text-align:right">Designed for use with <a href='https://checkstyle.org/'>CheckStyle</a> and <a href='http://jakarta.apache.org'>Ant</a>.</td>
         </tr>
       </table>
       <hr size="1"/>
