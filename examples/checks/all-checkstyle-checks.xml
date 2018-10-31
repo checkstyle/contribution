@@ -59,7 +59,7 @@
      !________________________________________________________________________________________
      !-->
     <!-- Checks that each Java package has a Javadoc file used for commenting. !-->
-    <!-- See http://checkstyle.sourceforge.net/config_javadoc.html#JavadocPackage !-->
+    <!-- See https://checkstyle.org/config_javadoc.html#JavadocPackage !-->
     <module name="JavadocPackage">
         <property name="allowLegacy" value="false"/>
     </module>
@@ -72,7 +72,7 @@
      !________________________________________________________________________________________
      !-->
     <!-- A check for detecting that matches across multiple lines. Works with any file type. !-->
-    <!-- See http://checkstyle.sourceforge.net/config_regexp.html#RegexpMultiline !-->
+    <!-- See https://checkstyle.org/config_regexp.html#RegexpMultiline !-->
     <!-- Default: OFF
     <module name="RegexpMultiline">
         <property name="format"         value=""/>
@@ -85,7 +85,7 @@
     !-->
 
     <!-- A check for detecting single lines that match a supplied regular expression. Works with any file type. !-->
-    <!-- See http://checkstyle.sourceforge.net/config_regexp.html#RegexpSingleline !-->
+    <!-- See https://checkstyle.org/config_regexp.html#RegexpSingleline !-->
     <!-- Default: OFF
     <module name="RegexpSingleline">
         <property name="format"         value=""/>
@@ -138,7 +138,7 @@
      !________________________________________________________________________________________
      !-->
     <!-- Checks that there are no tab characters ('\t') in the source code. !-->
-    <!-- See http://checkstyle.sourceforge.net/config_whitespace.html#FileTabCharacter !-->
+    <!-- See https://checkstyle.org/config_whitespace.html#FileTabCharacter !-->
     <module name="FileTabCharacter">
         <property name="eachLine"       value="false"/>
         <property name="fileExtensions" value=""/>
@@ -154,7 +154,7 @@
          !________________________________________________________________________________________
          !-->
         <!-- This check controls the usage style of annotations. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_annotation.html#AnnotationUseStyle !-->
+        <!-- See https://checkstyle.org/config_annotation.html#AnnotationUseStyle !-->
         <module name ="AnnotationUseStyle">
             <property name="elementStyle"       value="compact_no_array"/>
             <property name="closingParens"      value="never"/>
@@ -162,11 +162,11 @@
         </module>
 
         <!-- Verifies that both the java.lang.Deprecated import is present and the @deprecated Javadoc tag is present when either is present. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_annotation.html#MissingDeprecated !-->
+        <!-- See https://checkstyle.org/config_annotation.html#MissingDeprecated !-->
         <module name="MissingDeprecated"/>
 
         <!-- Verifies that the java.lang.Override annotation is present when the {@inheritDoc} javadoc tag is present. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_annotation.html#MissingOverride !-->
+        <!-- See https://checkstyle.org/config_annotation.html#MissingOverride !-->
         <!-- Default: OFF
         <module name="MissingOverride">
             <property name="javaFiveCompatibility" value="false"/>
@@ -174,12 +174,12 @@
         !-->
 
         <!-- This check makes sure that all package annotations are in the package-info.java file. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_annotation.html#PackageAnnotation !-->
+        <!-- See https://checkstyle.org/config_annotation.html#PackageAnnotation !-->
         <module name="PackageAnnotation"/>
 
         <!-- This check allows you to specify what warnings that SuppressWarnings is not allowed to suppress. !-->
         <!-- You can also specify a list of TokenTypes that the configured warning(s) cannot be suppressed on. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_annotation.html#SuppressWarnings !-->
+        <!-- See https://checkstyle.org/config_annotation.html#SuppressWarnings !-->
         <module name="SuppressWarnings">
             <property name="format" value="^$|^\s+$"/>
             <property name="tokens" value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, ANNOTATION_DEF,
@@ -257,7 +257,7 @@
         <module name="HideUtilityClassConstructor"/>
 
         <!-- Check nested (internal) classes/interfaces are declared at the bottom of the class after all method and field declarations. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_design.html#InnerTypeLast !-->
+        <!-- See https://checkstyle.org/config_design.html#InnerTypeLast !-->
         <module name="InnerTypeLast"/>
 
         <!-- Implements Bloch, Effective Java, Item 17 - Use Interfaces only to define types. !-->
@@ -324,7 +324,7 @@
         <module name="EmptyStatement"/>
 
         <!-- Checks that any combination of String literals with optional assignment is on the left side of an equals() comparison. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_coding.html#EqualsAvoidNull !-->
+        <!-- See https://checkstyle.org/config_coding.html#EqualsAvoidNull !-->
         <module name="EqualsAvoidNull"/>
 
         <!-- Checks that classes that override equals() also override hashCode(). !-->
@@ -377,7 +377,7 @@
 
         <!-- This check can be used to ensure that types are not declared to be thrown. !-->
         <!-- Declaring to throw java.lang.Error or java.lang.RuntimeException is almost never acceptable. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_coding.html#IllegalThrows !-->
+        <!-- See https://checkstyle.org/config_coding.html#IllegalThrows !-->
         <module name="IllegalThrows">
             <property name="illegalClassNames" value="java.lang.Throwable, java.lang.Error, java.lang.RuntimeException"/>
         </module>
@@ -445,11 +445,11 @@
         <module name="MissingSwitchDefault"/>
 
         <!-- Check for ensuring that for loop control variables are not modified inside the for block. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_coding.html#ModifiedControlVariable !-->
+        <!-- See https://checkstyle.org/config_coding.html#ModifiedControlVariable !-->
         <module name="ModifiedControlVariable"/>
 
         <!-- Checks for multiple occurrences of the same string literal within a single file. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_coding.html#MultipleStringLiterals !-->
+        <!-- See https://checkstyle.org/config_coding.html#MultipleStringLiterals !-->
         <module name="MultipleStringLiterals">
             <property name="allowedDuplicates"       value="1"/>
             <property name="ignoreStringsRegexp"     value='^""$'/>
@@ -461,7 +461,7 @@
         <module name="MultipleVariableDeclarations"/>
 
         <!-- Restricts nested for blocks to a specified depth. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_coding.html#NestedForDepth !-->
+        <!-- See https://checkstyle.org/config_coding.html#NestedForDepth !-->
         <module name="NestedForDepth">
             <property name="max" value="1"/>
         </module>
@@ -479,15 +479,15 @@
         </module>
 
         <!-- Checks that the clone method is not overridden from the Object class. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_coding.html#NoClone !-->
+        <!-- See https://checkstyle.org/config_coding.html#NoClone !-->
         <module name="NoClone"/>
 
         <!-- Verifies there are no finalize() methods defined in a class. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_coding.html#NoFinalizer !-->
+        <!-- See https://checkstyle.org/config_coding.html#NoFinalizer !-->
         <module name="NoFinalizer"/>
 
         <!-- Checks there is only one statement per line. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_coding.html#OneStatementPerLine !-->
+        <!-- See https://checkstyle.org/config_coding.html#OneStatementPerLine !-->
         <module name="OneStatementPerLine"/>
 
         <!-- Ensure a class has a package declaration. !-->
@@ -552,7 +552,7 @@
         </module>
 
         <!-- Checks that there are no static import statements. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_imports.html#AvoidStaticImport !-->
+        <!-- See https://checkstyle.org/config_imports.html#AvoidStaticImport !-->
         <module name="AvoidStaticImport">
             <property name="excludes" value=""/>
         </module>
@@ -565,7 +565,7 @@
 
         <!-- Controls what can be imported in each package. Useful for ensuring that application layering rules !-->
         <!-- are not violated, especially on large projects. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_imports.html#ImportControl !-->
+        <!-- See https://checkstyle.org/config_imports.html#ImportControl !-->
         <!-- Default: OFF
         <module name="ImportControl">
             <property name="file" value=""/>
@@ -655,7 +655,7 @@
         </module>
 
         <!-- Outputs a JavaDoc tag as information. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_javadoc.html#WriteTag !-->
+        <!-- See https://checkstyle.org/config_javadoc.html#WriteTag !-->
         <module name="WriteTag">
             <property name="tag"         value=""/>
             <property name="tagFormat"   value=""/>
@@ -695,7 +695,7 @@
         </module>
 
         <!-- Determines complexity of methods, classes and files by counting the Non Commenting Source Statements (NCSS). !-->
-        <!-- See http://checkstyle.sourceforge.net/config_metrics.html#JavaNCSS !-->
+        <!-- See https://checkstyle.org/config_metrics.html#JavaNCSS !-->
         <module name="JavaNCSS">
             <property name="methodMaximum" value="50"/>
             <property name="classMaximum"  value="1500"/>
@@ -763,7 +763,7 @@
         </module>
 
         <!-- Checks that the outer type name and the file name match. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_misc.html#OuterTypeFilename !-->
+        <!-- See https://checkstyle.org/config_misc.html#OuterTypeFilename !-->
         <module name="OuterTypeFilename"/>
 
         <!-- A check for TODO: comments. Actually it is a generic regular expression matcher on Java comments. !-->
@@ -825,7 +825,7 @@
         </module>
 
         <!-- Checks for class type parameter name naming conventions. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_naming.html#ClassTypeParameterName !-->
+        <!-- See https://checkstyle.org/config_naming.html#ClassTypeParameterName !-->
         <module name="ClassTypeParameterName">
             <property name="format" value="^[A-Z]$"/>
         </module>
@@ -871,7 +871,7 @@
         </module>
 
         <!-- Checks for method type parameter name naming conventions. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_naming.html#MethodTypeParameterName !-->
+        <!-- See https://checkstyle.org/config_naming.html#MethodTypeParameterName !-->
         <module name="MethodTypeParameterName">
             <property name="format" value="^[A-Z]$"/>
         </module>
@@ -918,7 +918,7 @@
          !-->
         <!-- A check that makes sure that a specified pattern exists, exists less than a set number of times, !-->
         <!-- or does not exist in the file. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_misc.html#Regexp !-->
+        <!-- See https://checkstyle.org/config_misc.html#Regexp !-->
         <!-- Default: OFF
         <module name="Regexp">
             <property name="format"         value=""/>
@@ -932,7 +932,7 @@
 
         <!-- This class is variation on RegexpSingleline for detecting single lines that match a !-->
         <!-- supplied regular expression in Java files. It supports suppressing matches in Java comments. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_regexp.html#RegexpSinglelineJava !-->
+        <!-- See https://checkstyle.org/config_regexp.html#RegexpSinglelineJava !-->
         <!-- Default: OFF
         <module name="RegexpSinglelineJava">
             <property name="format"         value=""/>
@@ -972,7 +972,7 @@
 
         <!-- Checks the number of methods declared in each type. This includes the number of each scope !-->
         <!-- (private, package, protected and public) as well as an overall total. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_sizes.html#MethodCount !-->
+        <!-- See https://checkstyle.org/config_sizes.html#MethodCount !-->
         <module name="MethodCount">
             <property name="maxTotal"     value="100"/>
             <property name="maxPrivate"   value="100"/>
@@ -990,7 +990,7 @@
         </module>
 
         <!-- Checks for the number of types declared at the outer (or root) level in a file. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_sizes.html#OuterTypeNumber !-->
+        <!-- See https://checkstyle.org/config_sizes.html#OuterTypeNumber !-->
         <module name="OuterTypeNumber">
             <property name="max" value="1"/>
         </module>
@@ -1021,7 +1021,7 @@
         </module>
 
         <!-- Checks that the whitespace around the Generic tokens < and > is correct to the typical convention. !-->
-        <!-- See http://checkstyle.sourceforge.net/config_whitespace.html#GenericWhitespace !-->
+        <!-- See https://checkstyle.org/config_whitespace.html#GenericWhitespace !-->
         <module name="GenericWhitespace"/>
 
         <!-- Checks the padding between the identifier of a method definition, !-->

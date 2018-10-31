@@ -1,4 +1,4 @@
-Checkstyle ${releaseNo} - http://checkstyle.sourceforge.net/releasenotes.html#Release_${releaseNo}
+Checkstyle ${releaseNo} - https://checkstyle.org/releasenotes.html#Release_${releaseNo}
 
 <#if breakingMessages?has_content>
 Breaking backward compatibility:
