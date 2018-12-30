@@ -165,7 +165,6 @@ public final class NotesBuilder {
      * @return a list of commits.
      * @throws IOException if I/O error occurs.
      * @throws GitAPIException if an error occurs when accessing Git API.
-     * @noinspection ResultOfMethodCallIgnored
      */
     private static Set<RevCommit> getCommitsBetweenReferences(String repoPath, String startRef,
             String endRef) throws IOException, GitAPIException {
