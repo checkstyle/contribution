@@ -97,6 +97,7 @@ function parse_arguments {
 }
 
 function mvn_package {
+	echo "mvn --batch-mode -Pno-validations clean package -Passembly"
 	mvn --batch-mode -Pno-validations clean package -Passembly
 
 	if [ $? -ne 0 ]; then
@@ -151,14 +152,18 @@ function launch {
 				if [ "$COMMIT_ID" != "" ] && [ "$COMMIT_ID" != "master" ]; then
 					echo "Reseting $REPO_TYPE sources to commit '$COMMIT_ID'"
 					cd $GITPATH
-					git fetch origin
+					if $CONTACTSERVER ; then
+						git fetch origin
+					fi
 					git reset --hard $COMMIT_ID
 					git clean -f -d
 					cd -
 				else
 					echo "Reseting GIT $REPO_TYPE sources to head"
 					cd $GITPATH
-					git fetch origin
+					if $CONTACTSERVER ; then
+						git fetch origin
+					fi
 					git reset --hard origin/master
 					git clean -f -d
 					cd -
@@ -190,10 +195,10 @@ function launch {
 			if $USE_CUSTOM_CONFIG ; then
 				CONFIG=$CUSTOM_CONFIG
 			else
-				CONFIG="my_checks_$REPO_NAME.xml"
+				CONFIG="$TESTER_DIR/my_checks_$REPO_NAME.xml"
 
 				if [ ! -f $CONFIG ] ; then
-					CONFIG="my_checks.xml"
+					CONFIG="$TESTER_DIR/my_checks.xml"
 				fi
 			fi
 
@@ -211,7 +216,7 @@ function launch {
 				java -Xmx3024m -jar $CS_JAR -c $CONFIG -f xml -o $1/$REPO_NAME/results.xml -x "$EXCLUDES" $CURRENT_REPO_DIR
 			fi
 
-			if [ "$?" == "-2" ]
+			if [ "$?" == "-2" ] || [ "$?" == "-1" ];
 			then
 				echo "Checkstyle failed"
 				exit 1
@@ -244,13 +249,15 @@ parse_arguments "$@"
 
 echo "Testing Checkstyle Starting"
 
+if $CONTACTSERVER ; then
+	echo "with server updates enabled"
+fi
+
 if $PACKAGE_MASTER ; then
 	cd $CHECKSTYLE_DIR
 
 	if $USE_CUSTOM_MASTER ; then
-		if $CONTACTSERVER ; then
-			git fetch $PULL_REMOTE
-		fi
+		git fetch $PULL_REMOTE
 
 		if [ ! `git rev-parse --verify $PULL_REMOTE/$CUSTOM_MASTER` ] ;
 		then
@@ -292,9 +299,7 @@ if $PACKAGE_PULL ; then
 
 	echo "Checking out and Packaging PR $1"
 
-	if $CONTACTSERVER ; then
-		git fetch $PULL_REMOTE
-	fi
+	git fetch $PULL_REMOTE
 
 	if [ ! `git rev-parse --verify $PULL_REMOTE/$1` ] ;
 	then
