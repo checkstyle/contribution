@@ -21,7 +21,6 @@ if [ "$1" == "clean" ] || [ "$1" == "-clean" ]; then
 	cd $TESTER_DIR
 	rm -rf $SITE_SAVE_MASTER_DIR
 	rm -rf $SITE_SAVE_PULL_DIR
-	mvn --batch-mode clean
 	rm -rf $FINAL_RESULTS_DIR/*
 	exit 0
 fi
@@ -54,7 +53,8 @@ function parse_arguments {
 }
 
 function mvn_package {
-	mvn --batch-mode clean package -Passembly -Dmaven.test.skip=true -Dcheckstyle.ant.skip=true -Dcheckstyle.skip=true -Dpmd.skip=true -Dspotbugs.skip=true -Djacoco.skip=true -Dforbiddenapis.skip=true -Dxml.skip=true
+	echo "mvn --batch-mode -Pno-validations clean package -Passembly"
+	mvn --batch-mode -Pno-validations clean package -Passembly
 
 	if [ $? -ne 0 ]; then
 		echo "Maven Package Failed!"
@@ -65,6 +65,13 @@ function mvn_package {
 }
 
 function launch {
+		if [ ! -d "$1" ]; then
+			mkdir $1
+		fi
+		if [ ! -d "$2" ]; then
+			mkdir $2
+		fi
+
 		while read line ; do
 			[[ "$line" == \#* ]] && continue # Skip lines with comments
 			[[ -z "$line" ]] && continue     # Skip empty lines
@@ -76,24 +83,13 @@ function launch {
 			EXCLUDES=` echo $line | cut -d '|' -f 5`
 			
 			echo "Running Launches on $REPO_NAME ..."
-			
+
+			if [ ! -d "$REPOSITORIES_DIR" ]; then
+				mkdir $REPOSITORIES_DIR
+			fi
 			REPO_SOURCES_DIR=
 			
-			if [ "$REPO_TYPE" == "github" ]; then
-				TARNAME=$(echo $REPO_URL | sed -E 's/\//-/')
-				TARPATH=$REPOSITORIES_DIR/$TARNAME".tar.gz"
-				
-				if [ ! -f "$TARPATH" ]; then
-					echo "Requesting a tar: 'wget https://api.github.com/repos/$REPO_URL/tarball/$COMMIT_ID -O $TARPATH'"
-					wget https://api.github.com/repos/$REPO_URL/tarball/$COMMIT_ID -O $TARPATH
-				fi
-				REPO_SOURCES_DIR=$TEMP_DIR/$REPO_NAME
-				if [ ! -d "$REPO_SOURCES_DIR" ]; then
-					echo -e "untar $TARNAME file to $REPO_SOURCES_DIR ..."
-					tar -xf $TARPATH -C $REPO_SOURCES_DIR
-					echo -e "untar $TARNAME file to $REPO_SOURCES_DIR - completed"
-				fi
-			elif [ "$REPO_TYPE" == "git" ]; then
+			if [ "$REPO_TYPE" == "git" ]; then
 				GITPATH=$REPOSITORIES_DIR/$REPO_NAME
 				
 				if [ ! -d "$GITPATH" ]; then
@@ -104,14 +100,18 @@ function launch {
 				if [ "$COMMIT_ID" != "" ] && [ "$COMMIT_ID" != "master" ]; then
 					echo "Reseting $REPO_TYPE sources to commit '$COMMIT_ID'"
 					cd $GITPATH
-					git fetch origin
+					if $CONTACTSERVER ; then
+						git fetch origin
+					fi
 					git reset --hard $COMMIT_ID
 					git clean -f -d
 					cd -
 				else
 					echo "Reseting GIT $REPO_TYPE sources to head"
 					cd $GITPATH
-					git fetch origin
+					if $CONTACTSERVER ; then
+						git fetch origin
+					fi
 					git reset --hard origin/master
 					git clean -f -d
 					cd -
@@ -142,13 +142,6 @@ function launch {
 			if [ -z "$REPO_SOURCES_DIR" ] || [ ! -d "$REPO_SOURCES_DIR" ]; then
 				echo "Unable to find RepoDir for $REPO_NAME: $REPO_SOURCES_DIR"
 				exit 1
-			fi
-
-			if [ ! -d "$1" ]; then
-				mkdir $1
-			fi
-			if [ ! -d "$2" ]; then
-				mkdir $2
 			fi
 
 			SECONDS=0
@@ -214,12 +207,14 @@ fi
 
 echo "Testing Checkstyle Starting"
 
+if $CONTACTSERVER ; then
+	echo "with server updates enabled"
+fi
+
 cd $CHECKSTYLE_DIR
 
 if $USE_CUSTOM_MASTER ; then
-	if $CONTACTSERVER ; then
-		git fetch $PULL_REMOTE
-	fi
+	git fetch $PULL_REMOTE
 
 	if [ ! `git rev-parse --verify $PULL_REMOTE/$CUSTOM_MASTER` ] ;
 	then
@@ -245,9 +240,7 @@ mvn_package "master"
 
 echo "Checking out and Installing PR $1"
 
-if $CONTACTSERVER ; then
-	git fetch $PULL_REMOTE
-fi
+git fetch $PULL_REMOTE
 
 if [ ! `git rev-parse --verify $PULL_REMOTE/$1` ] ;
 then
@@ -275,13 +268,40 @@ else
 	rm -rf $FINAL_RESULTS_DIR/*
 fi
 
-if [ -f $FINAL_RESULTS_DIR/index.html ] ; then
-	rm $FINAL_RESULTS_DIR/index.html
+OUTPUT_FILE="$FINAL_RESULTS_DIR/index.html"
+
+if [ -f $OUTPUT_FILE ] ; then
+	rm $OUTPUT_FILE
 fi
-echo "<html><body>" >> $FINAL_RESULTS_DIR/index.html
-echo "<h3><span style=\"color: #ff0000;\">" >> $FINAL_RESULTS_DIR/index.html
-echo "<strong>WARNING: Excludes are ignored by diff.groovy.</strong>" >> $FINAL_RESULTS_DIR/index.html
-echo "</span></h3>" >> $FINAL_RESULTS_DIR/index.html
+echo "<html><body>" >> $OUTPUT_FILE
+
+if $USE_CUSTOM_MASTER ; then
+	REMOTE="$PULL_REMOTE/$CUSTOM_MASTER"
+else
+	REMOTE="origin/master"
+fi
+
+cd $CHECKSTYLE_DIR
+HASH=$(git rev-parse $REMOTE)
+MSG=$(git log $REMOTE -1 --pretty=%B)
+
+echo "<h6>" >> $OUTPUT_FILE
+echo "Base branch: $REMOTE<br />" >> $OUTPUT_FILE
+echo "Base branch last commit SHA: $HASH<br />" >> $OUTPUT_FILE
+echo "Base branch last commit message: $MSG<br />" >> $OUTPUT_FILE
+echo "</h6>" >> $OUTPUT_FILE
+
+REMOTE="$PULL_REMOTE/$1"
+
+cd $CHECKSTYLE_DIR
+HASH=$(git rev-parse $REMOTE)
+MSG=$(git log $REMOTE -1 --pretty=%B)
+
+echo "<h6>" >> $OUTPUT_FILE
+echo "Patch branch: $REMOTE<br />" >> $OUTPUT_FILE
+echo "Patch branch last commit SHA: $HASH<br />" >> $OUTPUT_FILE
+echo "Patch branch last commit message: $MSG<br />" >> $OUTPUT_FILE
+echo "</h6>" >> $OUTPUT_FILE
 
 for extp in "${EXTPROJECTS[@]}"
 do
@@ -303,16 +323,16 @@ do
 
 	total=($(grep -Eo 'totalDiff">[0-9]+' $FINAL_RESULTS_DIR/$extp/index.html | grep -Eo '[0-9]+'))
 
-	echo "<a href='$extp/index.html'>$extp</a>" >> $FINAL_RESULTS_DIR/index.html
+	echo "<a href='$extp/index.html'>$extp</a>" >> $OUTPUT_FILE
 	if [ ${#total[@]} != "0" ] ; then
 		if [ ${total[0]} -ne 0 ] ; then
-			echo " (${total[0]})" >> $FINAL_RESULTS_DIR/index.html
+			echo " (${total[0]})" >> $OUTPUT_FILE
 		fi
 	fi
-	echo "<br />" >> $FINAL_RESULTS_DIR/index.html
+	echo "<br />" >> $OUTPUT_FILE
 done
 
-echo "</body></html>" >> $FINAL_RESULTS_DIR/index.html
+echo "</body></html>" >> $OUTPUT_FILE
 
 echo "Complete"
 
