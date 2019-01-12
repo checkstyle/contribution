@@ -405,14 +405,7 @@
     </module>
     <module name="CommentsIndentation"/>
     <module name="DescendantToken"/>
-    <module name="FinalParameters">
-      <!--
-        we will not use that fanatic validation, extra modifiers pollute a code
-        it is better to use extra validation(Check) that argument is reassigned
-        But this Check will exists as it was created by community demand.
-      -->
-      <property name="severity" value="ignore"/>
-    </module>
+    <module name="FinalParameters"/>
     <module name="Indentation">
       <property name="basicOffset" value="4"/>
       <property name="braceAdjustment" value="0"/>
@@ -434,10 +427,7 @@
     <!-- Modifiers -->
     <module name="ModifierOrder"/>
     <module name="RedundantModifier"/>
-    <module name="InterfaceMemberImpliedModifier">
-      <!-- effectively the opposite of RedundantModifier, so output must be ignored -->
-      <property name="severity" value="ignore"/>
-    </module>
+    <module name="InterfaceMemberImpliedModifier"/>
 
     <!-- Naming Conventions -->
     <module name="AbbreviationAsWordInName">
