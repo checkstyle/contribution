@@ -20,4 +20,4 @@ directory.
 [license img]:https://img.shields.io/badge/license-GNU%20LGPL%20v2.1-blue.svg
 
 [teamcity]:https://teamcity.jetbrains.com/viewType.html?buildTypeId=Checkstyle_ContributionIdeaInspectionsMaster
-[teamcity img]:https://img.shields.io/teamcity/http/teamcity.jetbrains.com/s/Checkstyle_ContributionIdeaInspectionsMaster.svg?label=TeamCity%20inspections
+[teamcity img]:https://teamcity.jetbrains.com/app/rest/builds/buildType:(id:Checkstyle_ContributionIdeaInspectionsMaster)/statusIcon
