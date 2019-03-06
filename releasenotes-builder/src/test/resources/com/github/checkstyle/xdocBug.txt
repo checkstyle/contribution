@@ -1,6 +1,6 @@
   
-    <div class="releaseDate">XX.XX.XXXX</div>
     <section name="Release 1.0.0">
+      <div class="releaseDate">XX.XX.XXXX</div>
       <p>Bug fixes:</p>
         <ul>
           <li>
