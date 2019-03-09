@@ -31,14 +31,15 @@ $checkstyle = getParameter("checkstyle");
 $config = getParameter("config");
 $code = getParameter("code");
 $printTree = getParameter("printTree");
+$printSuppressions = getParameter("printSuppressions");
 
 if (!isset($checkstyle)) {
-	$checkstyle = "checkstyle-6.17-all.jar";
+	$checkstyle = "checkstyle-8.18-all.jar";
 }
 
 if (!isset($action)) {
 	if (!isset($config)) {
-		$config = "<?xml version=\"1.0\"?>\n<!DOCTYPE module PUBLIC\n          \"-//Puppy Crawl//DTD Check Configuration 1.3//EN\"\n          \"http://www.puppycrawl.com/dtds/configuration_1_3.dtd\">\n\n<module name=\"Checker\">\n    <property name=\"charset\" value=\"UTF-8\"/>\n\n    <module name=\"TreeWalker\">\n    </module>\n</module>";
+		$config = "<?xml version=\"1.0\"?>\n<!DOCTYPE module PUBLIC\n          \"-//Puppy Crawl//DTD Check Configuration 1.3//EN\"\n          \"https://checkstyle.org/dtds/configuration_1_3.dtd\">\n\n<module name=\"Checker\">\n    <property name=\"charset\" value=\"UTF-8\"/>\n\n    <module name=\"TreeWalker\">\n    </module>\n</module>";
 	}
 	if (!isset($code)) {
 		$code = "public class TestClass {\n    void method() {\n    }\n}";
@@ -56,9 +57,11 @@ if (!isset($action)) {
 	// Vulnerabilities
 	// http://stackoverflow.com/questions/1906927/xml-vulnerabilities/1907500#1907500
 	} else if (stripos($config, "<!ENTITY") !== false) {
-		echo "XML Security: '<!ENTITY' is not allowed";
+		echo "XML Security: '&lt;!ENTITY' is not allowed";
 	} else if (stripos($config, "<!ELEMENT") !== false) {
-		echo "XML Security: '<!ELEMENT' is not allowed";
+		echo "XML Security: '&lt;!ELEMENT' is not allowed";
+	} else if (!isSafeSystemId($config)) {
+		echo "XML Security: System ID is not safe";
 	//
 	} else {
 		$config = fix_post_text($config);
@@ -103,7 +106,7 @@ if (!isset($action)) {
 }
 
 if ($action == "view") {
-	if (preg_match("/[^a-z0-9.-]/i", $checkstyle)) {
+	if (preg_match("/[^a-z0-9\\.\\-\\_]/i", $checkstyle)) {
 		die("Improper checkstyle '" . $checkstyle . "' was supplied.");
 	}
 	if (preg_match("/[^a-fA-F0-9]/i", $config)) {
@@ -131,28 +134,40 @@ if ($action == "view") {
 	$codeContents = @file_get_contents($codeFile);
 
 	echo "Results:<br />";
-	echo "<div style='border: 1px solid black;' id='cs_results'>";
+	echo "<div style='border: 1px solid black; overflow-wrap: break-word;' id='cs_results'>";
 
-	$output = shell_exec("java -jar " . $checkstyleFile . ($printTree == "true" ? " -J" : " -c " . $configFile) . " " . $codeFile . " 2>&1");
+	$output = shell_exec("java -jar " . $checkstyleFile . ($printTree == "true" ? " -J" : " -c " . $configFile) . " " . $codeFile . ($printSuppressions == "true" ? " -g" : "") . " 2>&1");
 
 	// pretty display
 	echo str_replace("\n", "<br />", str_replace("  ", "&nbsp; ", str_replace("\t", "&nbsp;&nbsp;&nbsp;&nbsp;", str_replace($saveDir, "", str_replace($code, "TestClass", str_replace($config, "TestConfig.xml", _sanitizeText($output)))))));
 
 	echo "</div>";
 
-	$link = $_SERVER['SCRIPT_NAME'] . "?action=view&config=" . $config . "&code=" . $code . "&checkstyle=" . $checkstyle . "&printTree=" . $printTree;
+	$link = $_SERVER['SCRIPT_NAME'] . "?action=view&config=" . $config . "&code=" . $code . "&checkstyle=" . $checkstyle . "&printTree=" . $printTree . "&printSuppressions=" . $printSuppressions;
 	$lpos = strrpos($link, "/");
 	if ($lpos >= 0) {
 		$link = substr($link, $lpos + 1);
 	}
 
 	echo "<br />Share Link: <a href='" . $link . "'>" . $link . "</a>";
-	if ($printTree != "true") {
+	if ($printTree != "true" && $printSuppressions != "true") {
 		echo "<br /><br /><input type=\"submit\" value=\"Create GitHub CLI Report\" id=\"reportCreate\" onclick=\"report();\">";
 	}
 	echo "<br /><br /><hr /><br />";
 
 	showForm($checkstyle, $configContents, $codeContents);
+}
+
+function isSafeSystemId($config) {
+	$doc = new DOMDocument();
+	$doc->loadXML($config) or die("<br />Failed to parse config");
+
+	if ($doc->doctype === null)
+		return true;
+
+	$systemId = $doc->doctype->systemId;
+
+	return strncmp($systemId, "https://checkstyle.org/", 23) === 0;
 }
 
 function showForm($checkstyle, $config, $code) {
@@ -169,15 +184,17 @@ function showForm($checkstyle, $config, $code) {
 
 	echo "</select>";
 	echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"submit\" value=\"Submit\"><br /><br />";
-	echo "Configuration:<br />";
+	echo "Configuration: <i>(TestConfig.xml)</i><br />";
 	echo "<textarea name='config' rows='12' wrap='off' style='width: 100%' id='cs_config' onchange='report_on_change();' onkeyup='report_on_change();'>";
 	echo _sanitizeText($config);
 	echo "</textarea><br /><br />";
-	echo "Java Code:<br />";
+	echo "Java Code: <i>(TestClass.java)</i><br />";
 	echo "<textarea name='code' rows='12' wrap='off' style='width: 100%' id='cs_code' onchange='report_on_change();' onkeyup='report_on_change();'>";
 	echo _sanitizeText($code);
 	echo "</textarea><br /><br />";
-	echo "<input type=\"checkbox\" name=\"printTree\" value=\"true\"> Print Tree Only<br /><br /><br />";
+	echo "<input type=\"checkbox\" name=\"printTree\" value=\"true\"> Print Tree Only<br />";
+	echo "<input type=\"checkbox\" name=\"printSuppressions\" value=\"true\"> Print Suppressions<br />";
+	echo "<br /><br />";
 	echo "<input type=\"submit\" value=\"Submit\">";
 	echo "</form>";
 	echo "<script>$(function() { $(\"#cs_config\").linedtextarea(); $(\"#cs_code\").linedtextarea(); });</script>";
