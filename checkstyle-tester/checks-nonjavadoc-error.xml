@@ -52,11 +52,9 @@
   </module>
 
   <!-- Javadoc Comments -->
-  <!-- deprecated old Javadoc Checks , too much bugs in them
   <module name="JavadocPackage">
     <property name="allowLegacy" value="false"/>
   </module>
-  -->
 
   <!-- Miscellaneous -->
   <module name="NewlineAtEndOfFile"/>
@@ -142,6 +140,23 @@
     <module name="AnnotationLocation">
       <property name="tokens" value="PARAMETER_DEF"/>
       <property name="allowSamelineMultipleAnnotations" value="true"/>
+    </module>
+    <module name="AnnotationOnSameLine">
+      <property name="tokens" value="METHOD_DEF"/>
+      <property name="tokens" value="CTOR_DEF"/>
+      <property name="tokens" value="TYPECAST"/>
+      <property name="tokens" value="DOT"/>
+      <property name="tokens" value="CLASS_DEF"/>
+      <property name="tokens" value="ENUM_DEF"/>
+      <property name="tokens" value="INTERFACE_DEF"/>
+      <property name="tokens" value="TYPE_ARGUMENT"/>
+      <property name="tokens" value="ANNOTATION_DEF"/>
+      <property name="tokens" value="LITERAL_NEW"/>
+      <property name="tokens" value="LITERAL_THROWS"/>
+      <property name="tokens" value="VARIABLE_DEF"/>
+      <property name="tokens" value="PARAMETER_DEF"/>
+      <property name="tokens" value="IMPLEMENTS_CLAUSE"/>
+      <property name="tokens" value="ANNOTATION_FIELD_DEF"/>
     </module>
     <module name="AnnotationUseStyle"/>
     <module name="MissingDeprecated"/>
@@ -256,13 +271,7 @@
     <module name="IllegalType"/>
     <module name="InnerAssignment"/>
     <module name="MagicNumber"/>
-    <module name="MissingCtor">
-      <!--
-        we will not use that fanatic validation, extra code is not good
-        But this Check will exists as it was created by community demand.
-      -->
-      <property name="severity" value="ignore"/>
-    </module>
+    <module name="MissingCtor"/>
     <module name="MissingSwitchDefault"/>
     <module name="ModifiedControlVariable"/>
     <module name="MultipleStringLiterals"/>
@@ -346,37 +355,31 @@
     <!-- JavadocAST Checks - disabled due to performance problem
     <module name="AtclauseOrder"/>
     -->
-    <!-- deprecated Checks, too much bugs in them
     <module name="JavadocMethod">
       <property name="allowUndeclaredRTE" value="true"/>
       <property name="allowThrowsTagsForSubclasses" value="true"/>
       <property name="allowMissingPropertyJavadoc" value="true"/>
     </module>
-    -->
     <!-- JavadocAST Checks - disabled due to performance problem
     <module name="JavadocParagraph"/>
     -->
-    <!-- deprecated Checks, too much bugs in them
     <module name="JavadocStyle">
       <property name="scope" value="public"/>
     </module>
-    -->
     <!-- JavadocAST Checks - disabled due to performance problem
     <module name="JavadocTagContinuationIndentation"/>
     -->
-    <!-- deprecated Checks, too much bugs in them
     <module name="JavadocType">
       <property name="authorFormat" value="\S"/>
       <property name="allowUnknownTags" value="true"/>
     </module>
     <module name="JavadocVariable"/>
-    -->
     <!-- JavadocAST Checks - disabled due to performance problem
     <module name="NonEmptyAtclauseDescription"/>
     <module name="SingleLineJavadoc"/>
-    <module name="WriteTag"/>
     <module name="SummaryJavadoc"/>
     -->
+    <module name="WriteTag"/>
 
     <!-- Metrics -->
     <module name="BooleanExpressionComplexity">
@@ -413,11 +416,9 @@
       <property name="throwsIndent" value="8"/>
     </module>
     <module name="OuterTypeFilename"/>
-    <!-- JavadocAST Checks - disabled due to performance problem
     <module name="TodoComment">
       <property name="format" value="(TODO)|(FIXME)" />
     </module>
-    -->
     <module name="TrailingComment"/>
     <module name="UncommentedMain">
       <property name="excludedClasses" value="\.Main$"/>
@@ -425,6 +426,7 @@
     <module name="UpperEll"/>
 
     <!-- Modifiers -->
+    <module name="ClassMemberImpliedModifier"/>
     <module name="ModifierOrder"/>
     <module name="RedundantModifier"/>
     <module name="InterfaceMemberImpliedModifier"/>
@@ -453,6 +455,9 @@
     <module name="ParameterName">
       <property name="format" value="^(id)|([a-z][a-z0-9][a-zA-Z0-9]+)$"/>
       <property name="ignoreOverridden" value="true"/>
+    </module>
+    <module name="LambdaParameterName">
+      <property name="format" value="^(id)|([a-z][a-z0-9][a-zA-Z0-9]+)$"/>
     </module>
     <module name="CatchParameterName">
       <property name="format" value="^(ex|[a-z][a-z][a-zA-Z]+)$"/>
