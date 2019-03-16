@@ -81,25 +81,63 @@ When the script finishes its work the following directory structure will be crea
 
 You will find *index.html* file in /reports/diff directory. The file represents summary diff report.
 
-To generate a diff report before and after your changes manually please use the tool
-[https://github.com/attatrol/ahsm](https://github.com/attatrol/ahsm)
+ATTENTION: 
+
+Administrators recommend you modify `projects-to-test-on.properties` and test as many projects as possible. Each project has its own unique style and it is common to find regression in 1 and not the others.
+
+You can specify at projects-to-test-on.properties, a path to a local file system's git or hg repository to run regressions on any projects you have personally saved. See the following example:
+
+```
+my_custom_checkstyle|git|/home/username/java/git-repos/checkstyle/checkstyle|master|**/ignoreFolderOrFiles/**/*
+my_custom_repo|hg|/home/username/java/hg-repos/myRepo|default||
+```
+
+## Checkstyle pitest regression:
+
+Main checkstyle project uses pitest to help remove unnecessary code and ensure all lines are fully tested when introduced to the project. Sometimes is extremely hard to resolve pitest and fix all mutations. In this case, diff report regression can help find and kill mutations. It is not always a guarantee that can help, especially if the code can truly never be hit, but it helps to show that removing the code has no noticeable impact on the functionality of the check.
+
+First, you must create a config that has the check using as many permutations of customizable options as possible. It is best to give each permutation a unique **id** property to be used in the final report to identify which specific configuration instance created the difference. The following is an example:
+
+````
+<module name="JavadocMethod">
+  <property name="id" value="JavadocMethod1" />
+</module>
+<module name="JavadocMethod">
+  <property name="validateThrows" value="true" />
+  <property name="id" value="JavadocMethod2" />
+</module>
+````
+
+Next you must create a new branch off the PR branch which must be modified to embed the applied mutation into the code. If your surviving mutation is `replaced equality check with true → SURVIVED`, then you must physically change the code in the new branch and replace the original condition with `true`. You can ensure you changed the code correctly because the test suite will still pass with this change in place.
+
+With all that done, you can now call groovy. **baseBranch** will be your PR branch that has the failing pitest mutations. **patchBranch** must be the new branch you have created off the PR branch mentioned in the previous paragraph. **config** must be the custom configuration created with all the permutations. 
+
+```
+groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle --baseBranch i111-my-fix --patchBranch i111-my-fix-mutation --config config.xml --listOfProjects projects-to-test-on.properties
+```
 
 ATTENTION: 
 
-you can specify at projects-to-test-on.properties path to local file system if you have some 
-repositories on your local, example: "checkstyle=/home/username/java/git-repos/checkstyle/checkstyle".
+It is recommended to only do 1 mutation per module for a single regression. Too many mutations at once could cancel each other out and falsely produce no differences.
+
+It is possible mutating the code in this way will cause unpredictable and even random results where you won't be able to reproduce a case locally. Checkstyle doesn't guarantee order of events so hash-based classes like `HashSet` and `HashMap` could interfere.
+
+Even if the regression proves no differences, it may be a false that there is no way to kill the mutation. Regression is only based on sources others have made and may just mean that this form of code is uncommon. If regression fails to find a difference, you must analyze the code manually and see if there is a way to determine if it is logically impossible to hit the code and kill the mutation.
 
 ## Testing sevntu checks:
-build sevntu checks and sevntu maven plugin by:
+
+Groovy scripts do not currently support sevntu regression. Sevntu can only be run with patch only branch and config. Running full difference regression will always produce no results because the scripts do no install the different versions of sevntu needed to function.
+
+First you must build sevntu checks and sevntu maven plugin by:
 ```
 cd sevntu-checks
 mvn  -Pno-validations clean install
 cd ../sevntu-checkstyle-maven-plugin/
 mvn clean install
 ``` 
-Sevntu it is already referenced at https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/pom.xml#L16 .
+Sevntu's current version must be referenced at https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/pom.xml#L16 .
 Change config file to reference your  Check - https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/my_check.xml#L22 .
-Run checkstyle-tester as described in README.
+Run checkstyle-tester as described above.
 
 ## Deploy Report: 
 
