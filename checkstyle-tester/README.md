@@ -85,11 +85,16 @@ ATTENTION:
 
 Administrators recommend you modify `projects-to-test-on.properties` and test as many projects as possible. Each project has its own unique style and it is common to find regression in 1 and not the others.
 
-You can specify at projects-to-test-on.properties, a path to a local file system's git or hg repository to run regressions on any projects you have personally saved. See the following example:
+You can also specify projects that are already available on your local file system in `projects-to-test-on.properties`.
+For this you can either use `git` or `hg` type which will clone the local repository into the workspace and use the specified branch.
+Alternatively you can use `local` type, where the specified branch is ignored and the current state on the disk is used as is.
+The latter does not depend on any specific version control being used.
+See the following examples:
 
 ```
+my_custom_project|local|/home/username/java/my_custom_project||
 my_custom_checkstyle|git|/home/username/java/git-repos/checkstyle/checkstyle|master|**/ignoreFolderOrFiles/**/*
-my_custom_repo|hg|/home/username/java/hg-repos/myRepo|default||
+my_custom_repo|hg|/home/username/java/hg-repos/myRepo|default|
 ```
 
 ## Checkstyle pitest regression:
