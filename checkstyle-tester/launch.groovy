@@ -250,7 +250,7 @@ def postProcessCheckstyleReport(targetDir) {
 }
 
 def removeNonReferencedXrefFiles(siteDir) {
-    println 'Removing non refernced xref files in report ...'
+    println 'Removing non referenced xref files in report ...'
 
     def linesFromIndexHtml = Files.readAllLines(Paths.get("$siteDir/index.html"))
     def filesReferencedInReport = getFilesReferencedInReport(linesFromIndexHtml)
