@@ -259,23 +259,26 @@ def removeNonReferencedXrefFiles(siteDir) {
     def linesFromIndexHtml = Files.readAllLines(Paths.get("$siteDir/index.html"))
     def filesReferencedInReport = getFilesReferencedInReport(linesFromIndexHtml)
 
-    Paths.get(getOsSpecificPath("$siteDir", "xref")).toFile().eachFileRecurse {
-        fileObj ->
-            def path = fileObj.path
-            path = path.substring(path.indexOf("xref"))
-            if (isWindows()) {
-                path = path.replace("\\", "/")
-            }
-            def fileName = fileObj.name
-            if (fileObj.isFile()
+    def xrefPath = Paths.get(getOsSpecificPath("$siteDir", "xref"))
+    if (Files.isDirectory(xrefPath)) {
+        xrefPath.toFile().eachFileRecurse {
+            fileObj ->
+                def path = fileObj.path
+                path = path.substring(path.indexOf("xref"))
+                if (isWindows()) {
+                    path = path.replace("\\", "/")
+                }
+                def fileName = fileObj.name
+                if (fileObj.isFile()
                     && !filesReferencedInReport.contains(path)
                     && 'stylesheet.css' != fileName
                     && 'allclasses-frame.html' != fileName
                     && 'index.html' != fileName
                     && 'overview-frame.html' != fileName
                     && 'overview-summary.html' != fileName) {
-                fileObj.delete()
-            }
+                    fileObj.delete()
+                }
+        }
     }
 }
 
