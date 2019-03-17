@@ -85,9 +85,13 @@ def generateCheckstyleReport(cliOptions) {
                     excludes = params[REPO_EXCLUDES_PARAM_NO]
                 }
 
-                cloneRepository(repoName, repoType, repoUrl, commitId, reposDir)
                 deleteDir(srcDir)
-                copyDir(getOsSpecificPath("$reposDir", "$repoName"), getOsSpecificPath("$srcDir", "$repoName"))
+                if (repoType == 'local') {
+                    copyDir(repoUrl, getOsSpecificPath("$srcDir", "$repoName"))
+                } else {
+                    cloneRepository(repoName, repoType, repoUrl, commitId, reposDir)
+                    copyDir(getOsSpecificPath("$reposDir", "$repoName"), getOsSpecificPath("$srcDir", "$repoName"))
+                }
                 runMavenExecution(srcDir, excludes, checkstyleCfg, ignoreExceptions, checkstyleVersion, sevntuVersion)
                 postProcessCheckstyleReport(targetDir)
                 deleteDir(getOsSpecificPath("$srcDir", "$repoName"))
