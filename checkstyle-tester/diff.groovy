@@ -271,7 +271,7 @@ def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo, checkstylePatchR
     summaryIndexHtml << ('<h3><span style="color: #ff0000;">')
     summaryIndexHtml << ('<strong>WARNING: Excludes are ignored by diff.groovy.</strong>')
     summaryIndexHtml << ('</span></h3>')
-    printReportInfoSection(summaryIndexHtml, checkstyleBaseReportInfo, checkstylePatchReportInfo)
+    printReportInfoSection(summaryIndexHtml, checkstyleBaseReportInfo, checkstylePatchReportInfo, projectsStatistic)
     projectsStatistic.each {
         project, diffCount ->
             summaryIndexHtml << ("<a href='$project/index.html'>$project</a>")
@@ -286,7 +286,7 @@ def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo, checkstylePatchR
     println 'Creating report summary page finished...'
 }
 
-def printReportInfoSection(summaryIndexHtml, checkstyleBaseReportInfo, checkstylePatchReportInfo) {
+def printReportInfoSection(summaryIndexHtml, checkstyleBaseReportInfo, checkstylePatchReportInfo, projectsStatistic) {
     summaryIndexHtml << ('<h6>')
     if (checkstyleBaseReportInfo) {
         summaryIndexHtml << "Base branch: $checkstyleBaseReportInfo.branch"
@@ -302,6 +302,9 @@ def printReportInfoSection(summaryIndexHtml, checkstyleBaseReportInfo, checkstyl
     summaryIndexHtml << "Patch branch last commit SHA: $checkstylePatchReportInfo.commitSha"
     summaryIndexHtml << ('<br />')
     summaryIndexHtml << "Patch branch last commit message: \"$checkstylePatchReportInfo.commitMsg\""
+    summaryIndexHtml << ('<br />')
+    summaryIndexHtml << ('<br />')
+    summaryIndexHtml << "Tested projects: ${projectsStatistic.size()}"
     summaryIndexHtml << ('</h6>')
 }
 
