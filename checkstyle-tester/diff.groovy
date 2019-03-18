@@ -274,7 +274,7 @@ def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo, checkstylePatchR
     summaryIndexHtml << ('<strong>WARNING: Excludes are ignored by diff.groovy.</strong>')
     summaryIndexHtml << ('</span></h3>')
     printReportInfoSection(summaryIndexHtml, checkstyleBaseReportInfo, checkstylePatchReportInfo, projectsStatistic)
-    projectsStatistic.each {
+    projectsStatistic.sort { it.key.toLowerCase() }.sort { it.value == 0 ? 1 : 0 }.each {
         project, diffCount ->
             summaryIndexHtml << ("<a href='$project/index.html'>$project</a>")
             if (diffCount.compareTo(0) != 0) {
