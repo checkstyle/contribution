@@ -264,7 +264,9 @@ def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo, checkstylePatchR
     def projectsStatistic = getProjectsStatistic(diffDir)
     def summaryIndexHtml = new File("$diffDir/index.html")
 
-    summaryIndexHtml << ('<html><body>')
+    summaryIndexHtml << ('<html><head>')
+    summaryIndexHtml << ('<title>Checkstyle Tester Report Diff Summary</title>')
+    summaryIndexHtml << ('</head><body>')
     summaryIndexHtml << ('\n')
     summaryIndexHtml << ('<h3><span style="color: #ff0000;">')
     summaryIndexHtml << ('<strong>WARNING: Excludes are ignored by diff.groovy.</strong>')
