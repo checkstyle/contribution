@@ -265,6 +265,7 @@ def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo, checkstylePatchR
     def summaryIndexHtml = new File("$diffDir/index.html")
 
     summaryIndexHtml << ('<html><head>')
+    summaryIndexHtml << ('<link rel="icon" href="https://checkstyle.org/images/favicon.png" type="image/x-icon" />')
     summaryIndexHtml << ('<title>Checkstyle Tester Report Diff Summary</title>')
     summaryIndexHtml << ('</head><body>')
     summaryIndexHtml << ('\n')
