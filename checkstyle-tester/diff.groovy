@@ -307,6 +307,8 @@ def printReportInfoSection(summaryIndexHtml, checkstyleBaseReportInfo, checkstyl
     summaryIndexHtml << ('<br />')
     summaryIndexHtml << ('<br />')
     summaryIndexHtml << "Tested projects: ${projectsStatistic.size()}"
+    summaryIndexHtml << ('<br />')
+    summaryIndexHtml << "Total differences found: ${projectsStatistic.values().sum()}"
     summaryIndexHtml << ('</h6>')
 }
 
