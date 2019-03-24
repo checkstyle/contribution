@@ -37,6 +37,8 @@ public final class ReleaseNotesMessage {
     private final int issueNo;
     /** Title. */
     private final String title;
+    /** Short Width Title. */
+    private final String shortWidthTitle;
     /** Author. */
     private final String author;
 
@@ -48,6 +50,7 @@ public final class ReleaseNotesMessage {
     public ReleaseNotesMessage(GHIssue issue, String author) {
         issueNo = issue.getNumber();
         title = getActualTitle(issue);
+        shortWidthTitle = split(title);
         this.author = author;
     }
 
@@ -58,7 +61,8 @@ public final class ReleaseNotesMessage {
      */
     public ReleaseNotesMessage(String title, String author) {
         issueNo = -1;
-        this.title = split(title);
+        this.title = title;
+        shortWidthTitle = split(title);
         this.author = author;
     }
 
@@ -68,6 +72,10 @@ public final class ReleaseNotesMessage {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getShortWidthTitle() {
+        return shortWidthTitle;
     }
 
     public String getAuthor() {
@@ -88,7 +96,7 @@ public final class ReleaseNotesMessage {
         else {
             actualTitle = issueTitle;
         }
-        return split(actualTitle);
+        return actualTitle;
     }
 
     /**
