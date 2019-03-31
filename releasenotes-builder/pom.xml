@@ -148,7 +148,9 @@
                             <propertiesLocation>config/checkstyle.properties</propertiesLocation>
                             <failOnViolation>true</failOnViolation>
                             <linkXRef>false</linkXRef>
-                            <sourceDirectory>${project.basedir}/src</sourceDirectory>
+                            <sourceDirectories>
+                              <sourceDirectory>${project.basedir}/src</sourceDirectory>
+                            </sourceDirectories>
                         </configuration>
                     </execution>
                 </executions>
