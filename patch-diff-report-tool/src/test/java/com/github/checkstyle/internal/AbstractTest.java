@@ -107,7 +107,7 @@ public abstract class AbstractTest {
     }
 
     protected static String getFileContents(File file) throws IOException {
-        final StringBuffer result = new StringBuffer();
+        final StringBuilder result = new StringBuilder();
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
