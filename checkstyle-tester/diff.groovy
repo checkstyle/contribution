@@ -1,6 +1,7 @@
 import static java.lang.System.err
 
 import java.nio.file.Paths
+import java.util.regex.Pattern
 
 static void main(String[] args) {
     def cliOptions = getCliOptions(args)
@@ -321,9 +322,10 @@ def getProjectsStatistic(diffDir) {
                 def indexHtmlFile = new File(fileObjf.absolutePath + '/index.html')
                 indexHtmlFile.eachLine {
                     line ->
-                        if (line.matches(".*totalDiff\">[0-9]+.*")) {
-                            def totalDiff = Integer.valueOf(line.substring(line.indexOf('>') + 1,
-                                    line.lastIndexOf('<')))
+                        def linePattern = Pattern.compile("totalDiff\">(?<totalDiff>[0-9]++)")
+                        def lineMatcher = linePattern.matcher(line)
+                        if (lineMatcher.find()) {
+                            def totalDiff = Integer.valueOf(lineMatcher.group('totalDiff'))
                             projectsStatistic.put(projectName, totalDiff)
                         }
                 }
