@@ -147,10 +147,14 @@ public final class DiffReport {
                 : records.entrySet()) {
             final List<CheckstyleRecord> list = entry.getValue();
             for (CheckstyleRecord rec : list) {
-                statistics.addSeverityRecord(rec.getSeverity(),
-                        CheckstyleReportsParser.DIFF_REPORT_INDEX);
-                statistics.addModuleRecord(rec.getSource(),
-                        CheckstyleReportsParser.DIFF_REPORT_INDEX);
+                if (rec.getIndex() == CheckstyleReportsParser.BASE_REPORT_INDEX) {
+                    statistics.addSeverityRecordRemoved(rec.getSeverity());
+                    statistics.addModuleRecordRemoved(rec.getSource());
+                }
+                else {
+                    statistics.addSeverityRecordAdded(rec.getSeverity());
+                    statistics.addModuleRecordAdded(rec.getSource());
+                }
                 statistics.incrementUniqueMessageCount(rec.getIndex());
             }
         }

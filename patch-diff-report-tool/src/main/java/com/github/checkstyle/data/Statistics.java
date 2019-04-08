@@ -19,10 +19,13 @@
 
 package com.github.checkstyle.data;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.github.checkstyle.parser.CheckstyleReportsParser;
 
@@ -34,14 +37,24 @@ import com.github.checkstyle.parser.CheckstyleReportsParser;
 public class Statistics {
 
     /**
-     * Map storing severity numbers for difference.
+     * Map storing severity numbers for records removed.
      */
-    private Map<String, Integer> severityNumDiff = new HashMap<>();
+    private Map<String, BigInteger> severityNumDiffRemoved = new HashMap<>();
 
     /**
-     * Map storing module numbers for difference.
+     * Map storing severity numbers for records added.
      */
-    private Map<String, Integer> moduleNumDiff = new HashMap<>();
+    private Map<String, BigInteger> severityNumDiffAdded = new HashMap<>();
+
+    /**
+     * Map storing module numbers for records removed.
+     */
+    private Map<String, BigInteger> moduleNumDiffRemoved = new HashMap<>();
+
+    /**
+     * Map storing module numbers for records added.
+     */
+    private Map<String, BigInteger> moduleNumDiffAdded = new HashMap<>();
 
     /**
      * Number of files in difference.
@@ -51,12 +64,12 @@ public class Statistics {
     /**
      * Map storing severity numbers for base source.
      */
-    private Map<String, Integer> severityNumBase = new HashMap<>();
+    private Map<String, BigInteger> severityNumBase = new HashMap<>();
 
     /**
      * Map storing module numbers for base source.
      */
-    private Map<String, Integer> moduleNumBase = new HashMap<>();
+    private Map<String, BigInteger> moduleNumBase = new HashMap<>();
 
     /**
      * Number of files in the base source.
@@ -71,12 +84,12 @@ public class Statistics {
     /**
      * Map storing severity numbers for patch source.
      */
-    private Map<String, Integer> severityNumPatch = new HashMap<>();
+    private Map<String, BigInteger> severityNumPatch = new HashMap<>();
 
     /**
      * Map storing module numbers for patch source.
      */
-    private Map<String, Integer> moduleNumPatch = new HashMap<>();
+    private Map<String, BigInteger> moduleNumPatch = new HashMap<>();
 
     /**
      * Number of files in the patch source.
@@ -88,7 +101,15 @@ public class Statistics {
      */
     private int uniqueMessagesPatch;
 
-    public final Map<String, Integer> getSeverityNumDiff() {
+    /**
+     * Getter for number of records per severity for difference.
+     *
+     * @return number of records per severity.
+     */
+    public final Map<String, BigInteger> getSeverityNumDiff() {
+        final Map<String, BigInteger> severityNumDiff = new HashMap<>(severityNumDiffRemoved);
+        severityNumDiffAdded.forEach(
+            (key, value) -> severityNumDiff.merge(key, value, BigInteger::add));
         return severityNumDiff;
     }
 
@@ -97,15 +118,23 @@ public class Statistics {
      *
      * @return total number of severity records.
      */
-    public final int getTotalNumDiff() {
-        int totalSeverityNumber = 0;
-        for (Integer number : severityNumDiff.values()) {
-            totalSeverityNumber += number;
+    public final BigInteger getTotalNumDiff() {
+        BigInteger totalSeverityNumber = BigInteger.ZERO;
+        for (BigInteger number : getSeverityNumDiff().values()) {
+            totalSeverityNumber = totalSeverityNumber.add(number);
         }
         return totalSeverityNumber;
     }
 
-    public final Map<String, Integer> getModuleNumDiff() {
+    /**
+     * Getter for number of records per module for difference.
+     *
+     * @return number of records per module.
+     */
+    public final Map<String, BigInteger> getModuleNumDiff() {
+        final Map<String, BigInteger> moduleNumDiff = new HashMap<>(moduleNumDiffRemoved);
+        moduleNumDiffAdded.forEach(
+            (key, value) -> moduleNumDiff.merge(key, value, BigInteger::add));
         return moduleNumDiff;
     }
 
@@ -113,11 +142,11 @@ public class Statistics {
         return fileNumDiff;
     }
 
-    public final Map<String, Integer> getSeverityNumBase() {
+    public final Map<String, BigInteger> getSeverityNumBase() {
         return severityNumBase;
     }
 
-    public final Map<String, Integer> getModuleNumBase() {
+    public final Map<String, BigInteger> getModuleNumBase() {
         return moduleNumBase;
     }
 
@@ -126,20 +155,51 @@ public class Statistics {
      *
      * @return total number of severity records.
      */
-    public final int getTotalNumBase() {
-        int totalSeverityNumber = 0;
-        for (Integer number : severityNumBase.values()) {
-            totalSeverityNumber += number;
+    public final BigInteger getTotalNumBase() {
+        BigInteger totalSeverityNumber = BigInteger.ZERO;
+        for (BigInteger number : severityNumBase.values()) {
+            totalSeverityNumber = totalSeverityNumber.add(number);
         }
         return totalSeverityNumber;
     }
 
-    public final Map<String, Integer> getSeverityNumPatch() {
-        return severityNumPatch;
+    public final Map<String, String> getSeverityStatisticsPatch() {
+        return buildStatisticsMap(severityNumPatch, severityNumDiffRemoved, severityNumDiffAdded);
     }
 
-    public final Map<String, Integer> getModuleNumPatch() {
-        return moduleNumPatch;
+    public final Map<String, String> getModuleStatisticsPatch() {
+        return buildStatisticsMap(moduleNumPatch, moduleNumDiffRemoved, moduleNumDiffAdded);
+    }
+
+    /**
+     * Getter for statistics strings of records per key in the given maps.
+     *
+     * @param numPatchMap map with total numbers.
+     * @param numDiffRemovedMap map with removed numbers.
+     * @param numDiffAddedMap map with added numbers.
+     * @return statistics of records per severity.
+     */
+    private Map<String, String> buildStatisticsMap(
+        Map<String, BigInteger> numPatchMap,
+        Map<String, BigInteger> numDiffRemovedMap,
+        Map<String, BigInteger> numDiffAddedMap) {
+
+        final Map<String, BigInteger> statistics = new HashMap<>(numPatchMap);
+        Stream.concat(
+            numDiffRemovedMap.keySet().stream(),
+            numDiffAddedMap.keySet().stream())
+            .distinct()
+            .forEach(module -> statistics.putIfAbsent(module, BigInteger.ZERO));
+
+        return statistics.entrySet()
+            .stream()
+            .collect(Collectors.toMap(Map.Entry::getKey, entry -> {
+                final String module = entry.getKey();
+                return buildStatisticsString(
+                    entry.getValue(),
+                    numDiffRemovedMap.getOrDefault(module, null),
+                    numDiffAddedMap.getOrDefault(module, null));
+            }));
     }
 
     public final int getFileNumBase() {
@@ -151,16 +211,67 @@ public class Statistics {
     }
 
     /**
-     * Getter for total number of severity records for patch source.
+     * Getter for total statistics of severity records for patch source.
      *
-     * @return total number of severity records.
+     * @return total statistics of severity records.
      */
-    public final int getTotalNumPatch() {
-        int totalSeverityNumber = 0;
-        for (Integer number : severityNumPatch.values()) {
-            totalSeverityNumber += number;
+    public final String getTotalStatisticsPatch() {
+        BigInteger totalSeverityNumber = BigInteger.ZERO;
+        for (BigInteger number : severityNumPatch.values()) {
+            totalSeverityNumber = totalSeverityNumber.add(number);
         }
-        return totalSeverityNumber;
+
+        final BigInteger removedNumber;
+        if (uniqueMessagesBase > 0) {
+            removedNumber = BigInteger.valueOf(uniqueMessagesBase);
+        }
+        else {
+            removedNumber = null;
+        }
+
+        final BigInteger addedNumber;
+        if (uniqueMessagesPatch > 0) {
+            addedNumber = BigInteger.valueOf(uniqueMessagesPatch);
+        }
+        else {
+            addedNumber = null;
+        }
+
+        return buildStatisticsString(totalSeverityNumber, removedNumber, addedNumber);
+    }
+
+    /**
+     * Builds a statistics string. Format is like one of the following:
+     * <ul>
+     *     <li>{@code <totalNumber>}</li>
+     *     <li>{@code <totalNumber> (<removedNumber> removed)}</li>
+     *     <li>{@code <totalNumber> (<addedNumber> added)}</li>
+     *     <li>{@code <totalNumber> (<removedNumber> removed, <addedNumber> added)}</li>
+     * </ul>
+     *
+     * @param totalNumber the total number.
+     * @param removedNumber the removed number.
+     * @param addedNumber the added number.
+     * @return the statistics string.
+     */
+    private String buildStatisticsString(
+        BigInteger totalNumber, BigInteger removedNumber, BigInteger addedNumber) {
+        final StringBuilder result = new StringBuilder();
+        result.append(totalNumber);
+        if (removedNumber != null || addedNumber != null) {
+            result.append(" (");
+            if (removedNumber != null) {
+                result.append(removedNumber).append(" removed");
+                if (addedNumber != null) {
+                    result.append(", ");
+                }
+            }
+            if (addedNumber != null) {
+                result.append(addedNumber).append(" added");
+            }
+            result.append(")");
+        }
+        return result.toString();
     }
 
     public final int getFileNumPatch() {
@@ -187,23 +298,32 @@ public class Statistics {
      * @param index index of the source.
      */
     public final void addSeverityRecord(String severity, int index) {
-        final Map<String, Integer> severityRecorder;
+        final Map<String, BigInteger> severityRecorder;
         if (index == CheckstyleReportsParser.BASE_REPORT_INDEX) {
             severityRecorder = severityNumBase;
         }
-        else if (index == CheckstyleReportsParser.PATCH_REPORT_INDEX) {
+        else {
             severityRecorder = severityNumPatch;
         }
-        else {
-            severityRecorder = severityNumDiff;
-        }
-        final Integer newNumber = severityRecorder.get(severity);
-        if (newNumber != null) {
-            severityRecorder.put(severity, newNumber + 1);
-        }
-        else {
-            severityRecorder.put(severity, 1);
-        }
+        severityRecorder.merge(severity, BigInteger.ONE, BigInteger::add);
+    }
+
+    /**
+     * Registers single removed severity record.
+     *
+     * @param severity value of severity record.
+     */
+    public final void addSeverityRecordRemoved(String severity) {
+        severityNumDiffRemoved.merge(severity, BigInteger.ONE, BigInteger::add);
+    }
+
+    /**
+     * Registers single added severity record.
+     *
+     * @param severity value of severity record.
+     */
+    public final void addSeverityRecordAdded(String severity) {
+        severityNumDiffAdded.merge(severity, BigInteger.ONE, BigInteger::add);
     }
 
     /**
@@ -213,23 +333,32 @@ public class Statistics {
      * @param index index of the source.
      */
     public void addModuleRecord(String moduleName, int index) {
-        final Map<String, Integer> moduleRecorder;
+        final Map<String, BigInteger> moduleRecorder;
         if (index == CheckstyleReportsParser.BASE_REPORT_INDEX) {
             moduleRecorder = moduleNumBase;
         }
-        else if (index == CheckstyleReportsParser.PATCH_REPORT_INDEX) {
+        else {
             moduleRecorder = moduleNumPatch;
         }
-        else {
-            moduleRecorder = moduleNumDiff;
-        }
-        final Integer newNumber = moduleRecorder.get(moduleName);
-        if (newNumber != null) {
-            moduleRecorder.put(moduleName, newNumber + 1);
-        }
-        else {
-            moduleRecorder.put(moduleName, 1);
-        }
+        moduleRecorder.merge(moduleName, BigInteger.ONE, BigInteger::add);
+    }
+
+    /**
+     * Registers single removed module record.
+     *
+     * @param moduleName value of module record.
+     */
+    public final void addModuleRecordRemoved(String moduleName) {
+        moduleNumDiffRemoved.merge(moduleName, BigInteger.ONE, BigInteger::add);
+    }
+
+    /**
+     * Registers single added module record.
+     *
+     * @param moduleName value of module record.
+     */
+    public final void addModuleRecordAdded(String moduleName) {
+        moduleNumDiffAdded.merge(moduleName, BigInteger.ONE, BigInteger::add);
     }
 
     /**
@@ -253,7 +382,8 @@ public class Statistics {
      * @return severity level names.
      */
     public final Set<String> getSeverityNames() {
-        final Set<String> names = new HashSet<>(severityNumDiff.keySet());
+        final Set<String> names = new HashSet<>(severityNumDiffRemoved.keySet());
+        names.addAll(severityNumDiffAdded.keySet());
         names.addAll(severityNumBase.keySet());
         names.addAll(severityNumPatch.keySet());
         return names;
@@ -266,7 +396,8 @@ public class Statistics {
      * @return module names.
      */
     public final Set<String> getModuleNames() {
-        final Set<String> names = new HashSet<>(moduleNumDiff.keySet());
+        final Set<String> names = new HashSet<>(moduleNumDiffRemoved.keySet());
+        names.addAll(moduleNumDiffAdded.keySet());
         names.addAll(moduleNumBase.keySet());
         names.addAll(moduleNumPatch.keySet());
         return names;

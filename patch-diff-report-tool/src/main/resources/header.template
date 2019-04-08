@@ -91,23 +91,23 @@
 							<td id="filesBase" th:text=${statistics.fileNumBase}> fileNumBase </td>
 							<td id="totalBase" th:text=${statistics.totalNumBase}> totalNumBase </td>
 							<th:block th:each="name : ${statistics.severityNames}">
-								<td th:id="${name} + @{SeverityNumBase}" th:text="${statistics.severityNumBase.get(name) != null} ? ${statistics.severityNumBase.get(name)} : '0'"> infoNumBase </td>
+								<td th:id="${name} + @{SeverityNumBase}" th:text="${statistics.severityNumBase.get(name)} ?: '0'"> severityNumBase </td>
 							</th:block>
 						</tr>
 						<tr class="a">
 							<td>patch</td>
 							<td id="filesPatch" th:text=${statistics.fileNumPatch}> fileNumPatch </td>
-							<td id="totalPatch" th:text=${statistics.totalNumPatch}> totalNumPatch </td>
+							<td id="totalPatch" th:text="${statistics.totalStatisticsPatch}"> totalStatisticsPatch </td>
 							<th:block th:each="name : ${statistics.severityNames}">
-								<td th:id="${name} + @{SeverityNumPatch}" th:text="${statistics.severityNumPatch.get(name) != null} ? ${statistics.severityNumPatch.get(name)} : '0'"> infoNumBase </td>
+								<td th:id="${name} + @{SeverityStatisticsPatch}" th:text="${statistics.severityStatisticsPatch.get(name)} ?: '0'"> severityStatisticsPatch </td>
 							</th:block>
 						</tr>
 						<tr class="d">
-							<td>difference</td>
-							<td id="filesDiff" th:text=${statistics.fileNumDiff}> fileNumDiff </td>
-							<td id="totalDiff" th:text=${statistics.totalNumDiff}> totalNumDiff </td>
+							<td/>
+							<td id="filesDiff" th:text="|${statistics.fileNumDiff} file${statistics.fileNumDiff == 1 ? '' : 's'} with differences|"> fileNumDiff </td>
+							<td id="totalDiff" th:text="|${statistics.totalNumDiff} change${statistics.totalNumDiff == 1 ? '' : 's'} in violations|"> totalNumDiff </td>
 							<th:block th:each="name : ${statistics.severityNames}">
-								<td th:id="${name} + @{SeverityNumDiff}" th:text="${statistics.severityNumDiff.get(name) != null} ? ${statistics.severityNumDiff.get(name)} : '0'"> infoNumBase </td>
+								<td th:id="${name} + @{SeverityNumDiff}" th:text="(${statistics.severityNumDiff.get(name)} ?: '0') + ' change' + (${statistics.severityNumDiff.get(name)} == 1 ? '' : 's') + ' in violations'"> infoNumBase </td>
 							</th:block>
 						<tr>
 					</table>
@@ -124,19 +124,19 @@
 							<tr class="b">
 								<td>base</td>
 								<th:block th:each="name : ${statistics.moduleNames}">
-									<td th:id="${name} + @{ModuleNumBase}" th:text="${statistics.moduleNumBase.get(name) != null} ? ${statistics.moduleNumBase.get(name)} : '0'"> moduleNumBase </td>
+									<td th:id="${name} + @{ModuleNumBase}" th:text="${statistics.moduleNumBase.get(name)} ?: '0'"> moduleNumBase </td>
 								</th:block>
 							</tr>
 							<tr class="a">
 								<td>patch</td>
 								<th:block th:each="name : ${statistics.moduleNames}">
-									<td th:id="${name} + @{ModuleNumPatch}" th:text="${statistics.moduleNumPatch.get(name) != null} ? ${statistics.moduleNumPatch.get(name)} : '0'"> moduleNumPatch </td>
+									<td th:id="${name} + @{ModuleStatisticsPatch}" th:text="${statistics.moduleStatisticsPatch.get(name)} ?: '0'"> moduleStatisticsPatch </td>
 								</th:block>
 							</tr>
 							<tr class="d">
-								<td>difference</td>
+								<td>changes in violations</td>
 								<th:block th:each="name : ${statistics.moduleNames}">
-									<td th:id="${name} + @{ModuleNumDiff}" th:text="${statistics.moduleNumDiff.get(name) != null} ? ${statistics.moduleNumDiff.get(name)} : '0'"> moduleNumDiff </td>
+									<td th:id="${name} + @{ModuleNumDiff}" th:text="${statistics.moduleNumDiff.get(name)} ?: '0'"> moduleNumDiff </td>
 								</th:block>
 							<tr>
 						</table>
