@@ -93,7 +93,11 @@ def generateCheckstyleReport(cliOptions) {
                     copyDir(getOsSpecificPath("$reposDir", "$repoName"), getOsSpecificPath("$srcDir", "$repoName"))
                 }
                 runMavenExecution(srcDir, excludes, checkstyleCfg, ignoreExceptions, checkstyleVersion, sevntuVersion)
-                postProcessCheckstyleReport(targetDir)
+                def repoPath = repoUrl
+                if (repoType != 'local') {
+                    repoPath = new File(getOsSpecificPath("$reposDir", "$repoName")).absolutePath
+                }
+                postProcessCheckstyleReport(targetDir, repoName, repoPath)
                 deleteDir(getOsSpecificPath("$srcDir", "$repoName"))
                 moveDir(targetDir, getOsSpecificPath("$reportsDir", "$repoName"))
             }
@@ -236,7 +240,7 @@ def runMavenExecution(srcDir, excludes, checkstyleConfig, ignoreExceptions, chec
     println "Running Checkstyle on $srcDir - finished"
 }
 
-def postProcessCheckstyleReport(targetDir) {
+def postProcessCheckstyleReport(targetDir, repoName, repoPath) {
     def siteDir = getOsSpecificPath("$targetDir", "site")
     println 'linking report to index.html'
     new File(getOsSpecificPath("$siteDir", "index.html")).renameTo  getOsSpecificPath("$siteDir", "_index.html")
@@ -248,8 +252,8 @@ def postProcessCheckstyleReport(targetDir) {
 
     new AntBuilder().replace(
         file: getOsSpecificPath("$targetDir", "checkstyle-result.xml"),
-        token: getOsSpecificPath("checkstyle-tester", "src", "main", "java"),
-        value: getOsSpecificPath("checkstyle-tester", "repositories")
+        token: new File(getOsSpecificPath("src", "main", "java", "$repoName")).absolutePath,
+        value: getOsSpecificPath("$repoPath")
     )
 }
 
