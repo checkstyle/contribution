@@ -64,7 +64,8 @@ public final class MainProcess {
         "com/github/checkstyle/templates/mailing_list.template";
 
     /** Default constructor. */
-    private MainProcess() { }
+    private MainProcess() {
+    }
 
     /**
      * Generate posts and publish them.

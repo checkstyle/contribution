@@ -57,7 +57,8 @@ public final class TemplateProcessor {
     private static final String TEMPLATE_NAME = "template";
 
     /** Default constructor. */
-    private TemplateProcessor() { }
+    private TemplateProcessor() {
+    }
 
     /**
      * Generates output file with release notes using FreeMarker.

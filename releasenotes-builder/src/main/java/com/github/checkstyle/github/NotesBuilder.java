@@ -67,7 +67,8 @@ public final class NotesBuilder {
             + "^(config:|minor:|infra:)(.|\n)*[\r|\n]?$");
 
     /** Default constructor. */
-    private NotesBuilder() { }
+    private NotesBuilder() {
+    }
 
     /**
      * Forms release notes as a map.
