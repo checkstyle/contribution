@@ -110,7 +110,8 @@ public final class CliOptions {
     private String sfRssProperties;
 
     /** Default constructor. */
-    private CliOptions() { }
+    private CliOptions() {
+    }
 
     public String getLocalRepoPath() {
         return localRepoPath;
@@ -250,7 +251,8 @@ public final class CliOptions {
     public final class Builder {
 
         /** Default constructor. */
-        private Builder() { }
+        private Builder() {
+        }
 
         /**
          * Specify Local repository path.

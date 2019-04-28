@@ -39,7 +39,8 @@ public final class Main {
     private static final int ERROR_EXIT_CODE = -2;
 
     /** Default constructor. */
-    private Main() { }
+    private Main() {
+    }
 
     /**
      * Entry point.

@@ -53,5 +53,6 @@ public final class Constants {
     }
 
     /** Default constructor. */
-    private Constants() { }
+    private Constants() {
+    }
 }
