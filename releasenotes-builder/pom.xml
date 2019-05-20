@@ -10,7 +10,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.plugin.guava.version>24.0-jre</maven.plugin.guava.version>
+        <maven.plugin.guava.version>27.1-jre</maven.plugin.guava.version>
         <maven.plugin.checkstyle.version>3.0.0</maven.plugin.checkstyle.version>
         <maven.plugin.github-api.version>1.70</maven.plugin.github-api.version>
         <maven.plugin.jgit.version>4.1.0.201509280440-r</maven.plugin.jgit.version>
