@@ -208,5 +208,10 @@
           <property name="methodName" value="assert(True|False)"/>
           <property name="argumentCount" value="1"/>
         </module>
+        <module name="com.github.sevntu.checkstyle.checks.coding.Jsr305AnnotationsCheck">
+          <property name="packages" value="com,org"/>
+          <property name="allowOverridingReturnValue" value="false"/>
+          <property name="allowOverridingParameter" value="false"/>
+        </module>
     </module>
 </module>
