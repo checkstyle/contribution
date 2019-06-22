@@ -29,9 +29,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -128,7 +128,7 @@ public final class TemplateProcessor {
 
         final Map<String, Object> variables = new HashMap<>();
         variables.put("todaysDate",
-                new SimpleDateFormat("dd.MM.yyyy", Locale.US).format(new Date()));
+                LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.US)));
         variables.put("remoteRepoPath", remoteRepoPath);
         variables.put("releaseNo", releaseNumber);
         variables.put("breakingMessages", releaseNotes.get(Constants.BREAKING_COMPATIBILITY_LABEL));

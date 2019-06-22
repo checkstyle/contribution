@@ -26,10 +26,10 @@ import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -324,7 +324,8 @@ public class TemplateProcessorTest {
         final String expectedXdoc =
                 getFileContents(getPath(expectedName).toFile());
         final String actualXdoc = getFileContents(new File(temporaryFolder.getRoot(), actualName))
-                .replace(new SimpleDateFormat("dd.MM.yyyy", Locale.US).format(new Date()),
+                .replace(LocalDate.now()
+                                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.US)),
                         "XX.XX.XXXX");
 
         Assert.assertEquals(expectedXdoc, actualXdoc);
