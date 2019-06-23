@@ -31,5 +31,5 @@ public enum CompareMode {
      */
     XML,
     /** Compare mode where raw files are read and compared against each other. */
-    TEXT;
+    TEXT
 }
