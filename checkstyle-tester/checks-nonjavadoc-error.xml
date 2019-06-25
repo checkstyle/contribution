@@ -306,6 +306,7 @@
     <module name="OneStatementPerLine"/>
     <module name="OverloadMethodsDeclarationOrder"/>
     <module name="PackageDeclaration"/>
+    <module name="PreferMethodReference"/>
     <module name="ParameterAssignment"/>
     <module name="RequireThis"/>
     <!-- extra config for RequireThis module base of missed regression -->
