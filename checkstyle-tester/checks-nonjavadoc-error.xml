@@ -375,6 +375,7 @@
     <!-- JavadocAST Checks - disabled due to performance problem
     <module name="AtclauseOrder"/>
     -->
+    <module name="InvalidJavadocPosition"/>
     <module name="JavadocMethod">
       <property name="allowUndeclaredRTE" value="true"/>
       <property name="allowThrowsTagsForSubclasses" value="true"/>
