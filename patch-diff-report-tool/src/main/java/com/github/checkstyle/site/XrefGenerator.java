@@ -139,8 +139,8 @@ class XrefGenerator {
         String result;
         if (!dest.toFile().exists()) {
             try {
-                codeTransform.transform(sourceFile.getAbsolutePath(),
-                    dest.toString(), Locale.ENGLISH,
+                codeTransform.transform(sourceFile.toPath(),
+                    dest, Locale.ENGLISH,
                     ENCODING, ENCODING, null, "", "");
             }
             // -@cs[IllegalCatch] We need to catch all exceptions from JXR
