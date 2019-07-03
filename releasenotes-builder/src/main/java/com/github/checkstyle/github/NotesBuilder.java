@@ -254,7 +254,7 @@ public final class NotesBuilder {
      */
     private static ObjectId getActualRefObjectId(Repository repo, String ref) throws IOException {
         final ObjectId actualObjectId;
-        final Ref referenceObj = repo.getRef(ref);
+        final Ref referenceObj = repo.findRef(ref);
         if (referenceObj == null) {
             actualObjectId = repo.resolve(ref);
         }
