@@ -40,7 +40,7 @@ while read line ; do
     elif [ "$REPO_TYPE" == "git" ]; then
 		if [ ! -d "$REPO_SOURCES_DIR" ]; then
 			echo "Cloning $REPO_TYPE repository '${REPO_NAME}' to $REPO_SOURCES_DIR folder ..."
-			git clone $REPO_URL $REPO_SOURCES_DIR
+			git clone --depth 1 $REPO_URL $REPO_SOURCES_DIR
 			echo -e "Cloning $REPO_TYPE repository '$REPO_NAME' - completed\n"
 			fi
 

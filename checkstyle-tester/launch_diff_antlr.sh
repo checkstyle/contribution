@@ -94,7 +94,7 @@ function launch {
 				
 				if [ ! -d "$GITPATH" ]; then
 					echo "Cloning $REPO_TYPE repository '${REPO_NAME}' ..."
-					git clone $REPO_URL $GITPATH
+					git clone --depth 1 $REPO_URL $GITPATH
 					echo -e "Cloning $REPO_TYPE repository '$REPO_NAME' - completed"
 				fi
 				if [ "$COMMIT_ID" != "" ] && [ "$COMMIT_ID" != "master" ]; then

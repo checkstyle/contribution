@@ -143,7 +143,7 @@ def getCloneCmd(repoType, repoUrl, srcDestinationDir) {
     def cloneCmd = ''
     switch (repoType) {
         case 'git':
-            cloneCmd = "git clone $repoUrl $srcDestinationDir"
+            cloneCmd = "git clone --depth 1 $repoUrl $srcDestinationDir"
             break
         case 'hg':
             cloneCmd = "hg clone $repoUrl $srcDestinationDir"
