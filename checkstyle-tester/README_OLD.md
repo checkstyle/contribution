@@ -21,8 +21,6 @@ and please make sure that
 custom(newly generated) versions are located in your local maven repo 
 ```
 ls  ~/.m2/repository/com/puppycrawl/tools/checkstyle/
-ls  ~/.m2/repository/com/github/sevntu/checkstyle/sevntu-checkstyle-maven-plugin
-
 ```
 
 to build SNAPSHOT version of `checkstyle` please run in his repo

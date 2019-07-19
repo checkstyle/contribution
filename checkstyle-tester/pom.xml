@@ -33,7 +33,7 @@
 					</dependency>
 					<dependency>
 						<groupId>com.github.sevntu-checkstyle</groupId>
-						<artifactId>sevntu-checkstyle-maven-plugin</artifactId>
+						<artifactId>sevntu-checks</artifactId>
 						<version>${sevntu-checkstyle.version}</version>
 					</dependency>
 					<dependency>

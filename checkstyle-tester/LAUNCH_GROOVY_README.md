@@ -62,7 +62,6 @@ If you you need to use custom (snapshot) versions please update pom.xml to refer
 
 ```
 ls  ~/.m2/repository/com/puppycrawl/tools/checkstyle/
-ls  ~/.m2/repository/com/github/sevntu/checkstyle/sevntu-checkstyle-maven-plugin
 ```
 
 To build SNAPSHOT version of `checkstyle` please run in its folder (local git repository):

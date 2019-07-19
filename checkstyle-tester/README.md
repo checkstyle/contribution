@@ -133,12 +133,10 @@ Even if the regression proves no differences, it may be a false that there is no
 
 Groovy scripts do not currently support sevntu regression. Sevntu can only be run with patch only branch and config. Running full difference regression will always produce no results because the scripts do no install the different versions of sevntu needed to function.
 
-First you must build sevntu checks and sevntu maven plugin by:
+First you must build sevntu checks:
 ```
 cd sevntu-checks
 mvn  -Pno-validations clean install
-cd ../sevntu-checkstyle-maven-plugin/
-mvn clean install
 ``` 
 Sevntu's current version must be referenced at https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/pom.xml#L16 .
 Change config file to reference your  Check - https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/my_check.xml#L22 .
