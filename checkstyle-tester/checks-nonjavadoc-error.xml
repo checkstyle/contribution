@@ -177,7 +177,6 @@
       <property name="tokens" value="ANNOTATION_FIELD_DEF"/>
     </module>
     <module name="AnnotationUseStyle"/>
-    <module name="MissingDeprecated"/>
     <module name="MissingOverride">
       <property name="javaFiveCompatibility" value="true"/>
     </module>
