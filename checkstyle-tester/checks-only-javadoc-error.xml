@@ -20,6 +20,7 @@
     <module name="AtclauseOrder"/>
     <module name="JavadocParagraph"/>
     <module name="JavadocTagContinuationIndentation"/>
+    <module name="MissingDeprecated"/>
     <module name="NonEmptyAtclauseDescription"/>
     <module name="SingleLineJavadoc"/>
     <module name="SummaryJavadoc"/>
