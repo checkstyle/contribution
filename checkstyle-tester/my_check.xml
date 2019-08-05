@@ -26,11 +26,23 @@
          <module name="ThrowsCount">
              <property name="max" value="20000000"/>
          </module>
+         <!-- uncomment to suppress javadoc parsing errors
+         <module name="SuppressionXpathSingleFilter">
+            <property name="message" value="Javadoc comment at column \d+ has parse error"/>
+         </module>
+          -->
+
     </module>
 <!--
     <module name="SeverityMatchFilter">
         <property name="severity" value="warning"/>
         <property name="acceptOnMatch" value="false"/>
     </module>
+-->
+  <!-- uncomment to suppress java parsing errors
+  <module name="SuppressionSingleFilter">
+    <property name="message" value="Exception occurred while parsing"/>
+    <property name="checks" value="Checker"/>
+  </module>
 -->
 </module>
