@@ -182,7 +182,7 @@ def generateCheckstyleReport(cfg) {
 
     def checkstyleVersion = getCheckstyleVersionFromPomXml("$cfg.localGitRepo/pom.xml", 'version')
 
-    executeCmd("mvn -Pno-validations clean install", cfg.localGitRepo)
+    executeCmd("mvn --batch-mode -Pno-validations clean install", cfg.localGitRepo)
     executeCmd("""groovy launch.groovy --listOfProjects $cfg.listOfProjects
             --config $cfg.checkstyleCfg --ignoreExceptions --ignoreExcludes --checkstyleVersion $checkstyleVersion""")
     println "Moving Checkstyle report into $cfg.destDir ..."
@@ -210,7 +210,7 @@ def generateDiffReport(cfg) {
         .parent
         .resolve("patch-diff-report-tool")
         .toFile()
-    executeCmd("mvn clean package -DskipTests", diffToolDir)
+    executeCmd("mvn --batch-mode clean package -DskipTests", diffToolDir)
     def diffToolJarPath = getPathToDiffToolJar(diffToolDir)
 
     println 'Starting diff report generation ...'

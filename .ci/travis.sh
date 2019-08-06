@@ -18,7 +18,7 @@ patch-diff-report-tool)
 checkstyle-tester-launch-groovy)
   git clone https://github.com/checkstyle/checkstyle
   cd checkstyle
-  mvn -B clean install -Passembly
+  mvn --batch-mode clean install -Passembly
   cd ../checkstyle-tester
   groovy launch.groovy -l projects-for-travis.properties -c my_check.xml -i
   ;;
