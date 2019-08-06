@@ -3,7 +3,6 @@
           "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
           "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 
-
 <module name = "Checker">
     <property name="charset" value="UTF-8"/>
 
@@ -19,30 +18,31 @@
     </module>
 
     <module name="TreeWalker">
-         <!-- Example of sevntu.checkstyle Check usage -->
-         <!-- <module name="NestedSwitchCheck"/> -->
-
          <!-- Example of checkstyle Check usage -->
+         <!-- PLEASE CHANGE IT TO CHECK YOU ARE TESTING !!!! -->
          <module name="ThrowsCount">
              <property name="max" value="20000000"/>
          </module>
-         <!-- uncomment to suppress javadoc parsing errors
+
+         <!-- Example of sevntu.checkstyle Check usage -->
+         <!-- <module name="NestedSwitchCheck"/> -->
+
+         <!-- usuppress javadoc parsing errors, as we test Check not a parser -->
          <module name="SuppressionXpathSingleFilter">
             <property name="message" value="Javadoc comment at column \d+ has parse error"/>
          </module>
-          -->
-
     </module>
-<!--
+    <!-- Example of filter -->
+    <!--
     <module name="SeverityMatchFilter">
         <property name="severity" value="warning"/>
         <property name="acceptOnMatch" value="false"/>
     </module>
--->
-  <!-- uncomment to suppress java parsing errors
-  <module name="SuppressionSingleFilter">
-    <property name="message" value="Exception occurred while parsing"/>
-    <property name="checks" value="Checker"/>
-  </module>
--->
+    -->
+
+    <!-- as we run on regression even on non-compiled files we need to skip exceptions on them -->
+    <module name="SuppressionSingleFilter">
+      <property name="message" value="Exception occurred while parsing"/>
+      <property name="checks" value="Checker"/>
+    </module>
 </module>
