@@ -81,32 +81,6 @@ When the script finishes its work the following directory structure will be crea
 
 You will find *index.html* file in /reports/diff directory. The file represents summary diff report.
 
-## Javadoc regression:
-Many javadoc comments contain errors. To avoid report pollution with
-parsing errors, add suppression to the configuration:
-```
-<?xml version="1.0"?>
-<!DOCTYPE module PUBLIC
-  "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
-  "https://checkstyle.org/dtds/configuration_1_3.dtd">
-<module name="Checker">
-  <property name="haltOnException" value="false"/>
-  <module name="TreeWalker">
-    <module name="SummaryJavadoc" />
-
-    <!-- suppress javadoc parsing errors -->
-    <module name="SuppressionXpathSingleFilter">
-      <property name="message" value="Javadoc comment at column \d+ has parse error"/>
-    </module>
-  </module>
-  <!-- suppress java parsing errors -->
-  <module name="SuppressionSingleFilter">
-    <property name="message" value="Exception occurred while parsing"/>
-    <property name="checks" value="Checker"/>
-  </module>
-</module>
-```
-
 ATTENTION: 
 
 Administrators recommend you modify `projects-to-test-on.properties` and test as many projects as possible. Each project has its own unique style and it is common to find regression in 1 and not the others.
@@ -167,6 +141,32 @@ mvn  -Pno-validations clean install
 Sevntu's current version must be referenced at https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/pom.xml#L16 .
 Change config file to reference your  Check - https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/my_check.xml#L22 .
 Run checkstyle-tester as described above.
+
+## Javadoc regression:
+Many javadoc comments contain errors. To avoid report pollution with
+parsing errors, add/keep suppression to the configuration for them. Example:
+```
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+  "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+  "https://checkstyle.org/dtds/configuration_1_3.dtd">
+<module name="Checker">
+  <property name="haltOnException" value="false"/>
+  <module name="TreeWalker">
+    <module name="SummaryJavadoc" />
+
+    <!-- suppress javadoc parsing errors -->
+    <module name="SuppressionXpathSingleFilter">
+      <property name="message" value="Javadoc comment at column \d+ has parse error"/>
+    </module>
+  </module>
+  <!-- suppress java parsing errors -->
+  <module name="SuppressionSingleFilter">
+    <property name="message" value="Exception occurred while parsing"/>
+    <property name="checks" value="Checker"/>
+  </module>
+</module>
+```
 
 ## Deploy Report: 
 
