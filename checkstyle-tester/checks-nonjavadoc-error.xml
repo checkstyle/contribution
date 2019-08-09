@@ -123,6 +123,11 @@
   <module name="FileLength">
     <property name="fileExtensions" value="java"/>
   </module>
+  <module name="LineLength">
+    <property name="fileExtensions" value="java"/>
+    <property name="max" value="100"/>
+    <property name="ignorePattern" value="^ *\* *[^ ]+$"/>
+  </module>
 
   <!-- Whitespace -->
   <module name="FileTabCharacter">
@@ -504,10 +509,6 @@
     <module name="AnonInnerLength"/>
     <module name="ExecutableStatementCount">
         <property name="max" value="30"/>
-    </module>
-    <module name="LineLength">
-      <property name="max" value="100"/>
-      <property name="ignorePattern" value="^ *\* *[^ ]+$"/>
     </module>
     <module name="MethodCount">
       <property name="maxTotal" value="35"/>
