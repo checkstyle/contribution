@@ -18,6 +18,7 @@
     <property name="tabWidth" value="4"/>
     <!-- All AbstractJavadocCheck children -->
     <module name="AtclauseOrder"/>
+    <module name="JavadocBlockTagLocation"/>
     <module name="JavadocParagraph"/>
     <module name="JavadocTagContinuationIndentation"/>
     <module name="MissingDeprecated"/>
