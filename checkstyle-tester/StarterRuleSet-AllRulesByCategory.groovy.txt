@@ -309,7 +309,7 @@ ruleset {
     LoggingSwallowsStacktrace
     MultipleLoggers
     PrintStackTrace
-    Println
+    //Println // We use groovy as scripted java, usage of std output is required by design
     SystemErrPrint
     SystemOutPrint
 
@@ -382,7 +382,7 @@ ruleset {
     UnnecessaryFinalOnPrivateMethod
     UnnecessaryFloatInstantiation
     //UnnecessaryGString // just to be the same as in java, as our primary language
-    UnnecessaryGetter
+    //UnnecessaryGetter // we are ok with code to looks like Java
     UnnecessaryIfStatement
     UnnecessaryInstanceOfCheck
     UnnecessaryInstantiationToGetClass

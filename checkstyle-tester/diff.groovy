@@ -277,7 +277,7 @@ def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo, checkstylePatchR
     projectsStatistic.sort { it.key.toLowerCase() }.sort { it.value == 0 ? 1 : 0 }.each {
         project, diffCount ->
             summaryIndexHtml << ("<a href='$project/index.html'>$project</a>")
-            if (diffCount.compareTo(0) != 0) {
+            if (diffCount != 0) {
                 summaryIndexHtml << (" ($diffCount)")
             }
             summaryIndexHtml << ('<br />')
@@ -360,6 +360,7 @@ def getOsSpecificCmd(cmd) {
     else {
         osSpecificCmd = cmd
     }
+    return osSpecificCmd
 }
 
 class Config {
