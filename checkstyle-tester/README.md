@@ -13,9 +13,7 @@ Content:
 In order to generate a compact diff report before and/or after your changes you can use diff.groovy script which performs all required work automatically. Note, diff.groovy ignores excludes specified in the list of projects file.
 Please execute the following command in your command line to run diff.groovy:
 
-```
-groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle --baseBranch master --patchBranch i111-my-fix --config my_check.xml --listOfProjects projects-to-test-on.properties
-```
+`groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle --baseBranch master --patchBranch i111-my-fix --config my_check.xml --listOfProjects projects-to-test-on.properties`
 
 or with short command line arguments names:
 
