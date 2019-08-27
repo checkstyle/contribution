@@ -52,8 +52,8 @@ checkstyle-tester-diff-groovy-patch-only)
 
 codenarc)
   cd checkstyle-tester
-  ./codenarc.sh . diff.groovy > diff.log && cat diff.log && grep '(p1=0; p2=8; p3=0)' diff.log
-  ./codenarc.sh . launch.groovy > launch.log && cat launch.log && grep '(p1=0; p2=21; p3=1)' launch.log
+  ./codenarc.sh . diff.groovy > diff.log && cat diff.log && grep '(p1=0; p2=0; p3=0)' diff.log
+  ./codenarc.sh . launch.groovy > launch.log && cat launch.log && grep '(p1=0; p2=11; p3=1)' launch.log
   ;;
 
 *)
