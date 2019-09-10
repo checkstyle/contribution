@@ -1,41 +1,18 @@
 # CHECKSTYLE-TESTER
 
-checkstyle-tester is a tool for Checkstyle report generation over very [basic set of java projects](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.properties).
-It consists of one Groovy script: diff.groovy. Thus, in order to use the tool make sure you have the Groovy runtime installed on your developer machine (min required version is 2.4.8).
+checkstyle-tester is a tool for Checkstyle report generation over very [basic set of external projects](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.properties).
+checkstyle-tester generates reports from violations printed from a supplied user config over the aforementioned projects. The generated reports are in HTML format. They can be viewed in any browser and can be posted online for others to view.
+Only 2 types of reports are currently supported, single and diff (short for difference). Single mode lets you turn violations from a project into a web version report that links to the code that generated the violations. Diff mode shows the differences between 2 different versions of checkstyle using the same or different configurations.
 
-Content:
+## Setup
 
-- [Diff report generation](https://github.com/checkstyle/contribution/tree/master/checkstyle-tester#diffgroovy-diff-report-generation)
-- [Deploy Report](https://github.com/checkstyle/contribution/tree/master/checkstyle-tester#deploy-report)
+The tool consists of one Groovy script: `diff.groovy`. Thus, in order to use the tool make sure you have the Groovy runtime installed on your developer machine (min required version is 2.4.8).
+The tool runs Checkstyle through maven and makes use of your checkstyle branches, so maven and git is required to be installed as well.
+Depending on the type of external projects you wish to generate reports for, you may require other tools like Git or Mericural, for Git and HG repositories respectively.
 
-## [diff.groovy] Diff report generation
+## Command Line Arguments
 
-In order to generate a compact diff report before and/or after your changes you can use diff.groovy script which performs all required work automatically. Note, diff.groovy ignores excludes specified in the list of projects file.
-Please execute the following command in your command line to run diff.groovy:
-
-`groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle --baseBranch master --patchBranch i111-my-fix --config my_check.xml --listOfProjects projects-to-test-on.properties`
-
-or with short command line arguments names:
-
-`groovy diff.groovy -r /home/johndoe/projects/checkstyle -b master -p i111-my-fix -c my_check.xml -l projects-to-test-on.properties`
-
-If you want to specify different Checkstyle configs for base branch and patch branch use the following command:
-
-`groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle --baseBranch master --patchBranch i111-my-fix --baseConfig base_config.xml --patchConfig patch_config.xml --listOfProjects projects-to-test-on.properties`
-
-or with short command line arguments names:
-
-`groovy diff.groovy -r /home/johndoe/projects/checkstyle -b master -p i111-my-fix -bc base_config.xml -pc patch_config.xml -l projects-to-test-on.properties`
-
-To generate the report only for the patch branch which contains your changes, use the following command:
-
-`groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle --patchBranch i111-my-fix --patchConfig patch_config.xml --listOfProjects projects-to-test-on.properties --mode single`
-
-or with short command line arguments names:
-
-`groovy diff.groovy -r /home/johndoe/projects/checkstyle -p i111-my-fix -pc patch_config.xml -l projects-to-test-on.properties -m single`
-
-The script receives the following set of command line arguments:
+`diff.groovy` supports the following command line arguments:
 
 **localGitRepo** (r) - path to the local Checkstyle repository (required);
 
@@ -57,7 +34,9 @@ You must specify 'patchBranch' and 'patchConfig' if the mode is 'single', and 'b
 
 **shortFilePaths** (s) - whether to save report file paths as a shorter version to prevent long paths. This option is useful for Windows users where they are restricted to maximum directory depth (optional, default is false).
 
-When the script finishes its work the following directory structure will be created in the root of cehckstyle-tester directory:
+## Outputs
+
+When the script finishes its work the following directory structure will be created in the root of checkstyle-tester directory:
 
 */repositories* - directory with downloaded projects sources which are specified in projects-to-test-on.properties;
 
@@ -67,11 +46,20 @@ When the script finishes its work the following directory structure will be crea
 
 *reports/patchBranch* - directory with Checkstyle reports which are generated with Checkstyle version that contains your changes (based on specified patch branch).
 
-You will find *index.html* file in /reports/diff directory. The file represents summary diff report.
+You will find *index.html* file in /reports/diff directory. The file represents the summary report and will link to each individual project with an overview of the number of violations.
 
-ATTENTION: 
+## Preparation before Executing
 
-Administrators recommend you modify `projects-to-test-on.properties` and test as many projects as possible. Each project has its own unique style and it is common to find regression in 1 and not the others.
+Before you are ready to execute `diff.groovy`, you will have to prepare some external files and branches first.
+
+### projects-to-test-on.properties
+
+`projects-to-test-on.properties` lists all the projects that `diff.groovy` will execute. Anything that starts with `#` is considered a comment and is ignored.
+`projects-to-test-on.properties` is expected to be in the following format:
+
+> REPO_NAME|[local|git|hg]|URL|[COMMIT_ID]|[EXCLUDE FOLDERS]
+
+You should modify `projects-to-test-on.properties` and test as many projects as possible. Each project has its own unique style and it is common to find new and different violations in 1 and not the others.
 
 You can also specify projects that are already available on your local file system in `projects-to-test-on.properties`.
 For this you can either use `git` or `hg` type which will clone the local repository into the workspace and use the specified branch.
@@ -85,9 +73,116 @@ my_custom_checkstyle|git|/home/username/java/git-repos/checkstyle/checkstyle|mas
 my_custom_repo|hg|/home/username/java/hg-repos/myRepo|default|
 ```
 
-## Checkstyle pitest regression:
+### Configuration File
 
-Main checkstyle project uses pitest to help remove unnecessary code and ensure all lines are fully tested when introduced to the project. Sometimes is extremely hard to resolve pitest and fix all mutations. In this case, diff report regression can help find and kill mutations. It is not always a guarantee that can help, especially if the code can truly never be hit, but it helps to show that removing the code has no noticeable impact on the functionality of the check.
+You will need to modify your configuration file that you wish to generate a report for. If you are doing diff mode, you can specify 2 configuration files if a new property or value is being introduced.
+
+**Note:** You can use `my_check.xml` as a base as it provides most of the necessary elements already added, but you are still required to customize it to what you are specifically building a report for. 
+
+#### Special Configuration Additions
+
+There are a few ways to modify the configuration file to generate special reports.
+
+If you wish to generate an exception only report, where only exceptions are visible and violations are hidden, you can change the severity of your module to `ignore`. Exceptions are always reported with a severity of `error` which can't be turned off.
+Example:
+```
+<module name="FinalLocalVariable">
+    <property name="severity" value="ignore"/>
+</module>
+```
+
+If you wish to ignore specific cases from a report, you can use `SuppressionSingleFilter` or `SuppressionXpathSingleFilter` to hide them.
+Example:
+```
+    <module name="SuppressionSingleFilter">
+      <property name="message" value="Exception occurred while parsing"/>
+      <property name="checks" value="Checker"/>
+    </module>
+```
+
+##### Javadoc Regression
+
+Many javadoc comments found in other projects contain various errors since Checkstyle's Javadoc parser is slightly more strict. To avoid polluting the report with all these parsing errors, it is recommended to add and keep suppressions from `my_checks.xml` in your own config when working with the Javadoc checks.
+
+Example:
+```
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+  "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+  "https://checkstyle.org/dtds/configuration_1_3.dtd">
+<module name="Checker">
+  <property name="haltOnException" value="false"/>
+  <module name="TreeWalker">
+    <module name="SummaryJavadoc" />
+
+    <!-- suppress javadoc parsing errors -->
+    <module name="SuppressionXpathSingleFilter">
+      <property name="message" value="Javadoc comment at column \d+ has parse error"/>
+    </module>
+  </module>
+  <!-- suppress java parsing errors -->
+  <module name="SuppressionSingleFilter">
+    <property name="message" value="Exception occurred while parsing"/>
+    <property name="checks" value="Checker"/>
+  </module>
+</module>
+```
+
+## Executing diff.groovy
+
+`diff.groovy` is executed by calling groovy and passing in the command line arguments that specify the report you want generated.
+
+`groovy diff.groovy`
+
+### Examples
+
+#### Basic Difference Report
+
+`groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle --baseBranch master --patchBranch i111-my-fix --config my_check.xml --listOfProjects projects-to-test-on.properties`
+
+or with short command line arguments names:
+
+`groovy diff.groovy -r /home/johndoe/projects/checkstyle -b master -p i111-my-fix -c my_check.xml -l projects-to-test-on.properties`
+
+#### Difference Report with Different Base and Patch Config
+
+If you want to specify different Checkstyle configs for base branch and patch branch use the following command:
+
+`groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle --baseBranch master --patchBranch i111-my-fix --baseConfig base_config.xml --patchConfig patch_config.xml --listOfProjects projects-to-test-on.properties`
+
+or with short command line arguments names:
+
+`groovy diff.groovy -r /home/johndoe/projects/checkstyle -b master -p i111-my-fix -bc base_config.xml -pc patch_config.xml -l projects-to-test-on.properties`
+
+#### Basic Single Report
+
+To generate the report only for the patch branch which contains your changes, use the following command:
+
+`groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle --patchBranch i111-my-fix --patchConfig patch_config.xml --listOfProjects projects-to-test-on.properties --mode single`
+
+or with short command line arguments names:
+
+`groovy diff.groovy -r /home/johndoe/projects/checkstyle -p i111-my-fix -pc patch_config.xml -l projects-to-test-on.properties -m single`
+
+## Deploying Report
+
+The created report can be deployed to github pages repo (https://pages.github.com/) or your own private web server to share with others.
+
+The following instructions are how to deploy to github pages repo.
+
+1) please follow instruction from https://pages.github.com/ to create your static web site on github;
+
+2) please copy the whole "reports/diff" folder to the newly created repo;
+
+3) please make sure that report is available as http://YOURUSER.github.io/ ;
+
+4) please make sure that at web site source links to violations are working as it is main part of report, just list of violations is not clear for most cases.
+
+If you are required to create multiple reports, you should deploy each one to their own sub-directory.
+
+## Checkstyle pitest Regression
+
+Main checkstyle project uses pitest to help remove unnecessary code and ensure all lines are fully tested when introduced to the project. Sometimes is extremely hard to resolve pitest and fix all mutations. In this case, diff report regression can help find and kill mutations. It is not always a guarantee that it can help, especially if the code can truly never be hit, but it helps to show that removing the code has no noticeable impact on the functionality of the check.
 
 First, you must create a config that has the check using as many permutations of customizable options as possible. It is best to give each permutation a unique **id** property to be used in the final report to identify which specific configuration instance created the difference. The following is an example:
 
@@ -115,9 +210,9 @@ It is possible mutating the code in this way will cause unpredictable and even r
 
 Even if the regression proves no differences, it may be a false that there is no way to kill the mutation. Regression is only based on sources others have made and may just mean that this form of code is uncommon. If regression fails to find a difference, you must analyze the code manually and see if there is a way to determine if it is logically impossible to hit the code and kill the mutation.
 
-## Testing sevntu checks:
+## Testing Sevntu
 
-Groovy scripts do not currently support sevntu regression. Sevntu can only be run with patch only branch and config. Running full difference regression will always produce no results because the scripts do no install the different versions of sevntu needed to function.
+`diff.groovy` script does not currently support generating reports for sevntu. Sevntu can only be run with patch only branch and config. Running a full difference report will always produce no results because the scripts do no install the different versions of sevntu needed to function.
 
 First you must build sevntu checks:
 ```
@@ -125,43 +220,5 @@ cd sevntu-checks
 mvn  -Pno-validations clean install
 ``` 
 Sevntu's current version must be referenced at https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/pom.xml#L16 .
-Change config file to reference your  Check - https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/my_check.xml#L22 .
-Run checkstyle-tester as described above.
 
-## Javadoc regression:
-Many javadoc comments contain errors. To avoid report pollution with
-parsing errors, add/keep suppression to the configuration for them. Example:
-```
-<?xml version="1.0"?>
-<!DOCTYPE module PUBLIC
-  "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
-  "https://checkstyle.org/dtds/configuration_1_3.dtd">
-<module name="Checker">
-  <property name="haltOnException" value="false"/>
-  <module name="TreeWalker">
-    <module name="SummaryJavadoc" />
-
-    <!-- suppress javadoc parsing errors -->
-    <module name="SuppressionXpathSingleFilter">
-      <property name="message" value="Javadoc comment at column \d+ has parse error"/>
-    </module>
-  </module>
-  <!-- suppress java parsing errors -->
-  <module name="SuppressionSingleFilter">
-    <property name="message" value="Exception occurred while parsing"/>
-    <property name="checks" value="Checker"/>
-  </module>
-</module>
-```
-
-## Deploy Report: 
-
-The created report can be deployed to github pages repo (https://pages.github.com/) to share with others:
-
-1) please follow instruction from https://pages.github.com/ to create your static web site on github;
-
-2) please copy the whole "reports/diff" (if you use diff.groovy script) or "reports" folder (if you use only launch.groovy) to newly created repo;
-
-3) please make sure that report is available as http://YOURUSER.github.io/ ;
-
-4) please make sure that at web site source links to violations are working as it is main part of report, just list of violations is not enough.
+Finally, just run checkstyle-tester as described above.
