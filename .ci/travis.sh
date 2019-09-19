@@ -24,7 +24,7 @@ checkstyle-tester-launch-groovy)
   ;;
 
 checkstyle-tester-diff-groovy-patch)
-  git clone https://github.com/checkstyle/checkstyle
+  git clone https://github.com/romani/checkstyle
   cd checkstyle
   git checkout -b patch-branch
   cd ../checkstyle-tester
@@ -33,7 +33,7 @@ checkstyle-tester-diff-groovy-patch)
   ;;
 
 checkstyle-tester-diff-groovy-base-patch)
-  git clone https://github.com/checkstyle/checkstyle
+  git clone https://github.com/romani/checkstyle
   cd checkstyle
   git checkout -b patch-branch
   cd ../checkstyle-tester
@@ -42,7 +42,7 @@ checkstyle-tester-diff-groovy-base-patch)
   ;;
 
 checkstyle-tester-diff-groovy-patch-only)
-  git clone https://github.com/checkstyle/checkstyle
+  git clone https://github.com/romani/checkstyle
   cd checkstyle
   git checkout -b patch-branch
   cd ../checkstyle-tester
