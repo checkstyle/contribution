@@ -384,7 +384,6 @@
     <module name="JavadocMethod">
       <property name="allowUndeclaredRTE" value="true"/>
       <property name="allowThrowsTagsForSubclasses" value="true"/>
-      <property name="allowMissingPropertyJavadoc" value="true"/>
     </module>
     <!-- JavadocAST Checks - disabled due to performance problem
     <module name="JavadocParagraph"/>
