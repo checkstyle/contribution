@@ -32,6 +32,19 @@
             <groupId>org.kohsuke</groupId>
             <artifactId>github-api</artifactId>
             <version>${maven.plugin.github-api.version}</version>
+            <!-- till github-api next version above 1.95 -->
+            <exclusions>
+              <exclusion>
+                <artifactId>com.fasterxml.jackson.core</artifactId>
+                <groupId>jackson-databind</groupId>
+              </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- till github-api next version above 1.95 -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.10.0</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
