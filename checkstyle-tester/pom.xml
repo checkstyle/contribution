@@ -13,7 +13,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<checkstyle-plugin.version>3.1.0</checkstyle-plugin.version>
 		<checkstyle.version>8.28-SNAPSHOT</checkstyle.version>
-		<sevntu-checkstyle.version>1.35.0</sevntu-checkstyle.version>
+		<sevntu-checkstyle.version>1.36.0</sevntu-checkstyle.version>
 		<jxr-plugin.version>2.5</jxr-plugin.version>
 		<checkstyle.config.location>https://raw.githubusercontent.com/checkstyle/checkstyle/master/src/main/resources/google_checks.xml</checkstyle.config.location>
 		<checkstyle.failsOnError>true</checkstyle.failsOnError>
