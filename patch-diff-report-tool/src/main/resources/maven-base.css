@@ -26,6 +26,9 @@ div.clear{
 div.clear hr{
   display: none;
 }
+a:target {
+  background-color: #b2b2e1;
+}
 #bannerLeft, #bannerRight {
   font-size: xx-large;
   font-weight: bold;
@@ -128,6 +131,7 @@ div.clear hr{
 }
 .section {
   padding: 4px;
+  word-wrap: break-word;
 }
 #footer {
   padding: 3px 10px 3px 10px;

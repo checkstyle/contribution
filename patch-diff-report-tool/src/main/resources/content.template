@@ -14,7 +14,7 @@
 								<tr th:case = "1" class="b">
 								<tr th:case = "*" class="a">
 							</th:block>
-								<td><a th:name="${anchor.getAnchor()}" th:href = "@{#} + ${anchor.getAnchor()}" th:text = @{#}> Anchor </a></td>
+								<td><a th:name="${anchor.getAnchor()}" th:href = "@{#} + ${anchor.getAnchor()}" th:text = "@{#} + ${anchor.getAnchor()}"> Anchor </a></td>
 								<td th:text = ${record.severity}> Severity </td>
 								<td th:text = ${record.simpleCuttedSourceName}> Rule </td>
 								<td th:utext = ${record.messageHtml}> Message </td>
