@@ -25,8 +25,8 @@
 							<th:block th:each="child : ${config.children}">
 								<th:block th:fragment="module" class="a">
 									<tr>
-										<td th:text=${child.simpleModuleName} class="c"> moduleName </td>
-										<td th:if="${child.hasBaseModule() and not child.hasIdenticalProperties}" class="b">
+										<td th:text=${child.simpleModuleName} class="c wrap-anywhere"> moduleName </td>
+										<td th:if="${child.hasBaseModule() and not child.hasIdenticalProperties}" class="b wrap-anywhere">
 											<th:block th:each="property : ${child.baseModuleProperties}">
 												<th:block th:text=${property.key}> propertyName </th:block>
 												<th:block th:each="token : ${property.value}">
@@ -35,7 +35,7 @@
 												<br/>
 											</th:block>
 										</td>
-										<td th:if="${child.hasBaseModule() and child.hasIdenticalProperties}" class="c">
+										<td th:if="${child.hasBaseModule() and child.hasIdenticalProperties}" class="c wrap-anywhere">
 											<th:block th:each="property : ${child.baseModuleProperties}">
 												<th:block th:text=${property.key}> propertyName </th:block>
 												<th:block th:each="token : ${property.value}">
@@ -45,7 +45,7 @@
 											</th:block>
 										</td>
 										<td th:unless="${child.hasBaseModule()}"> </td>
-										<td th:if="${child.hasPatchModule() and not child.hasIdenticalProperties}" class="a">
+										<td th:if="${child.hasPatchModule() and not child.hasIdenticalProperties}" class="a wrap-anywhere">
 											<th:block th:each="property : ${child.patchModuleProperties}">
 												<th:block th:text=${property.key}> propertyName </th:block>
 												<th:block th:each="token : ${property.value}">
@@ -54,7 +54,7 @@
 												<br/>
 											</th:block>
 										</td>
-										<td th:if="${child.hasPatchModule() and child.hasIdenticalProperties}" class="c">
+										<td th:if="${child.hasPatchModule() and child.hasIdenticalProperties}" class="c wrap-anywhere">
 											<th:block th:each="property : ${child.patchModuleProperties}">
 												<th:block th:text=${property.key}> propertyName </th:block>
 												<th:block th:each="token : ${property.value}">
@@ -118,24 +118,24 @@
 							<tr class="a">
 								<th>Report id</th>
 								<th:block th:each="name : ${statistics.moduleNames}">
-									<th th:text="${name}"> moduleName </th>
+									<th th:text="${name}" class="wrap-anywhere"> moduleName </th>
 								</th:block>
 							</tr>
 							<tr class="b">
 								<td>base</td>
-								<th:block th:each="name : ${statistics.moduleNames}">
+								<th:block th:each="name : ${statistics.moduleNames}" class="wrap-anywhere">
 									<td th:id="${name} + @{ModuleNumBase}" th:text="${statistics.moduleNumBase.get(name)} ?: '0'"> moduleNumBase </td>
 								</th:block>
 							</tr>
 							<tr class="a">
 								<td>patch</td>
-								<th:block th:each="name : ${statistics.moduleNames}">
+								<th:block th:each="name : ${statistics.moduleNames}" class="wrap-anywhere">
 									<td th:id="${name} + @{ModuleStatisticsPatch}" th:text="${statistics.moduleStatisticsPatch.get(name)} ?: '0'"> moduleStatisticsPatch </td>
 								</th:block>
 							</tr>
 							<tr class="d">
 								<td>changes in violations</td>
-								<th:block th:each="name : ${statistics.moduleNames}">
+								<th:block th:each="name : ${statistics.moduleNames}" class="wrap-anywhere">
 									<td th:id="${name} + @{ModuleNumDiff}" th:text="${statistics.moduleNumDiff.get(name)} ?: '0'"> moduleNumDiff </td>
 								</th:block>
 							<tr>

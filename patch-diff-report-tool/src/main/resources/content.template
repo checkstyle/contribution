@@ -16,8 +16,8 @@
 							</th:block>
 								<td><a th:name="${anchor.getAnchor()}" th:href = "@{#} + ${anchor.getAnchor()}" th:text = "@{#} + ${anchor.getAnchor()}"> Anchor </a></td>
 								<td th:text = ${record.severity}> Severity </td>
-								<td th:text = ${record.simpleCuttedSourceName}> Rule </td>
-								<td th:utext = ${record.messageHtml}> Message </td>
+								<td class="wrap-anywhere" th:text = ${record.simpleCuttedSourceName}> Rule </td>
+								<td class="wrap-anywhere" th:utext = ${record.messageHtml}> Message </td>
 								<th:block th:switch="${record.xref}">
 									<td th:case = "null" th:text = ${record.line}> Line </td>
 									<td th:case = "*"><a th:href = "${record.xref} + @{#L} + ${record.line}" th:text = ${record.line}> Line </a></td>

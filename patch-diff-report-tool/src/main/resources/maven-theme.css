@@ -122,6 +122,9 @@ table.bodyTable td.c {
   background-color: #eee;
 }
 
+.wrap-anywhere {
+  word-break: break-all;
+}
 .source {
   border: 1px solid #999;
 }
