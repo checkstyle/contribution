@@ -481,6 +481,10 @@
         <!-- Checks that the clone method is not overridden from the Object class. !-->
         <!-- See https://checkstyle.org/config_coding.html#NoClone !-->
         <module name="NoClone"/>
+        
+        <!-- Checks that enum definition does not contain a trailing comma. !-->
+        <!-- See http://checkstyle.sf.net/config_coding.html !-->
+        <module name="NoEnumTrailingComma">
 
         <!-- Verifies there are no finalize() methods defined in a class. !-->
         <!-- See https://checkstyle.org/config_coding.html#NoFinalizer !-->
