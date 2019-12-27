@@ -66,6 +66,18 @@ public final class NotesBuilder {
             + "^doc: release notes.*[\r\n]?$|"
             + "^(config:|minor:|infra:|dependency:)(.|\n)*[\r|\n]?$");
 
+    /** String format pattern for github issue. */
+    private static final String GITHUB_ISSUE_TEMPLATE =
+            " https://github.com/%s/issues/%d";
+    /** String format pattern for warning if issue is not closed. */
+    private static final String MESSAGE_NOT_CLOSED = "[WARN] Issue #%d \"%s\" is not closed!"
+                            + " Please review issue"
+                            + GITHUB_ISSUE_TEMPLATE;
+    /** String format pattern for error if no label on issue. */
+    private static final String MESSAGE_NO_LABEL = "[ERROR] Issue #%d does not have %s label!"
+                            + " Please set label at"
+                            + GITHUB_ISSUE_TEMPLATE;
+
     /** Default constructor. */
     private NotesBuilder() {
     }
@@ -109,15 +121,17 @@ public final class NotesBuilder {
 
                 final GHIssue issue = remoteRepo.getIssue(issueNo);
                 if (issue.getState() != GHIssueState.CLOSED) {
-                    result.addWarning(String.format("[WARN] Issue #%d \"%s\" is not closed!",
-                        issueNo, issue.getTitle()));
+                    result.addWarning(String.format(MESSAGE_NOT_CLOSED,
+                        issueNo, issue.getTitle(), remoteRepoPath, issueNo));
                 }
 
                 final String issueLabel = getIssueLabelFrom(issue);
                 if (issueLabel.isEmpty()) {
-                    final String error = String.format("[ERROR] Issue #%d does not have %s label!",
-                        issueNo, Arrays.stream(Constants.ISSUE_LABELS)
-                            .collect(Collectors.joining(SEPARATOR)));
+                    final String error = String.format(MESSAGE_NO_LABEL,
+                        issueNo,
+                        Arrays.stream(Constants.ISSUE_LABELS)
+                                .collect(Collectors.joining(SEPARATOR)),
+                        remoteRepoPath, issueNo);
                     result.addError(error);
                 }
                 final Set<RevCommit> issueCommits = getCommitsForIssue(commitsForRelease, issueNo);
