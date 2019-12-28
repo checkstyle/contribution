@@ -69,8 +69,7 @@ public class TemplateProcessorTest {
         Assert.assertEquals("no errors", 0, errors.size());
 
         assertFile("xdocBreakingCompatibility.txt", MainProcess.XDOC_FILENAME);
-        assertFile("twitterGplusBreakingCompatibility.txt", MainProcess.TWITTER_FILENAME);
-        assertFile("twitterGplusBreakingCompatibility.txt", MainProcess.GPLUS_FILENAME);
+        assertFile("twitterBreakingCompatibility.txt", MainProcess.TWITTER_FILENAME);
         assertFile("rssMlistBreakingCompatibility.txt", MainProcess.RSS_FILENAME);
         assertFile("rssMlistBreakingCompatibility.txt", MainProcess.MLIST_FILENAME);
     }
@@ -84,8 +83,7 @@ public class TemplateProcessorTest {
         Assert.assertEquals("no errors", 0, errors.size());
 
         assertFile("xdocNew.txt", MainProcess.XDOC_FILENAME);
-        assertFile("twitterGplusNew.txt", MainProcess.TWITTER_FILENAME);
-        assertFile("twitterGplusNew.txt", MainProcess.GPLUS_FILENAME);
+        assertFile("twitterNew.txt", MainProcess.TWITTER_FILENAME);
         assertFile("rssMlistNew.txt", MainProcess.RSS_FILENAME);
         assertFile("rssMlistNew.txt", MainProcess.MLIST_FILENAME);
     }
@@ -99,8 +97,7 @@ public class TemplateProcessorTest {
         Assert.assertEquals("no errors", 0, errors.size());
 
         assertFile("xdocBug.txt", MainProcess.XDOC_FILENAME);
-        assertFile("twitterGplusBug.txt", MainProcess.TWITTER_FILENAME);
-        assertFile("twitterGplusBug.txt", MainProcess.GPLUS_FILENAME);
+        assertFile("twitterBug.txt", MainProcess.TWITTER_FILENAME);
         assertFile("rssMlistBug.txt", MainProcess.RSS_FILENAME);
         assertFile("rssMlistBug.txt", MainProcess.MLIST_FILENAME);
     }
@@ -114,8 +111,7 @@ public class TemplateProcessorTest {
         Assert.assertEquals("no errors", 0, errors.size());
 
         assertFile("xdocMisc.txt", MainProcess.XDOC_FILENAME);
-        assertFile("twitterGplusMisc.txt", MainProcess.TWITTER_FILENAME);
-        assertFile("twitterGplusMisc.txt", MainProcess.GPLUS_FILENAME);
+        assertFile("twitterMisc.txt", MainProcess.TWITTER_FILENAME);
         assertFile("rssMlistMisc.txt", MainProcess.RSS_FILENAME);
         assertFile("rssMlistMisc.txt", MainProcess.MLIST_FILENAME);
     }
@@ -129,8 +125,7 @@ public class TemplateProcessorTest {
         Assert.assertEquals("no errors", 0, errors.size());
 
         assertFile("xdocNew.txt", MainProcess.XDOC_FILENAME);
-        assertFile("twitterGplusNew.txt", MainProcess.TWITTER_FILENAME);
-        assertFile("twitterGplusNew.txt", MainProcess.GPLUS_FILENAME);
+        assertFile("twitterNew.txt", MainProcess.TWITTER_FILENAME);
         assertFile("rssMlistNew.txt", MainProcess.RSS_FILENAME);
         assertFile("rssMlistNew.txt", MainProcess.MLIST_FILENAME);
     }
@@ -149,8 +144,7 @@ public class TemplateProcessorTest {
         Assert.assertEquals("no errors", 0, errors.size());
 
         assertFile("xdocAll.txt", MainProcess.XDOC_FILENAME);
-        assertFile("twitterGplusAll.txt", MainProcess.TWITTER_FILENAME);
-        assertFile("twitterGplusAll.txt", MainProcess.GPLUS_FILENAME);
+        assertFile("twitterAll.txt", MainProcess.TWITTER_FILENAME);
         assertFile("rssMlistAll.txt", MainProcess.RSS_FILENAME);
         assertFile("rssMlistAll.txt", MainProcess.MLIST_FILENAME);
     }
@@ -165,7 +159,6 @@ public class TemplateProcessorTest {
 
         assertFile("xdocBreakingCompatibility.txt", MainProcess.XDOC_FILENAME);
         assertFile(MainProcess.TWITTER_FILENAME);
-        assertFile(MainProcess.GPLUS_FILENAME);
         assertFile(MainProcess.RSS_FILENAME);
         assertFile(MainProcess.MLIST_FILENAME);
     }
@@ -179,23 +172,7 @@ public class TemplateProcessorTest {
         Assert.assertEquals("no errors", 0, errors.size());
 
         assertFile(MainProcess.XDOC_FILENAME);
-        assertFile("twitterGplusBreakingCompatibility.txt", MainProcess.TWITTER_FILENAME);
-        assertFile(MainProcess.GPLUS_FILENAME);
-        assertFile(MainProcess.RSS_FILENAME);
-        assertFile(MainProcess.MLIST_FILENAME);
-    }
-
-    @Test
-    public void testGenerateOnlyGplus() throws Exception {
-        final List<String> errors = MainProcess.run(
-            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
-                .setGenerateGplus(true).build());
-
-        Assert.assertEquals("no errors", 0, errors.size());
-
-        assertFile(MainProcess.XDOC_FILENAME);
-        assertFile(MainProcess.TWITTER_FILENAME);
-        assertFile("twitterGplusBreakingCompatibility.txt", MainProcess.GPLUS_FILENAME);
+        assertFile("twitterBreakingCompatibility.txt", MainProcess.TWITTER_FILENAME);
         assertFile(MainProcess.RSS_FILENAME);
         assertFile(MainProcess.MLIST_FILENAME);
     }
@@ -210,7 +187,6 @@ public class TemplateProcessorTest {
 
         assertFile(MainProcess.XDOC_FILENAME);
         assertFile(MainProcess.TWITTER_FILENAME);
-        assertFile(MainProcess.GPLUS_FILENAME);
         assertFile("rssMlistBreakingCompatibility.txt", MainProcess.RSS_FILENAME);
         assertFile(MainProcess.MLIST_FILENAME);
     }
@@ -225,7 +201,6 @@ public class TemplateProcessorTest {
 
         assertFile(MainProcess.XDOC_FILENAME);
         assertFile(MainProcess.TWITTER_FILENAME);
-        assertFile(MainProcess.GPLUS_FILENAME);
         assertFile(MainProcess.RSS_FILENAME);
         assertFile("rssMlistBreakingCompatibility.txt", MainProcess.MLIST_FILENAME);
     }
@@ -240,14 +215,13 @@ public class TemplateProcessorTest {
                 createNotes(createAllNotes(), createAllNotes(), createAllNotes(), createAllNotes(),
                         createAllNotes()),
                 createBaseCliOptions().setGenerateAll(true).setXdocTemplate(template)
-                        .setTwitterTemplate(template).setGplusTemplate(template)
+                        .setTwitterTemplate(template)
                         .setRssTemplate(template).setMlistTemplate(template).build());
 
         Assert.assertEquals("no errors", 0, errors.size());
 
         assertFile("customTemplate.txt", MainProcess.XDOC_FILENAME);
         assertFile("customTemplate.txt", MainProcess.TWITTER_FILENAME);
-        assertFile("customTemplate.txt", MainProcess.GPLUS_FILENAME);
         assertFile("customTemplate.txt", MainProcess.RSS_FILENAME);
         assertFile("customTemplate.txt", MainProcess.MLIST_FILENAME);
     }
