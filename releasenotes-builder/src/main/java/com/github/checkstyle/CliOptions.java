@@ -54,8 +54,6 @@ public final class CliOptions {
     private boolean generateXdoc;
     /** Whether to generate a post for Twitter. */
     private boolean generateTw;
-    /** Whether to generate a post for Google Plus. */
-    private boolean generateGplus;
     /** Whether to generate a post for RSS. */
     private boolean generateRss;
     /** Whether to generate a post for Mailing List. */
@@ -65,8 +63,6 @@ public final class CliOptions {
     private String xdocTemplate;
     /** File location for twitter template. */
     private String twitterTemplate;
-    /** File location for google plus template. */
-    private String gplusTemplate;
     /** File location for rss template. */
     private String rssTemplate;
     /** File location for mailing list template. */
@@ -153,10 +149,6 @@ public final class CliOptions {
         return generateTw;
     }
 
-    public boolean isGenerateGplus() {
-        return generateGplus;
-    }
-
     public boolean isGenerateRss() {
         return generateRss;
     }
@@ -171,10 +163,6 @@ public final class CliOptions {
 
     public String getTwitterTemplate() {
         return twitterTemplate;
-    }
-
-    public String getGplusTemplate() {
-        return gplusTemplate;
     }
 
     public String getRssTemplate() {
@@ -365,17 +353,6 @@ public final class CliOptions {
         }
 
         /**
-         * Spacify flag to generate google plus post.
-         * @param genGplus flag to generate google plus
-         * @return Builder Object
-         * @noinspection ReturnOfInnerClass
-         */
-        public Builder setGenerateGplus(boolean genGplus) {
-            generateGplus = genGplus;
-            return this;
-        }
-
-        /**
          * Specify flag to generate RSS post.
          * @param genRss flag to generate RSS post
          * @return Builder Object
@@ -416,17 +393,6 @@ public final class CliOptions {
          */
         public Builder setTwitterTemplate(String twitterTemp) {
             twitterTemplate = twitterTemp;
-            return this;
-        }
-
-        /**
-         * Specify google plus template.
-         * @param gplusTemp google plus template
-         * @return Builder Object
-         * @noinspection ReturnOfInnerClass
-         */
-        public Builder setGplusTemplate(String gplusTemp) {
-            gplusTemplate = gplusTemp;
             return this;
         }
 
@@ -781,12 +747,10 @@ public final class CliOptions {
             cliOptions.generateAll = generateAll;
             cliOptions.generateXdoc = generateXdoc;
             cliOptions.generateTw = generateTw;
-            cliOptions.generateGplus = generateGplus;
             cliOptions.generateRss = generateRss;
             cliOptions.generateMlist = generateMlist;
             cliOptions.xdocTemplate = xdocTemplate;
             cliOptions.twitterTemplate = twitterTemplate;
-            cliOptions.gplusTemplate = gplusTemplate;
             cliOptions.rssTemplate = rssTemplate;
             cliOptions.mlistTemplate = mlistTemplate;
             cliOptions.publishAllSocial = publishAllSocial;

@@ -20,8 +20,8 @@ Jar file which includes all required dependencies will be located at
 java -jar releasenotes-builder-1.0-all.jar -localRepoPath <arg> \
      -remoteRepoPath <arg> -startRef <arg> [-endRef <arg>] \
      -releaseNumber <arg> [-outputLocation <args>] [-githubAuthToken <arg>] \
-     [-generateAll] [-generateXdoc] [-generateTwit] [-generateRss] [-generateGplus] [-generateMlist] \
-     [-xdocTemplate] [-twitterTemplate] [-gplusTemplate] [-rssTemplate] [-mlistTemplate] \
+     [-generateAll] [-generateXdoc] [-generateTwit] [-generateRss] [-generateMlist] \
+     [-xdocTemplate] [-twitterTemplate] [-rssTemplate] [-mlistTemplate] \
      [-publishXdoc] [-publishXdocWithPush] \
      [-publishAllSocial] [-publishTwit] [-twitterConsumerKey <arg>] [-twitterConsumerSecret <arg>] \
      [-twiterAccessToken <arg>] [-twitterAccessTokenSecret <arg>] [-twitterProperties <arg>] \
@@ -57,8 +57,6 @@ release notes. For example, ```753bc06``` or just tag ```checkstyle-6.12.1``` .
 
 **generateRss** - (optional) generate a release notes post to publish on RSS. Generated file will be ```rss.txt```.
 
-**generateGplus** - (optional) generate a release notes post to publish on Google plus. Generated file will be ```gplus.txt```.
-
 **generateMlist** - (optional) generate a release notes post to publish on Mailing list. Generated file will be ```mailing_list.txt```.
 
 **generateAll** - (optional) generate all possible posts. Generated files will be at specified output location.
@@ -66,8 +64,6 @@ release notes. For example, ```753bc06``` or just tag ```checkstyle-6.12.1``` .
 **xdocTemplate** - (optional) path to the external xdoc freemarker template file.
 
 **twitterTemplate** - (optional) path to the external twitter freemarker template file.
-
-**gplusTemplate** - (optional) path to the external google plus freemarker template file.
 
 **rssTemplate** - (optional) path to the external rss freemarker template file.
 

@@ -40,8 +40,6 @@ public final class MainProcess {
     public static final String XDOC_FILENAME = "xdoc.xml";
     /** Filename for a generated Twitter post. */
     public static final String TWITTER_FILENAME = "twitter.txt";
-    /** Filename for a generated Google Plus post. */
-    public static final String GPLUS_FILENAME = "gplus.txt";
     /** Filename for a generated RSS post. */
     public static final String RSS_FILENAME = "rss.txt";
     /** Filename for a generated Mailing List post. */
@@ -53,9 +51,6 @@ public final class MainProcess {
     /** Twitter template file name. */
     public static final String TWITTER_TEMPLATE_FILE =
         "com/github/checkstyle/templates/twitter.template";
-    /** Google Plus template file name. */
-    public static final String GPLUS_TEMPLATE_FILE =
-        "com/github/checkstyle/templates/gplus.template";
     /** RSS template file name. */
     public static final String RSS_TEMPLATE_FILE =
         "com/github/checkstyle/templates/rss.template";
@@ -108,11 +103,6 @@ public final class MainProcess {
             TemplateProcessor.generateWithFreemarker(templateVariables,
                     outputLocation + TWITTER_FILENAME, cliOptions.getTwitterTemplate(),
                     TWITTER_TEMPLATE_FILE);
-        }
-        if (cliOptions.isGenerateAll() || cliOptions.isGenerateGplus()) {
-            TemplateProcessor.generateWithFreemarker(templateVariables,
-                    outputLocation + GPLUS_FILENAME, cliOptions.getGplusTemplate(),
-                    GPLUS_TEMPLATE_FILE);
         }
         if (cliOptions.isGenerateAll() || cliOptions.isGenerateRss()) {
             TemplateProcessor.generateWithFreemarker(templateVariables,
