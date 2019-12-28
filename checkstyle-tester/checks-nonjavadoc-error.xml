@@ -306,7 +306,7 @@
     </module>
     <module name="NestedTryDepth"/>
     <module name="NoClone"/>
-    <module name="NoEnumTrailingComma"/>
+    <module name="NoArrayTrailingComma"/>
     <module name="NoFinalizer"/>
     <module name="OneStatementPerLine"/>
     <module name="OverloadMethodsDeclarationOrder"/>
