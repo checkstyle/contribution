@@ -656,7 +656,7 @@ public final class CliOptions {
         /**
          * Load options for Twitter publication from properties if they were not set.
          *
-         * @throws IllegalStateException when there is problems to load properties
+         * @throws IllegalStateException when there is problem to load properties
          */
         private void loadTwitterProperties() {
             try (InputStream propStream = new FileInputStream(twitterProperties)) {
@@ -698,7 +698,7 @@ public final class CliOptions {
         /**
          * Load options for mailing list publication from properties if they were not set.
          *
-         * @throws IllegalStateException when there is problems to load properties
+         * @throws IllegalStateException when there is problem to load properties
          */
         private void loadMlistProperties() {
             try (InputStream propStream = new FileInputStream(mlistProperties)) {
@@ -721,7 +721,7 @@ public final class CliOptions {
         /**
          * Load options for RSS publication from properties if they were not set.
          *
-         * @throws IllegalStateException when there is problems to load properties
+         * @throws IllegalStateException when there is problem to load properties
          */
         private void loadSfRssProperties() {
             try (InputStream propStream = new FileInputStream(sfRssProperties)) {
