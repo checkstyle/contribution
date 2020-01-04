@@ -42,7 +42,14 @@ matrix:
         - DESC="codenarc validation for groovy files"
         - CMD="./.ci/travis.sh codenarc"
 
-script: eval $CMD
+addons:
+  apt:
+    packages:
+      - xmlstarlet
+
+script:
+  - xmlstarlet ed --inplace -d "//mirrors" /home/travis/.m2/settings.xml
+  - eval $CMD
 
 after_success:
 
