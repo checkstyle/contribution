@@ -14,17 +14,17 @@
 								<tr th:case = "1" class="b">
 								<tr th:case = "*" class="a">
 							</th:block>
-								<td><a th:name="${anchor.getAnchor()}" th:href = "@{#} + ${anchor.getAnchor()}" th:text = "@{#} + ${anchor.getAnchor()}"> Anchor </a></td>
+								<td class="keepWidth"><a th:name="${anchor.getAnchor()}" th:href = "@{#} + ${anchor.getAnchor()}" th:text = "@{#} + ${anchor.getAnchor()}"> Anchor </a></td>
 								<td th:text = ${record.severity}> Severity </td>
 								<td th:text = ${record.simpleCuttedSourceName}> Rule </td>
 								<td th:utext = ${record.messageHtml}> Message </td>
 								<th:block th:switch="${record.xref}">
-									<td th:case = "null" th:text = ${record.line}> Line </td>
-									<td th:case = "*"><a th:href = "${record.xref} + @{#L} + ${record.line}" th:text = ${record.line}> Line </a></td>
+									<td class="keepWidth" th:case = "null" th:text = ${record.line}> Line </td>
+									<td class="keepWidth" th:case = "*"><a th:href = "${record.xref} + @{#L} + ${record.line}" th:text = ${record.line}> Line </a></td>
 								</th:block>
 								<th:block th:switch="${record.column}">
-									<td th:case = "-1"> </td>
-									<td th:case = "*" th:text=${record.column}> column </td>
+									<td class="keepWidth" th:case = "-1"> </td>
+									<td class="keepWidth" th:case = "*" th:text=${record.column}> column </td>
 								</th:block>
 							</tr>
 						</th:block>

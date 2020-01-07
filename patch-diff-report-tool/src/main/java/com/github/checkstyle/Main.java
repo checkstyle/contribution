@@ -245,6 +245,8 @@ public final class Main {
                 outputPath.resolve(CSS_FILEPATH).resolve("maven-theme.css"));
         FilesystemUtils.exportResource("/maven-base.css",
                 outputPath.resolve(CSS_FILEPATH).resolve("maven-base.css"));
+        FilesystemUtils.exportResource("/site.css",
+            outputPath.resolve(CSS_FILEPATH).resolve("site.css"));
     }
 
     /**

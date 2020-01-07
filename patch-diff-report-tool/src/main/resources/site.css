@@ -1,0 +1,7 @@
+.bodyTable * {
+    word-break: break-all;
+}
+
+.keepWidth, .keepWidth * {
+    word-break: keep-all;
+}

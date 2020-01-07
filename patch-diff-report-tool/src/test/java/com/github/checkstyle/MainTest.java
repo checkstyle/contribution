@@ -65,6 +65,8 @@ public class MainTest extends AbstractTest {
                 "css/maven-base.css"));
         assertFileExists("maven-theme.css doesn't exist", new File(outputDirectory,
                 "css/maven-theme.css"));
+        assertFileExists("site.css doesn't exist", new File(outputDirectory,
+            "css/site.css"));
 
         final File xrefDirectory = new File(outputDirectory, "xref");
 
