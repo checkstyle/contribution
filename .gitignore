@@ -15,6 +15,9 @@ bin
 /qulice/src/main/java/
 .DS_Store
 
+# temp folder for files/folders of ci validations
+.ci-temp
+
 # downloads from jsoref-spellchecker
 jsoref-spellchecker/english.words
 jsoref-spellchecker/spelling-unknown-word-splitter.pl
