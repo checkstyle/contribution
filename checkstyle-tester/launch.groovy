@@ -225,7 +225,7 @@ def runMavenExecution(srcDir, excludes, checkstyleConfig, ignoreExceptions, chec
     println "Running 'mvn clean' on $srcDir ..."
     def mvnClean = "mvn --batch-mode clean"
     executeCmd(mvnClean)
-    println "Running Checkstyle on $srcDir ... with excludes $excludes"
+    println "Running Checkstyle on $srcDir ... with excludes {$excludes}"
     def mvnSite = "mvn -e --batch-mode site -Dcheckstyle.config.location=$checkstyleConfig -Dcheckstyle.excludes=$excludes"
     if (checkstyleVersion) {
         mvnSite = mvnSite + " -Dcheckstyle.version=$checkstyleVersion"
@@ -313,6 +313,7 @@ def removeEmptyDirectories(file) {
 }
 
 def executeCmd(cmd, dir =  new File("").getAbsoluteFile()) {
+    println "Running command: ${cmd}"
     def osSpecificCmd = getOsSpecificCmd(cmd)
     def proc = osSpecificCmd.execute(null, dir)
     proc.consumeProcessOutput(System.out, System.err)
