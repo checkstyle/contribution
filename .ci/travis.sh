@@ -44,8 +44,8 @@ checkstyle-tester-diff-groovy-patch)
   cd .ci-temp/checkstyle
   git checkout -b patch-branch
   cd ../../checkstyle-tester
-  #sed -i'' 's/^guava/#guava/' projects-for-wercker.properties
-  #sed -i'' 's/#checkstyle/checkstyle/' projects-for-wercker.properties
+  sed -i'' 's/^guava/#guava/' projects-for-wercker.properties
+  sed -i'' 's/#checkstyle/checkstyle/' projects-for-wercker.properties
   groovy diff.groovy -l projects-for-travis.properties \
     -c my_check.xml -b master -p patch-branch -r ../.ci-temp/checkstyle
   ;;
