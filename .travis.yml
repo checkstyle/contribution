@@ -37,10 +37,11 @@ matrix:
         - DESC="checkstyle-tester (diff.groovy) on linux with enabled patchOnly"
         - CMD="./.ci/travis.sh checkstyle-tester-diff-groovy-patch-only"
 
-    - jdk: openjdk8
-      env:
-        - DESC="codenarc validation for groovy files"
-        - CMD="./.ci/travis.sh codenarc"
+    # disabled till https://github.com/checkstyle/contribution/issues/448
+    # - jdk: openjdk8
+    #   env:
+    #     - DESC="codenarc validation for groovy files"
+    #     - CMD="./.ci/travis.sh codenarc"
 
 addons:
   apt:
