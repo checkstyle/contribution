@@ -225,7 +225,7 @@ public final class NotesBuilder {
                 final int lastPeriodIndex = commitMessage.lastIndexOf('.');
                 final String revertedCommitReference;
                 if (lastSpaceIndex > lastPeriodIndex) {
-                    //smth is wrong with commit message, revert commit was changed manually
+                    // smth is wrong with commit message, revert commit was changed manually
                     revertedCommitReference = "nonexistingsha";
                 }
                 else {

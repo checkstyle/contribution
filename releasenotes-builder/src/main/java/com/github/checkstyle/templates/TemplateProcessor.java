@@ -50,7 +50,7 @@ import freemarker.template.TemplateExceptionHandler;
  * Util class to generate release notes output file with FreeMarker template engines.
  * @author Andrei Selkin
  */
-//-@cs[ClassDataAbstractionCoupling] No way to split this up right now.
+// -@cs[ClassDataAbstractionCoupling] No way to split this up right now.
 public final class TemplateProcessor {
 
     /** Internal template name. */
