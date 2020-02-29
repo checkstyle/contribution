@@ -24,6 +24,7 @@
         <tools.jar.version>${java.version}.0</tools.jar.version>
         <tools.jar.path>${java.home}/../lib/tools.jar</tools.jar.path>
         <checkstyle.version>8.30</checkstyle.version>
+        <checkstyle.configLocation>https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-${checkstyle.version}/config/checkstyle_checks.xml</checkstyle.configLocation>
         <junit.version>4.12</junit.version>
     </properties>
 
@@ -157,7 +158,7 @@
                         <configuration>
                             <includeResources>false</includeResources>
                             <includeTestResources>false</includeTestResources>
-                            <configLocation>https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-${checkstyle.version}/config/checkstyle_checks.xml</configLocation>
+                            <configLocation>${checkstyle.configLocation}</configLocation>
                             <propertiesLocation>config/checkstyle.properties</propertiesLocation>
                             <failOnViolation>true</failOnViolation>
                             <linkXRef>false</linkXRef>
