@@ -54,10 +54,10 @@ final class ConfigurationMerger {
      */
     public static MergedConfigurationModule merge(ConfigurationModule baseModule,
             ConfigurationModule patchModule, String parentName) {
-        //creation of paired module
+        // creation of paired module
         final MergedConfigurationModule doubledModule =
                 getMergedConfigurationModule(baseModule, patchModule, parentName);
-        //getting silbings
+        // getting silbings
         final List<ConfigurationModule> baseChildren;
         if (baseModule != null) {
             baseChildren = baseModule.getChildren();
@@ -72,16 +72,16 @@ final class ConfigurationMerger {
         else {
             patchChildren = new ArrayList<>(0);
         }
-        //flags for detection of used patch siblings.
+        // flags for detection of used patch siblings.
         final boolean[] usedPatchParentChildren = new boolean[patchChildren.size()];
-        //processing of base siblings
+        // processing of base siblings
         for (ConfigurationModule module : baseChildren) {
             final String moduleName = module.getName();
             final ConfigurationModule patchSibling =
                     getSibling(moduleName, patchChildren, usedPatchParentChildren);
             doubledModule.addChild(merge(module, patchSibling, doubledModule.getFullModuleName()));
         }
-        //processing of residual patch siblings
+        // processing of residual patch siblings
         for (int i = 0; i < patchChildren.size(); i++) {
             if (!usedPatchParentChildren[i]) {
                 doubledModule.addChild(merge(null, patchChildren.get(i),

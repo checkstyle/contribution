@@ -149,15 +149,15 @@ public final class CheckstyleConfigurationsParser {
                 final StartElement startElement = event.asStartElement();
                 final String startElementName = startElement.getName()
                         .getLocalPart();
-                //module tag encounter
+                // module tag encounter
                 if (startElementName.equals(MODULE_TAG)) {
                     processModuleTag(reader, startElement, parent);
                 }
-                //property tag encounter
+                // property tag encounter
                 else if (startElementName.equals(PROPERTY_TAG)) {
                     processPropertyTag(startElement, parent);
                 }
-                //message tag encounter
+                // message tag encounter
                 else if (startElementName.equals(MESSAGE_TAG)) {
                     processMessageTag(startElement, parent);
                 }
@@ -165,7 +165,7 @@ public final class CheckstyleConfigurationsParser {
             if (event.isEndElement()) {
                 final EndElement endElement = event.asEndElement();
                 if (endElement.getName().getLocalPart().equals(MODULE_TAG)) {
-                    //return from recursive method
+                    // return from recursive method
                     break;
                 }
             }

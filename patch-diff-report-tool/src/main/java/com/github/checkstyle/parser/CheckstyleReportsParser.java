@@ -162,7 +162,7 @@ public final class CheckstyleReportsParser {
                 final StartElement startElement = event.asStartElement();
                 final String startElementName = startElement.getName()
                         .getLocalPart();
-                //file tag encounter
+                // file tag encounter
                 if (startElementName.equals(FILE_TAG)) {
                     counter--;
                     diffReport.getStatistics().incrementFileCount(index);
@@ -177,7 +177,7 @@ public final class CheckstyleReportsParser {
                     }
                     records = new ArrayList<>();
                 }
-                //error tag encounter
+                // error tag encounter
                 else if (startElementName.equals(ERROR_TAG)) {
                     records.add(parseErrorTag(startElement, diffReport.getStatistics(), index,
                             filename));
