@@ -6,6 +6,7 @@ Only 2 types of reports are currently supported, single and diff (short for diff
 
 ## Setup
 
+The contribution repository must be cloned and all the folders must be kept together, like they are on the server. Not only does the tool use the `checkstyle-tester` directory and it's layout, but it also uses `patch-diff-report-tool` to help with building the final report.
 The tool consists of one Groovy script: `diff.groovy`. Thus, in order to use the tool make sure you have the Groovy runtime installed on your developer machine (min required version is 2.4.8).
 The tool runs Checkstyle through maven and makes use of your checkstyle branches, so maven and git is required to be installed as well.
 Depending on the type of external projects you wish to generate reports for, you may require other tools like Git or Mericural, for Git and HG repositories respectively.
