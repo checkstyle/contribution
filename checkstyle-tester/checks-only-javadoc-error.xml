@@ -20,6 +20,7 @@
     <module name="AtclauseOrder"/>
     <module name="JavadocBlockTagLocation"/>
     <module name="JavadocContentLocation"/>
+    <module name="JavadocMissingWhitespaceAfterAsterisk"/>
     <module name="JavadocParagraph"/>
     <module name="JavadocTagContinuationIndentation"/>
     <module name="MissingDeprecated"/>
