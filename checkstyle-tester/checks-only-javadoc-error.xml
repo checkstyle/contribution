@@ -27,7 +27,7 @@
     <module name="NonEmptyAtclauseDescription"/>
     <module name="SingleLineJavadoc"/>
     <module name="SummaryJavadoc"/>
-
+    <module name="MissingLeadingAsterisk"/>
   </module>
 
 </module>
