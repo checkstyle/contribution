@@ -31,7 +31,7 @@ static void main(String[] args) {
         moveDir(cfg.tmpReportsDir, cfg.reportsDir)
 
         generateDiffReport(cfg.diffToolConfig)
-        generateSummaryIndexHtml(cfg.diffDir, checkstyleBaseReportInfo, checkstylePatchReportInfo)
+        generateSummaryIndexHtml(cfg.diffDir, checkstyleBaseReportInfo, checkstylePatchReportInfo, cfg.listOfProjects)
     }
     else {
         throw new IllegalArgumentException('Error: invalid command line arguments!')
@@ -260,7 +260,19 @@ def getPathToDiffToolJar(diffToolDir) {
     return pathToDiffToolJar
 }
 
-def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo, checkstylePatchReportInfo) {
+def getTextTransform() {
+    def diffToolDir = Paths.get("").toAbsolutePath()
+        .parent
+        .resolve("patch-diff-report-tool")
+        .toFile()
+    def diffToolJarPath = getPathToDiffToolJar(diffToolDir)
+    this.class.classLoader.rootLoader.addURL(new URL("file:$diffToolJarPath"))
+    def textTransform = Class.forName("com.github.checkstyle.site.TextTransform").newInstance()
+
+    return textTransform;
+}
+
+def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo, checkstylePatchReportInfo, listOfProjects) {
     println 'Starting creating report summary page ...'
     def projectsStatistic = getProjectsStatistic(diffDir)
     def summaryIndexHtml = new File("$diffDir/index.html")
@@ -275,6 +287,11 @@ def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo, checkstylePatchR
     summaryIndexHtml << ('<strong>WARNING: Excludes are ignored by diff.groovy.</strong>')
     summaryIndexHtml << ('</span></h3>')
     printReportInfoSection(summaryIndexHtml, checkstyleBaseReportInfo, checkstylePatchReportInfo, projectsStatistic)
+
+    def textTransform = getTextTransform();
+    def listOfProjectsFile = new File(listOfProjects)
+    generateAndPrintConfigHtmlFile(diffDir, listOfProjectsFile, textTransform, summaryIndexHtml)
+
     projectsStatistic.sort { it.key.toLowerCase() }.sort { it.value == 0 ? 1 : 0 }.each {
         project, diffCount ->
             summaryIndexHtml << ("<a href='$project/index.html'>$project</a>")
@@ -287,6 +304,26 @@ def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo, checkstylePatchR
     summaryIndexHtml << ('</body></html>')
 
     println 'Creating report summary page finished...'
+}
+
+def generateAndPrintConfigHtmlFile(diffDir, configFile, textTransform, summaryIndexHtml) {
+    def configfilenameWithoutExtension = getFilenameWithoutExtension(configFile.name)
+    def configFileHtml = new File("$diffDir/${configfilenameWithoutExtension}.html")
+    textTransform.transform(configFile.name, configFileHtml.toPath().toString(), Locale.ENGLISH,
+        "UTF-8", "UTF-8")
+
+    summaryIndexHtml << ('<h6>')
+    summaryIndexHtml << ("<a href='${configFileHtml.name}'>${configFile.name} file</a>")
+    summaryIndexHtml << ('</h6>')
+}
+
+def getFilenameWithoutExtension(filename) {
+    def filenameWithoutExtension
+    int pos = filename.lastIndexOf(".");
+    if (pos > 0) {
+        filenameWithoutExtension = filename.substring(0, pos);
+    }
+    return filenameWithoutExtension
 }
 
 def printReportInfoSection(summaryIndexHtml, checkstyleBaseReportInfo, checkstylePatchReportInfo, projectsStatistic) {
