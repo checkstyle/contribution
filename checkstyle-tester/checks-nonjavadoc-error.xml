@@ -137,6 +137,9 @@
   <module name="TreeWalker">
     <property name="tabWidth" value="4"/>
 
+    <!-- Miscellaneous -->
+    <module name="NoCodeInFile"/>
+
     <!-- Annotations -->
     <module name="AnnotationLocation">
       <property name="tokens" value="CLASS_DEF"/>
