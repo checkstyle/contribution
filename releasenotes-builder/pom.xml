@@ -12,7 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.plugin.guava.version>28.0-jre</maven.plugin.guava.version>
         <maven.plugin.checkstyle.version>3.1.1</maven.plugin.checkstyle.version>
-        <maven.plugin.github-api.version>1.95</maven.plugin.github-api.version>
+        <maven.plugin.github-api.version>1.99</maven.plugin.github-api.version>
         <maven.plugin.jgit.version>5.4.2.201908231537-r</maven.plugin.jgit.version>
         <maven.plugin.slf4j.version>1.7.12</maven.plugin.slf4j.version>
         <maven.plugin.freemarker.version>2.3.29</maven.plugin.freemarker.version>
