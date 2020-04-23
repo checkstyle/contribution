@@ -613,7 +613,8 @@
     <module name="TypecastParenPad"/>
     <module name="WhitespaceAfter"/>
     <module name="WhitespaceAround"/>
-
+    <module name="EmptyLineWrappingInBlock"/>
+    
   </module>
 
 </module>
