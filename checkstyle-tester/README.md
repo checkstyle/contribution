@@ -223,3 +223,13 @@ mvn  -Pno-validations clean install
 Sevntu's current version must be referenced at https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/pom.xml#L16 .
 
 Finally, just run checkstyle-tester as described above.
+
+## Troubleshooting
+
+To generate a report in debug mode, use the `MAVEN_OPTS` environment variable:
+```
+export MAVEN_OPTS=-Dorg.slf4j.simpleLogger.defaultLogLevel=debug
+groovy diff.groovy --localGitRepo ...
+
+```
+Windows users should use the `SET` command instead of the `export` command.
