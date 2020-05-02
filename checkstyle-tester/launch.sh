@@ -10,17 +10,17 @@ export EXCLUDES_ACCUM=""
 while read line ; do
     [[ "$line" == \#* ]] && continue # Skip lines with comments
     [[ -z "$line" ]] && continue     # Skip empty lines
-    
+
     REPO_NAME=`echo $line | cut -d '|' -f 1`
     REPO_TYPE=`echo $line | cut -d '|' -f 2`
     REPO_URL=` echo $line | cut -d '|' -f 3`
     COMMIT_ID=`echo $line | cut -d '|' -f 4`
     EXCLUDES=` echo $line | cut -d '|' -f 5`
-    
+
     EXCLUDES_ACCUM+=",$EXCLUDES"
 
     REPO_SOURCES_DIR=$SOURCES_DIR/$REPO_NAME
-    
+
     if [ "$REPO_TYPE" == "github" ]; then
         rm -rf $REPO_SOURCES_DIR
         if [ ! -d "$REPO_SOURCES_DIR" ]; then
@@ -63,10 +63,10 @@ while read line ; do
 			cd $REPO_SOURCES_DIR
 			hg up $COMMIT_ID
 			cd -
-			fi 
-    
+			fi
+
     fi
-    
+
     echo -e "$REPO_NAME is synchronized\n"
 
 done < projects-to-test-on.properties
@@ -90,7 +90,7 @@ fi
 
 echo "linking report to index.html"
 mv target/site/index.html target/site/_index.html
-ln -s checkstyle.html target/site/index.html 
+ln -s checkstyle.html target/site/index.html
 
 echo "Removing non refernced xref files in report ..."
 
