@@ -27,6 +27,7 @@ import javax.xml.stream.events.XMLEvent;
 
 /**
  * Simple {@link XMLEventReader} with no elements.
+ *
  * @author Richard Veach
  */
 public final class EmptyXmlEventReader implements XMLEventReader {

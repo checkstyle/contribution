@@ -36,6 +36,7 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 /**
  * Class for xdoc publication.
+ *
  * @author Vladislav Lisetskii
  */
 public class XdocPublisher {
@@ -65,6 +66,7 @@ public class XdocPublisher {
 
     /**
      * Default constructor.
+     *
      * @param postFilename the name of the file to get post xml from.
      * @param localRepoPath path to a local git repository.
      * @param releaseNumber release number.
@@ -82,6 +84,7 @@ public class XdocPublisher {
 
     /**
      * Publish release notes.
+     *
      * @throws IOException if problem with access to files appears.
      * @throws GitAPIException for problems with jgit.
      */
@@ -108,6 +111,7 @@ public class XdocPublisher {
 
     /**
      * Do modification of an xdoc release notes in a local repo.
+     *
      * @throws IOException if problem with access to files appears.
      */
     private void changeLocalRepoXdoc() throws IOException {

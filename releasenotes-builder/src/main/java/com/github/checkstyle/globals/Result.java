@@ -28,6 +28,7 @@ import com.google.common.collect.Multimap;
 
 /**
  * Represents the result of release notes generation.
+ *
  * @author Andrei Selkin
  */
 public final class Result {
@@ -52,6 +53,7 @@ public final class Result {
 
     /**
      * Puts release notes message into release notes map.
+     *
      * @param label section label.
      * @param message release notes message.
      */
@@ -75,6 +77,7 @@ public final class Result {
 
     /**
      * Adds error message into result.
+     *
      * @param message error message.
      */
     public void addError(String message) {
@@ -83,6 +86,7 @@ public final class Result {
 
     /**
      * Adds warning message into result.
+     *
      * @param message warning message.
      */
     public void addWarning(String message) {
@@ -91,6 +95,7 @@ public final class Result {
 
     /**
      * Checks whether result has errors.
+     *
      * @return true if result has errors.
      */
     public boolean hasErrors() {
@@ -99,6 +104,7 @@ public final class Result {
 
     /**
      * Checks whether result has warnings.
+     *
      * @return true if result has warnings.
      */
     public boolean hasWarnings() {

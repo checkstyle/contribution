@@ -34,6 +34,7 @@ import org.apache.commons.cli.ParseException;
 
 /**
  * Helper class to process command line arguments for NotesBuilder.
+ *
  * @author Andrei Selkin
  */
 public class CliProcessor {
@@ -119,6 +120,7 @@ public class CliProcessor {
 
     /**
      * Constructs CliProcessor object.
+     *
      * @param args command line cmdArgs.
      */
     public CliProcessor(String... args) {
@@ -128,6 +130,7 @@ public class CliProcessor {
 
     /**
      * Process command line arguments.
+     *
      * @throws ParseException if an error occurs while parsing command line arguments.
      */
     public void process() throws ParseException {
@@ -138,6 +141,7 @@ public class CliProcessor {
 
     /**
      * Checks whether any errors occurred while processing command line arguments.
+     *
      * @return true if any errors occurred while processing command line arguments.
      */
     public boolean hasErrors() {
@@ -146,6 +150,7 @@ public class CliProcessor {
 
     /**
      * Returns a list of error messages.
+     *
      * @return a list of error messages.
      */
     public List<String> getErrorMessages() {
@@ -154,6 +159,7 @@ public class CliProcessor {
 
     /**
      * Does validation of command line options.
+     *
      * @return list of violations.
      */
     // -@cs[CyclomaticComplexity|NPathComplexity] This code is not complicated and is better to
@@ -212,6 +218,7 @@ public class CliProcessor {
 
     /**
      * Util method to convert CommandLine type to POJO object.
+     *
      * @return command line options as POJO object.
      */
     public CliOptions getCliOptions() {
@@ -254,6 +261,7 @@ public class CliProcessor {
 
     /**
      * Builds and returns list of parameters supported by cli Main.
+     *
      * @return available options.
      */
     private static Options buildOptions() {

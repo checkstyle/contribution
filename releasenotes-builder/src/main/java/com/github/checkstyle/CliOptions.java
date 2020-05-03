@@ -29,6 +29,7 @@ import com.google.common.base.Verify;
 /**
  * Helper structure class to clear show what command line arguments are required for NotesBuilder
  * to run.
+ *
  * @author Andrei Selkin
  */
 public final class CliOptions {
@@ -227,6 +228,7 @@ public final class CliOptions {
 
     /**
      * Creates a new Builder instance.
+     *
      * @return new Builder instance.
      */
     public static Builder newBuilder() {
@@ -244,6 +246,7 @@ public final class CliOptions {
 
         /**
          * Specify Local repository path.
+         *
          * @param path Local repository path
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -255,6 +258,7 @@ public final class CliOptions {
 
         /**
          * Specify Remote repository path.
+         *
          * @param path Remote repository path
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -266,6 +270,7 @@ public final class CliOptions {
 
         /**
          * Specify Start git reference.
+         *
          * @param ref Start reference
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -277,6 +282,7 @@ public final class CliOptions {
 
         /**
          * Specify End git reference.
+         *
          * @param ref End reference
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -288,6 +294,7 @@ public final class CliOptions {
 
         /**
          * Specify release number.
+         *
          * @param number Release Number
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -299,6 +306,7 @@ public final class CliOptions {
 
         /**
          * Specify Auth Token.
+         *
          * @param token Auth Token
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -310,6 +318,7 @@ public final class CliOptions {
 
         /**
          * Specify Output location.
+         *
          * @param outputLoc Output location
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -321,6 +330,7 @@ public final class CliOptions {
 
         /**
          * Specify flag to generate all.
+         *
          * @param genAll flag to generate all
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -332,6 +342,7 @@ public final class CliOptions {
 
         /**
          * Specify flag to generate xdoc.
+         *
          * @param genXdoc flag to generate xdoc
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -343,6 +354,7 @@ public final class CliOptions {
 
         /**
          * Spacify flag to generate twiter post.
+         *
          * @param genTw flag to generate twitt
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -354,6 +366,7 @@ public final class CliOptions {
 
         /**
          * Specify flag to generate RSS post.
+         *
          * @param genRss flag to generate RSS post
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -365,6 +378,7 @@ public final class CliOptions {
 
         /**
          * Spacify flag to generate Mail-list post.
+         *
          * @param genMlist flag to generate mail-list post
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -376,6 +390,7 @@ public final class CliOptions {
 
         /**
          * Specify xdoc template.
+         *
          * @param xdocTemp xdoc template
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -387,6 +402,7 @@ public final class CliOptions {
 
         /**
          * Specify twitter template.
+         *
          * @param twitterTemp twitter template
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -398,6 +414,7 @@ public final class CliOptions {
 
         /**
          * Specify rss template.
+         *
          * @param rssTemp rss template
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -409,6 +426,7 @@ public final class CliOptions {
 
         /**
          * Specify mailing list template.
+         *
          * @param mlistTemp mailing list template
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -420,6 +438,7 @@ public final class CliOptions {
 
         /**
          * Spacify to do publish all social posts.
+         *
          * @param pubAllSocial flag to generate all social posts
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -431,6 +450,7 @@ public final class CliOptions {
 
         /**
          * Specify to do publish only for twitter.
+         *
          * @param publishTw flag to publish twitt
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -442,6 +462,7 @@ public final class CliOptions {
 
         /**
          * Specify Twitter consumer key.
+         *
          * @param twConsKey twitter consumer key
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -453,6 +474,7 @@ public final class CliOptions {
 
         /**
          * Specify Twitter Consumer secret.
+         *
          * @param twConsSecret twitter consumer secret
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -464,6 +486,7 @@ public final class CliOptions {
 
         /**
          * Specify Twitter Access Token.
+         *
          * @param twAccessToken twitter access token
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -475,6 +498,7 @@ public final class CliOptions {
 
         /**
          * Specify Access Token Secret.
+         *
          * @param twAccessTokenSecret twitter access token secret
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -486,6 +510,7 @@ public final class CliOptions {
 
         /**
          * Specify Twitter Properties.
+         *
          * @param twProperties twitter properties
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -497,6 +522,7 @@ public final class CliOptions {
 
         /**
          * Specify to publish Xdoc update.
+         *
          * @param pubXdoc flag to publish xdoc file update
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -508,6 +534,7 @@ public final class CliOptions {
 
         /**
          * Specify to publish xdoc update and do push to remote git.
+         *
          * @param pubXdocWithPush flag to publish xdoc and push to remote repo
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -519,6 +546,7 @@ public final class CliOptions {
 
         /**
          * Specify to do publication only for mailing list.
+         *
          * @param pubMlist flag to publish to mailing list
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -530,6 +558,7 @@ public final class CliOptions {
 
         /**
          * Specify username to publish to mailing list.
+         *
          * @param username mailing list username
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -541,6 +570,7 @@ public final class CliOptions {
 
         /**
          * Specify password to publish to mailing list.
+         *
          * @param password mailing list password
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -552,6 +582,7 @@ public final class CliOptions {
 
         /**
          * Specify mailing list properties.
+         *
          * @param mlistProps mailing list properties
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -563,6 +594,7 @@ public final class CliOptions {
 
         /**
          * Specify to do publication only for RSS.
+         *
          * @param pubRss flag to publish to RSS
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -574,6 +606,7 @@ public final class CliOptions {
 
         /**
          * Specify mailing list properties.
+         *
          * @param token sourceforge bearer token
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -585,6 +618,7 @@ public final class CliOptions {
 
         /**
          * Specify RSS properties.
+         *
          * @param rssProps mailing list properties
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
@@ -596,6 +630,7 @@ public final class CliOptions {
 
         /**
          * Verify options and set defaults.
+         *
          * @return new CliOption instance
          */
         public CliOptions build() {
@@ -645,6 +680,7 @@ public final class CliOptions {
 
         /**
          * Whether Twitter properties should be loaded.
+         *
          * @return true, if Twitter properties should be loaded.
          */
         private boolean shouldLoadTwitterProperties() {
@@ -688,6 +724,7 @@ public final class CliOptions {
 
         /**
          * Whether RSS properties should be loaded.
+         *
          * @return true, if RSS properties should be loaded.
          */
         private boolean shouldLoadMlistProperties() {
@@ -738,6 +775,7 @@ public final class CliOptions {
 
         /**
          * Get new CliOptions instance.
+         *
          * @return new CliOptions instance.
          */
         // -@cs[ExecutableStatementCount] long list of options being assigned to single instance

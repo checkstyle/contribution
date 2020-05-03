@@ -33,6 +33,7 @@ import java.util.regex.Pattern;
 
 /**
  * Class for RSS post publication.
+ *
  * @author Vladislav Lisetskii
  */
 public class SourceforgeRssPublisher {
@@ -57,6 +58,7 @@ public class SourceforgeRssPublisher {
 
     /**
      * Default constructor.
+     *
      * @param postFilename the name of the file to get post text from.
      * @param bearerToken token for posting.
      * @param releaseNumber release number.
@@ -69,6 +71,7 @@ public class SourceforgeRssPublisher {
 
     /**
      * Publish release notes.
+     *
      * @throws IOException if problem with access to files appears.
      */
     public void publish() throws IOException {
@@ -99,6 +102,7 @@ public class SourceforgeRssPublisher {
 
     /**
      * Get number of posts in RSS feed.
+     *
      * @return number of posts in RSS feed or -1 if number is not found in response.
      * @throws IOException in case of problems with connection or InputStream.
      */

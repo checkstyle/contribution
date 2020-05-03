@@ -31,6 +31,7 @@ import freemarker.template.TemplateException;
 
 /**
  * Class for command line usage.
+ *
  * @author Andrei Selkin
  */
 public final class Main {
@@ -44,6 +45,7 @@ public final class Main {
 
     /**
      * Entry point.
+     *
      * @param args command line arguments.
      */
     public static void main(String... args) {
@@ -90,6 +92,7 @@ public final class Main {
 
     /**
      * Executes NotesBuilder based on passed command line options.
+     *
      * @param cliOptions command line options.
      * @return result of NotesBuilder work.
      * @throws IOException if an I/O error occurs.
@@ -117,6 +120,7 @@ public final class Main {
 
     /**
      * Prints a list of elements in standard out.
+     *
      * @param entities a list.
      */
     private static void printListOf(List<String> entities) {

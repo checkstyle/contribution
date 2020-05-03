@@ -44,6 +44,7 @@ import com.github.checkstyle.site.SiteGenerator;
 
 /**
  * Utility class, contains main function and its auxiliary routines.
+ *
  * @author attatrol
  */
 public final class Main {
