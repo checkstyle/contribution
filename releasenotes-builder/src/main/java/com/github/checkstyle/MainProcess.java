@@ -64,6 +64,7 @@ public final class MainProcess {
 
     /**
      * Generate posts and publish them.
+     *
      * @param releaseNotes map of release notes messages.
      * @param cliOptions command line options.
      * @return list of publication errors.
@@ -78,6 +79,7 @@ public final class MainProcess {
 
     /**
      * Generate posts and write them to files.
+     *
      * @param releaseNotes map of release notes messages.
      * @param cliOptions command line options.
      * @throws IOException if I/O error occurs.
@@ -118,6 +120,7 @@ public final class MainProcess {
 
     /**
      * Publish social posts.
+     *
      * @param cliOptions command line options.
      * @return list of publication errors.
      */
@@ -140,6 +143,7 @@ public final class MainProcess {
 
     /**
      * Publish on xdoc.
+     *
      * @param cliOptions command line options.
      * @param errors list of publication errors.
      */
@@ -159,6 +163,7 @@ public final class MainProcess {
 
     /**
      * Publish on Twitter.
+     *
      * @param cliOptions command line options.
      * @param errors list of publication errors.
      */
@@ -178,6 +183,7 @@ public final class MainProcess {
 
     /**
      * Publish on mailing list.
+     *
      * @param cliOptions command line options.
      * @param errors list of publication errors.
      */
@@ -196,6 +202,7 @@ public final class MainProcess {
 
     /**
      * Publish on RSS.
+     *
      * @param cliOptions command line options.
      * @param errors list of publication errors.
      */

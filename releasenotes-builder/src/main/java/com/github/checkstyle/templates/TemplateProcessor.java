@@ -48,6 +48,7 @@ import freemarker.template.TemplateExceptionHandler;
 
 /**
  * Util class to generate release notes output file with FreeMarker template engines.
+ *
  * @author Andrei Selkin
  */
 // -@cs[ClassDataAbstractionCoupling] No way to split this up right now.
@@ -62,6 +63,7 @@ public final class TemplateProcessor {
 
     /**
      * Generates output file with release notes using FreeMarker.
+     *
      * @param variables the map which represents template variables.
      * @param outputFile output file.
      * @param templateFileName the optional file name of the template.
@@ -91,6 +93,7 @@ public final class TemplateProcessor {
 
     /**
      * Loads a template file to a string, otherwise a resource template if the file isn't supplied.
+     *
      * @param fileName The path of the optional file to load.
      * @param defaultResource The path of the resource to load if there is no file.
      * @return The contents of the template.
@@ -117,6 +120,7 @@ public final class TemplateProcessor {
 
     /**
      * Returns the map which represents template variables.
+     *
      * @param releaseNotes release notes map.
      * @param remoteRepoPath remote repository path.
      * @param releaseNumber release number.

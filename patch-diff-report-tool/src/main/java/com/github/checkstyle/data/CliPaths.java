@@ -23,6 +23,7 @@ import java.nio.file.Path;
 
 /**
  * POJO class that hold input paths.
+ *
  * @author attatrol
  */
 public final class CliPaths {

@@ -42,6 +42,7 @@ import com.github.checkstyle.data.Statistics;
  * Generates site report using thymeleaf template engine. Instead of single
  * template 3 smaller ones are used with purpose of avoiding creation of extra
  * large Context instance.
+ *
  * @author attatrol
  */
 public final class SiteGenerator {

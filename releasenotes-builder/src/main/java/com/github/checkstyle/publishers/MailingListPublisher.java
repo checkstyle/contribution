@@ -38,6 +38,7 @@ import javax.mail.internet.MimeMultipart;
 
 /**
  * Class for mailing list publication.
+ *
  * @author Vladislav Lisetskii
  */
 public class MailingListPublisher {
@@ -62,6 +63,7 @@ public class MailingListPublisher {
 
     /**
      * Default constructor.
+     *
      * @param postFilename the name of the file to get post from.
      * @param username username for publishing.
      * @param password password for publishing.
@@ -77,6 +79,7 @@ public class MailingListPublisher {
 
     /**
      * Publish post.
+     *
      * @throws MessagingException if an error occurs while publishing.
      * @throws IOException if there are problems with reading file with the post text.
      */

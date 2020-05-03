@@ -52,6 +52,7 @@ import com.google.common.collect.Sets;
 
 /**
  * Contains methods for release notes generation.
+ *
  * @author Andrei Selkin
  */
 public final class NotesBuilder {
@@ -84,6 +85,7 @@ public final class NotesBuilder {
 
     /**
      * Forms release notes as a map.
+     *
      * @param localRepoPath path to local git repository.
      * @param authToken the authorization token.
      * @param remoteRepoPath path to remote git repository.
@@ -154,6 +156,7 @@ public final class NotesBuilder {
 
     /**
      * Creates the connection to the remote repository.
+     *
      * @param authToken the authorization token.
      * @param remoteRepoPath path to remote git repository.
      * @return the remote repository object.
@@ -174,6 +177,7 @@ public final class NotesBuilder {
 
     /**
      * Returns a list of commits between two references.
+     *
      * @param repoPath path to local git repository.
      * @param startRef start reference.
      * @param endRef end reference.
@@ -200,6 +204,7 @@ public final class NotesBuilder {
 
     /**
      * Checks whether a commit message starts with the 'Revert' word.
+     *
      * @param commitMessage commit message.
      * @return true if a commit message starts with the 'Revert' word.
      */
@@ -213,6 +218,7 @@ public final class NotesBuilder {
      * Returns a set of ignored commits.
      * Ignored commits are 'revert' commits and commits which were reverted by the 'revert' commits
      * in current release.
+     *
      * @param commitsForRelease commits for release.
      * @return a set of ignored commits.
      */
@@ -251,6 +257,7 @@ public final class NotesBuilder {
 
     /**
      * Checks commit message to determine whether commit should be ignored.
+     *
      * @param commitMessage commit message.
      * @return if commit with the message should be ignored.
      */
@@ -261,6 +268,7 @@ public final class NotesBuilder {
 
     /**
      * Returns actual SHA-1 object by commit reference.
+     *
      * @param repo git repository.
      * @param ref string representation of commit reference.
      * @return actual SHA-1 object.
@@ -282,6 +290,7 @@ public final class NotesBuilder {
 
     /**
      * Extracts an issue number from commit message.
+     *
      * @param commitMessage commit message.
      * @return issue number.
      */
@@ -293,6 +302,7 @@ public final class NotesBuilder {
 
     /**
      * Returns a list of commits which are associated with the current issue.
+     *
      * @param commits commits.
      * @param issueNo issue number.
      * @return a list of commits which are associated with the current issue.
@@ -315,6 +325,7 @@ public final class NotesBuilder {
      * Checks whether commits message is associated with a pull request or an issue.
      * Commit message which is associated with a pull request or an issue starts with 'Pull'
      * or 'Issue' prefix.
+     *
      * @param commitMessage commit message.
      * @return true if commits message is associated with a pull request or an issue.
      */
@@ -324,6 +335,7 @@ public final class NotesBuilder {
 
     /**
      * Forms a string which represents the authors who are referenced in the commits.
+     *
      * @param commits commits.
      * @return string which represents the authors who are referenced in the commits.
      */
@@ -334,6 +346,7 @@ public final class NotesBuilder {
 
     /**
      * Finds authors of the commits.
+     *
      * @param commits current issue commits.
      * @return a list of authors who work on the current issue.
      */
@@ -348,6 +361,7 @@ public final class NotesBuilder {
 
     /**
      * Returns issue label for release notes.
+     *
      * @param issue issue.
      * @return issue label for release notes
      * @throws IOException if an I/o error occurs.

@@ -31,6 +31,7 @@ import twitter4j.auth.AccessToken;
 
 /**
  * Class for Twitter post publication.
+ *
  * @author Vladislav Lisetskii
  */
 public class TwitterPublisher {
@@ -49,6 +50,7 @@ public class TwitterPublisher {
 
     /**
      * Default constructor.
+     *
      * @param postFilename the name of the file to get post text from.
      * @param consumerKey consumer key.
      * @param consumerSecret consumer secret.
@@ -66,6 +68,7 @@ public class TwitterPublisher {
 
     /**
      * Publish post.
+     *
      * @throws TwitterException if an error occurs while publishing.
      * @throws IOException if there are problems with reading file with the post text.
      */

@@ -23,6 +23,7 @@ import org.kohsuke.github.GHIssue;
 
 /**
  * Represents a release notes message.
+ *
  * @author Andrei Selkin
  */
 public final class ReleaseNotesMessage {
@@ -44,6 +45,7 @@ public final class ReleaseNotesMessage {
 
     /**
      * Constructs a release notes message for issue.
+     *
      * @param issue issue.
      * @param author author.
      */
@@ -56,6 +58,7 @@ public final class ReleaseNotesMessage {
 
     /**
      * Constructs a release notes message for commit.
+     *
      * @param title commit title.
      * @param author commit author.
      */
@@ -84,6 +87,7 @@ public final class ReleaseNotesMessage {
 
     /**
      * Returns actual title of issue or pull request which is represented as an issue.
+     *
      * @param issue issue object.
      * @return actual title of issue or pull request which is represented as an issue.
      */
@@ -101,6 +105,7 @@ public final class ReleaseNotesMessage {
 
     /**
      * Splits the given string by the max line size into multiple lines.
+     *
      * @param str The string to examine.
      * @return The split string.
      */
