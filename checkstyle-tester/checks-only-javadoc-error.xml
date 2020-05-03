@@ -25,6 +25,7 @@
     <module name="JavadocTagContinuationIndentation"/>
     <module name="MissingDeprecated"/>
     <module name="NonEmptyAtclauseDescription"/>
+    <module name="RequireEmptyLineBeforeBlockTagGroup"/>
     <module name="SingleLineJavadoc"/>
     <module name="SummaryJavadoc"/>
 
