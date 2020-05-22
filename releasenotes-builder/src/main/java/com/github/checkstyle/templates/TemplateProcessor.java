@@ -98,6 +98,7 @@ public final class TemplateProcessor {
      * @param defaultResource The path of the resource to load if there is no file.
      * @return The contents of the template.
      * @throws FileNotFoundException if the supplied file can't be found.
+     * @throws IllegalStateException if the resource can't be found.
      */
     private static String loadTemplate(String fileName, String defaultResource)
             throws FileNotFoundException {
