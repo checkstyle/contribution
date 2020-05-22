@@ -113,6 +113,7 @@ public class XdocPublisher {
      * Do modification of an xdoc release notes in a local repo.
      *
      * @throws IOException if problem with access to files appears.
+     * @throws IllegalStateException if the placeholder for a new section could not be found.
      */
     private void changeLocalRepoXdoc() throws IOException {
         final Path pathToXdoc = Paths.get(localRepoPath + PATH_TO_XDOC_IN_REPO);
