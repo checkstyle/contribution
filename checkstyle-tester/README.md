@@ -224,6 +224,29 @@ Sevntu's current version must be referenced at https://github.com/checkstyle/con
 
 Finally, just run checkstyle-tester as described above.
 
+## Testing ANTLR Grammar Changes
+
+After modifying Checkstyle's ANTLR grammar, it is neccessary to compare how Checkstyle's checks are affected by your changes.  This is done by comparing the check violation output of your modified branch of Checkstyle against Checkstyle's master branch, and comparing the abstract syntax trees of both branches. 
+
+#### Check Regression Report
+
+To generate the check difference report, you must separate the modules and settings in the [`checkstyle_checks.xml`](https://github.com/checkstyle/checkstyle/blob/master/config/checkstyle_checks.xml) configuration file, found in the checkstyle repository, into separate configuration files (this helps avoid 'out of memory' errors).  The best way to separate the checks is to determine which typically produce the most violations, such as Indentation and WhiteSpace Checks, and put them each into their own configuration file, then separating the rest into files with roughly ten checks each.
+
+You may modify all the checks that depend on external files to use default settings.  **For each of the configuration files, you should use the [`my_check.xml`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/my_check.xml) file as a base**, and add the checks from `checkstyle_checks.xml` to it. Then `diff.groovy` should be run on all projects in `projects-to-test-on.properties`, using the `diff.groovy` script once for each configuration file.  [See instructions above](https://github.com/checkstyle/contribution/tree/master/checkstyle-tester#basic-difference-report) for "Basic Difference Report".
+
+#### ANTLR Regression Report
+
+ This report is generated using the [`launch_diff_antlr.sh`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/launch_diff_antlr.sh) script.  This script generates a report based on the differences in the ASTs generated from your PR branch and Checkstyle's 'main' branch using projects that are selected (uncommented) in the [`projects-to-test-on.properties`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.properties) file. For the ANTLR regression report, we usually only want to see that changes to the Checkstyle project. To ensure that you test against any new inputs that you have created (unit test inputs, etc.), please make sure that you comment out all other projects, and add the following line to [`projects-to-test-on.properties`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.properties):
+ 
+ `my-checkstyle|git|https://github.com/<username>/checkstyle.git|<pr-branch>||`
+
+  Where `<username>` and `<pr-branch>` are your github username and the branch that your Checkstyle PR is based on, respectively. To use [`launch_diff_antlr.sh`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/launch_diff_antlr.sh), you must modify the [`launch_diff_variables.sh`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/launch_diff_variables.sh) file to reflect the location of the variables that  [`launch_diff_antlr.sh`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/launch_diff_antlr.sh) uses to produce the report. Please note that `PULL_REMOTE` will need to be set to the name of the remote repository where your branch resides. If your branch is found at `origin/name-of-your-branch-here`, you will set `PULL_REMOTE=origin`. Then, run:
+  
+  `./launch_diff_antlr.sh name-of-your-branch-here`.
+
+*Note: if you are experiencing maven 'out of memory' errors from maven, see https://cwiki.apache.org/confluence/display/MAVEN/OutOfMemoryError*
+
+
 ## Troubleshooting
 
 To generate a report in debug mode, use the `MAVEN_OPTS` environment variable:
