@@ -19,7 +19,7 @@ Depending on the type of external projects you wish to generate reports for, you
 
 **baseBranch** (b) - name of the base branch in local Checkstyle repository (optional, if asent, then the tool will use only patchBranch in case the tool mode is 'single', otherwise baseBrach will be set to 'master');
 
-**mode** (m) - the mode of the tool: 'single' or 'diff' (optional, default is 'diff'. Set this option to 'single' if your patch branch contains changes for any option that can't work on master/base branch. 
+**mode** (m) - the mode of the tool: 'single' or 'diff' (optional, default is 'diff'. Set this option to 'single' if your patch branch contains changes for any option that can't work on master/base branch.
 For example, for new properties, new tokens, or new modules. For all other changes, 'diff' mode should be the preferred mode used. Note, that if the mode is 'single', then 'baseBranch', 'baseConfig', and 'config' should not be specified as the tool will finish the execution with the error.
 You must specify 'patchBranch' and 'patchConfig' if the mode is 'single', and 'baseBranch', 'baseConfig', 'patchBranch', and 'patchConfig' if the mode is 'diff');
 
@@ -78,7 +78,7 @@ my_custom_repo|hg|/home/username/java/hg-repos/myRepo|default|
 
 You will need to modify your configuration file that you wish to generate a report for. If you are doing diff mode, you can specify 2 configuration files if a new property or value is being introduced.
 
-**Note:** You can use `my_check.xml` as a base as it provides most of the necessary elements already added, but you are still required to customize it to what you are specifically building a report for. 
+**Note:** You can use `my_check.xml` as a base as it provides most of the necessary elements already added, but you are still required to customize it to what you are specifically building a report for.
 
 #### Special Configuration Additions
 
@@ -203,7 +203,7 @@ With all that done, you can now call groovy. **baseBranch** will be your PR bran
 
 `groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle --baseBranch i111-my-fix --patchBranch i111-my-fix-mutation --config config.xml --listOfProjects projects-to-test-on.properties`
 
-ATTENTION: 
+ATTENTION:
 
 It is recommended to only do 1 mutation per module for a single regression. Too many mutations at once could cancel each other out and falsely produce no differences.
 
@@ -219,7 +219,7 @@ First you must build sevntu checks:
 ```
 cd sevntu-checks
 mvn  -Pno-validations clean install
-``` 
+```
 Sevntu's current version must be referenced at https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/pom.xml#L16 .
 
 Finally, just run checkstyle-tester as described above.
