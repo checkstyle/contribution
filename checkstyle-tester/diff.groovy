@@ -23,10 +23,12 @@ static void main(String[] args) {
 
         def checkstyleBaseReportInfo = null
         if (cfg.isDiffMode()) {
-            checkstyleBaseReportInfo = generateCheckstyleReport(cfg.checkstyleToolBaseConfig)
+            //checkstyleBaseReportInfo = generateCheckstyleReport(cfg.checkstyleToolBaseConfig)
         }
 
         def checkstylePatchReportInfo = generateCheckstyleReport(cfg.checkstyleToolPatchConfig)
+        checkstyleBaseReportInfo = checkstylePatchReportInfo
+
         deleteDir(cfg.reportsDir)
         moveDir(cfg.tmpReportsDir, cfg.reportsDir)
 
@@ -177,13 +179,13 @@ def getCheckstyleVersionFromPomXml(pathToPomXml, xmlTagName) {
 }
 
 def generateCheckstyleReport(cfg) {
-    println "Installing Checkstyle artifact ($cfg.branch) into local Maven repository ..."
-    executeCmd("git checkout $cfg.branch", cfg.localGitRepo)
-    executeCmd("git log -1 --pretty=MSG:%s%nSHA-1:%H", cfg.localGitRepo)
+    //println "Installing Checkstyle artifact ($cfg.branch) into local Maven repository ..."
+    //executeCmd("git checkout $cfg.branch", cfg.localGitRepo)
+    //executeCmd("git log -1 --pretty=MSG:%s%nSHA-1:%H", cfg.localGitRepo)
 
     def checkstyleVersion = getCheckstyleVersionFromPomXml("$cfg.localGitRepo/pom.xml", 'version')
 
-    executeCmd("mvn -e --batch-mode -Pno-validations clean install", cfg.localGitRepo)
+    //executeCmd("mvn -e --batch-mode -Pno-validations clean install", cfg.localGitRepo)
     executeCmd("""groovy launch.groovy --listOfProjects $cfg.listOfProjects
             --config $cfg.checkstyleCfg --ignoreExceptions --ignoreExcludes --checkstyleVersion $checkstyleVersion""")
     println "Moving Checkstyle report into $cfg.destDir ..."
@@ -226,7 +228,18 @@ def generateDiffReport(cfg) {
                     def diffCmd = """java -jar $diffToolJarPath --patchReport $patchReport
                         --output $outputDir --patchConfig $cfg.patchConfig"""
                     if ('diff'.equals(cfg.mode)) {
+                        executeCmd("mkdir -p $cfg.masterReportsDir/$projectName");
+                        executeCmd("cp $patchReport $cfg.masterReportsDir/$projectName/");
                         def baseReport = "$cfg.masterReportsDir/$projectName/checkstyle-result.xml"
+                        StringBuilder sb = new StringBuilder()
+                        File baseReportFile = new File("$baseReport")
+                        def ln = System.getProperty('line.separator')
+                        baseReportFile.eachLine { line ->
+                          if (line ==~ /^(<\\/?checkstyle|<\\?xml|<\\/?file).+/) {
+                            sb.append(line).append(ln)
+                          }
+                        }
+                        baseReportFile.write(sb.toString())
                         diffCmd += " --baseReport $baseReport --baseConfig $cfg.baseConfig"
                     }
                     if (cfg.shortFilePaths) {
