@@ -7,6 +7,7 @@ static void main(String[] args) {
     def cliOptions = getCliOptions(args)
     if (areValidCliOptions(cliOptions)) {
         def cfg = new Config(cliOptions)
+        def configFilesList = [cfg.config, cfg.baseConfig, cfg.patchConfig, cfg.listOfProjects]
 
         if (hasUnstagedChanges(cfg.localGitRepo)) {
             def exMsg = "Error: git repository ${cfg.localGitRepo.path} has unstaged changes!"
@@ -31,7 +32,7 @@ static void main(String[] args) {
         moveDir(cfg.tmpReportsDir, cfg.reportsDir)
 
         generateDiffReport(cfg.diffToolConfig)
-        generateSummaryIndexHtml(cfg.diffDir, checkstyleBaseReportInfo, checkstylePatchReportInfo, cfg.listOfProjects)
+        generateSummaryIndexHtml(cfg.diffDir, checkstyleBaseReportInfo, checkstylePatchReportInfo, configFilesList)
     }
     else {
         throw new IllegalArgumentException('Error: invalid command line arguments!')
@@ -272,7 +273,7 @@ def getTextTransform() {
     return textTransform;
 }
 
-def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo, checkstylePatchReportInfo, listOfProjects) {
+def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo, checkstylePatchReportInfo, configFilesList) {
     println 'Starting creating report summary page ...'
     def projectsStatistic = getProjectsStatistic(diffDir)
     def summaryIndexHtml = new File("$diffDir/index.html")
@@ -287,10 +288,7 @@ def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo, checkstylePatchR
     summaryIndexHtml << ('<strong>WARNING: Excludes are ignored by diff.groovy.</strong>')
     summaryIndexHtml << ('</span></h3>')
     printReportInfoSection(summaryIndexHtml, checkstyleBaseReportInfo, checkstylePatchReportInfo, projectsStatistic)
-
-    def textTransform = getTextTransform();
-    def listOfProjectsFile = new File(listOfProjects)
-    generateAndPrintConfigHtmlFile(diffDir, listOfProjectsFile, textTransform, summaryIndexHtml)
+    printConfigSection(diffDir, configFilesList, summaryIndexHtml);
 
     projectsStatistic.sort { it.key.toLowerCase() }.sort { it.value == 0 ? 1 : 0 }.each {
         project, diffCount ->
@@ -304,6 +302,21 @@ def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo, checkstylePatchR
     summaryIndexHtml << ('</body></html>')
 
     println 'Creating report summary page finished...'
+}
+
+def printConfigSection(diffDir, configFilesList, summaryIndexHtml) {
+    def textTransform = getTextTransform();
+
+    // Remove boolean value for single config in case of different base and patch config
+    configFilesList.removeIf {it instanceof Boolean};
+    // Remove dups in case of single config
+    configFilesList = configFilesList.unique();
+
+    for (filename in configFilesList) {
+        def configFile = new File(filename)
+        generateAndPrintConfigHtmlFile(diffDir, configFile, textTransform,
+            summaryIndexHtml)
+    }
 }
 
 def generateAndPrintConfigHtmlFile(diffDir, configFile, textTransform, summaryIndexHtml) {
