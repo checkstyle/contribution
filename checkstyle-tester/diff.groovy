@@ -193,7 +193,8 @@ def generateCheckstyleReport(cfg) {
     return new CheckstyleReportInfo(
         cfg.branch,
         getLastCommitSha(cfg.localGitRepo, cfg.branch),
-        getLastCommitMsg(cfg.localGitRepo, cfg.branch)
+        getLastCommitMsg(cfg.localGitRepo, cfg.branch),
+        getLastCommitTime(cfg.localGitRepo, cfg.branch)
     )
 }
 
@@ -205,6 +206,11 @@ def getLastCommitSha(gitRepo, branch) {
 def getLastCommitMsg(gitRepo, branch) {
     executeCmd("git checkout $branch", gitRepo)
     return 'git log -1 --pretty=%B'.execute(null, gitRepo).text.trim()
+}
+
+def getLastCommitTime(gitRepo, branch) {
+    executeCmd("git checkout $branch", gitRepo)
+    return 'git log -1 --format=%cd'.execute(null, gitRepo).text.trim()
 }
 
 def generateDiffReport(cfg) {
@@ -348,6 +354,8 @@ def printReportInfoSection(summaryIndexHtml, checkstyleBaseReportInfo, checkstyl
         summaryIndexHtml << ('<br />')
         summaryIndexHtml << "Base branch last commit message: \"$checkstyleBaseReportInfo.commitMsg\""
         summaryIndexHtml << ('<br />')
+        summaryIndexHtml << "Base branch last commit timestamp: \"$checkstyleBaseReportInfo.commitTime\""
+        summaryIndexHtml << ('<br />')
         summaryIndexHtml << ('<br />')
     }
     summaryIndexHtml << "Patch branch: $checkstylePatchReportInfo.branch"
@@ -355,6 +363,8 @@ def printReportInfoSection(summaryIndexHtml, checkstyleBaseReportInfo, checkstyl
     summaryIndexHtml << "Patch branch last commit SHA: $checkstylePatchReportInfo.commitSha"
     summaryIndexHtml << ('<br />')
     summaryIndexHtml << "Patch branch last commit message: \"$checkstylePatchReportInfo.commitMsg\""
+    summaryIndexHtml << ('<br />')
+    summaryIndexHtml << "Patch branch last commit timestamp: \"$checkstylePatchReportInfo.commitTime\""
     summaryIndexHtml << ('<br />')
     summaryIndexHtml << ('<br />')
     summaryIndexHtml << "Tested projects: ${projectsStatistic.size()}"
@@ -532,10 +542,12 @@ class CheckstyleReportInfo {
     def branch
     def commitSha
     def commitMsg
+    def commitTime
 
-    CheckstyleReportInfo(branch, commitSha, commitMsg) {
+    CheckstyleReportInfo(branch, commitSha, commitMsg, commitTime) {
         this.branch = branch
         this.commitSha = commitSha
         this.commitMsg = commitMsg
+        this.commitTime = commitTime
     }
 }
