@@ -346,6 +346,7 @@ def getFilenameWithoutExtension(filename) {
 }
 
 def printReportInfoSection(summaryIndexHtml, checkstyleBaseReportInfo, checkstylePatchReportInfo, projectsStatistic) {
+    def date = new Date();
     summaryIndexHtml << ('<h6>')
     if (checkstyleBaseReportInfo) {
         summaryIndexHtml << "Base branch: $checkstyleBaseReportInfo.branch"
@@ -370,6 +371,8 @@ def printReportInfoSection(summaryIndexHtml, checkstyleBaseReportInfo, checkstyl
     summaryIndexHtml << "Tested projects: ${projectsStatistic.size()}"
     summaryIndexHtml << ('<br />')
     summaryIndexHtml << "&#177; differences found: ${projectsStatistic.values().sum()[0]}"
+    summaryIndexHtml << ('<br />')
+    summaryIndexHtml << "Time of report generation: $date"
     summaryIndexHtml << ('</h6>')
 }
 
