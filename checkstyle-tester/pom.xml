@@ -74,6 +74,7 @@
 					<enableFilesSummary>false</enableFilesSummary>
 					<failsOnError>${checkstyle.failsOnError}</failsOnError>
 					<propertyExpansion>checkstyle.patchfilter.patch=${checkstyle.patchfilter.patch}</propertyExpansion>
+					<includes>**\/*</includes>
 				</configuration>
 			</plugin>
           <plugin>
