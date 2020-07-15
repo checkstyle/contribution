@@ -1,0 +1,16 @@
+name: 'Add Comment To Pull Request'
+description: 'Adding comment to PR'
+inputs:
+  message:  # comment
+    description: 'What to write'
+    required: true
+    default: 'Empty message'
+  GITHUB_TOKEN:
+    description: "Github token of repository"
+    required: true
+outputs:
+  time: # id of output
+    description: 'The time we we greeted you'
+runs:
+  using: 'node12'
+  main: 'index.js'
