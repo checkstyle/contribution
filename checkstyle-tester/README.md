@@ -49,137 +49,43 @@ When the script finishes its work the following directory structure will be crea
 
 You will find *index.html* file in /reports/diff directory. The file represents the summary report and will link to each individual project with an overview of the number of violations.
 
-## Preparation before Executing
+## Report generation
 
-Before you are ready to execute `diff.groovy`, you will have to prepare some external files and branches first.
+### Executing generation
 
-### projects-to-test-on.properties
+You can generate report in different ways:
+1) generate report yourself: [manual generation](./README_MANUAL_EXECUTION.md#executing-diffgroovy)
+2) generate report using github action.
 
-`projects-to-test-on.properties` lists all the projects that `diff.groovy` will execute. Anything that starts with `#` is considered a comment and is ignored.
-`projects-to-test-on.properties` is expected to be in the following format:
+To generate report using github action, you need to specify the URI for the 'raw' version of your configuration and projects-to-test-on.properties files in the description for the pull request. URI must be specified in the following format:
 
-> REPO_NAME|[local|git|hg]|URL|[COMMIT_ID]|[EXCLUDE FOLDERS]
+Diff Regression projects: {{URI to projects-to-test-on.properties}}
 
-You should modify `projects-to-test-on.properties` and test as many projects as possible. Each project has its own unique style and it is common to find new and different violations in 1 and not the others.
+Diff Regression config: {{URI to my_checks.xml}}
 
-You can also specify projects that are already available on your local file system in `projects-to-test-on.properties`.
-For this you can either use `git` or `hg` type which will clone the local repository into the workspace and use the specified branch.
-Alternatively you can use `local` type, where the specified branch is ignored and the current state on the disk is used as is.
-The latter does not depend on any specific version control being used.
-See the following examples:
+Examples of URIs:
+- https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/projects-to-test-on.properties
+- https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/my_check.xml
 
-```
-my_custom_project|local|/home/username/java/my_custom_project||
-my_custom_checkstyle|git|/home/username/java/git-repos/checkstyle/checkstyle|master|**/ignoreFolderOrFiles/**/*
-my_custom_repo|hg|/home/username/java/hg-repos/myRepo|default|
-```
+After that, you need to create specific comment to generate the desired report:
+- comment 'diff report' will start generating [Basic Difference Report](./README_MANUAL_EXECUTION.md#basic-difference-report) (for fix bugs);
+- comment 'single report' will start generating [Basic Single Report](./README_MANUAL_EXECUTION.md#basic-single-report) (for new checks).
 
-### Configuration File
+If you want to generate [Difference Report with Different Base and Patch Config](./README_MANUAL_EXECUTION.md#difference-report-with-different-base-and-patch-config) (for split properties, change property types, add a new property, etc...), you need to add one more URI to the pull request description. This URI must refer to patch config. The additional URI format should be like this:
 
-You will need to modify your configuration file that you wish to generate a report for. If you are doing diff mode, you can specify 2 configuration files if a new property or value is being introduced.
+Diff Regression patch config: {{URI to patch_config.xml}}
 
-**Note:** You can use `my_check.xml` as a base as it provides most of the necessary elements already added, but you are still required to customize it to what you are specifically building a report for.
+Then create comment 'diff report'. The Github action will use two config files to generate difference report.
 
-#### Special Configuration Additions
+### Generation examples
 
-There are a few ways to modify the configuration file to generate special reports.
+#### Basic Difference Report and Basic Single Report
 
-If you wish to generate an exception only report, where only exceptions are visible and violations are hidden, you can change the severity of your module to `ignore`. Exceptions are always reported with a severity of `error` which can't be turned off.
-Example:
-```
-<module name="FinalLocalVariable">
-    <property name="severity" value="ignore"/>
-</module>
-```
-
-If you wish to ignore specific cases from a report, you can use `SuppressionSingleFilter` or `SuppressionXpathSingleFilter` to hide them.
-Example:
-```
-    <module name="SuppressionSingleFilter">
-      <property name="message" value="Exception occurred while parsing"/>
-      <property name="checks" value="Checker"/>
-    </module>
-```
-
-##### Javadoc Regression
-
-Many javadoc comments found in other projects contain various errors since Checkstyle's Javadoc parser is slightly more strict. To avoid polluting the report with all these parsing errors, it is recommended to add and keep suppressions from `my_checks.xml` in your own config when working with the Javadoc checks.
-
-Example:
-```
-<?xml version="1.0"?>
-<!DOCTYPE module PUBLIC
-  "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
-  "https://checkstyle.org/dtds/configuration_1_3.dtd">
-<module name="Checker">
-  <property name="haltOnException" value="false"/>
-  <module name="TreeWalker">
-    <module name="SummaryJavadoc" />
-
-    <!-- suppress javadoc parsing errors -->
-    <module name="SuppressionXpathSingleFilter">
-      <property name="message" value="Javadoc comment at column \d+ has parse error"/>
-    </module>
-  </module>
-  <!-- suppress java parsing errors -->
-  <module name="SuppressionSingleFilter">
-    <property name="message" value="Exception occurred while parsing"/>
-    <property name="checks" value="Checker"/>
-  </module>
-</module>
-```
-
-## Executing diff.groovy
-
-`diff.groovy` is executed by calling groovy and passing in the command line arguments that specify the report you want generated.
-
-`groovy diff.groovy`
-
-### Examples
-
-#### Basic Difference Report
-
-`groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle --baseBranch master --patchBranch i111-my-fix --config my_check.xml --listOfProjects projects-to-test-on.properties`
-
-or with short command line arguments names:
-
-`groovy diff.groovy -r /home/johndoe/projects/checkstyle -b master -p i111-my-fix -c my_check.xml -l projects-to-test-on.properties`
+![Alt text](./screenshots/diff_report_example1.png?raw=true "Basic reports")
 
 #### Difference Report with Different Base and Patch Config
 
-If you want to specify different Checkstyle configs for base branch and patch branch use the following command:
-
-`groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle --baseBranch master --patchBranch i111-my-fix --baseConfig base_config.xml --patchConfig patch_config.xml --listOfProjects projects-to-test-on.properties`
-
-or with short command line arguments names:
-
-`groovy diff.groovy -r /home/johndoe/projects/checkstyle -b master -p i111-my-fix -bc base_config.xml -pc patch_config.xml -l projects-to-test-on.properties`
-
-#### Basic Single Report
-
-To generate the report only for the patch branch which contains your changes, use the following command:
-
-`groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle --patchBranch i111-my-fix --patchConfig patch_config.xml --listOfProjects projects-to-test-on.properties --mode single`
-
-or with short command line arguments names:
-
-`groovy diff.groovy -r /home/johndoe/projects/checkstyle -p i111-my-fix -pc patch_config.xml -l projects-to-test-on.properties -m single`
-
-## Deploying Report
-
-The created report can be deployed to github pages repo (https://pages.github.com/) or your own private web server to share with others.
-
-The following instructions are how to deploy to github pages repo.
-
-1) please follow instruction from https://pages.github.com/ to create your static web site on github;
-
-2) please copy the whole "reports/diff" folder to the newly created repo;
-
-3) please make sure that report is available as http://YOURUSER.github.io/ ;
-
-4) please make sure that at web site source links to violations are working as it is main part of report, just list of violations is not clear for most cases.
-
-If you are required to create multiple reports, you should deploy each one to their own sub-directory.
+![Alt text](./screenshots/diff_report_example2.png?raw=true "Report with Different Base and Patch Config")
 
 ## Checkstyle pitest Regression
 
