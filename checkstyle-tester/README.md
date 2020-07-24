@@ -63,29 +63,29 @@ Diff Regression projects: {{URI to projects-to-test-on.properties}}
 
 Diff Regression config: {{URI to my_checks.xml}}
 
-Examples of URIs:
-- https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/projects-to-test-on.properties
-- https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/my_check.xml
-
-After that, you need to create specific comment to generate the desired report:
-- comment 'diff report' will start generating [Basic Difference Report](./README_MANUAL_EXECUTION.md#basic-difference-report) (for fix bugs);
-- comment 'single report' will start generating [Basic Single Report](./README_MANUAL_EXECUTION.md#basic-single-report) (for new checks).
-
 If you want to generate [Difference Report with Different Base and Patch Config](./README_MANUAL_EXECUTION.md#difference-report-with-different-base-and-patch-config) (for split properties, change property types, add a new property, etc...), you need to add one more URI to the pull request description. This URI must refer to patch config. The additional URI format should be like this:
 
 Diff Regression patch config: {{URI to patch_config.xml}}
 
-Then create comment 'diff report'. The Github action will use two config files to generate difference report.
+Examples of URIs:
+- https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/projects-to-test-on.properties
+- https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/my_check.xml
+
+After that, you need to create specific comment `GitHub, generate report` to generate the report.
 
 ### Generation examples
 
-#### Basic Difference Report and Basic Single Report
+#### Basic Difference Report
 
-![Alt text](./screenshots/diff_report_example1.png?raw=true "Basic reports")
+![Alt text](./screenshots/diff_report_example.png?raw=true "Basic report")
+
+#### Basic Single Report
+
+![Alt text](./screenshots/single_report_example.png?raw=true "Single report")
 
 #### Difference Report with Different Base and Patch Config
 
-![Alt text](./screenshots/diff_report_example2.png?raw=true "Report with Different Base and Patch Config")
+![Alt text](./screenshots/diff_report_with_patch_config.png?raw=true "Report with Different Base and Patch Config")
 
 ## Checkstyle pitest Regression
 
@@ -105,7 +105,7 @@ First, you must create a config that has the check using as many permutations of
 
 Next you must create a new branch off the PR branch which must be modified to embed the applied mutation into the code. If your surviving mutation is `replaced equality check with true → SURVIVED`, then you must physically change the code in the new branch and replace the original condition with `true`. You can ensure you changed the code correctly because the test suite will still pass with this change in place.
 
-With all that done, you can now call groovy. **baseBranch** will be your PR branch that has the failing pitest mutations. **patchBranch** must be the new branch you have created off the PR branch mentioned in the previous paragraph. **config** must be the custom configuration created with all the permutations. 
+With all that done, you can now call groovy. **baseBranch** will be your PR branch that has the failing pitest mutations. **patchBranch** must be the new branch you have created off the PR branch mentioned in the previous paragraph. **config** must be the custom configuration created with all the permutations.
 
 `groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle --baseBranch i111-my-fix --patchBranch i111-my-fix-mutation --config config.xml --listOfProjects projects-to-test-on.properties`
 
@@ -132,7 +132,7 @@ Finally, just run checkstyle-tester as described above.
 
 ## Testing ANTLR Grammar Changes
 
-After modifying Checkstyle's ANTLR grammar, it is neccessary to compare how Checkstyle's checks are affected by your changes.  This is done by comparing the check violation output of your modified branch of Checkstyle against Checkstyle's master branch, and comparing the abstract syntax trees of both branches. 
+After modifying Checkstyle's ANTLR grammar, it is neccessary to compare how Checkstyle's checks are affected by your changes.  This is done by comparing the check violation output of your modified branch of Checkstyle against Checkstyle's master branch, and comparing the abstract syntax trees of both branches.
 
 #### Check Regression Report
 
@@ -143,11 +143,11 @@ You may modify all the checks that depend on external files to use default setti
 #### ANTLR Regression Report
 
  This report is generated using the [`launch_diff_antlr.sh`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/launch_diff_antlr.sh) script.  This script generates a report based on the differences in the ASTs generated from your PR branch and Checkstyle's 'main' branch using projects that are selected (uncommented) in the [`projects-to-test-on.properties`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.properties) file. For the ANTLR regression report, we usually only want to see that changes to the Checkstyle project. To ensure that you test against any new inputs that you have created (unit test inputs, etc.), please make sure that you comment out all other projects, and add the following line to [`projects-to-test-on.properties`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.properties):
- 
+
  `my-checkstyle|git|https://github.com/<username>/checkstyle.git|<pr-branch>||`
 
   Where `<username>` and `<pr-branch>` are your github username and the branch that your Checkstyle PR is based on, respectively. To use [`launch_diff_antlr.sh`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/launch_diff_antlr.sh), you must modify the [`launch_diff_variables.sh`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/launch_diff_variables.sh) file to reflect the location of the variables that  [`launch_diff_antlr.sh`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/launch_diff_antlr.sh) uses to produce the report. Please note that `PULL_REMOTE` will need to be set to the name of the remote repository where your branch resides. If your branch is found at `origin/name-of-your-branch-here`, you will set `PULL_REMOTE=origin`. Then, run:
-  
+
   `./launch_diff_antlr.sh name-of-your-branch-here`.
 
 *Note: if you are experiencing maven 'out of memory' errors from maven, see https://cwiki.apache.org/confluence/display/MAVEN/OutOfMemoryError*
