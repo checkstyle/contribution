@@ -23,7 +23,7 @@
         <java.version>1.8</java.version>
         <tools.jar.version>${java.version}.0</tools.jar.version>
         <tools.jar.path>${java.home}/../lib/tools.jar</tools.jar.path>
-        <checkstyle.version>8.34</checkstyle.version>
+        <checkstyle.version>8.35</checkstyle.version>
         <checkstyle.configLocation>https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-${checkstyle.version}/config/checkstyle_checks.xml</checkstyle.configLocation>
         <junit.version>4.12</junit.version>
     </properties>
