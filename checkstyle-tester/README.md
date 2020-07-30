@@ -57,7 +57,19 @@ You can generate report in different ways:
 1) generate report yourself: [manual generation](./README_MANUAL_EXECUTION.md#executing-diffgroovy)
 2) generate report using github action.
 
-To generate report using github action, you need to specify the URI for the 'raw' version of your configuration and projects-to-test-on.properties files in the description for the pull request. URI must be specified in the following format:
+To generate report using github action, you need to provide links to "raw" versions of your configuration and projects-to-test-on.properties files.
+There are many ways to do that, but recommended one is to create [GitHub Gist](https://gist.github.com/) for each file.
+
+After gist is created, click on "Raw" button on right side.
+![Alt text](./screenshots/gist_raw_button.png?raw=true "Gist raw button example")
+
+And copy the link.
+![Alt text](./screenshots/gist_link.png?raw=true "Link example")
+
+Alternative way is to commit file to some repository and branch, get its raw version and copy link.
+![Alt text](./screenshots/github_raw_button.png?raw=true "Repository raw button example")
+
+When you have links, add following lines to your PR description (replace placeholders with your links)
 
 Diff Regression projects: {{URI to projects-to-test-on.properties}}
 
@@ -69,9 +81,10 @@ Diff Regression patch config: {{URI to patch_config.xml}}
 
 Examples of URIs:
 - https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/projects-to-test-on.properties
-- https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/my_check.xml
+- https://gist.githubusercontent.com/strkkk/121653f4a334be38b9e77e4245e144e2/raw/691fe6e90ff40473707ce77518b7a0b058bd0955/config.xml
 
-After that, you need to create specific comment `GitHub, generate report` to generate the report.
+After that, you need to create specific comment `GitHub, generate report` (no text/spaces/line feeds before and after) to generate the report.
+Action can be triggered on editing a comment as well, so if you made a typo or something, there is no need to add new comment, you can just edit comment to appropriate format.
 
 ### Generation examples
 
