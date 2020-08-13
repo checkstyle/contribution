@@ -50,7 +50,9 @@ addons:
 
 script:
   - xmlstarlet ed --inplace -d "//mirrors" /home/travis/.m2/settings.xml
-  - eval $CMD
+  - |
+    set -e
+    eval $CMD
 
 after_success:
 
