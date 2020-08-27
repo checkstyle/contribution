@@ -129,8 +129,8 @@ public final class DiffReport {
     private static boolean isInList(List<CheckstyleRecord> list,
             CheckstyleRecord testedRecord) {
         boolean belongsToList = false;
-        for (CheckstyleRecord record : list) {
-            if (testedRecord.specificEquals(record)) {
+        for (CheckstyleRecord checkstyleRecord : list) {
+            if (testedRecord.specificEquals(checkstyleRecord)) {
                 belongsToList = true;
                 break;
             }
