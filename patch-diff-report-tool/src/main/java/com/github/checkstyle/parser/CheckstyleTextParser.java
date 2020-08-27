@@ -173,14 +173,14 @@ public final class CheckstyleTextParser {
                 xref = patchFile.getPath();
             }
 
-            final CheckstyleRecord record = new CheckstyleRecord(diff.getIndex(),
+            final CheckstyleRecord checkstyleRecord = new CheckstyleRecord(diff.getIndex(),
                     diff.getLineNo() + 1, 1, DEFAULT_SEVERITY, DEFAULT_SOURCE, diff.getLine(),
                     xref);
 
             statistics.addSeverityRecord(DEFAULT_SEVERITY, diff.getIndex());
             statistics.addModuleRecord(DEFAULT_SOURCE, diff.getIndex());
 
-            records.add(record);
+            records.add(checkstyleRecord);
         }
 
         diffReport.addRecords(records, filePath);
@@ -219,13 +219,14 @@ public final class CheckstyleTextParser {
         final Statistics statistics = diffReport.getStatistics();
         final List<CheckstyleRecord> records = new ArrayList<>();
 
-        final CheckstyleRecord record = new CheckstyleRecord(otherIndex, 1, 1, DEFAULT_SEVERITY,
+        final CheckstyleRecord checkstyleRecord =
+            new CheckstyleRecord(otherIndex, 1, 1, DEFAULT_SEVERITY,
                 DEFAULT_SOURCE, "File not found.", xref);
 
         statistics.addSeverityRecord(DEFAULT_SEVERITY, otherIndex);
         statistics.addModuleRecord(DEFAULT_SOURCE, otherIndex);
 
-        records.add(record);
+        records.add(checkstyleRecord);
 
         diffReport.addRecords(records, filePath);
 

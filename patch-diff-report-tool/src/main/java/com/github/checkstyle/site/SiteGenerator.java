@@ -163,10 +163,10 @@ public final class SiteGenerator {
 
             xrefGenerator.reset();
 
-            for (CheckstyleRecord record : records) {
-                final String xreference = xrefGenerator.generateXref(record.getXref(),
+            for (CheckstyleRecord checkstyleRecord : records) {
+                final String xreference = xrefGenerator.generateXref(checkstyleRecord.getXref(),
                             paths.isShortFilePaths());
-                record.setXref(xreference);
+                checkstyleRecord.setXref(xreference);
             }
 
             if (refFilesPath != null) {
