@@ -300,7 +300,15 @@ def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo, checkstylePatchR
         project, diffCount ->
             summaryIndexHtml << ("<a href='$project/index.html'>$project</a>")
             if (diffCount[0] != 0) {
-                summaryIndexHtml << (" (&#177;${diffCount[0]}, <span style=\"color: green;\">+${diffCount[1]}, </span><span style=\"color: red;\">-${diffCount[2]}</span>)")
+                if(diffCount[1] == 0) {
+                    summaryIndexHtml << (" ( &#177;${diffCount[0]}, <span style=\"color: red;\">-${diffCount[2]}</span> )")
+                }
+                else if (diffCount[2] == 0) {
+                    summaryIndexHtml << (" ( &#177;${diffCount[0]}, <span style=\"color: green;\">+${diffCount[1]} )")
+                }
+                else {
+                    summaryIndexHtml << (" ( &#177;${diffCount[0]}, <span style=\"color: red;\">-${diffCount[2]}</span>, <span style=\"color: green;\">+${diffCount[1]}</span> )")
+                }
             }
             summaryIndexHtml << ('<br />')
             summaryIndexHtml << ('\n')
@@ -388,16 +396,24 @@ def getProjectsStatistic(diffDir) {
                 def indexHtmlFile = new File(fileObjf.absolutePath + '/index.html')
                 indexHtmlFile.eachLine {
                     line ->
-                        def addPatchLinePattern = Pattern.compile("totalPatch\">[0-9]++ .[0-9]++ removed, (?<totalAdd>[0-9]++)")
-                        def addPatchLineMatcher = addPatchLinePattern.matcher(line)
-                        if (addPatchLineMatcher.find()) {
-                            addedDiff = Integer.valueOf(addPatchLineMatcher.group('totalAdd'))
-                        }
+                        def totalPatch = Pattern.compile("id=\"totalPatch\">[0-9]++")
+                        def totalPatchMatcher = totalPatch.matcher(line)
+                        if (totalPatchMatcher.find()) {
+                            def removedPatchLinePattern = Pattern.compile(".(?<totalRemoved>[0-9]++) removed")
+                            def removedPatchLineMatcher = removedPatchLinePattern.matcher(line)
+                            if (removedPatchLineMatcher.find()) {
+                                removedDiff = Integer.valueOf(removedPatchLineMatcher.group('totalRemoved'))
+                            } else {
+                                removedDiff = 0;
+                            }
 
-                        def removedPatchLinePattern = Pattern.compile("totalPatch\">[0-9]++ .(?<totalRemoved>[0-9]++)")
-                        def removedPatchLineMatcher = removedPatchLinePattern.matcher(line)
-                        if (removedPatchLineMatcher.find()) {
-                            removedDiff = Integer.valueOf(removedPatchLineMatcher.group('totalRemoved'))
+                            def addPatchLinePattern = Pattern.compile("(?<totalAdd>[0-9]++) added")
+                            def addPatchLineMatcher = addPatchLinePattern.matcher(line)
+                            if (addPatchLineMatcher.find()) {
+                                addedDiff = Integer.valueOf(addPatchLineMatcher.group('totalAdd'))
+                            } else {
+                                addedDiff = 0;
+                            }
                         }
 
                         def linePattern = Pattern.compile("totalDiff\">(?<totalDiff>[0-9]++)")
