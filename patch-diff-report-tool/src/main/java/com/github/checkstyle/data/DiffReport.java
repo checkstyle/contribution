@@ -24,7 +24,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import com.github.checkstyle.parser.CheckstyleReportsParser;
 
@@ -37,6 +43,9 @@ import com.github.checkstyle.parser.CheckstyleReportsParser;
  *
  */
 public final class DiffReport {
+
+    /** Number of records to process at a time when looking for differences. */
+    private static final int SPLIT_SIZE = 100;
 
     /**
      * Container for parsed data,
@@ -61,6 +70,22 @@ public final class DiffReport {
 
     public Statistics getStatistics() {
         return statistics;
+    }
+
+    /**
+     * Utility to merge the patch related contents of the {@code other} class to the current.
+     *
+     * @param other The other class to merge.
+     */
+    public void mergePatch(DiffReport other) {
+        mergeRecords(other.records);
+        statistics.copyPatch(other.statistics);
+    }
+
+    private void mergeRecords(Map<String, List<CheckstyleRecord>> other) {
+        for (Entry<String, List<CheckstyleRecord>> item : other.entrySet()) {
+            addRecords(item.getValue(), item.getKey());
+        }
     }
 
     /**
@@ -103,16 +128,44 @@ public final class DiffReport {
      */
     private static List<CheckstyleRecord> produceDiff(
             List<CheckstyleRecord> list1, List<CheckstyleRecord> list2) {
+        final List<CheckstyleRecord> diff;
+        try {
+            diff = produceDiffEx(list1, list2);
+            diff.addAll(produceDiffEx(list2, list1));
+        }
+        catch (InterruptedException | ExecutionException ex) {
+            throw new IllegalStateException("Multi-threading failure reported", ex);
+        }
+
+        return diff;
+    }
+
+    private static List<CheckstyleRecord> produceDiffEx(
+            List<CheckstyleRecord> list1, List<CheckstyleRecord> list2)
+            throws InterruptedException, ExecutionException {
         final List<CheckstyleRecord> diff = new ArrayList<>();
-        for (CheckstyleRecord rec1 : list1) {
-            if (!isInList(list2, rec1)) {
-                diff.add(rec1);
+        if (list1.size() < SPLIT_SIZE) {
+            for (CheckstyleRecord rec1 : list1) {
+                if (!isInList(list2, rec1)) {
+                    diff.add(rec1);
+                }
             }
         }
-        for (CheckstyleRecord rec2 : list2) {
-            if (!isInList(list1, rec2)) {
-                diff.add(rec2);
+        else {
+            final ExecutorService executor =
+                Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+            final List<Future<List<CheckstyleRecord>>> futures = new ArrayList<>();
+            final int size = list1.size();
+            for (int i = 0; i < size; i += SPLIT_SIZE) {
+                futures.add(executor.submit(new MultiThreadedDiff(list1, list2, i, Math.min(size, i
+                        + SPLIT_SIZE))));
             }
+
+            for (Future<List<CheckstyleRecord>> future : futures) {
+                diff.addAll(future.get());
+            }
+
+            executor.shutdown();
         }
         return diff;
     }
@@ -141,7 +194,7 @@ public final class DiffReport {
     /**
      * Generates statistical information and puts in in the accumulator.
      */
-    public void getDiffStatistics() {
+    public void generateDiffStatistics() {
         statistics.setFileNumDiff(records.size());
         for (Map.Entry<String, List<CheckstyleRecord>> entry
                 : records.entrySet()) {
@@ -180,6 +233,48 @@ public final class DiffReport {
             else {
                 return difference;
             }
+        }
+    }
+
+    /** Separate class to multi-thread 2 lists checking if items from 1 is in the other. */
+    private static final class MultiThreadedDiff implements Callable<List<CheckstyleRecord>> {
+        /** First list to examine. */
+        private List<CheckstyleRecord> list1;
+        /** Second list to examine. */
+        private List<CheckstyleRecord> list2;
+        /** Inclusive start position of the first list. */
+        private int list1Start;
+        /** Non-inclusive End position of the first list. */
+        private int list1End;
+
+        /**
+         * Default constructor.
+         *
+         * @param list1 First list to examine.
+         * @param list2 Second list to examine.
+         * @param list1Start Inclusive start position of the first list.
+         * @param list1End Non-inclusive End position of the first list.
+         */
+        private MultiThreadedDiff(List<CheckstyleRecord> list1, List<CheckstyleRecord> list2,
+                int list1Start, int list1End) {
+            this.list1 = list1;
+            this.list2 = list2;
+            this.list1Start = list1Start;
+            this.list1End = list1End;
+        }
+
+        @Override
+        public List<CheckstyleRecord> call() throws Exception {
+            final List<CheckstyleRecord> diff = new ArrayList<>();
+
+            for (int i = list1Start; i < list1End; i++) {
+                final CheckstyleRecord rec1 = list1.get(i);
+
+                if (!isInList(list2, rec1)) {
+                    diff.add(rec1);
+                }
+            }
+            return diff;
         }
     }
 

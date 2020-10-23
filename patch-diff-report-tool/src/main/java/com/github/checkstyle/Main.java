@@ -68,11 +68,6 @@ public final class Main {
             + "\t-h - simply shows help message.";
 
     /**
-     * Number of "file" xml tags parsed at one iteration of parser.
-     */
-    public static final int XML_PARSE_PORTION_SIZE = 50;
-
-    /**
      * Name for the site file.
      */
     public static final Path CONFIG_PATH = Paths.get("configuration.html");
@@ -162,7 +157,7 @@ public final class Main {
                 // XML parsing stage
                 System.out.println("XML parsing is started.");
                 diffReport = CheckstyleReportsParser.parse(paths.getBaseReportPath(),
-                        paths.getPatchReportPath(), XML_PARSE_PORTION_SIZE);
+                        paths.getPatchReportPath());
             }
             else {
                 // file parsing stage

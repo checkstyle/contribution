@@ -114,6 +114,18 @@ public class Statistics {
     }
 
     /**
+     * Utility to merge the patch related contents of the {@code other} class to the current.
+     *
+     * @param other The other class to merge.
+     */
+    public void copyPatch(Statistics other) {
+        severityNumPatch = other.severityNumPatch;
+        moduleNumPatch = other.moduleNumPatch;
+        fileNumPatch = other.fileNumPatch;
+        uniqueMessagesPatch = other.uniqueMessagesPatch;
+    }
+
+    /**
      * Getter for total number of severity records for difference.
      *
      * @return total number of severity records.

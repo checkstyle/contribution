@@ -99,7 +99,7 @@ public final class CheckstyleTextParser {
                 break;
             }
         }
-        content.getDiffStatistics();
+        content.generateDiffStatistics();
         return content;
     }
 

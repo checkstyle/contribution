@@ -24,6 +24,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLStreamException;
@@ -116,136 +121,168 @@ public final class CheckstyleReportsParser {
      *        path to base XML file.
      * @param patchXml
      *        path to patch XML file.
-     * @param portionSize
-     *        single portion of XML file processed at once by any parser.
      * @return parsed content.
      * @throws FileNotFoundException
      *         if files not found.
      * @throws XMLStreamException
      *         on internal parser error.
      */
-    public static DiffReport parse(Path baseXml, Path patchXml, int portionSize)
-                    throws FileNotFoundException, XMLStreamException {
-        final DiffReport content = new DiffReport();
-        final XMLEventReader baseReader = StaxUtils.createReader(baseXml);
-        final XMLEventReader patchReader = StaxUtils.createReader(patchXml);
-        while (baseReader.hasNext() || patchReader.hasNext()) {
-            parseXmlPortion(content, baseReader, portionSize, BASE_REPORT_INDEX);
-            parseXmlPortion(content, patchReader, portionSize, PATCH_REPORT_INDEX);
+    public static DiffReport parse(Path baseXml, Path patchXml)
+                    throws XMLStreamException {
+        final ExecutorService executor = Executors.newCachedThreadPool();
+
+        final Future<DiffReport> baseFuture =
+            executor.submit(new MultiThreadedParser(baseXml, BASE_REPORT_INDEX));
+        final Future<DiffReport> patchFuture =
+            executor.submit(new MultiThreadedParser(patchXml, PATCH_REPORT_INDEX));
+
+        final DiffReport content;
+        final DiffReport patchContent;
+        try {
+            content = baseFuture.get();
+            patchContent = patchFuture.get();
         }
-        content.getDiffStatistics();
+        catch (InterruptedException | ExecutionException ex) {
+            throw new XMLStreamException("Multi-threading failure reported", ex);
+        }
+
+        executor.shutdown();
+
+        content.mergePatch(patchContent);
+        content.generateDiffStatistics();
+
         return content;
     }
 
-    /**
-     * Parses portion of the XML report.
-     *
-     * @param diffReport
-     *        container for parsed data.
-     * @param reader
-     *        StAX parser interface.
-     * @param numOfFilenames
-     *        number of "file" tags to parse.
-     * @param index
-     *        internal index of the parsed file.
-     * @throws XMLStreamException
-     *         on internal parser error.
-     */
-    private static void parseXmlPortion(DiffReport diffReport,
-            XMLEventReader reader, int numOfFilenames, int index)
-                    throws XMLStreamException {
-        int counter = numOfFilenames;
-        String filename = null;
-        List<CheckstyleRecord> records = null;
-        while (reader.hasNext()) {
-            final XMLEvent event = reader.nextEvent();
-            if (event.isStartElement()) {
-                final StartElement startElement = event.asStartElement();
-                final String startElementName = startElement.getName()
-                        .getLocalPart();
-                // file tag encounter
-                if (startElementName.equals(FILE_TAG)) {
-                    counter--;
-                    diffReport.getStatistics().incrementFileCount(index);
-                    final Iterator<Attribute> attributes = startElement
-                            .getAttributes();
-                    while (attributes.hasNext()) {
-                        final Attribute attribute = attributes.next();
-                        if (attribute.getName().toString()
-                                .equals(FILENAME_ATTR)) {
-                            filename = attribute.getValue();
+    /** Separate class to multi-thread parsing of XML files. */
+    private static final class MultiThreadedParser implements Callable<DiffReport> {
+        /** Path of XML file to parse. */
+        private Path xml;
+        /** Internal index of the parsed file. */
+        private int readerIndex;
+
+        /**
+         * Default constructor.
+         *
+         * @param xml Path of XML file to parse.
+         * @param readerIndex Internal index of the parsed file.
+         */
+        private MultiThreadedParser(Path xml, int readerIndex) {
+            this.xml = xml;
+            this.readerIndex = readerIndex;
+        }
+
+        @Override
+        public DiffReport call() throws Exception {
+            final DiffReport output = new DiffReport();
+            final XMLEventReader reader = StaxUtils.createReader(xml);
+            parseXmlPortion(output, reader, readerIndex);
+            return output;
+        }
+
+        /**
+         * Parses portion of the XML report.
+         *
+         * @param diffReport
+         *        container for parsed data.
+         * @param reader
+         *        StAX parser interface.
+         * @param index
+         *        internal index of the parsed file.
+         * @throws XMLStreamException
+         *         on internal parser error.
+         */
+        private static void parseXmlPortion(DiffReport diffReport,
+                XMLEventReader reader, int index)
+                        throws XMLStreamException {
+            String filename = null;
+            List<CheckstyleRecord> records = null;
+            while (reader.hasNext()) {
+                final XMLEvent event = reader.nextEvent();
+                if (event.isStartElement()) {
+                    final StartElement startElement = event.asStartElement();
+                    final String startElementName = startElement.getName()
+                            .getLocalPart();
+                    // file tag encounter
+                    if (startElementName.equals(FILE_TAG)) {
+                        diffReport.getStatistics().incrementFileCount(index);
+                        final Iterator<Attribute> attributes = startElement
+                                .getAttributes();
+                        while (attributes.hasNext()) {
+                            final Attribute attribute = attributes.next();
+                            if (attribute.getName().toString()
+                                    .equals(FILENAME_ATTR)) {
+                                filename = attribute.getValue();
+                            }
                         }
+                        records = new ArrayList<>();
                     }
-                    records = new ArrayList<>();
+                    // error tag encounter
+                    else if (startElementName.equals(ERROR_TAG)) {
+                        records.add(parseErrorTag(startElement, diffReport.getStatistics(), index,
+                                filename));
+                    }
                 }
-                // error tag encounter
-                else if (startElementName.equals(ERROR_TAG)) {
-                    records.add(parseErrorTag(startElement, diffReport.getStatistics(), index,
-                            filename));
+                if (event.isEndElement()) {
+                    final EndElement endElement = event.asEndElement();
+                    if (endElement.getName().getLocalPart().equals(FILE_TAG)) {
+                        diffReport.addRecords(records, filename);
+                    }
                 }
             }
-            if (event.isEndElement()) {
-                final EndElement endElement = event.asEndElement();
-                if (endElement.getName().getLocalPart().equals(FILE_TAG)) {
-                    diffReport.addRecords(records, filename);
-                    if (counter == 0) {
+        }
+
+        /**
+         * Parses "error" XML tag.
+         *
+         * @param startElement
+         *        cursor of StAX parser pointed on the tag.
+         * @param statistics
+         *        container accumulating statistics.
+         * @param index
+         *        internal index of the parsed file.
+         * @param filename
+         *        file name.
+         * @return parsed data as CheckstyleRecord instance.
+         */
+        private static CheckstyleRecord parseErrorTag(StartElement startElement,
+                Statistics statistics, int index, String filename) {
+            int line = -1;
+            int column = -1;
+            String source = null;
+            String message = null;
+            String severity = null;
+            final Iterator<Attribute> attributes = startElement
+                    .getAttributes();
+            while (attributes.hasNext()) {
+                final Attribute attribute = attributes.next();
+                final String attrName = attribute.getName().toString();
+                switch (attrName) {
+                    case LINE_ATTR:
+                        line = Integer.parseInt(attribute.getValue());
                         break;
-                    }
+                    case COLUMN_ATTR:
+                        column = Integer.parseInt(attribute.getValue());
+                        break;
+                    case SEVERITY_ATTR:
+                        severity = attribute.getValue();
+                        statistics.addSeverityRecord(severity, index);
+                        break;
+                    case MESSAGE_ATTR:
+                        message = attribute.getValue();
+                        break;
+                    case SOURCE_ATTR:
+                        source = attribute.getValue();
+                        statistics.addModuleRecord(source, index);
+                        break;
+                    default:
+                        break;
                 }
             }
-        }
-    }
+            return new CheckstyleRecord(index,
+                    line, column, severity, source, message, filename);
 
-    /**
-     * Parses "error" XML tag.
-     *
-     * @param startElement
-     *        cursor of StAX parser pointed on the tag.
-     * @param statistics
-     *        container accumulating statistics.
-     * @param index
-     *        internal index of the parsed file.
-     * @param filename
-     *        file name.
-     * @return parsed data as CheckstyleRecord instance.
-     */
-    private static CheckstyleRecord parseErrorTag(StartElement startElement,
-            Statistics statistics, int index, String filename) {
-        int line = -1;
-        int column = -1;
-        String source = null;
-        String message = null;
-        String severity = null;
-        final Iterator<Attribute> attributes = startElement
-                .getAttributes();
-        while (attributes.hasNext()) {
-            final Attribute attribute = attributes.next();
-            final String attrName = attribute.getName().toString();
-            switch (attrName) {
-                case LINE_ATTR:
-                    line = Integer.parseInt(attribute.getValue());
-                    break;
-                case COLUMN_ATTR:
-                    column = Integer.parseInt(attribute.getValue());
-                    break;
-                case SEVERITY_ATTR:
-                    severity = attribute.getValue();
-                    statistics.addSeverityRecord(severity, index);
-                    break;
-                case MESSAGE_ATTR:
-                    message = attribute.getValue();
-                    break;
-                case SOURCE_ATTR:
-                    source = attribute.getValue();
-                    statistics.addModuleRecord(source, index);
-                    break;
-                default:
-                    break;
-            }
         }
-        return new CheckstyleRecord(index,
-                line, column, severity, source, message, filename);
-
     }
 
 }
