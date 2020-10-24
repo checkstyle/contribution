@@ -80,7 +80,9 @@ If you want to generate [Difference Report with Different Base and Patch Config]
 Diff Regression patch config: {{URI to patch_config.xml}}
 
 Examples of URIs:
+
 - https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/projects-to-test-on.properties
+
 - https://gist.githubusercontent.com/strkkk/121653f4a334be38b9e77e4245e144e2/raw/691fe6e90ff40473707ce77518b7a0b058bd0955/config.xml
 
 After that, you need to create specific comment `GitHub, generate report` (no text/spaces/line feeds before and after) to generate the report.
@@ -166,7 +168,6 @@ You may modify all the checks that depend on external files to use default setti
   `./launch_diff_antlr.sh name-of-your-branch-here`.
 
 *Note: if you are experiencing maven 'out of memory' errors from maven, see https://cwiki.apache.org/confluence/display/MAVEN/OutOfMemoryError*
-
 
 ## Troubleshooting
 

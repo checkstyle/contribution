@@ -13,6 +13,7 @@ cd target
 ```
 
 ## Xdoc
+
 Prepare releasenotes 7.3 for commit in /home/user/opensource/checkstyle:
 
 ```bash
