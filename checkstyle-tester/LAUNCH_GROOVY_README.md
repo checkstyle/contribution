@@ -4,25 +4,25 @@ Checkstyle report generation
 
 **launch.groovy** is a script which allows you to generate Checkstyle report over target projects. It invokes Maven Checkstyle plugin. In order to use the script you should run the following command in your command line:
 
-```
+```bash
 groovy launch.groovy --listOfProjects projects-to-test-on.properties --config my_check.xml
 ```
 
 or with short command line arguments names:
 
-```
+```bash
 groovy launch.groovy -l projects-to-test-on.properties -c my_check.xml
 ```
 
 If you want to force Maven Checkstyle Plugin to ignore exceptions:
 
-```
+```bash
 groovy launch.groovy --listOfProjects projects-to-test-on.properties --config my_check.xml --ignoreExceptions
 ```
 
 or with short command line arguments names:
 
-```
+```bash
 groovy launch.groovy -l projects-to-test-on.properties -c my_check.xml -i
 ```
 
@@ -55,20 +55,20 @@ You may see failure of `TreeWalker` but as long as it is applied for no-compilab
 
 Please use `-Dcheckstyle.consoleOutput=true` option if you need to see all Checkstyle errors in console, but expect it to print very and very much lines of terminal logs in this case. Launch command in this case will be:
 
-```
+```bash
 groovy launch.groovy projects-to-test-on.properties my_check.xml -Dcheckstyle.consoleOutput=true
 ```
 
 **Attention:** this project by default uses the latest SNAPSHOT version of [Checkstyle](https://github.com/checkstyle/contribution/search?utf8=%E2%9C%93&q=path%3Acheckstyle-tester+filename%3Apom.xml+%22checkstyle.version%22&type=) and the latest released version of [sevntu.checkstyle](https://github.com/checkstyle/contribution/search?utf8=%E2%9C%93&q=path%3Acheckstyle-tester+filename%3Apom.xml+%22sevntu.checkstyle.version%22&type=).
 If you you need to use custom (snapshot) versions please update pom.xml to reference that versions ([checkstyle version](https://github.com/checkstyle/contribution/blob/35d35dfcc48e2022403231e41aac8bf96126acc9/checkstyle-tester/pom.xml#L15), [sevntu.checkstyle version](https://github.com/checkstyle/contribution/blob/35d35dfcc48e2022403231e41aac8bf96126acc9/checkstyle-tester/pom.xml#L16)), and please make sure that custom(newly generated) versions are located in your local maven repo
 
-```
+```bash
 ls  ~/.m2/repository/com/puppycrawl/tools/checkstyle/
 ```
 
 To build SNAPSHOT version of `checkstyle` please run in its folder (local git repository):
 
-```
+```bash
 mvn clean install -Pno-validations
 ```
 
@@ -82,7 +82,7 @@ launch.groovy has no way to protect against this as branch with change isn't spe
 If you want to validate new check from `sevntu.checkstyle`(https://github.com/sevntu-checkstyle/sevntu.checkstyle) project,
 before you use "launch.groovy" you need to clone it and deploy to your local maven repo by following command
 
-```
+```bash
 ./deploy.sh --maven
 ```
 

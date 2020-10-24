@@ -13,23 +13,24 @@ usage example:
 
 You have 2 different checkstyle repos, original (base) and forked (patch), for each of them do 4-7:
 
-4) go to repo folder and execute in console `mvn clean install` <br/>
-5) go to `./contribution/checkstyle-tester` directory, uncomment all/required lines in `projects-to-test-on.properties`, edit  `my_check.xml`<br/>
-6) execute `groovy launch.groovy --listOfProjects projects-to-test-on.properties --config my_check.xml --ignoreExceptions`<br/>
-7) copy `checkstyle-result.xml` from `checkstyle-tester/reports/project-name/` to some other location.<br/>
+4) go to repo folder and execute in console `mvn clean install`
+5) go to `./contribution/checkstyle-tester` directory, uncomment all/required lines in `projects-to-test-on.properties`, edit  `my_check.xml`
+6) execute `groovy launch.groovy --listOfProjects projects-to-test-on.properties --config my_check.xml --ignoreExceptions`
+7) copy `checkstyle-result.xml` from `checkstyle-tester/reports/project-name/` to some other location.
 
-8) Now execute this utility with 6 command line arguments:<br/>
+8) Now execute this utility with 6 command line arguments:
 
-`--baseReport` - path to the base checkstyle-result.xml (optional argument, if absent then only configuration and violations for patch will be in the report);<br/>
-`--patchReport` - path to the patch checkstyle-result.xml (required argument);<br/>
-`--refFiles` - path to the source files under check (optional argument);<br/>
-`--output` - path to store the resulting diff report (optional argument, default: ~/XMLDiffGen_report_yyyy.mm.dd_hh_mm_ss)<br/>
-`--baseConfig` - path to the base checkstyle configuration xml file (optional argument);<br/>
-`--patchConfig` - path to the patch checkstyle configuration xml file (optional argument);<br/>
-`--shortFilePaths` - Option to save report file paths as a shorter version to prevent long paths. This option is useful for Windows users where they are restricted to maximum directory depth.<br />
-`-h` - shows help message.<br/>
-
-
+`--baseReport` - path to the base checkstyle-result.xml (optional argument, if absent then only configuration and violations for patch will be in the report); \
+`--patchReport` - path to the patch checkstyle-result.xml (required argument); \
+`--refFiles` - path to the source files under check (optional argument); \
+`--output` - path to store the resulting diff report (optional argument, default: ~/XMLDiffGen_report_yyyy.mm.dd_hh_mm_ss) \
+`--baseConfig` - path to the base checkstyle configuration xml file (optional argument); \
+`--patchConfig` - path to the patch checkstyle configuration xml file (optional argument); \
+`--shortFilePaths` - Option to save report file paths as a shorter version to prevent long paths. This option is useful for Windows users where they are restricted to maximum directory depth. \
+`-h` - shows help message.
 
 Example:
-`java -jar ./patch-diff-report-tool-0.1-SNAPSHOT-jar-with-dependencies.jar --baseReport ~/contribution/checkstyle-tester/location1/checkstyle-result.xml --patchReport ~/contribution/checkstyle-tester/location2/checkstyle-result.xml --refFiles ~/contribution/checkstyle-tester/src/main/java --output ~/contribution/checkstyle-tester/site_result --baseConfig ~/contribution/checkstyle-tester/my_check.xml --patchConfig ~/contribution/checkstyle-tester/my_other_check.xml`
+
+```bash
+java -jar ./patch-diff-report-tool-0.1-SNAPSHOT-jar-with-dependencies.jar --baseReport ~/contribution/checkstyle-tester/location1/checkstyle-result.xml --patchReport ~/contribution/checkstyle-tester/location2/checkstyle-result.xml --refFiles ~/contribution/checkstyle-tester/src/main/java --output ~/contribution/checkstyle-tester/site_result --baseConfig ~/contribution/checkstyle-tester/my_check.xml --patchConfig ~/contribution/checkstyle-tester/my_other_check.xml`
+```

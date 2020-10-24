@@ -1,17 +1,20 @@
 # CHECKSTYLE-TESTER
 
 Launch command for testing against google_checks.xml and very [basic set of java projects](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.properties):
-```
+
+```bash
 ./launch.sh
 ```
 
 Launch command for testing against your custom config (one or few Checks):
-```
+
+```bash
 ./launch.sh -Dcheckstyle.config.location=my_check.xml
 ```
 
 Launch command for testing against all Checks to validate that there is no Exceptions (all validation warnings are ignored) :
-```
+
+```bash
 ./launch.sh -Dcheckstyle.config.location=checks-nonjavadoc-error.xml
 ```
 
@@ -21,18 +24,21 @@ If you you need to use custom(snapshot) versons please update pom.xml to referen
  [sevntu.checkstyle version](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/pom.xml#L34)),
 and please make sure that
 custom(newly generated) versions are located in your local maven repo
-```
+
+```bash
 ls  ~/.m2/repository/com/puppycrawl/tools/checkstyle/
 ```
 
 to build SNAPSHOT version of `checkstyle` please run in his repo
-```
+
+```bash
 mvn clean install -DskipTests -Djacoco.skip=true -Dspotbugs.skip=true -Dpmd.skip=true
 ```
 
 If you want to validate new check from `sevntu.checkstyle`(https://github.com/sevntu-checkstyle/sevntu.checkstyle) project,
 before you use ".launch.sh" you need to clone it and deploy to your local maven repo by following command
-```
+
+```bash
 ./deploy.sh --maven
 ```
 
@@ -46,7 +52,8 @@ Second run shall be done to prove that check is working correctly and for this o
 
 Please use `-Dcheckstyle.consoleOutput=true` option if you need to see all Checkstyle errors in console,
 but expect it to print very and very much lines of terminal logs in this case. Launch command in this case will be:
-```
+
+```bash
 ./launch.sh -Dcheckstyle.config.location=my_check.xml -Dcheckstyle.consoleOutput=true
 ```
 
