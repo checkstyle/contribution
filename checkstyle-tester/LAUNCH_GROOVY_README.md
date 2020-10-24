@@ -1,4 +1,6 @@
-## [launch.groovy] Checkstyle report generation
+# launch.groovy
+
+Checkstyle report generation
 
 **launch.groovy** is a script which allows you to generate Checkstyle report over target projects. It invokes Maven Checkstyle plugin. In order to use the script you should run the following command in your command line:
 

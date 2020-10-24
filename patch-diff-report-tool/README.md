@@ -1,4 +1,9 @@
-patch-diff-report-tool - for creating a symmetrical difference from two checkstyle-result.xml files. It is useful when you have two different large checkstyle XML reports and want to know difference between them. It deletes identical lines present in both XML files, merges remaining lines into a result site.
+# patch-diff-report-tool
+
+A tool for creating a symmetrical difference from two checkstyle-result.xml files.
+It is useful when you have two different large checkstyle XML reports and want
+to know difference between them. It deletes identical lines present in both XML files,
+merges remaining lines into a result site.
 
 usage example:
 
