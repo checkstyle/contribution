@@ -1,4 +1,4 @@
-#Publication examples
+# Publication examples
 
 Build jar:
 
@@ -12,7 +12,7 @@ and navigate to it:
 cd target
 ```
 
-##Xdoc
+## Xdoc
 Prepare releasenotes 7.3 for commit in /home/user/opensource/checkstyle:
 
 ```bash
@@ -22,7 +22,7 @@ java -jar releasenotes-builder-1.0-all.jar -localRepoPath /home/user/opensource/
 
 to make push just add `-publishXdocWithPush` option
 
-##Twitter
+## Twitter
 
 ```bash
 java -jar releasenotes-builder-1.0-all.jar -localRepoPath /home/user/opensource/checkstyle -startRef checkstyle-7.2 \
@@ -49,7 +49,7 @@ twitterAccessToken=712345678921234567-4SVDS6sdvzx1vdVDV54dVDP5RcaDaEz
 twitterAccessTokenSecret=t5N3IoGVSHAvcvTCvJ465c4ZCXcc66548CS48SCFC1ccz
 ```
 
-##Mailing list
+## Mailing list
 
 ```bash
 java -jar releasenotes-builder-1.0-all.jar -localRepoPath /home/user/opensource/checkstyle -startRef checkstyle-7.2 \
@@ -72,7 +72,7 @@ mlistUsername=username
 mlistPassword=password
 ```
 
-##RSS feed
+## RSS feed
 
 ```bash
 java -jar releasenotes-builder-1.0-all.jar -localRepoPath /home/user/opensource/checkstyle -startRef checkstyle-7.2 \
