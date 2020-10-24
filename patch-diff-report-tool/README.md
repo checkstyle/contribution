@@ -7,9 +7,9 @@ merges remaining lines into a result site.
 
 usage example:
 
-1) Create local copy of checkstyle/contribution repository with command `git clone https://github.com/checkstyle/contribution`<br/>
-2) `cd ./contribution/patch-diff-report-tool`<br/>
-3) Compile source with `mvn clean install`, your application is located in `cd ./contribution/patch-diff-report-tool/target`  and named `patch-diff-report-tool-0.1-SNAPSHOT-jar-with-dependencies.jar`<br/>
+1) Create local copy of checkstyle/contribution repository with command `git clone https://github.com/checkstyle/contribution`
+2) `cd ./contribution/patch-diff-report-tool`
+3) Compile source with `mvn clean install`, your application is located in `cd ./contribution/patch-diff-report-tool/target`  and named `patch-diff-report-tool-0.1-SNAPSHOT-jar-with-dependencies.jar`
 
 You have 2 different checkstyle repos, original (base) and forked (patch), for each of them do 4-7:
 
