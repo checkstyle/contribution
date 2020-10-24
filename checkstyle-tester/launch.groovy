@@ -26,6 +26,7 @@ def getCliOptions(args) {
             'What version of Checkstyle to use (optional, default the latest snapshot)')
         sv(longOpt: 'sevntuVersion', args: 1, required: false,
             'What version of Sevntu to use (optional, default the latest release)')
+        xm(longOpt: 'extraMvnOptions', args: 1, required: false, 'Extra arguements to pass to Maven (optional, ex: -Dmaven.prop=true)')
     }
     return cli.parse(args)
 }
@@ -66,6 +67,7 @@ def generateCheckstyleReport(cliOptions) {
     def ignoreExceptions = cliOptions.ignoreExceptions
     def listOfProjectsFile = new File(cliOptions.listOfProjects)
     def projects = listOfProjectsFile.readLines()
+    def extraMvnOptions = cliOptions.extraMvnOptions
 
     projects.each {
         project ->
@@ -92,7 +94,8 @@ def generateCheckstyleReport(cliOptions) {
                     cloneRepository(repoName, repoType, repoUrl, commitId, reposDir)
                     copyDir(getOsSpecificPath("$reposDir", "$repoName"), getOsSpecificPath("$srcDir", "$repoName"))
                 }
-                runMavenExecution(srcDir, excludes, checkstyleCfg, ignoreExceptions, checkstyleVersion, sevntuVersion)
+                runMavenExecution(srcDir, excludes, checkstyleCfg, ignoreExceptions, checkstyleVersion,
+                    sevntuVersion, extraMvnOptions)
                 def repoPath = repoUrl
                 if (repoType != 'local') {
                     repoPath = new File(getOsSpecificPath("$reposDir", "$repoName")).absolutePath
@@ -221,7 +224,8 @@ def deleteDir(dir) {
     new AntBuilder().delete(dir: dir, failonerror: false)
 }
 
-def runMavenExecution(srcDir, excludes, checkstyleConfig, ignoreExceptions, checkstyleVersion, sevntuVersion) {
+def runMavenExecution(srcDir, excludes, checkstyleConfig, ignoreExceptions, checkstyleVersion,
+                      sevntuVersion, extraMvnOptions) {
     println "Running 'mvn clean' on $srcDir ..."
     def mvnClean = "mvn --batch-mode clean"
     executeCmd(mvnClean)
@@ -235,6 +239,9 @@ def runMavenExecution(srcDir, excludes, checkstyleConfig, ignoreExceptions, chec
     }
     if (ignoreExceptions) {
         mvnSite = mvnSite + ' -Dcheckstyle.failsOnError=false'
+    }
+    if (extraMvnOptions) {
+        mvnSite = mvnSite + " " + extraMvnOptions
     }
     executeCmd(mvnSite)
     println "Running Checkstyle on $srcDir - finished"
