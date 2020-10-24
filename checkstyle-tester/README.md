@@ -106,7 +106,7 @@ Main checkstyle project uses pitest to help remove unnecessary code and ensure a
 
 First, you must create a config that has the check using as many permutations of customizable options as possible. It is best to give each permutation a unique **id** property to be used in the final report to identify which specific configuration instance created the difference. The following is an example:
 
-````
+```xml
 <module name="JavadocMethod">
   <property name="id" value="JavadocMethod1" />
 </module>
@@ -114,7 +114,7 @@ First, you must create a config that has the check using as many permutations of
   <property name="validateThrows" value="true" />
   <property name="id" value="JavadocMethod2" />
 </module>
-````
+```
 
 Next you must create a new branch off the PR branch which must be modified to embed the applied mutation into the code. If your surviving mutation is `replaced equality check with true → SURVIVED`, then you must physically change the code in the new branch and replace the original condition with `true`. You can ensure you changed the code correctly because the test suite will still pass with this change in place.
 
@@ -135,10 +135,12 @@ Even if the regression proves no differences, it may be a false that there is no
 `diff.groovy` script does not currently support generating reports for sevntu. Sevntu can only be run with patch only branch and config. Running a full difference report will always produce no results because the scripts do no install the different versions of sevntu needed to function.
 
 First you must build sevntu checks:
-```
+
+```bash
 cd sevntu-checks
 mvn  -Pno-validations clean install
 ```
+
 Sevntu's current version must be referenced at https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/pom.xml#L16 .
 
 Finally, just run checkstyle-tester as described above.
@@ -169,9 +171,10 @@ You may modify all the checks that depend on external files to use default setti
 ## Troubleshooting
 
 To generate a report in debug mode, use the `MAVEN_OPTS` environment variable:
-```
+
+```bash
 export MAVEN_OPTS=-Dorg.slf4j.simpleLogger.defaultLogLevel=debug
 groovy diff.groovy --localGitRepo ...
-
 ```
+
 Windows users should use the `SET` command instead of the `export` command.

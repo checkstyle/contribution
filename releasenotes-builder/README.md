@@ -5,18 +5,19 @@
 Release notes builder uses Maven as a build tool. So, you can use standard maven commands
 for compilation and packaging:
 
-```
+```bash
 mvn clean compile package
 ```
 
 Jar file which includes all required dependencies will be located at
 
-```
+```bash
 /releasenotes-builder/target/
 ```
 
 ## Command line usage
-```
+
+```bash
 java -jar releasenotes-builder-1.0-all.jar -localRepoPath <arg> \
      -remoteRepoPath <arg> -startRef <arg> [-endRef <arg>] \
      -releaseNumber <arg> [-outputLocation <args>] [-githubAuthToken <arg>] \
@@ -41,8 +42,8 @@ Command line options are:
 **startRef** - specifies the commit reference or tag from which to start the generation of
 release notes. For example, ```753bc06``` or just tag ```checkstyle-6.12.1``` .
 
-**endRef** - (optional) specifies the number at which to end the generation of messages.
-```HEAD``` reference will be used if not specified (by default).
+**endRef** - (optional) specifies the number at which to end the generation of messages. ```HEAD``` reference
+will be used if not specified (by default).
 
 **releaseNumber** - the number of current release. For example, ```6.13``` .
 
@@ -110,7 +111,7 @@ Command line usage example:
 
 The following example demonstrates how to generate releasenotes.xml for checkstyle 6.13 release starting with checkstyle-6.12.1 release tag.
 
-```
+```bash
 java -jar releasenotes-builder-1.0-all.jar -localRepoPath /home/user/checkstyle/ \
     -remoteRepoPath checkstyle/checkstyle \
     -startRef checkstyle-6.12.1 -releaseNumber 6.13 -generateAll

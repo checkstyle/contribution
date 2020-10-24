@@ -19,7 +19,7 @@ Alternatively you can use `local` type, where the specified branch is ignored an
 The latter does not depend on any specific version control being used.
 See the following examples:
 
-```
+```properties
 my_custom_project|local|/home/username/java/my_custom_project||
 my_custom_checkstyle|git|/home/username/java/git-repos/checkstyle/checkstyle|master|**/ignoreFolderOrFiles/**/*
 my_custom_repo|hg|/home/username/java/hg-repos/myRepo|default|
@@ -37,7 +37,8 @@ There are a few ways to modify the configuration file to generate special report
 
 If you wish to generate an exception only report, where only exceptions are visible and violations are hidden, you can change the severity of your module to `ignore`. Exceptions are always reported with a severity of `error` which can't be turned off.
 Example:
-```
+
+```xml
 <module name="FinalLocalVariable">
     <property name="severity" value="ignore"/>
 </module>
@@ -45,7 +46,8 @@ Example:
 
 If you wish to ignore specific cases from a report, you can use `SuppressionSingleFilter` or `SuppressionXpathSingleFilter` to hide them.
 Example:
-```
+
+```xml
     <module name="SuppressionSingleFilter">
       <property name="message" value="Exception occurred while parsing"/>
       <property name="checks" value="Checker"/>
@@ -57,7 +59,8 @@ Example:
 Many javadoc comments found in other projects contain various errors since Checkstyle's Javadoc parser is slightly more strict. To avoid polluting the report with all these parsing errors, it is recommended to add and keep suppressions from `my_checks.xml` in your own config when working with the Javadoc checks.
 
 Example:
-```
+
+```xml
 <?xml version="1.0"?>
 <!DOCTYPE module PUBLIC
   "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
