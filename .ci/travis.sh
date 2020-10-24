@@ -75,6 +75,12 @@ codenarc)
   ./codenarc.sh . launch.groovy > launch.log && cat launch.log && grep '(p1=0; p2=11; p3=1)' launch.log
   ;;
 
+markdownlint)
+  # The folder "comment-action" is excluded since it contains many 3rd party files that do not pass the validation
+  files=$(git ls-files -- '*.md' ':!:comment-action')
+  mdl ${files}
+  ;;
+
 *)
   echo "Unexpected argument: $1"
   sleep 5s
