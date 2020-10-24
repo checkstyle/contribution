@@ -1,3 +1,5 @@
+# Manual execution
+
 ## Preparation before Executing
 
 Before you are ready to execute `diff.groovy`, you will have to prepare some external files and branches first.
