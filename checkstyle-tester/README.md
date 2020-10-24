@@ -149,13 +149,13 @@ Finally, just run checkstyle-tester as described above.
 
 After modifying Checkstyle's ANTLR grammar, it is neccessary to compare how Checkstyle's checks are affected by your changes.  This is done by comparing the check violation output of your modified branch of Checkstyle against Checkstyle's master branch, and comparing the abstract syntax trees of both branches.
 
-#### Check Regression Report
+### Check Regression Report
 
 To generate the check difference report, you must separate the modules and settings in the [`checkstyle_checks.xml`](https://github.com/checkstyle/checkstyle/blob/master/config/checkstyle_checks.xml) configuration file, found in the checkstyle repository, into separate configuration files (this helps avoid 'out of memory' errors).  The best way to separate the checks is to determine which typically produce the most violations, such as Indentation and WhiteSpace Checks, and put them each into their own configuration file, then separating the rest into files with roughly ten checks each.
 
 You may modify all the checks that depend on external files to use default settings.  **For each of the configuration files, you should use the [`my_check.xml`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/my_check.xml) file as a base**, and add the checks from `checkstyle_checks.xml` to it. Then `diff.groovy` should be run on all projects in `projects-to-test-on.properties`, using the `diff.groovy` script once for each configuration file.  [See instructions above](https://github.com/checkstyle/contribution/tree/master/checkstyle-tester#basic-difference-report) for "Basic Difference Report". You can also use our check regression script, found [here](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/multi_config_check_regression.groovy), to automate this process for you.
 
-#### ANTLR Regression Report
+### ANTLR Regression Report
 
  This report is generated using the [`launch_diff_antlr.sh`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/launch_diff_antlr.sh) script.  This script generates a report based on the differences in the ASTs generated from your PR branch and Checkstyle's 'main' branch using projects that are selected (uncommented) in the [`projects-to-test-on.properties`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.properties) file. For the ANTLR regression report, we usually only want to see that changes to the Checkstyle project. To ensure that you test against any new inputs that you have created (unit test inputs, etc.), please make sure that you comment out all other projects, and add the following line to [`projects-to-test-on.properties`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.properties):
 
