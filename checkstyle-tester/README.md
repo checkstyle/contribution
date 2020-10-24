@@ -159,15 +159,21 @@ You may modify all the checks that depend on external files to use default setti
 
 ### ANTLR Regression Report
 
- This report is generated using the [`launch_diff_antlr.sh`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/launch_diff_antlr.sh) script.  This script generates a report based on the differences in the ASTs generated from your PR branch and Checkstyle's 'main' branch using projects that are selected (uncommented) in the [`projects-to-test-on.properties`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.properties) file. For the ANTLR regression report, we usually only want to see that changes to the Checkstyle project. To ensure that you test against any new inputs that you have created (unit test inputs, etc.), please make sure that you comment out all other projects, and add the following line to [`projects-to-test-on.properties`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.properties):
+This report is generated using the [`launch_diff_antlr.sh`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/launch_diff_antlr.sh) script.  This script generates a report based on the differences in the ASTs generated from your PR branch and Checkstyle's 'main' branch using projects that are selected (uncommented) in the [`projects-to-test-on.properties`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.properties) file. For the ANTLR regression report, we usually only want to see that changes to the Checkstyle project. To ensure that you test against any new inputs that you have created (unit test inputs, etc.), please make sure that you comment out all other projects, and add the following line to [`projects-to-test-on.properties`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.properties):
 
- `my-checkstyle|git|https://github.com/<username>/checkstyle.git|<pr-branch>||`
+```bash
+my-checkstyle|git|https://github.com/<username>/checkstyle.git|<pr-branch>||
+```
 
-  Where `<username>` and `<pr-branch>` are your github username and the branch that your Checkstyle PR is based on, respectively. To use [`launch_diff_antlr.sh`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/launch_diff_antlr.sh), you must modify the [`launch_diff_variables.sh`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/launch_diff_variables.sh) file to reflect the location of the variables that  [`launch_diff_antlr.sh`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/launch_diff_antlr.sh) uses to produce the report. Please note that `PULL_REMOTE` will need to be set to the name of the remote repository where your branch resides. If your branch is found at `origin/name-of-your-branch-here`, you will set `PULL_REMOTE=origin`. Then, run:
+Where `<username>` and `<pr-branch>` are your github username and the branch that your Checkstyle PR is based on, respectively. To use [`launch_diff_antlr.sh`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/launch_diff_antlr.sh), you must modify the [`launch_diff_variables.sh`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/launch_diff_variables.sh) file to reflect the location of the variables that  [`launch_diff_antlr.sh`](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/launch_diff_antlr.sh) uses to produce the report. Please note that `PULL_REMOTE` will need to be set to the name of the remote repository where your branch resides. If your branch is found at `origin/name-of-your-branch-here`, you will set `PULL_REMOTE=origin`. Then, run:
 
-  `./launch_diff_antlr.sh name-of-your-branch-here`.
+```bash
+./launch_diff_antlr.sh name-of-your-branch-here
+```
 
-*Note: if you are experiencing maven 'out of memory' errors from maven, see https://cwiki.apache.org/confluence/display/MAVEN/OutOfMemoryError*
+#### Note
+
+if you are experiencing maven 'out of memory' errors from maven, see https://cwiki.apache.org/confluence/display/MAVEN/OutOfMemoryError
 
 ## Troubleshooting
 
