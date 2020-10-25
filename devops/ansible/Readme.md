@@ -16,7 +16,9 @@ exec bash
 
 ## How to provision Checkstyle Jenkins instance with Ansible
 
-### How to provision Jenkins, Nginx and common part (common part includes apt packages, pip packages, sshd settings, etc.)
+### How to provision Jenkins, Nginx and common part
+
+(common part includes apt packages, pip packages, sshd settings, etc.)
 
 ```bash
 ansible-playbook -i inventories/jenkins jenkins.yaml
