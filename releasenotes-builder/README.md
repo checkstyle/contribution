@@ -42,25 +42,32 @@ Command line options are:
 **startRef** - specifies the commit reference or tag from which to start the generation of
 release notes. For example, ```753bc06``` or just tag ```checkstyle-6.12.1``` .
 
-**endRef** - (optional) specifies the number at which to end the generation of messages. ```HEAD``` reference
+**endRef** - (optional) specifies the number at which to end the generation of messages. ```HEAD```
+reference
 will be used if not specified (by default).
 
 **releaseNumber** - the number of current release. For example, ```6.13``` .
 
-**outputLocation** - (optional) the name of an output folder. For example, ```/home/user/releasenotes/```
+**outputLocation** - (optional) the name of an output folder.
+For example, ```/home/user/releasenotes/```
 . Current folder will be used if not specified (by default).
 
-**githubAuthToken** - (optional) the GitHub authentication access token to establish private connection to remote repository. For example, `0f95514f36200ebaadb8f28d8ba54300360a9e90` .
+**githubAuthToken** - (optional) the GitHub authentication access token to establish
+private connection to remote repository. For example, `0f95514f36200ebaadb8f28d8ba54300360a9e90`.
 
 **generateXdoc** - (optional) generate release notes. Generated file will be ```xdoc.xml```.
 
-**generateTwit** - (optional) generate a release notes post to publish on Twitter. Generated file will be ```twitter.txt```.
+**generateTwit** - (optional) generate a release notes post to publish on Twitter.
+Generated file will be ```twitter.txt```.
 
-**generateRss** - (optional) generate a release notes post to publish on RSS. Generated file will be ```rss.txt```.
+**generateRss** - (optional) generate a release notes post to publish on RSS.
+Generated file will be ```rss.txt```.
 
-**generateMlist** - (optional) generate a release notes post to publish on Mailing list. Generated file will be ```mailing_list.txt```.
+**generateMlist** - (optional) generate a release notes post to publish on Mailing list.
+Generated file will be ```mailing_list.txt```.
 
-**generateAll** - (optional) generate all possible posts. Generated files will be at specified output location.
+**generateAll** - (optional) generate all possible posts.
+Generated files will be at specified output location.
 
 **xdocTemplate** - (optional) path to the external xdoc freemarker template file.
 
@@ -70,7 +77,8 @@ will be used if not specified (by default).
 
 **mlistTemplate** - (optional) path to the external mailing list freemarker template file.
 
-**publishXdoc** - (optional) Make commit in local checkstyle repo with releasenotes. Notes are read from ```xdoc.xml```.
+**publishXdoc** - (optional) Make commit in local checkstyle repo with releasenotes.
+Notes are read from ```xdoc.xml```.
 
 **publishXdocWithPush** - (optional) Make push of a commit from ```publishXdoc```.
 
@@ -109,7 +117,8 @@ Options in property files have the same names as in command line and have lower 
 
 Command line usage example:
 
-The following example demonstrates how to generate releasenotes.xml for checkstyle 6.13 release starting with checkstyle-6.12.1 release tag.
+The following example demonstrates how to generate releasenotes.xml for checkstyle 6.13 release
+starting with checkstyle-6.12.1 release tag.
 
 ```bash
 java -jar releasenotes-builder-1.0-all.jar -localRepoPath /home/user/checkstyle/ \
