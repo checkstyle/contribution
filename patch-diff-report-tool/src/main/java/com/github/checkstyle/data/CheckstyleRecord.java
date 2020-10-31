@@ -19,6 +19,8 @@
 
 package com.github.checkstyle.data;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,13 +32,20 @@ import org.thymeleaf.util.StringUtils;
  * @author attatrol
  *
  */
-public final class CheckstyleRecord {
+public final class CheckstyleRecord implements Comparable<CheckstyleRecord> {
 
     /**
      * It is usual for sources of records to have name that
      * matches this pattern. It is used for shortening source names.
      */
     private static final Pattern CHECKSTYLE_CHECK_NAME = Pattern.compile(".+Check");
+
+    /**
+     * Predefined severities for sorting. All other severities has lower priority
+     * and will be arranged in the default order for strings.
+     */
+    private static final List<String> PREDEFINED_SEVERITIES =
+        Arrays.asList("info", "warning", "error");
 
     /**
      * Length of "Check" string.
@@ -177,17 +186,67 @@ public final class CheckstyleRecord {
 
     /**
      * Compares CheckstyleRecord instances by their content.
-     * It is used in a single controlled occasion in the code.
+     * The order is source, line, column, severity, message.
+     * Properties index and xref are ignored.
      *
      * @param other
-     *        another ChechstyleRecord instance under comparison
+     *        another CheckstyleRecord instance under comparison
      *        with this instance.
-     * @return true if instances are equal.
+     * @return 0 if the objects are equal, a negative integer if this record is before the specified
+     *         record, or a positive integer if this record is after the specified record.
      */
-    public boolean specificEquals(final CheckstyleRecord other) {
-        return this.line == other.line && this.column == other.column
-                && this.source.equals(other.source)
-                && this.message.equals(other.message);
+    public int compareTo(final CheckstyleRecord other) {
+        int diff = Integer.compare(this.line, other.line);
+        if (diff == 0) {
+            diff = Integer.compare(this.column, other.column);
+        }
+        if (diff == 0) {
+            diff = compareSeverity(this.severity, other.severity);
+        }
+        if (diff == 0) {
+            diff = this.message.compareTo(other.message);
+        }
+        if (diff == 0) {
+            diff = this.source.compareTo(other.source);
+        }
+        return diff;
+    }
+
+    /**
+     * Compares record severities in the order "info", "warning", "error", all other.
+     *
+     * @param severity1 first severity
+     * @param severity2 second severity
+     * @return the value {@code 0} if both severities are the same
+     *         a value less than {@code 0} if severity1 should be first and
+     *         a value greater than {@code 0} if severity2 should be first
+     */
+    private int compareSeverity(String severity1, String severity2) {
+        final int result;
+        if (severity1.equals(severity2)) {
+            result = 0;
+        }
+        else {
+            final int index1 = PREDEFINED_SEVERITIES.indexOf(severity1);
+            final int index2 = PREDEFINED_SEVERITIES.indexOf(severity2);
+            if (index1 < 0 && index2 < 0) {
+                // Both severity levels are unknown, so use regular order for strings.
+                result = severity1.compareTo(severity2);
+            }
+            else if (index1 < 0) {
+                // First is unknown, second is known: second before
+                result = 1;
+            }
+            else if (index2 < 0) {
+                // First is known, second is unknown: first before
+                result = -1;
+            }
+            else {
+                // Both result are well-known, use predefined order
+                result = Integer.compare(index1, index2);
+            }
+        }
+        return result;
     }
 
 }

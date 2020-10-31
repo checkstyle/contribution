@@ -32,10 +32,11 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import com.github.checkstyle.data.CliPaths;
+import com.github.checkstyle.data.CliOptions;
 import com.github.checkstyle.data.CompareMode;
 import com.github.checkstyle.data.DiffReport;
 import com.github.checkstyle.data.MergedConfigurationModule;
+import com.github.checkstyle.data.ThreadingMode;
 import com.github.checkstyle.parser.CheckstyleConfigurationsParser;
 import com.github.checkstyle.parser.CheckstyleReportsParser;
 import com.github.checkstyle.parser.CheckstyleTextParser;
@@ -65,6 +66,7 @@ public final class Main {
             + "\t--output - path to store the resulting diff report (optional, if absent then "
             + "default path will be used: ~/XMLDiffGen_report_yyyy.mm.dd_hh_mm_ss), remember, "
             + "if this folder exists its content will be purged;\n"
+            + "\t--threadingMode - which type of threading mode to use: SINGLE or MULTI;\n"
             + "\t-h - simply shows help message.";
 
     /**
@@ -106,6 +108,11 @@ public final class Main {
      * Name for command line option "refFiles".
      */
     private static final String OPTION_REFFILES_PATH = "refFiles";
+
+    /**
+     * Name for command line option "threadingMode".
+     */
+    private static final String OPTION_THREADING_MODE = "threadingMode";
 
     /**
      * Name for command line option "outputPath".
@@ -155,39 +162,40 @@ public final class Main {
             System.out.println(MSG_HELP);
         }
         else {
-            final CliPaths paths = getCliPaths(commandLine);
+            final CliOptions options = getCliOptions(commandLine);
             final DiffReport diffReport;
 
-            if (paths.getCompareMode() == CompareMode.XML) {
+            if (options.getCompareMode() == CompareMode.XML) {
                 // XML parsing stage
                 System.out.println("XML parsing is started.");
-                diffReport = CheckstyleReportsParser.parse(paths.getBaseReportPath(),
-                        paths.getPatchReportPath(), XML_PARSE_PORTION_SIZE);
+                diffReport = CheckstyleReportsParser.parse(options.getBaseReportPath(),
+                        options.getPatchReportPath(), options.getThreadingMode(),
+                        XML_PARSE_PORTION_SIZE);
             }
             else {
                 // file parsing stage
                 System.out.println("File parsing is started.");
-                diffReport = CheckstyleTextParser.parse(paths.getBaseReportPath(),
-                        paths.getPatchReportPath());
+                diffReport = CheckstyleTextParser.parse(options.getBaseReportPath(),
+                        options.getPatchReportPath(), options.getThreadingMode());
             }
 
             // Configuration processing stage.
             MergedConfigurationModule diffConfiguration = null;
-            if (paths.configurationPresent()) {
+            if (options.configurationPresent()) {
                 System.out.println("Creation of configuration report is started.");
-                diffConfiguration = CheckstyleConfigurationsParser.parse(paths.getBaseConfigPath(),
-                        paths.getPatchConfigPath());
+                diffConfiguration = CheckstyleConfigurationsParser.parse(
+                        options.getBaseConfigPath(), options.getPatchConfigPath());
             }
             else {
-                System.out.println(
-                        "Configuration processing skipped: " + "no configuration paths provided.");
+                System.out.println("Configuration processing skipped: "
+                        + "no configuration options provided.");
             }
 
             // Site and XREF generation stage
             System.out.println("Creation of diff html site is started.");
             try {
-                exportResources(paths);
-                SiteGenerator.generate(diffReport, diffConfiguration, paths);
+                exportResources(options);
+                SiteGenerator.generate(diffReport, diffConfiguration, options);
             }
             finally {
                 for (String message : JxrDummyLog.getLogs()) {
@@ -223,8 +231,8 @@ public final class Main {
      *        CLI arguments.
      * @return CliPaths instance.
      */
-    private static CliPaths getCliPaths(CommandLine commandLine) {
-        final CliPaths paths = parseCliToPojo(commandLine);
+    private static CliOptions getCliOptions(CommandLine commandLine) {
+        final CliOptions paths = parseCliToPojo(commandLine);
         CliArgsValidator.checkPaths(paths);
         return paths;
     }
@@ -237,7 +245,7 @@ public final class Main {
      * @throws IOException
      *         thrown on failure to perform checks.
      */
-    private static void exportResources(CliPaths paths) throws IOException {
+    private static void exportResources(CliOptions paths) throws IOException {
         final Path outputPath = paths.getOutputPath();
         Files.createDirectories(outputPath);
         FilesystemUtils.createOverwriteDirectory(outputPath.resolve(CSS_FILEPATH));
@@ -265,6 +273,8 @@ public final class Main {
                 "Path to the patch checkstyle-report.xml");
         options.addOption(null, OPTION_REFFILES_PATH, true,
                 "Path to the directory containing source under checkstyle check, optional.");
+        options.addOption(null, OPTION_THREADING_MODE, true,
+                "Option to control which type of threading mode to use.");
         options.addOption(null, OPTION_OUTPUT_PATH, true,
                 "Path to directory where diff results will be stored.");
         options.addOption(null, OPTION_BASE_CONFIG_PATH, true,
@@ -286,9 +296,9 @@ public final class Main {
      * @throws IllegalArgumentException
      *         on failure to find necessary arguments.
      */
-    private static CliPaths parseCliToPojo(CommandLine commandLine)
+    private static CliOptions parseCliToPojo(CommandLine commandLine)
             throws IllegalArgumentException {
-        final CompareMode compareMode = getCompareMode(OPTION_COMPARE_MODE, commandLine,
+        final CompareMode compareMode = getEnumOption(OPTION_COMPARE_MODE, commandLine,
                 CompareMode.XML);
         final Path xmlBasePath = getPath(OPTION_BASE_REPORT_PATH, commandLine, null);
         final Path xmlPatchPath = getPath(OPTION_PATCH_REPORT_PATH, commandLine, null);
@@ -300,8 +310,10 @@ public final class Main {
         final Path configBasePath = getPath(OPTION_BASE_CONFIG_PATH, commandLine, null);
         final Path configPatchPath = getPath(OPTION_PATCH_CONFIG_PATH, commandLine, null);
         final boolean shortFilePaths = commandLine.hasOption(OPTION_SHORT_PATHS);
-        return new CliPaths(compareMode, xmlBasePath, xmlPatchPath, refFilesPath, outputPath,
-                configBasePath, configPatchPath, shortFilePaths);
+        final ThreadingMode threadingMode = getEnumOption(OPTION_THREADING_MODE, commandLine,
+                ThreadingMode.MULTI);
+        return new CliOptions(compareMode, xmlBasePath, xmlPatchPath, refFilesPath, outputPath,
+                configBasePath, configPatchPath, shortFilePaths, threadingMode);
     }
 
     /**
@@ -311,18 +323,21 @@ public final class Main {
      *        name of the option.
      * @param commandLine
      *        parsed CLI.
-     * @param defaultMode
+     * @param defaultValue
      *        mode which is used if CLI option is absent.
+     * @param <T>
+     *        type of the enum.
      * @return compare mode.
      */
-    private static CompareMode getCompareMode(String optionName, CommandLine commandLine,
-            CompareMode defaultMode) {
-        final CompareMode result;
+    private static <T extends Enum<T>> T getEnumOption(String optionName, CommandLine commandLine,
+            T defaultValue) {
+        final T result;
         if (commandLine.hasOption(optionName)) {
-            result = CompareMode.valueOf(commandLine.getOptionValue(optionName).toUpperCase());
+            final Class<T> enumType = (Class<T>) defaultValue.getClass();
+            result = Enum.valueOf(enumType, commandLine.getOptionValue(optionName).toUpperCase());
         }
         else {
-            result = defaultMode;
+            result = defaultValue;
         }
         return result;
     }

@@ -22,11 +22,11 @@ package com.github.checkstyle.data;
 import java.nio.file.Path;
 
 /**
- * POJO class that hold input paths.
+ * POJO class that hold input options.
  *
  * @author attatrol
  */
-public final class CliPaths {
+public final class CliOptions {
     /**
      * Option to control which type of diff comparison to do.
      */
@@ -68,6 +68,12 @@ public final class CliPaths {
     private final boolean shortFilePaths;
 
     /**
+     * Switch specifying if report generation should be done in a single-threaded
+     * or multi-threaded mode.
+     */
+    private final ThreadingMode threadingMode;
+
+    /**
      * POJO ctor.
      *
      * @param compareMode
@@ -75,22 +81,24 @@ public final class CliPaths {
      * @param baseReportPath
      *        path to the base checkstyle-report.xml.
      * @param patchReportPath
-     *        path to the patch checkstyle-report.xml.
+ *        path to the patch checkstyle-report.xml.
      * @param refFilesPath
-     *        path to the data, tested by checkstyle.
+*        path to the data, tested by checkstyle.
      * @param outputPath
-     *        path to the result site.
-     * @param patchConfigPath
-     *        path to the configuration of the base report.
+*        path to the result site.
      * @param baseConfigPath
-     *        path to the configuration of the patch report.
+*        path to the configuration of the patch report.
+     * @param patchConfigPath
+*        path to the configuration of the base report.
      * @param shortFilePaths
-     *           {@code true} if only short file names should be used with no paths.
+*           {@code true} if only short file names should be used with no paths.
+     * @param threadingMode
+*           type of threading mode to use.
      */
     // -@cs[ParameterNumber] Helper class to pass all CLI attributes around.
-    public CliPaths(CompareMode compareMode, Path baseReportPath, Path patchReportPath,
+    public CliOptions(CompareMode compareMode, Path baseReportPath, Path patchReportPath,
             Path refFilesPath, Path outputPath, Path baseConfigPath, Path patchConfigPath,
-            boolean shortFilePaths) {
+            boolean shortFilePaths, ThreadingMode threadingMode) {
         this.compareMode = compareMode;
         this.baseReportPath = baseReportPath;
         this.patchReportPath = patchReportPath;
@@ -99,6 +107,7 @@ public final class CliPaths {
         this.baseConfigPath = baseConfigPath;
         this.patchConfigPath = patchConfigPath;
         this.shortFilePaths = shortFilePaths;
+        this.threadingMode = threadingMode;
     }
 
     public CompareMode getCompareMode() {
@@ -131,6 +140,10 @@ public final class CliPaths {
 
     public boolean isShortFilePaths() {
         return shortFilePaths;
+    }
+
+    public ThreadingMode getThreadingMode() {
+        return threadingMode;
     }
 
     /**

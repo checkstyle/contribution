@@ -30,6 +30,7 @@ import java.util.List;
 import com.github.checkstyle.data.CheckstyleRecord;
 import com.github.checkstyle.data.DiffReport;
 import com.github.checkstyle.data.Statistics;
+import com.github.checkstyle.data.ThreadingMode;
 import com.github.checkstyle.parser.JgitUtils.JgitDifference;
 
 /**
@@ -72,12 +73,15 @@ public final class CheckstyleTextParser {
      *            path to base directory.
      * @param patchReport
      *            path to patch directory.
+     * @param threadingMode
+     *            type of threading mode to use.
      * @return parsed content.
      * @throws IOException
      *             if there is a problem accessing a file.
      */
-    public static DiffReport parse(Path baseReport, Path patchReport) throws IOException {
-        final DiffReport content = new DiffReport();
+    public static DiffReport parse(Path baseReport, Path patchReport, ThreadingMode threadingMode)
+            throws IOException {
+        final DiffReport content = new DiffReport(threadingMode);
         final StringListIterator baseReader = getFiles(baseReport);
         final StringListIterator patchReader = getFiles(patchReport);
         while (true) {

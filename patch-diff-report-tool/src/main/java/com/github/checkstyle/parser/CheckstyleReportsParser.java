@@ -35,6 +35,7 @@ import javax.xml.stream.events.XMLEvent;
 import com.github.checkstyle.data.CheckstyleRecord;
 import com.github.checkstyle.data.DiffReport;
 import com.github.checkstyle.data.Statistics;
+import com.github.checkstyle.data.ThreadingMode;
 
 /**
  * Contains logics of the StaX parser for the checkstyle xml reports.
@@ -116,6 +117,8 @@ public final class CheckstyleReportsParser {
      *        path to base XML file.
      * @param patchXml
      *        path to patch XML file.
+     * @param threadingMode
+     *        type of threading mode to use.
      * @param portionSize
      *        single portion of XML file processed at once by any parser.
      * @return parsed content.
@@ -124,9 +127,10 @@ public final class CheckstyleReportsParser {
      * @throws XMLStreamException
      *         on internal parser error.
      */
-    public static DiffReport parse(Path baseXml, Path patchXml, int portionSize)
+    public static DiffReport parse(Path baseXml, Path patchXml,
+                    ThreadingMode threadingMode, int portionSize)
                     throws FileNotFoundException, XMLStreamException {
-        final DiffReport content = new DiffReport();
+        final DiffReport content = new DiffReport(threadingMode);
         final XMLEventReader baseReader = StaxUtils.createReader(baseXml);
         final XMLEventReader patchReader = StaxUtils.createReader(patchXml);
         while (baseReader.hasNext() || patchReader.hasNext()) {

@@ -48,7 +48,9 @@ public class MainTest extends AbstractTest {
                 + "\t--output - path to store the resulting diff report (optional,"
                 + " if absent then default path will be used:"
                 + " ~/XMLDiffGen_report_yyyy.mm.dd_hh_mm_ss), remember, if this folder"
-                + " exists its content will be purged;\n" + "\t-h - simply shows help message.\n"
+                + " exists its content will be purged;\n"
+                + "\t--threadingMode - which type of threading mode to use: SINGLE or MULTI;\n"
+                + "\t-h - simply shows help message.\n"
                 + "patch-diff-report-tool execution finished.\n", getSystemOut());
     }
 

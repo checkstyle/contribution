@@ -21,7 +21,7 @@ package com.github.checkstyle;
 
 import java.nio.file.Files;
 
-import com.github.checkstyle.data.CliPaths;
+import com.github.checkstyle.data.CliOptions;
 import com.github.checkstyle.data.CompareMode;
 
 /**
@@ -52,7 +52,7 @@ public final class CliArgsValidator {
      * @throws IllegalArgumentException
      *             on failure of any check.
      */
-    public static void checkPaths(CliPaths paths) throws IllegalArgumentException {
+    public static void checkPaths(CliOptions paths) throws IllegalArgumentException {
         if (paths.getPatchReportPath() == null) {
             throw new IllegalArgumentException("obligatory argument --patchReportPath "
                     + "not present, -h for help");

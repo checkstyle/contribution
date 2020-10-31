@@ -33,7 +33,7 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 import com.github.checkstyle.Main;
 import com.github.checkstyle.data.CheckstyleRecord;
-import com.github.checkstyle.data.CliPaths;
+import com.github.checkstyle.data.CliOptions;
 import com.github.checkstyle.data.DiffReport;
 import com.github.checkstyle.data.MergedConfigurationModule;
 import com.github.checkstyle.data.Statistics;
@@ -81,7 +81,7 @@ public final class SiteGenerator {
      *         on failure to write site to disc.
      */
     public static void generate(DiffReport diffReport, MergedConfigurationModule diffConfiguration,
-            CliPaths paths) throws IOException {
+            CliOptions paths) throws IOException {
         // setup thymeleaf engine
         final TemplateEngine tplEngine = getTemplateEngine();
         // setup xreference generator
@@ -147,16 +147,16 @@ public final class SiteGenerator {
      *        file writer.
      * @param diffReport
      *        difference between two checkstyle reports.
-     * @param paths
-     *        CLI paths.
+     * @param options
+     *        CLI options.
      * @param xrefGenerator
      *        xReference generator.
      */
     private static void generateBody(TemplateEngine tplEngine, FileWriter writer,
-            DiffReport diffReport, CliPaths paths, XrefGenerator xrefGenerator) {
+            DiffReport diffReport, CliOptions options, XrefGenerator xrefGenerator) {
         final AnchorCounter anchorCounter = new AnchorCounter();
 
-        final Path refFilesPath = paths.getRefFilesPath();
+        final Path refFilesPath = options.getRefFilesPath();
         for (Map.Entry<String, List<CheckstyleRecord>> entry : diffReport.getRecords().entrySet()) {
             final List<CheckstyleRecord> records = entry.getValue();
             String filename = entry.getKey();
@@ -165,7 +165,7 @@ public final class SiteGenerator {
 
             for (CheckstyleRecord checkstyleRecord : records) {
                 final String xreference = xrefGenerator.generateXref(checkstyleRecord.getXref(),
-                            paths.isShortFilePaths());
+                            options.isShortFilePaths());
                 checkstyleRecord.setXref(xreference);
             }
 
