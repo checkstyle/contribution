@@ -90,7 +90,11 @@ You can generate report in different ways:
 2) generate report using github action.
 
 To generate report using github action, you need to provide links to "raw" versions
-of your configuration and projects-to-test-on.properties files.
+of your
+configuration([template](https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/my_check.xml))
+and
+projects-to-test-on.properties([template](https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/projects-to-test-on.properties))
+files.
 There are many ways to do that, but recommended one is to create
 [GitHub Gist](https://gist.github.com/) for each file.
 
