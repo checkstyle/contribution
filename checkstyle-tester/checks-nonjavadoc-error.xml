@@ -298,6 +298,11 @@
     <module name="IllegalType"/>
     <module name="InnerAssignment"/>
     <module name="MagicNumber"/>
+    <module name="MatchXpath">
+      <property name="query"
+                value="//LITERAL_CATCH//METHOD_CALL[.//IDENT[@text = 'printStackTrace']]/.."/>
+      <message key="matchxpath.match" value="Avoid using 'printStackTrace'."/>
+    </module>
     <module name="MissingCtor"/>
     <module name="MissingSwitchDefault"/>
     <module name="ModifiedControlVariable"/>
