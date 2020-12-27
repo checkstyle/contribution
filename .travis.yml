@@ -1,17 +1,11 @@
 language: java
 sudo: false
 
-install:
-  - gem install mdl
+install: []
 
 matrix:
   fast_finish: true
   include:
-    - jdk: openjdk8
-      env:
-        - DESC="markdown lint"
-        - CMD="./.ci/travis.sh markdownlint"
-
     - jdk: openjdk8
       env:
         - DESC="releasenotes-builder"
@@ -52,7 +46,6 @@ addons:
   apt:
     packages:
       - xmlstarlet
-      - ruby
 
 script:
   - xmlstarlet ed --inplace -d "//mirrors" /home/travis/.m2/settings.xml
