@@ -248,75 +248,11 @@ def runMavenExecution(srcDir, excludes, checkstyleConfig, ignoreExceptions, chec
 }
 
 def postProcessCheckstyleReport(targetDir, repoName, repoPath) {
-    def siteDir = getOsSpecificPath("$targetDir", "site")
-    println 'linking report to index.html'
-    new File(getOsSpecificPath("$siteDir", "index.html")).renameTo  getOsSpecificPath("$siteDir", "_index.html")
-    Files.createLink(Paths.get(getOsSpecificPath("$siteDir", "index.html")),
-        Paths.get(getOsSpecificPath("$siteDir", "checkstyle.html")))
-
-    removeNonReferencedXrefFiles(siteDir)
-    removeEmptyDirectories(new File(getOsSpecificPath("$siteDir", "xref")))
-
     new AntBuilder().replace(
         file: getOsSpecificPath("$targetDir", "checkstyle-result.xml"),
         token: new File(getOsSpecificPath("src", "main", "java", "$repoName")).absolutePath,
         value: getOsSpecificPath("$repoPath")
     )
-}
-
-def removeNonReferencedXrefFiles(siteDir) {
-    println 'Removing non referenced xref files in report ...'
-
-    def linesFromIndexHtml = Files.readAllLines(Paths.get("$siteDir/index.html"))
-    def filesReferencedInReport = getFilesReferencedInReport(linesFromIndexHtml)
-
-    def xrefPath = Paths.get(getOsSpecificPath("$siteDir", "xref"))
-    if (Files.isDirectory(xrefPath)) {
-        xrefPath.toFile().eachFileRecurse {
-            fileObj ->
-                def path = fileObj.path
-                path = path.substring(path.indexOf("xref"))
-                if (isWindows()) {
-                    path = path.replace("\\", "/")
-                }
-                def fileName = fileObj.name
-                if (fileObj.isFile()
-                    && !filesReferencedInReport.contains(path)
-                    && 'stylesheet.css' != fileName
-                    && 'allclasses-frame.html' != fileName
-                    && 'index.html' != fileName
-                    && 'overview-frame.html' != fileName
-                    && 'overview-summary.html' != fileName) {
-                    fileObj.delete()
-                }
-        }
-    }
-}
-
-def getFilesReferencedInReport(linesFromIndexHtml) {
-    def xrefStartIdx = 2
-    def pattern = Pattern.compile('\\./xref/[^<>]+\\.html')
-    def referencedFiles = new HashSet<String>()
-    linesFromIndexHtml.each {
-        line ->
-            def matcher = pattern.matcher(line)
-            if (matcher.find()) {
-                referencedFiles.addAll(matcher.collect { it.substring(xrefStartIdx) })
-            }
-    }
-    return referencedFiles
-}
-
-def removeEmptyDirectories(file) {
-    def contents = file.listFiles()
-    if (contents != null) {
-        for (File f : contents) {
-            removeEmptyDirectories(f)
-        }
-    }
-    if (file.isDirectory() && file.listFiles().length == 0) {
-        file.delete()
-    }
 }
 
 def executeCmd(cmd, dir =  new File("").getAbsoluteFile()) {
