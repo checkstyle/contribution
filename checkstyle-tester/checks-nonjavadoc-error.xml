@@ -509,6 +509,7 @@
     </module>
     <module name="TypeName"/>
     <module name="IllegalIdentifierName"/>
+    <module name="RecordComponentName"/>
 
     <!-- Regexp -->
     <module name="Regexp"/>
