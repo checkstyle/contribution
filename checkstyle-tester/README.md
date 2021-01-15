@@ -61,6 +61,10 @@ will be analyzed by Checkstyle during report generation.
 This option is useful for Windows users where they are restricted to maximum directory depth
 (optional, default is false).
 
+**extraMvnRegressionOptions** (xm) - this option can be used to supply extra command line arguments
+to maven during the Checkstyle regression run.  For example, if you want to skip site generation, you
+would add `--extraMvnRegressionOptions "-Dmaven.site.skip=true"` to `diff.groovy` execution.
+
 ## Outputs
 
 When the script finishes its work the following directory structure will be created

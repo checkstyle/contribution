@@ -63,6 +63,8 @@ def getCliOptions(args) {
             + ' as a shorter version to prevent long paths. (optional, default is false)')
         m(longOpt: 'mode', args: 1, required: false, argName: 'mode', 'The mode of the tool:' \
             + ' \'diff\' or \'single\'. (optional, default is \'diff\')')
+        xm(longOpt: 'extraMvnRegressionOptions', args: 1, required: false, 'Extra arguments to pass to Maven' \
+            + 'for Checkstyle Regression run (optional, ex: -Dmaven.prop=true)')
     }
     return cli.parse(args)
 }
@@ -76,6 +78,7 @@ def areValidCliOptions(cliOptions) {
     def localGitRepo = new File(cliOptions.localGitRepo)
     def patchBranch = cliOptions.patchBranch
     def baseBranch = cliOptions.baseBranch
+    def extraMvnRegressionOptions = cliOptions.extraMvnRegressionOptions
 
     if (toolMode && !('diff'.equals(toolMode) || 'single'.equals(toolMode))) {
         err.println "Error: Invalid mode: \'$toolMode\'. The mode should be \'single\' or \'diff\'!"
@@ -185,8 +188,16 @@ def generateCheckstyleReport(cfg) {
     def checkstyleVersion = getCheckstyleVersionFromPomXml("$cfg.localGitRepo/pom.xml", 'version')
 
     executeCmd("mvn -e --batch-mode -Pno-validations clean install", cfg.localGitRepo)
-    executeCmd("""groovy launch.groovy --listOfProjects $cfg.listOfProjects
-            --config $cfg.checkstyleCfg --ignoreExceptions --ignoreExcludes --checkstyleVersion $checkstyleVersion""")
+
+    command = """groovy launch.groovy --listOfProjects $cfg.listOfProjects
+            --config $cfg.checkstyleCfg --ignoreExceptions --ignoreExcludes
+            --checkstyleVersion $checkstyleVersion"""
+
+    if (cfg.extraMvnRegressionOptions == true) {
+        command.concat("--extraMvnOptions " + cfg.extraMvnRegressionOptions)
+    }
+    executeCmd(command)
+
     println "Moving Checkstyle report into $cfg.destDir ..."
     moveDir("reports", cfg.destDir)
 
@@ -480,11 +491,13 @@ class Config {
     def tmpMasterReportsDir
     def tmpPatchReportsDir
     def diffDir
+    def extraMvnRegressionOptions
 
     Config(cliOptions) {
         localGitRepo = new File(cliOptions.localGitRepo)
         shortFilePaths = cliOptions.shortFilePaths
         listOfProjects = cliOptions.listOfProjects
+        extraMvnRegressionOptions = cliOptions.extraMvnRegressionOptions
 
         mode = cliOptions.mode
         if (!mode) {
@@ -531,6 +544,7 @@ class Config {
             checkstyleCfg: baseConfig,
             listOfProjects: listOfProjects,
             destDir: tmpMasterReportsDir,
+            extraMvnRegressionOptions: extraMvnRegressionOptions,
         ]
     }
 
@@ -541,6 +555,7 @@ class Config {
             checkstyleCfg: patchConfig,
             listOfProjects: listOfProjects,
             destDir: tmpPatchReportsDir,
+            extraMvnRegressionOptions: extraMvnRegressionOptions,
         ]
     }
 
