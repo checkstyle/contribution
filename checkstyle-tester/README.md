@@ -118,13 +118,20 @@ Diff Regression projects: {{URI to projects-to-test-on.properties}}
 
 Diff Regression config: {{URI to my_checks.xml}}
 
-If you want to generate [Difference Report with Different Base and Patch Config]
-(./README_MANUAL_EXECUTION.md#difference-report-with-different-base-and-patch-config)
+If you want to generate [Difference Report with Different Base and Patch Config](./README_MANUAL_EXECUTION.md#difference-report-with-different-base-and-patch-config)
 (for split properties, change property types, add a new property, etc...),
 you need to add one more URI to the pull request description.
 This URI must refer to patch config. The additional URI format should be like this:
 
 Diff Regression patch config: {{URI to patch_config.xml}}
+
+Optional - you can add some label for your report. It can be useful in case you are creating many
+ reports. You need to add special line to PR description:
+
+Report label: here is some label
+
+Everything between "Report label: " and EOL will be taken as a label for the report. For the example above,
+label will be `here is some label`. This text will be added in bot message before link to report.
 
 Examples of URIs:
 
@@ -151,6 +158,10 @@ there is no need to add new comment, you can just edit comment to appropriate fo
 
 ![Alt text](./screenshots/diff_report_with_patch_config.png?raw=true
 "Report with Different Base and Patch Config")
+
+#### Basic Difference Report With Label
+
+![Alt text](./screenshots/diff_report_example_label.png?raw=true "Basic report with label")
 
 ## Checkstyle pitest Regression
 
