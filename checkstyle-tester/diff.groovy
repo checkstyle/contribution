@@ -1,5 +1,7 @@
 import static java.lang.System.err
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
+import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.regex.Pattern
 
@@ -8,6 +10,7 @@ static void main(String[] args) {
     if (areValidCliOptions(cliOptions)) {
         def cfg = new Config(cliOptions)
         def configFilesList = [cfg.config, cfg.baseConfig, cfg.patchConfig, cfg.listOfProjects]
+        copyConfigFilesAndUpdatePaths(configFilesList)
 
         if (hasUnstagedChanges(cfg.localGitRepo)) {
             def exMsg = "Error: git repository ${cfg.localGitRepo.path} has unstaged changes!"
@@ -151,6 +154,21 @@ def isExistingGitBranch(gitRepo, branchName) {
         exist = false
     }
     return exist
+}
+
+def copyConfigFilesAndUpdatePaths(configFilesList) {
+    // Remove boolean value for single config in case of different base and patch config
+    configFilesList.removeIf { it instanceof Boolean };
+    // Remove dups in case of single config
+    configFilesList = configFilesList.unique();
+
+    for (filename in configFilesList) {
+        def sourceFile = new File(filename)
+        def checkstyleTesterDir = new File("").getCanonicalFile()
+        def destFile = new File("${checkstyleTesterDir.toPath()}/${sourceFile.getName()}")
+        Files.copy(sourceFile.toPath(), destFile.toPath(), REPLACE_EXISTING)
+        filename = destFile.toPath()
+    }
 }
 
 def hasUnstagedChanges(gitRepo) {
@@ -331,12 +349,6 @@ def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo, checkstylePatchR
 
 def printConfigSection(diffDir, configFilesList, summaryIndexHtml) {
     def textTransform = getTextTransform();
-
-    // Remove boolean value for single config in case of different base and patch config
-    configFilesList.removeIf {it instanceof Boolean};
-    // Remove dups in case of single config
-    configFilesList = configFilesList.unique();
-
     for (filename in configFilesList) {
         def configFile = new File(filename)
         generateAndPrintConfigHtmlFile(diffDir, configFile, textTransform,
