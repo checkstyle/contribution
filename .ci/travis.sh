@@ -32,15 +32,15 @@ patch-diff-report-tool)
   ;;
 
 checkstyle-tester-launch-groovy)
-  checkout_from https://github.com/checkstyle/checkstyle
+  checkout_from "-b issue-529 https://github.com/nmancus1/contribution.git"
   cd .ci-temp/checkstyle
   mvn --batch-mode clean install -Passembly
   cd ../../checkstyle-tester
-  groovy launch.groovy -l projects-for-travis.properties -c my_check.xml -i
+  groovy diff.groovy -l projects-for-travis.properties -c my_check.xml
   ;;
 
 checkstyle-tester-diff-groovy-patch)
-  checkout_from https://github.com/checkstyle/checkstyle
+  checkout_from "-b issue-529 https://github.com/nmancus1/contribution.git"
   cd .ci-temp/checkstyle
   git checkout -b patch-branch
   cd ../../checkstyle-tester
@@ -52,7 +52,7 @@ checkstyle-tester-diff-groovy-patch)
   ;;
 
 checkstyle-tester-diff-groovy-base-patch)
-  checkout_from https://github.com/checkstyle/checkstyle
+  checkout_from "-b issue-529 https://github.com/nmancus1/contribution.git"
   cd .ci-temp/checkstyle
   git checkout -b patch-branch
   cd ../../checkstyle-tester
@@ -61,7 +61,7 @@ checkstyle-tester-diff-groovy-base-patch)
   ;;
 
 checkstyle-tester-diff-groovy-patch-only)
-  checkout_from https://github.com/checkstyle/checkstyle
+  checkout_from "-b issue-529 https://github.com/nmancus1/contribution.git"
   cd .ci-temp/checkstyle
   git checkout -b patch-branch
   cd ../../checkstyle-tester
@@ -72,7 +72,7 @@ checkstyle-tester-diff-groovy-patch-only)
 codenarc)
   cd checkstyle-tester
   ./codenarc.sh . diff.groovy > diff.log && cat diff.log && grep '(p1=0; p2=0; p3=0)' diff.log
-  ./codenarc.sh . launch.groovy > launch.log && cat launch.log && grep '(p1=0; p2=11; p3=1)' launch.log
+  #./codenarc.sh . launch.groovy > launch.log && cat launch.log && grep '(p1=0; p2=11; p3=1)' launch.log
   ;;
 
 markdownlint)
