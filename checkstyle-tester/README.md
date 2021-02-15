@@ -114,7 +114,7 @@ Report configuration([template](https://raw.githubusercontent.com/checkstyle/con
 
 4) **Optional** `Diff Regression projects: {{URI to projects-to-test-on.properties}}`
 Link to custom list of projects([template](https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/projects-to-test-on.properties)).
-If no list is provided, [default](https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/projects-to-test-on.properties) list is taken.
+If no list is provided, [default](https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/projects-to-test-on-for-github-action.properties) list is taken.
 
 5) **Optional** `Report label: here is some label`
 Everything between "Report label: " and EOL will be taken as a label for the report. For the example above,
