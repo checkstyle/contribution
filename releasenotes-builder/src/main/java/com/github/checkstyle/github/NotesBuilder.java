@@ -65,7 +65,7 @@ public final class NotesBuilder {
         Pattern.compile("^\\[maven-release-plugin].*[\r\n]?$|"
             + "^update to ([0-9]|\\.)+-SNAPSHOT[\r\n]?$|"
             + "^doc: release notes.*[\r\n]?$|"
-            + "^(config:|minor:|infra:|dependency:)(.|\n)*[\r|\n]?$");
+            + "^(config:|minor:|infra:|dependency:|supplemental:)(.|\n)*[\r|\n]?$");
 
     /** String format pattern for github issue. */
     private static final String GITHUB_ISSUE_TEMPLATE =
