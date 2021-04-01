@@ -185,6 +185,9 @@
         <module name="com.github.sevntu.checkstyle.checks.naming.UniformEnumConstantNameCheck" />
         <module name="com.github.sevntu.checkstyle.checks.annotation.ForbidAnnotationElementValueCheck" />
         <module name="com.github.sevntu.checkstyle.checks.design.HideUtilityClassConstructorCheck" />
+        <module name="com.github.sevntu.checkstyle.checks.coding.PreferMethodReferenceCheck">
+      	  <property name="detectForExpression" value="true" />
+    	 </module>
         <module name="com.github.sevntu.checkstyle.checks.coding.AvoidModifiersForTypesCheck">
           <property name="forbiddenClassesRegexpProtected" value="Logger"/>
           <property name="forbiddenClassesRegexpPublic" value="Logger"/>
