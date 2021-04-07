@@ -26,7 +26,7 @@ you may require other tools like Git or Mericural, for Git and HG repositories r
 
 `diff.groovy` supports the following command line arguments:
 
-**localGitRepo** (r) - path to the local Checkstyle repository (required);
+**localGitRepo** (r) - path to the local Checkstyle repository (required in diff mode);
 
 **baseBranch** (b) - name of the base branch in local Checkstyle repository
 (optional, if absent, then the tool will use only patchBranch in case the tool
@@ -42,7 +42,7 @@ will finish the execution with the error.
 You must specify 'patchBranch' and 'patchConfig' if the mode is 'single', and 'baseBranch',
 'baseConfig', 'patchBranch', and 'patchConfig' if the mode is 'diff');
 
-**patchBranch** (p) - name of the branch with your changes (required);
+**patchBranch** (p) - name of the branch with your changes (required in diff mode);
 
 **baseConfig** (bc) - path to the base checkstyle configuration file.
 It will be applied to base branch (required if patchConfig is specified);
@@ -64,6 +64,10 @@ This option is useful for Windows users where they are restricted to maximum dir
 **extraMvnRegressionOptions** (xm) - this option can be used to supply extra command line arguments
 to maven during the Checkstyle regression run.  For example, if you want to skip site generation, you
 would add `--extraMvnRegressionOptions "-Dmaven.site.skip=true"` to `diff.groovy` execution.
+
+**allowExcludes** (g) - this option tells `diff.groovy` to allow paths and files defined in the file specified for
+the `--listOfProjects (-l)` argument to be excluded from report generation (optional, default is false). This option is
+ used for files that are not compilable or that Checkstyle cannot parse.
 
 ## Outputs
 

@@ -34,9 +34,11 @@ patch-diff-report-tool)
 checkstyle-tester-launch-groovy)
   checkout_from https://github.com/checkstyle/checkstyle
   cd .ci-temp/checkstyle
+  LOCAL_GIT_REPO=$(pwd)
   mvn --batch-mode clean install -Passembly
   cd ../../checkstyle-tester
-  groovy launch.groovy -l projects-for-travis.properties -c my_check.xml -i
+  groovy diff.groovy -r "$LOCAL_GIT_REPO" -l projects-for-travis.properties --patchConfig my_check.xml \
+        --patchBranch master --mode single --allowExcludes
   ;;
 
 checkstyle-tester-diff-groovy-patch)
@@ -67,6 +69,37 @@ checkstyle-tester-diff-groovy-patch-only)
   cd ../../checkstyle-tester
   groovy diff.groovy -l projects-for-travis.properties \
     -pc my_check.xml -p patch-branch -r ../.ci-temp/checkstyle -m single
+  ;;
+
+checkstyle-tester-diff-groovy-regression-single)
+  # Check out lateset checkstyle from master
+  rm -rf .ci-temp
+  checkout_from https://github.com/checkstyle/checkstyle
+
+  # Run report from master branch of contribution
+  checkout_from https://github.com/checkstyle/contribution
+  cd .ci-temp/contribution/checkstyle-tester
+  sed -i'' 's/^guava/#guava/' projects-to-test-on.properties
+  sed -i'' 's/#checkstyle|/checkstyle|/' projects-to-test-on.properties
+  export MAVEN_OPTS="-Xmx2048m"
+  groovy ./diff.groovy --listOfProjects projects-to-test-on.properties \
+    -pc ../../../checkstyle-tester/diff-groovy-regression-config.xml \
+    -r ../../checkstyle -xm "-Dcheckstyle.failsOnError=false" \
+    -m single -p master
+
+  # Run report with current branch
+  cd ../../../checkstyle-tester/
+  sed -i'' 's/^guava/#guava/' projects-to-test-on.properties
+  sed -i'' 's/#checkstyle|/checkstyle|/' projects-to-test-on.properties
+  rm -rf reports repositories
+  groovy ./diff.groovy --listOfProjects projects-to-test-on.properties \
+    -pc diff-groovy-regression-config.xml -r ../.ci-temp/checkstyle/ \
+    -m single -p master -xm "-Dcheckstyle.failsOnError=false"
+
+  cd ..
+  # We need to ignore file paths below, since they will be different between reports
+  diff -I "contribution" checkstyle-tester/reports/diff/checkstyle/index.html \
+    .ci-temp/contribution/checkstyle-tester/reports/diff/checkstyle/index.html
   ;;
 
 codenarc)
