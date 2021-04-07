@@ -12,7 +12,7 @@ static void main(String[] args) {
         def configFilesList = [cfg.config, cfg.baseConfig, cfg.patchConfig, cfg.listOfProjects]
         copyConfigFilesAndUpdatePaths(configFilesList)
 
-        if (hasUnstagedChanges(cfg.localGitRepo)) {
+        if (cfg.localGitRepo && hasUnstagedChanges(cfg.localGitRepo)) {
             def exMsg = "Error: git repository ${cfg.localGitRepo.path} has unstaged changes!"
             throw new IllegalStateException(exMsg)
         }
@@ -27,15 +27,18 @@ static void main(String[] args) {
 
         def checkstyleBaseReportInfo = null
         if (cfg.isDiffMode()) {
-            checkstyleBaseReportInfo = generateCheckstyleReport(cfg.checkstyleToolBaseConfig)
+            checkstyleBaseReportInfo = launchCheckstyleReport(cfg.checkstyleToolBaseConfig)
         }
 
-        def checkstylePatchReportInfo = generateCheckstyleReport(cfg.checkstyleToolPatchConfig)
-        deleteDir(cfg.reportsDir)
-        moveDir(cfg.tmpReportsDir, cfg.reportsDir)
+        def checkstylePatchReportInfo = launchCheckstyleReport(cfg.checkstyleToolPatchConfig)
 
-        generateDiffReport(cfg.diffToolConfig)
-        generateSummaryIndexHtml(cfg.diffDir, checkstyleBaseReportInfo, checkstylePatchReportInfo, configFilesList)
+        if (checkstylePatchReportInfo) {
+            deleteDir(cfg.reportsDir)
+            moveDir(cfg.tmpReportsDir, cfg.reportsDir)
+
+            generateDiffReport(cfg.diffToolConfig)
+            generateSummaryIndexHtml(cfg.diffDir, checkstyleBaseReportInfo, checkstylePatchReportInfo, configFilesList)
+        }
     }
     else {
         throw new IllegalArgumentException('Error: invalid command line arguments!')
@@ -60,6 +63,8 @@ def getCliOptions(args) {
             'Path to the patch checkstyle config file (required if baseConfig is specified)')
         c(longOpt: 'config', args: 1, required: false, argName: 'path', 'Path to the checkstyle ' \
             + 'config file (required if baseConfig and patchConfig are not secified)')
+        g(longOpt: 'allowExcludes', required: false, 'Whether to allow excludes specified in the list of ' \
+            + 'projects (optional, default is false)')
         l(longOpt: 'listOfProjects', args: 1, required: true, argName: 'path',
             'Path to file which contains projects to test on (required)')
         s(longOpt: 'shortFilePaths', required: false, 'Whether to save report file paths' \
@@ -78,10 +83,11 @@ def areValidCliOptions(cliOptions) {
     def patchConfig = cliOptions.patchConfig
     def config = cliOptions.config
     def toolMode = cliOptions.mode
-    def localGitRepo = new File(cliOptions.localGitRepo)
     def patchBranch = cliOptions.patchBranch
     def baseBranch = cliOptions.baseBranch
     def extraMvnRegressionOptions = cliOptions.extraMvnRegressionOptions
+    def listOfProjectsFile = new File(cliOptions.listOfProjects)
+    def localGitRepo = cliOptions.localGitRepo
 
     if (toolMode && !('diff'.equals(toolMode) || 'single'.equals(toolMode))) {
         err.println "Error: Invalid mode: \'$toolMode\'. The mode should be \'single\' or \'diff\'!"
@@ -90,16 +96,21 @@ def areValidCliOptions(cliOptions) {
     else if (!isValidCheckstyleConfigsCombination(config, baseConfig, patchConfig, toolMode)) {
         valid = false
     }
-    else if (!isValidGitRepo(localGitRepo)) {
+    else if (localGitRepo && !isValidGitRepo(new File(localGitRepo))) {
         err.println "Error: $localGitRepo is not a valid git repository!"
         valid = false
     }
-    else if (!isExistingGitBranch(localGitRepo, patchBranch)) {
+    else if (localGitRepo && !isExistingGitBranch(new File(localGitRepo), patchBranch)) {
         err.println "Error: $patchBranch is not an exiting git branch!"
         valid = false
     }
-    else if (baseBranch && !isExistingGitBranch(localGitRepo, baseBranch)) {
+    else if (baseBranch &&
+            !isExistingGitBranch(new File(localGitRepo), baseBranch)) {
         err.println "Error: $baseBranch is not an existing git branch!"
+        valid = false
+    }
+    else if (!listOfProjectsFile.exists()) {
+        err.println "Error: file ${listOfProjectsFile.name} does not exist!"
         valid = false
     }
 
@@ -192,42 +203,108 @@ def getCheckstyleVersionFromPomXml(pathToPomXml, xmlTagName) {
                 return true
             }
     }
-    if (checkstyleVersion == null) {
-        throw new GroovyRuntimeException("Error: cannot get Checkstyle version from $pathToPomXml!")
-    }
     return checkstyleVersion
 }
 
-def generateCheckstyleReport(cfg) {
-    println "Installing Checkstyle artifact ($cfg.branch) into local Maven repository ..."
-    executeCmd("git checkout $cfg.branch", cfg.localGitRepo)
-    executeCmd("git log -1 --pretty=MSG:%s%nSHA-1:%H", cfg.localGitRepo)
+def launchCheckstyleReport(cfg) {
+    CheckstyleReportInfo reportInfo;
+    def isRegressionTesting = cfg.branch && cfg.localGitRepo
 
-    def checkstyleVersion = getCheckstyleVersionFromPomXml("$cfg.localGitRepo/pom.xml", 'version')
-
-    executeCmd("mvn -e --batch-mode -Pno-validations clean install", cfg.localGitRepo)
-
-    command = """groovy launch.groovy --listOfProjects $cfg.listOfProjects
-            --config $cfg.checkstyleCfg --ignoreExceptions --ignoreExcludes
-            --checkstyleVersion $checkstyleVersion"""
-
-    if (cfg.extraMvnRegressionOptions == true) {
-        command.concat("--extraMvnOptions " + cfg.extraMvnRegressionOptions)
+    // If "no exception" testing, these may not be defined in repos other than checkstyle
+    if (isRegressionTesting) {
+        println "Installing Checkstyle artifact ($cfg.branch) into local Maven repository ..."
+        executeCmd("git checkout $cfg.branch", cfg.localGitRepo)
+        executeCmd("git log -1 --pretty=MSG:%s%nSHA-1:%H", cfg.localGitRepo)
+        executeCmd("mvn -e --batch-mode -Pno-validations clean install", cfg.localGitRepo)
     }
-    executeCmd(command)
+
+    cfg.checkstyleVersion =
+            getCheckstyleVersionFromPomXml("$cfg.localGitRepo/pom.xml", 'version')
+
+    generateCheckstyleReport(cfg)
 
     println "Moving Checkstyle report into $cfg.destDir ..."
     moveDir("reports", cfg.destDir)
 
-    return new CheckstyleReportInfo(
-        cfg.branch,
-        getLastCommitSha(cfg.localGitRepo, cfg.branch),
-        getLastCommitMsg(cfg.localGitRepo, cfg.branch),
-        getLastCommitTime(cfg.localGitRepo, cfg.branch)
-    )
+    if (isRegressionTesting) {
+        reportInfo = new CheckstyleReportInfo(
+            cfg.branch,
+            getLastCheckstyleCommitSha(cfg.localGitRepo, cfg.branch),
+            getLastCommitMsg(cfg.localGitRepo, cfg.branch),
+            getLastCommitTime(cfg.localGitRepo, cfg.branch)
+        )
+    }
+    return reportInfo
 }
 
-def getLastCommitSha(gitRepo, branch) {
+def generateCheckstyleReport(cfg) {
+    println 'Testing Checkstyle started'
+
+    def targetDir = 'target'
+    def srcDir = getOsSpecificPath("src", "main", "java")
+    def reposDir = 'repositories'
+    def reportsDir = 'reports'
+    createWorkDirsIfNotExist(srcDir, reposDir, reportsDir)
+
+    final REPO_NAME_PARAM_NO = 0
+    final REPO_TYPE_PARAM_NO = 1
+    final REPO_URL_PARAM_NO = 2
+    final REPO_COMMIT_ID_PARAM_NO = 3
+    final REPO_EXCLUDES_PARAM_NO = 4
+    final FULL_PARAM_LIST_SIZE = 5
+
+    def checkstyleConfig = cfg.checkstyleCfg
+    def checkstyleVersion = cfg.checkstyleVersion
+    def failsOnError = cfg.failsOnError
+    def allowExcludes = cfg.allowExcludes
+    def listOfProjectsFile = new File(cfg.listOfProjects)
+    def projects = listOfProjectsFile.readLines()
+    def extraMvnRegressionOptions = cfg.extraMvnRegressionOptions
+
+    projects.each {
+        project ->
+            if (!project.startsWith('#') && !project.isEmpty()) {
+                def params = project.split('\\|', -1)
+                if (params.length < FULL_PARAM_LIST_SIZE) {
+                    throw new InvalidPropertiesFormatException("Error: line '$project' " +
+                        "in file '$listOfProjectsFile.name' should have $FULL_PARAM_LIST_SIZE " +
+                        "pipe-delimited sections!")
+                }
+
+                def repoName = params[REPO_NAME_PARAM_NO]
+                def repoType = params[REPO_TYPE_PARAM_NO]
+                def repoUrl = params[REPO_URL_PARAM_NO]
+                def commitId = params[REPO_COMMIT_ID_PARAM_NO]
+
+                def excludes = ""
+                if (allowExcludes) {
+                    excludes = params[REPO_EXCLUDES_PARAM_NO]
+                }
+
+                deleteDir(srcDir)
+                if (repoType == 'local') {
+                    copyDir(repoUrl, getOsSpecificPath("$srcDir", "$repoName"))
+                } else {
+                    cloneRepository(repoName, repoType, repoUrl, commitId, reposDir)
+                    copyDir(getOsSpecificPath("$reposDir", "$repoName"), getOsSpecificPath("$srcDir", "$repoName"))
+                }
+                runMavenExecution(srcDir, excludes, checkstyleConfig, failsOnError,
+                    checkstyleVersion, extraMvnRegressionOptions)
+                def repoPath = repoUrl
+                if (repoType != 'local') {
+                    repoPath = new File(getOsSpecificPath("$reposDir", "$repoName")).absolutePath
+                }
+                postProcessCheckstyleReport(targetDir, repoName, repoPath)
+                deleteDir(getOsSpecificPath("$srcDir", "$repoName"))
+                moveDir(targetDir, getOsSpecificPath("$reportsDir", "$repoName"))
+            }
+    }
+
+    // restore empty_file to make src directory tracked by git
+    new File(getOsSpecificPath("$srcDir", "empty_file")).createNewFile()
+}
+
+def getLastCheckstyleCommitSha(gitRepo, branch) {
     executeCmd("git checkout $branch", gitRepo)
     return 'git rev-parse HEAD'.execute(null, gitRepo).text.trim()
 }
@@ -240,6 +317,78 @@ def getLastCommitMsg(gitRepo, branch) {
 def getLastCommitTime(gitRepo, branch) {
     executeCmd("git checkout $branch", gitRepo)
     return 'git log -1 --format=%cd'.execute(null, gitRepo).text.trim()
+}
+
+def getCommitSha(commitId, repoType, srcDestinationDir) {
+    def cmd = ''
+    switch (repoType) {
+        case 'git':
+            cmd = "git rev-parse $commitId"
+            break
+        case 'hg':
+            cmd = "hg identify --id $commitId"
+            break
+        default:
+            throw new IllegalArgumentException("Error! Unknown $repoType repository.")
+    }
+    def sha = cmd.execute(null, new File("$srcDestinationDir")).text
+    // cmd output contains new line character which should be removed
+    return sha.replace('\n', '')
+}
+
+def getCloneCmd(repoType, repoUrl, srcDestinationDir) {
+    def cloneCmd = ''
+    switch (repoType) {
+        case 'git':
+            cloneCmd = "git clone $repoUrl $srcDestinationDir"
+            break
+        case 'hg':
+            cloneCmd = "hg clone $repoUrl $srcDestinationDir"
+            break
+        default:
+            throw new IllegalArgumentException("Error! Unknown $repoType repository.")
+    }
+}
+
+def cloneRepository(repoName, repoType, repoUrl, commitId, srcDir) {
+    def srcDestinationDir = getOsSpecificPath("$srcDir", "$repoName")
+    if (!Files.exists(Paths.get(srcDestinationDir))) {
+        def cloneCmd = getCloneCmd(repoType, repoUrl, srcDestinationDir)
+        println "Cloning $repoType repository '$repoName' to $srcDestinationDir folder ..."
+        executeCmdWithRetry(cloneCmd)
+        println "Cloning $repoType repository '$repoName' - completed\n"
+    }
+
+    if (commitId && commitId != '') {
+        def lastCommitSha = getLastProjectCommitSha(repoType, srcDestinationDir)
+        def commitIdSha = getCommitSha(commitId, repoType, srcDestinationDir)
+        if (lastCommitSha != commitIdSha) {
+            def resetCmd = getResetCmd(repoType, commitId)
+            println "Resetting $repoType sources to commit '$commitId'"
+            executeCmd(resetCmd, new File("$srcDestinationDir"))
+        }
+    }
+    println "$repoName is synchronized"
+}
+
+def executeCmdWithRetry(cmd, dir = new File("").getAbsoluteFile(), retry = 5) {
+    def osSpecificCmd = getOsSpecificCmd(cmd)
+    def left = retry
+    while (true) {
+        def proc = osSpecificCmd.execute(null, dir)
+        proc.consumeProcessOutput(System.out, System.err)
+        proc.waitFor()
+        left--
+        if (proc.exitValue() != 0) {
+            if (left <= 0) {
+                throw new GroovyRuntimeException("Error: ${proc.err.text}!")
+            } else {
+                Thread.sleep(15000)
+            }
+        } else {
+            break
+        }
+    }
 }
 
 def generateDiffReport(cfg) {
@@ -376,6 +525,21 @@ def getFilenameWithoutExtension(filename) {
     return filenameWithoutExtension
 }
 
+def createWorkDirsIfNotExist(srcDirPath, repoDirPath, reportsDirPath) {
+    def srcDir = new File(srcDirPath)
+    if (!srcDir.exists()) {
+        srcDir.mkdirs()
+    }
+    def repoDir = new File(repoDirPath)
+    if (!repoDir.exists()) {
+        repoDir.mkdir()
+    }
+    def reportsDir = new File(reportsDirPath)
+    if (!reportsDir.exists()) {
+        reportsDir.mkdir()
+    }
+}
+
 def printReportInfoSection(summaryIndexHtml, checkstyleBaseReportInfo, checkstylePatchReportInfo, projectsStatistic) {
     def date = new Date();
     summaryIndexHtml << ('<h6>')
@@ -452,6 +616,42 @@ def getProjectsStatistic(diffDir) {
     return projectsStatistic
 }
 
+def runMavenExecution(srcDir, excludes, checkstyleConfig, failsOnError,
+                      checkstyleVersion, extraMvnRegressionOptions) {
+    println "Running 'mvn clean' on $srcDir ..."
+    def mvnClean = "mvn --batch-mode clean"
+    executeCmd(mvnClean)
+    println "Running Checkstyle on $srcDir ... with excludes {$excludes}"
+    def mvnSite = "mvn -e --batch-mode site -Dcheckstyle.config.location=$checkstyleConfig " +
+        "-Dcheckstyle.excludes=$excludes"
+    if (checkstyleVersion) {
+        mvnSite = mvnSite + " -Dcheckstyle.version=$checkstyleVersion"
+    }
+    if (extraMvnRegressionOptions) {
+        if (!extraMvnRegressionOptions.startsWith("-")){
+            extraMvnRegressionOptions = "-" + extraMvnRegressionOptions
+        }
+        mvnSite = mvnSite + " " + extraMvnRegressionOptions
+    }
+    println(mvnSite)
+    executeCmd(mvnSite)
+    println "Running Checkstyle on $srcDir - finished"
+}
+
+def postProcessCheckstyleReport(targetDir, repoName, repoPath) {
+    new AntBuilder().replace(
+        file: getOsSpecificPath("$targetDir", "checkstyle-result.xml"),
+        token: new File(getOsSpecificPath("src", "main", "java", "$repoName")).absolutePath,
+        value: getOsSpecificPath("$repoPath")
+    )
+}
+
+def copyDir(source, destination) {
+    new AntBuilder().copy(todir: destination) {
+        fileset(dir: source)
+    }
+}
+
 def moveDir(source, destination) {
     new AntBuilder().move(todir: destination) {
         fileset(dir: source)
@@ -463,6 +663,7 @@ def deleteDir(dir) {
 }
 
 def executeCmd(cmd, dir = new File("").absoluteFile) {
+    println "Running command: ${cmd}"
     def osSpecificCmd = getOsSpecificCmd(cmd)
     def proc = osSpecificCmd.execute(null, dir)
     proc.consumeProcessOutput(System.out, System.err)
@@ -481,6 +682,47 @@ def getOsSpecificCmd(cmd) {
         osSpecificCmd = cmd
     }
     return osSpecificCmd
+}
+
+def getOsSpecificPath(String... name) {
+    def slash = isWindows() ? "\\" : "/"
+    def path = name.join(slash)
+    return path
+}
+
+def isWindows() {
+    return System.properties['os.name'].toLowerCase().contains('windows')
+}
+
+def getResetCmd(repoType, commitId) {
+    def resetCmd = ''
+    switch (repoType) {
+        case 'git':
+            resetCmd = "git reset --hard $commitId"
+            break
+        case 'hg':
+            resetCmd = "hg up $commitId"
+            break
+        default:
+            throw new IllegalArgumentException("Error! Unknown $repoType repository.")
+    }
+}
+
+def getLastProjectCommitSha(repoType, srcDestinationDir) {
+    def cmd = ''
+    switch (repoType) {
+        case 'git':
+            cmd = "git rev-parse HEAD"
+            break
+        case 'hg':
+            cmd = "hg id -i"
+            break
+        default:
+            throw new IllegalArgumentException("Error! Unknown $repoType repository.")
+    }
+    def sha = cmd.execute(null, new File("$srcDestinationDir")).text
+    // cmd output contains new line character which should be removed
+    return sha.replace('\n', '')
 }
 
 class Config {
@@ -505,11 +747,22 @@ class Config {
     def diffDir
     def extraMvnRegressionOptions
 
+    def checkstyleVersion
+    def sevntuVersion
+    def failsOnError
+    def allowExcludes
+
     Config(cliOptions) {
-        localGitRepo = new File(cliOptions.localGitRepo)
+        if(cliOptions.localGitRepo) {
+            localGitRepo = new File(cliOptions.localGitRepo)
+        }
+
         shortFilePaths = cliOptions.shortFilePaths
         listOfProjects = cliOptions.listOfProjects
         extraMvnRegressionOptions = cliOptions.extraMvnRegressionOptions
+
+        checkstyleVersion = cliOptions.checkstyleVersion
+        allowExcludes = cliOptions.allowExcludes
 
         mode = cliOptions.mode
         if (!mode) {
@@ -557,6 +810,7 @@ class Config {
             listOfProjects: listOfProjects,
             destDir: tmpMasterReportsDir,
             extraMvnRegressionOptions: extraMvnRegressionOptions,
+            allowExcludes:allowExcludes,
         ]
     }
 
@@ -568,6 +822,7 @@ class Config {
             listOfProjects: listOfProjects,
             destDir: tmpPatchReportsDir,
             extraMvnRegressionOptions: extraMvnRegressionOptions,
+            allowExcludes: allowExcludes,
         ]
     }
 
@@ -580,6 +835,7 @@ class Config {
             patchConfig: patchConfig,
             shortFilePaths: shortFilePaths,
             mode: mode,
+            allowExcludes: allowExcludes,
         ]
     }
 }

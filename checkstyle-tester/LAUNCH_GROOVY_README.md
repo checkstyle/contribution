@@ -1,3 +1,5 @@
+# _LAUNCH.GROOVY IS BEING DEPRECATED!!!_
+
 # launch.groovy
 
 Checkstyle report generation
