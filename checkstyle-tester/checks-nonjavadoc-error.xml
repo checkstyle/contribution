@@ -416,6 +416,7 @@
     <module name="SingleLineJavadoc"/>
     <module name="SummaryJavadoc"/>
     -->
+    <module name="JavadocParamOrder"/>
     <module name="MissingJavadocMethod"/>
     <module name="MissingJavadocPackage"/>
     <module name="MissingJavadocType"/>
