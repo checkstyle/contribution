@@ -26,11 +26,6 @@ matrix:
 
     - jdk: openjdk8
       env:
-        - DESC="checkstyle-tester (launch.groovy) on linux"
-        - CMD="./.ci/travis.sh checkstyle-tester-launch-groovy"
-
-    - jdk: openjdk8
-      env:
         - DESC="checkstyle-tester (diff.groovy) on linux"
         - CMD="./.ci/travis.sh checkstyle-tester-diff-groovy-patch"
 

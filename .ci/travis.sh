@@ -31,16 +31,6 @@ patch-diff-report-tool)
   mvn clean install
   ;;
 
-checkstyle-tester-launch-groovy)
-  checkout_from https://github.com/checkstyle/checkstyle
-  cd .ci-temp/checkstyle
-  LOCAL_GIT_REPO=$(pwd)
-  mvn --batch-mode clean install -Passembly
-  cd ../../checkstyle-tester
-  groovy diff.groovy -r "$LOCAL_GIT_REPO" -l projects-for-travis.properties --patchConfig my_check.xml \
-        --patchBranch master --mode single --allowExcludes
-  ;;
-
 checkstyle-tester-diff-groovy-patch)
   checkout_from https://github.com/checkstyle/checkstyle
   cd .ci-temp/checkstyle
@@ -105,7 +95,6 @@ checkstyle-tester-diff-groovy-regression-single)
 codenarc)
   cd checkstyle-tester
   ./codenarc.sh . diff.groovy > diff.log && cat diff.log && grep '(p1=0; p2=0; p3=0)' diff.log
-  ./codenarc.sh . launch.groovy > launch.log && cat launch.log && grep '(p1=0; p2=11; p3=1)' launch.log
   ;;
 
 markdownlint)
