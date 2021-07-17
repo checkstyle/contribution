@@ -27,8 +27,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.eclipse.jgit.api.Git;
@@ -59,13 +57,6 @@ public final class NotesBuilder {
 
     /** Array elements separator. */
     private static final String SEPARATOR = ", ";
-
-    /** Regexp pattern for ignoring commit messages. */
-    private static final Pattern IGNORED_COMMIT_MESSAGES_PATTERN =
-        Pattern.compile("^\\[maven-release-plugin].*[\r\n]?$|"
-            + "^update to ([0-9]|\\.)+-SNAPSHOT[\r\n]?$|"
-            + "^doc: release notes.*[\r\n]?$|"
-            + "^(config:|minor:|infra:|dependency:|supplemental:)(.|\n)*[\r|\n]?$");
 
     /** String format pattern for github issue. */
     private static final String GITHUB_ISSUE_TEMPLATE =
@@ -107,15 +98,13 @@ public final class NotesBuilder {
 
         final Set<Integer> processedIssueNumbers = new HashSet<>();
         for (RevCommit commit : commitsForRelease) {
-            String commitMessage = commit.getFullMessage();
-            if (isRevertCommit(commitMessage)) {
-                System.out.println(commitMessage);
-                final int firstQuoteIndex = commitMessage.indexOf('"');
-                final int lastQuoteIndex = commitMessage.lastIndexOf('"');
-                commitMessage = commitMessage.substring(firstQuoteIndex, lastQuoteIndex);
+            CommitMessage commitMessage = new CommitMessage(commit.getFullMessage());
+            if (commitMessage.isRevert()) {
+                System.out.println(commitMessage.getMessage());
+                commitMessage = new CommitMessage(commitMessage.getRevertedCommitMessage());
             }
-            if (isIssueOrPull(commitMessage)) {
-                final int issueNo = getIssueNumberFrom(commitMessage);
+            if (commitMessage.isIssueOrPull()) {
+                final int issueNo = commitMessage.getIssueNumber();
                 if (processedIssueNumbers.contains(issueNo)) {
                     continue;
                 }
@@ -203,18 +192,6 @@ public final class NotesBuilder {
     }
 
     /**
-     * Checks whether a commit message starts with the 'Revert' word.
-     *
-     * @param commitMessage commit message.
-     * @return true if a commit message starts with the 'Revert' word.
-     */
-    private static boolean isRevertCommit(String commitMessage) {
-        return commitMessage.startsWith("Revert")
-                && commitMessage.indexOf('"') != -1
-                && commitMessage.lastIndexOf('"', commitMessage.lastIndexOf('"') + 1) != -1;
-    }
-
-    /**
      * Returns a set of ignored commits.
      * Ignored commits are 'revert' commits and commits which were reverted by the 'revert' commits
      * in current release.
@@ -225,20 +202,9 @@ public final class NotesBuilder {
     private static Set<RevCommit> getIgnoredCommits(Set<RevCommit> commitsForRelease) {
         final Set<RevCommit> ignoredCommits = new HashSet<>();
         for (RevCommit commit : commitsForRelease) {
-            final String commitMessage = commit.getFullMessage();
-            if (isRevertCommit(commitMessage)) {
-                final int lastSpaceIndex = commitMessage.lastIndexOf(' ');
-                final int lastPeriodIndex = commitMessage.lastIndexOf('.');
-                final String revertedCommitReference;
-                if (lastSpaceIndex > lastPeriodIndex) {
-                    // smth is wrong with commit message, revert commit was changed manually
-                    revertedCommitReference = "nonexistingsha";
-                }
-                else {
-                    revertedCommitReference =
-                            commitMessage.substring(lastSpaceIndex + 1, lastPeriodIndex);
-                }
-
+            final CommitMessage commitMessage = new CommitMessage(commit.getFullMessage());
+            if (commitMessage.isRevert()) {
+                final String revertedCommitReference = commitMessage.getRevertedCommitReference();
                 final Optional<RevCommit> revertedCommit = commitsForRelease.stream()
                     .filter(revCommit -> revertedCommitReference.equals(revCommit.getName()))
                     .findFirst();
@@ -248,22 +214,11 @@ public final class NotesBuilder {
                     ignoredCommits.add(revertedCommit.get());
                 }
             }
-            else if (isIgnoredCommit(commitMessage)) {
+            else if (commitMessage.isIgnored()) {
                 ignoredCommits.add(commit);
             }
         }
         return ignoredCommits;
-    }
-
-    /**
-     * Checks commit message to determine whether commit should be ignored.
-     *
-     * @param commitMessage commit message.
-     * @return if commit with the message should be ignored.
-     */
-    private static boolean isIgnoredCommit(String commitMessage) {
-        final Matcher matcher = IGNORED_COMMIT_MESSAGES_PATTERN.matcher(commitMessage);
-        return matcher.matches();
     }
 
     /**
@@ -289,18 +244,6 @@ public final class NotesBuilder {
     }
 
     /**
-     * Extracts an issue number from commit message.
-     *
-     * @param commitMessage commit message.
-     * @return issue number.
-     */
-    private static int getIssueNumberFrom(String commitMessage) {
-        final int numberSignIndex = commitMessage.indexOf('#');
-        final int colonIndex = commitMessage.indexOf(':');
-        return Integer.parseInt(commitMessage.substring(numberSignIndex + 1, colonIndex));
-    }
-
-    /**
      * Returns a list of commits which are associated with the current issue.
      *
      * @param commits commits.
@@ -310,27 +253,15 @@ public final class NotesBuilder {
     private static Set<RevCommit> getCommitsForIssue(Set<RevCommit> commits, int issueNo) {
         final Set<RevCommit> currentIssueCommits = new HashSet<>();
         for (RevCommit commit : commits) {
-            final String commitMessage = commit.getFullMessage();
-            if (isIssueOrPull(commitMessage)) {
-                final int currentIssueNo = getIssueNumberFrom(commitMessage);
+            final CommitMessage commitMessage = new CommitMessage(commit.getFullMessage());
+            if (commitMessage.isIssueOrPull()) {
+                final int currentIssueNo = commitMessage.getIssueNumber();
                 if (issueNo == currentIssueNo) {
                     currentIssueCommits.add(commit);
                 }
             }
         }
         return currentIssueCommits;
-    }
-
-    /**
-     * Checks whether commits message is associated with a pull request or an issue.
-     * Commit message which is associated with a pull request or an issue starts with 'Pull'
-     * or 'Issue' prefix.
-     *
-     * @param commitMessage commit message.
-     * @return true if commits message is associated with a pull request or an issue.
-     */
-    private static boolean isIssueOrPull(String commitMessage) {
-        return commitMessage.startsWith("Issue") || commitMessage.startsWith("Pull");
     }
 
     /**
