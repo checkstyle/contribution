@@ -1,6 +1,6 @@
 
 // Transmogrify License
-// 
+//
 // Copyright (c) 2001, ThoughtWorks, Inc.
 // All rights reserved.
 // Redistribution and use in source and binary forms, with or without
@@ -52,7 +52,7 @@ import com.puppycrawl.tools.checkstyle.api.TokenTypes;
  *
  * @see SymTabToken
  */
-//TODO: Should be an adapter of DetailAST
+// TODO: Should be an adapter of DetailAST
 
 public class SymTabAST
     extends antlr.CommonASTWithHiddenTokens
@@ -72,7 +72,7 @@ public class SymTabAST
 
     /** original syntax tree node */
     private DetailAST detailNode;
-    
+
 //    /**
 //     * gets parent of this node
 //     * @return <code>SymTabAST</code>
@@ -95,7 +95,7 @@ public class SymTabAST
      * @return <code>void</code>
      */
     public void setParent(SymTabAST parent) {
-//parent is not used by Checkstyle
+// parent is not used by Checkstyle
 //        this.parent = parent;
     }
 
@@ -328,14 +328,14 @@ public class SymTabAST
      * @return <code>String</code>
      */
     public String toString() {
-        //StringBuffer resultBuffer = new StringBuffer(super.toString());
+        // StringBuffer resultBuffer = new StringBuffer(super.toString());
         StringBuffer resultBuffer = new StringBuffer(prefixString(true));
         resultBuffer.append("[" + getLineNo() + "," + getColumnNo() + "]");
-        //if ( getSpan() != null ) {
+        // if ( getSpan() != null ) {
         //  resultBuffer.append( " spans " + getSpan() );
-        //}
+        // }
         resultBuffer.append(" in " + getFile());
-        //resultBuffer.append(" type: " + getType());
+        // resultBuffer.append(" type: " + getType());
         return resultBuffer.toString();
     }
 
@@ -439,14 +439,14 @@ public class SymTabAST
                 }
             }
         }
-        return super.getFirstChild(); 
+        return super.getFirstChild();
     }
-    
+
     public AST getNextSibling()
     {
         if (super.getNextSibling() == null) {
             DetailAST siblingDetailAST = null;
-            final DetailAST detailAST = getDetailNode();           
+            final DetailAST detailAST = getDetailNode();
             if (detailAST != null) {
                 siblingDetailAST = (DetailAST) detailAST.getNextSibling();
                 if (siblingDetailAST != null) {
@@ -458,10 +458,10 @@ public class SymTabAST
                 }
             }
         }
-        return super.getNextSibling(); 
+        return super.getNextSibling();
     }
 
-    
+
     /**
      * initialized this node with input node
      * @param aAST the node to initialize from. Must be a
@@ -475,9 +475,9 @@ public class SymTabAST
             setDetailNode(detailAST);
             _column = detailAST.getColumnNo() + 1;
             _line = detailAST.getLineNo();
-        } 
+        }
     }
-        
+
     /**
      * Gets first occurence of the child node with a certain type
      * @param type

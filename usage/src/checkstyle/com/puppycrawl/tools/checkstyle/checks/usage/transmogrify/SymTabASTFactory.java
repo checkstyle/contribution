@@ -1,6 +1,6 @@
 
 // Transmogrify License
-// 
+//
 // Copyright (c) 2001, ThoughtWorks, Inc.
 // All rights reserved.
 // Redistribution and use in source and binary forms, with or without
@@ -39,13 +39,13 @@ public class SymTabASTFactory
 {
     /** singleton factory */
     private static ASTFactory factory;
-    
+
     static
     {
         factory = new ASTFactory();
         factory.setASTNodeClass(SymTabAST.class.getName());
     }
-    
+
     /**
      * Creates a <code>SymTabAST</code> with a given type and text.
      * @param aType the type for the new <code>SymTabAST</code>.
@@ -61,16 +61,16 @@ public class SymTabASTFactory
      * Creates an <code>SymTabAST</code> from a given <code>AST</code>.
      * @param aAST the <code>AST</code> for the new <code>SymTabAST</code>.
      * @return the new <code>SymTabAST</code>.
-     */    
+     */
     public static SymTabAST create(AST aAST)
     {
         return (SymTabAST) factory.create(aAST);
     }
-    
-    ///CLOVER:OFF
+
+    // CLOVER:OFF
     /** prevent instantiation */
     private SymTabASTFactory()
     {
     }
-    ///CLOVER:ON
+    // CLOVER:ON
 }

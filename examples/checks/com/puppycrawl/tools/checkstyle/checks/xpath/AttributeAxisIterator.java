@@ -50,7 +50,7 @@ public class AttributeAxisIterator
     public AttributeAxisIterator(DetailAST aAST)
     {
         Map props = new HashMap();
-        //use BeanUtils to get the properties
+        // use BeanUtils to get the properties
         try {
             props = BeanUtils.describe(aAST);
         }

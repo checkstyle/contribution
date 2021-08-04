@@ -1,5 +1,5 @@
-//Tested with BCEL-5.1
-//http://jakarta.apache.org/builds/jakarta-bcel/release/v5.1/
+// Tested with BCEL-5.1
+// http://jakarta.apache.org/builds/jakarta-bcel/release/v5.1/
 
 package com.puppycrawl.tools.checkstyle.bcel;
 
@@ -32,7 +32,7 @@ import com.puppycrawl.tools.checkstyle.api.LocalizedMessages;
  * Checks a set of class files using BCEL
  * @author Rick Giles
  */
-//TODO: Refactor with AbstractFileSetCheck and TreeWalker
+// TODO: Refactor with AbstractFileSetCheck and TreeWalker
 public class ClassFileSetCheck
     extends AbstractFileSetCheck
     implements IObjectSetVisitor

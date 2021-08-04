@@ -1,5 +1,5 @@
-//Tested with BCEL-5.1
-//http://jakarta.apache.org/builds/jakarta-bcel/release/v5.1/
+// Tested with BCEL-5.1
+// http://jakarta.apache.org/builds/jakarta-bcel/release/v5.1/
 
 package com.puppycrawl.tools.checkstyle.bcel.classfile;
 
@@ -123,7 +123,7 @@ public class JavaClassDefinition
                     if (result == null) {
                         result = mMethodDefs[i];
                     }
-                    //else if (mMethodDefs[i].isAsNarrow(result)) {
+                    // else if (mMethodDefs[i].isAsNarrow(result)) {
                     else if (result.isCompatible(mMethodDefs[i])) {
                         result = mMethodDefs[i];
                     }

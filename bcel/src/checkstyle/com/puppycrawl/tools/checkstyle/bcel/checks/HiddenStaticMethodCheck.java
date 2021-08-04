@@ -1,5 +1,5 @@
-//Tested with BCEL-5.1
-//http://jakarta.apache.org/builds/jakarta-bcel/release/v5.1/
+// Tested with BCEL-5.1
+// http://jakarta.apache.org/builds/jakarta-bcel/release/v5.1/
 
 package com.puppycrawl.tools.checkstyle.bcel.checks;
 
@@ -78,7 +78,7 @@ public class HiddenStaticMethodCheck
     /** @see AbstractReferenceCheck */
     public boolean ignore(String aClassName, Method aMethod) {
         final String methodName = aMethod.getName();
-        return (/*super.ignore(aClassName, aMethod)
+        return (/* super.ignore(aClassName, aMethod)
                 || */methodName.equals("<init>")
                 || methodName.equals("<clinit>")
                 || methodName.equals("class$")
