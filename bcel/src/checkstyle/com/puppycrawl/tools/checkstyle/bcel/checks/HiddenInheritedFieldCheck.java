@@ -1,5 +1,5 @@
-//Tested with BCEL-5.1
-//http://jakarta.apache.org/builds/jakarta-bcel/release/v5.1/
+// Tested with BCEL-5.1
+// http://jakarta.apache.org/builds/jakarta-bcel/release/v5.1/
 
 package com.puppycrawl.tools.checkstyle.bcel.checks;
 
@@ -58,7 +58,7 @@ public class HiddenInheritedFieldCheck
     /** @see AbstractReferenceCheck */
     public boolean ignore(String aClassName, Field aField) {
         final String fieldName = aField.toString();
-        return (/*super.ignore(aClassName, aField)
+        return (/* super.ignore(aClassName, aField)
                 || */fieldName.indexOf("[Synthetic]") > -1);
     }
 }

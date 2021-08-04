@@ -1,5 +1,5 @@
-//Tested with BCEL-5.1
-//http://jakarta.apache.org/builds/jakarta-bcel/release/v5.1/
+// Tested with BCEL-5.1
+// http://jakarta.apache.org/builds/jakarta-bcel/release/v5.1/
 
 package com.puppycrawl.tools.checkstyle.bcel;
 
@@ -15,7 +15,7 @@ import org.apache.bcel.classfile.JavaClass;
  * Abstract class for checks with visitors.
  * @author Rick Giles
  */
-//TODO: Refactor with class Check
+// TODO: Refactor with class Check
 public abstract class AbstractCheckVisitor
     extends AbstractViolationReporter
     implements IObjectSetVisitor,

@@ -1,6 +1,6 @@
 
 // Transmogrify License
-// 
+//
 // Copyright (c) 2001, ThoughtWorks, Inc.
 // All rights reserved.
 // Redistribution and use in source and binary forms, with or without
@@ -40,8 +40,8 @@ import java.util.Vector;
  */
 public class ScopeIndex {
 
-    //This is a Hashtable full of Vectors.  The keys to this hashtable are filenames.
-    //Each vector contains all of the scope objects from the specific file.
+    // This is a Hashtable full of Vectors.  The keys to this hashtable are filenames.
+    // Each vector contains all of the scope objects from the specific file.
     private Hashtable indexOfFiles = new Hashtable();
 
     public Hashtable getIndex() {

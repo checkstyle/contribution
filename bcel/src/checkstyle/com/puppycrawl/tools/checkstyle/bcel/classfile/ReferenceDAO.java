@@ -1,5 +1,5 @@
-//Tested with BCEL-5.1
-//http://jakarta.apache.org/builds/jakarta-bcel/release/v5.1/
+// Tested with BCEL-5.1
+// http://jakarta.apache.org/builds/jakarta-bcel/release/v5.1/
 
 package com.puppycrawl.tools.checkstyle.bcel.classfile;
 
@@ -108,7 +108,7 @@ public class ReferenceDAO
                     fieldDef.addReference(aFieldRef);
                 }
             }
-            //search the parent
+            // search the parent
             javaClass = javaClass.getSuperClass();
         }
     }
@@ -132,7 +132,7 @@ public class ReferenceDAO
             if (javaClassDef != null) {
                 result = javaClassDef.findFieldDef(fieldName);
             }
-            //search the parent
+            // search the parent
             javaClass = javaClass.getSuperClass();
         }
         return result;

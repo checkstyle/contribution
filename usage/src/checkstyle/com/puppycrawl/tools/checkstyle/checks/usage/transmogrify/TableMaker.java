@@ -1,6 +1,6 @@
 
 // Transmogrify License
-// 
+//
 // Copyright (c) 2001, ThoughtWorks, Inc.
 // All rights reserved.
 // Redistribution and use in source and binary forms, with or without
@@ -149,7 +149,7 @@ public class TableMaker {
     }
     else if (def instanceof BlockDef) {
       SymTabAST firstChild = (SymTabAST)def.getTreeNode().getFirstChild();
-      //handle Checkstyle grammar
+      // handle Checkstyle grammar
       if (firstChild.getType() == TokenTypes.LPAREN) {
           firstChild = (SymTabAST) firstChild.getNextSibling();
       }
@@ -253,7 +253,7 @@ public class TableMaker {
 
       case TokenTypes.LITERAL_NEW:
         SymTabAST symtabTree = tree;
-        //walk parameters, in case of anonymous inner class
+        // walk parameters, in case of anonymous inner class
         walkTree(symtabTree.findFirstToken(TokenTypes.ELIST),
           makeAnonymousScopes);
         SymTabAST objblock
@@ -319,7 +319,7 @@ public class TableMaker {
       case TokenTypes.LITERAL_IF:
         processIf(tree);
         break;
-      
+
       case TokenTypes.LITERAL_ASSERT:
         processAssert(tree);
         break;
@@ -355,10 +355,10 @@ public void processAssert(SymTabAST tree) {
 
     symbolTable.pushScope( block );
     walkTree(expr, false);
-    if (message != null) {  
+    if (message != null) {
         walkTree(message, false);
     }
-    symbolTable.popScope();   
+    symbolTable.popScope();
 }
 
 /**
@@ -550,13 +550,13 @@ public void processAssert(SymTabAST tree) {
         tree.findFirstToken(TokenTypes.OBJBLOCK);
     SymTabAST start = (SymTabAST)objblock.getFirstChild();
     if (start != null) {
-        //skip LPAREN
+        // skip LPAREN
         if (start.getType() == TokenTypes.LPAREN) {
             start = (SymTabAST)start.getNextSibling();
         }
         walkSiblings(start, false);
     }
-    
+
     symbolTable.popScope();
   }
 
@@ -735,7 +735,7 @@ public void processAssert(SymTabAST tree) {
         body = (SymTabAST)forIter.getNextSibling();
     }
 
-    //handle Checkstyle grammar
+    // handle Checkstyle grammar
     if (body.getType() == TokenTypes.RPAREN) {
         body = (SymTabAST) body.getNextSibling();
     }
@@ -826,7 +826,7 @@ public void processAssert(SymTabAST tree) {
   public void processBlock(SymTabAST tree, boolean makeAnonymousScopes) {
     BlockDef block = makeBlock(tree);
     symbolTable.pushScope(block);
-    //handle Checkstyle grammar
+    // handle Checkstyle grammar
     SymTabAST child = (SymTabAST)tree.getFirstChild();
     if ((child != null) && (child.getType() == TokenTypes.LPAREN)) {
         child = (SymTabAST) child.getNextSibling();
@@ -1070,8 +1070,8 @@ public void processAssert(SymTabAST tree) {
               _def.importPackage(pkg);
             }
             else {
-              //TODO: can we safely ignore this?
-              //throw new ClassImportException(className);
+              // TODO: can we safely ignore this?
+              // throw new ClassImportException(className);
               ;
             }
           }
@@ -1080,9 +1080,9 @@ public void processAssert(SymTabAST tree) {
         // now set definitions where appropriate
         imported.ignoreChildren();
         if ((lastPart.getType() == TokenTypes.IDENT)
-            //TODO: guard added for class not loaded
-            //This is OK for single file processing, but not
-            //multiple files.
+            // TODO: guard added for class not loaded
+            // This is OK for single file processing, but not
+            // multiple files.
             && (importedClass != null)
             )
         {

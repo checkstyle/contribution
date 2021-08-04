@@ -1,6 +1,6 @@
 
 // Transmogrify License
-// 
+//
 // Copyright (c) 2001, ThoughtWorks, Inc.
 // All rights reserved.
 // Redistribution and use in source and binary forms, with or without
@@ -88,12 +88,12 @@ public class QueryEngine {
   public IDefinition getDefinition(String name, Occurrence location) {
     Reference symbol = getSymbol(name, location);
 
-    //if (symbol != null) {
+    // if (symbol != null) {
     //  System.out.println("  found " + name);
-    //}
-    //else {
+    // }
+    // else {
     //  System.out.println("  !could not find " + name);
-    //}
+    // }
 
     return resolveDefinition(symbol);
   }

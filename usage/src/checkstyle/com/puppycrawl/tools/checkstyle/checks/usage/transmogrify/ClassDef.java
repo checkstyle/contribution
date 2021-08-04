@@ -1,6 +1,6 @@
 
 // Transmogrify License
-// 
+//
 // Copyright (c) 2001, ThoughtWorks, Inc.
 // All rights reserved.
 // Redistribution and use in source and binary forms, with or without
@@ -143,8 +143,8 @@ public class ClassDef extends DefaultScope implements IClass {
         if (result == null) {
             result = getParentScope().getClassDefinition(name);
         }
-        
-        //TODO: check for a class in the same package?
+
+        // TODO: check for a class in the same package?
         if (result == null) {
             final String packageName = getParentScope().getQualifiedName();
             final String fullName = packageName + "." + name;
@@ -157,7 +157,7 @@ public class ClassDef extends DefaultScope implements IClass {
                 // no-op
             }
         }
-         
+
         return result;
     }
 

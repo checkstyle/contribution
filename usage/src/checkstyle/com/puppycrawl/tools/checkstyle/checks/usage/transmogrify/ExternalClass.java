@@ -1,6 +1,6 @@
 
 // Transmogrify License
-// 
+//
 // Copyright (c) 2001, ThoughtWorks, Inc.
 // All rights reserved.
 // Redistribution and use in source and binary forms, with or without
@@ -42,7 +42,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-//import com.puppycrawl.tools.checkstyle.checks.lint.parser.DotUtils;
+// import com.puppycrawl.tools.checkstyle.checks.lint.parser.DotUtils;
 
 public class ExternalClass extends ExternalDefinition implements IClass {
   private Class _javaClass;

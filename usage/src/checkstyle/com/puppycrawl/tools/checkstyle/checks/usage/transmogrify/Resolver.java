@@ -1,6 +1,6 @@
 
 // Transmogrify License
-// 
+//
 // Copyright (c) 2001, ThoughtWorks, Inc.
 // All rights reserved.
 // Redistribution and use in source and binary forms, with or without
@@ -375,7 +375,7 @@ public class Resolver extends DefinitionTraverser {
                 true);
             body = (SymTabAST) (forEach.getNextSibling());
         }
-        //could be an SLIST, EXPR or an EMPTY_STAT
+        // could be an SLIST, EXPR or an EMPTY_STAT
         if (body.getType() == TokenTypes.RPAREN) {
             body = (SymTabAST) body.getNextSibling();
         }
@@ -414,7 +414,7 @@ public class Resolver extends DefinitionTraverser {
         	}
 
 	        SymTabAST elseBody = (SymTabAST) body.getNextSibling();
-	        //handle Checkstyle grammar
+	        // handle Checkstyle grammar
 	        while ((elseBody != null)
 	            && (elseBody.getType() != TokenTypes.LITERAL_ELSE)) {
 	            elseBody = (SymTabAST) elseBody.getNextSibling();
@@ -587,7 +587,7 @@ public class Resolver extends DefinitionTraverser {
                     break;
 
                 case TokenTypes.METHOD_CALL :
-                //case TokenTypes.SUPER_CTOR_CALL :
+                // case TokenTypes.SUPER_CTOR_CALL :
                     result =
                         resolveMethod(
                             expression,
@@ -755,9 +755,9 @@ public class Resolver extends DefinitionTraverser {
 
                 case TokenTypes.LPAREN :
                     result = resolveExpression(
-                        //TODO: child || sibling?
+                        // TODO: child || sibling?
      (SymTabAST) (expression.getNextSibling()),
-                        //(SymTabAST) (expression.getFirstChild()),
+                        // (SymTabAST) (expression.getFirstChild()),
     location, context, referencePhase);
                     break;
 
@@ -863,7 +863,7 @@ public class Resolver extends DefinitionTraverser {
                     break;
 
                 default :
-                //TODO: throw exception
+                // TODO: throw exception
                     if (mInitialized) {
                         final Log log =
                             mLogFactory.getInstance(this.getClass());
@@ -875,7 +875,7 @@ public class Resolver extends DefinitionTraverser {
             }
         }
         catch (Exception e) {
-            
+
             result = new UnknownClass(expression.getText(), expression);
 //          TODO: This really should be logged
 //            if (mInitialized) {
@@ -894,7 +894,7 @@ public class Resolver extends DefinitionTraverser {
         boolean referencePhase) {
         SymTabAST typeNode = (SymTabAST) node.getFirstChild();
         SymTabAST exprNode = (SymTabAST) typeNode.getNextSibling();
-        //handle Checkstyle grammar
+        // handle Checkstyle grammar
         if (exprNode.getType() == TokenTypes.RPAREN) {
             exprNode = (SymTabAST) exprNode.getNextSibling();
         }
@@ -923,7 +923,7 @@ public class Resolver extends DefinitionTraverser {
         }
 
         resolveExpression(exprNode, location, context, referencePhase);
-        //TODO: Checkstyle change. Can this be ignored?
+        // TODO: Checkstyle change. Can this be ignored?
         if (type != null) {
             ((SymTabAST) typeNode.getFirstChild()).setDefinition(
                 type,
@@ -943,13 +943,13 @@ public class Resolver extends DefinitionTraverser {
         SymTabAST arrayNode = (SymTabAST) (node.getFirstChild());
         SymTabAST exprNode = (SymTabAST) (arrayNode.getNextSibling());
 
-        //resolve index expressions
+        // resolve index expressions
         while (arrayNode.getType() == TokenTypes.INDEX_OP) {
             resolveExpression(exprNode, location, context, referencePhase);
             arrayNode = (SymTabAST) (arrayNode.getFirstChild());
-            exprNode = (SymTabAST) (arrayNode.getNextSibling()); 
+            exprNode = (SymTabAST) (arrayNode.getNextSibling());
         }
-        
+
         ArrayDef array =
             (ArrayDef) resolveExpression(arrayNode,
                 location,
@@ -1085,13 +1085,13 @@ public class Resolver extends DefinitionTraverser {
         else {
             // REDTAG -- doing dotted name resolution on its own
             SymTabAST contextNode = (SymTabAST) (nameNode.getFirstChild());
-            //TODO: handle Checkstyle grammar
+            // TODO: handle Checkstyle grammar
             nameNode = (SymTabAST) contextNode.getNextSibling();
-            //skip to IDENT
+            // skip to IDENT
             while (nameNode.getType() != TokenTypes.IDENT) {
                 nameNode = (SymTabAST) nameNode.getNextSibling();
             }
-            
+
             name = nameNode.getText();
             newContext =
                 resolveExpression(
@@ -1158,7 +1158,7 @@ public class Resolver extends DefinitionTraverser {
 
         SymTabAST typeNode =
             (SymTabAST) (newNode.getFirstChild().getNextSibling());
-        //handle Checkstyle grammar
+        // handle Checkstyle grammar
         if (typeNode.getType() == TokenTypes.LPAREN) {
             typeNode = (SymTabAST) typeNode.getNextSibling();
         }
@@ -1361,7 +1361,7 @@ public class Resolver extends DefinitionTraverser {
         IClass classConstructed = null;
 
         SymTabAST nameNode = (SymTabAST) (constructor.getFirstChild());
-        //SymTabAST parametersNode = (SymTabAST) (nameNode.getNextSibling());
+        // SymTabAST parametersNode = (SymTabAST) (nameNode.getNextSibling());
         SymTabAST parametersNode =
             constructor.findFirstToken(TokenTypes.ELIST);
         SymTabAST nameIdent = null;
@@ -1567,13 +1567,13 @@ public class Resolver extends DefinitionTraverser {
         IClass result = null;
 
         SymTabAST leftChild = findLeftChild(expression);
-        
+
         IClass leftType =
             (resolveExpression(leftChild,
 		    location,
 		    context,
 		    referencePhase));
-                
+
         SymTabAST rightChild = findRightSibling(leftChild);
 
         IClass rightType =
@@ -1591,7 +1591,7 @@ public class Resolver extends DefinitionTraverser {
      * Finds the left child of a binary operator, skipping parentheses.
      * @param aExpression the node for the binary operator.
      * @return the node for the left child.
-     */  
+     */
     private SymTabAST findLeftChild(SymTabAST aExpression) {
         SymTabAST leftChild = (SymTabAST) (aExpression.getFirstChild());
         // handle Checkstyle grammar
@@ -1606,7 +1606,7 @@ public class Resolver extends DefinitionTraverser {
      * skipping parentheses.
      * @param aLeftChild the left child of a binary operator.
      * @return the node of the right sibling.
-     */   
+     */
     private SymTabAST findRightSibling(SymTabAST aLeftChild) {
         SymTabAST rightChild = (SymTabAST) (aLeftChild.getNextSibling());
         // handle Checkstyle grammar

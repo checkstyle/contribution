@@ -1,6 +1,6 @@
 
 // Transmogrify License
-// 
+//
 // Copyright (c) 2001, ThoughtWorks, Inc.
 // All rights reserved.
 // Redistribution and use in source and binary forms, with or without
@@ -44,7 +44,7 @@ public class UnknownClass implements IClass {
   public UnknownClass(String name, SymTabAST node) {
     _name = name;
     _node = node;
-    //System.out.println("Creating unknown class [" + name + " : " + node + "]");
+    // System.out.println("Creating unknown class [" + name + " : " + node + "]");
   }
 
   /**
@@ -160,7 +160,7 @@ public class UnknownClass implements IClass {
   }
 
   public boolean equals(Object o) {
-    //TODO: handle Checkstyle condition for two unknown classes
+    // TODO: handle Checkstyle condition for two unknown classes
     if (o instanceof UnknownClass) {
         final UnknownClass other = (UnknownClass) o;
         return other.getName().equals(getName());

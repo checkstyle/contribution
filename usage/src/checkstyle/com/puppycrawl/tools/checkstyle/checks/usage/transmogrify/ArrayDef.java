@@ -1,6 +1,6 @@
 
 // Transmogrify License
-// 
+//
 // Copyright (c) 2001, ThoughtWorks, Inc.
 // All rights reserved.
 // Redistribution and use in source and binary forms, with or without
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
-//import com.puppycrawl.tools.checkstyle.checks.lint.parser.JavaTokenTypes;
+// import com.puppycrawl.tools.checkstyle.checks.lint.parser.JavaTokenTypes;
 
 public class ArrayDef implements IClass {
 
@@ -74,7 +74,7 @@ public class ArrayDef implements IClass {
 
   public IVariable getVariableDefinition(String name) {
     IVariable result = null;
-    
+
     if (name.equals("length")) {
       result = LENGTH_MEMBER;
     }
