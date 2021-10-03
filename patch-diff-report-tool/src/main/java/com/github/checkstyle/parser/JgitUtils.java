@@ -217,14 +217,29 @@ public final class JgitUtils {
             this.line = temp;
         }
 
+        /**
+         * Returns the index of the source.
+         *
+         * @return the index of the source
+         */
         public int getIndex() {
             return index;
         }
 
+        /**
+         * Returns the line number of the difference.
+         *
+         * @return the line number of the difference
+         */
         public int getLineNo() {
             return lineNo;
         }
 
+        /**
+         * Returns the contents of the difference.
+         *
+         * @return the ccontents of the difference
+         */
         public String getLine() {
             return line;
         }

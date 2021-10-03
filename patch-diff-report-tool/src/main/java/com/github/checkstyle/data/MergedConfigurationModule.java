@@ -89,26 +89,57 @@ public final class MergedConfigurationModule {
         hasIdenticalProperties = compareProperties(baseModuleProperties, patchModuleProperties);
     }
 
+    /**
+     * Returns the base module properties.
+     *
+     * @return the base module properties
+     */
     public Map<String, List<String>> getBaseModuleProperties() {
         return baseModuleProperties;
     }
 
+    /**
+     * Returns the patch module properties.
+     *
+     * @return the patch module properties
+     */
     public Map<String, List<String>> getPatchModuleProperties() {
         return patchModuleProperties;
     }
 
+    /**
+     * Returns the full module name.
+     *
+     * @return the full module name
+     */
     public String getFullModuleName() {
         return fullModuleName;
     }
 
+    /**
+     * Returns the simple (short) module name.
+     *
+     * @return the simple module name
+     */
     public String getSimpleModuleName() {
         return simpleModuleName;
     }
 
+    /**
+     * Returns the list of submodules.
+     *
+     * @return the list of submodules
+     */
     public List<MergedConfigurationModule> getChildren() {
         return children;
     }
 
+    /**
+     * Returns the {@code true} if properties from both base and patch configuration
+     * modules are identical.
+     *
+     * @return the {@code true} if properties from both configuration modules are identical
+     */
     public boolean isHasIdenticalProperties() {
         return hasIdenticalProperties;
     }

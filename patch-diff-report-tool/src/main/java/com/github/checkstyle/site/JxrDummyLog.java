@@ -57,6 +57,11 @@ public class JxrDummyLog implements Log {
         logs.add("Warning: " + arg0);
     }
 
+    /**
+     * Returns the logs.
+     *
+     * @return the logs
+     */
     public static List<String> getLogs() {
         return logs;
     }

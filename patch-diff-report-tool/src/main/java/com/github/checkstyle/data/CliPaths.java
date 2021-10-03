@@ -101,34 +101,74 @@ public final class CliPaths {
         this.shortFilePaths = shortFilePaths;
     }
 
+    /**
+     * Returns the option to control which type of diff comparison to do.
+     *
+     * @return the option to control which type of diff comparison to do
+     */
     public CompareMode getCompareMode() {
         return compareMode;
     }
 
+    /**
+     * Returns the path to the first checkstyle-report.xml.
+     *
+     * @return the path to the first checkstyle-report.xml
+     */
     public Path getBaseReportPath() {
         return baseReportPath;
     }
 
+    /**
+     * Returns the path to the second checkstyle-report.xml.
+     *
+     * @return the path to the second checkstyle-report.xml
+     */
     public Path getPatchReportPath() {
         return patchReportPath;
     }
 
+    /**
+     * Returns the path to the data, tested by checkstyle.
+     *
+     * @return the path to the data, tested by checkstyle
+     */
     public Path getRefFilesPath() {
         return refFilesPath;
     }
 
+    /**
+     * Returns the path to the result site.
+     *
+     * @return the path to the result site
+     */
     public Path getOutputPath() {
         return outputPath;
     }
 
+    /**
+     * Returns the path to the data, tested by checkstyle.
+     *
+     * @return the path to the data, tested by checkstyle
+     */
     public Path getBaseConfigPath() {
         return baseConfigPath;
     }
 
+    /**
+     * Returns the path to the result site.
+     *
+     * @return the path to the result site
+     */
     public Path getPatchConfigPath() {
         return patchConfigPath;
     }
 
+    /**
+     * Returns the {@code true} if only short file names should be used with no path.
+     *
+     * @return the {@code true} if only short file names should be used with no path
+     */
     public boolean isShortFilePaths() {
         return shortFilePaths;
     }

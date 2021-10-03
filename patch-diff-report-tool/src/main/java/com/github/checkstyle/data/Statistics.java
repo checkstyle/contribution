@@ -138,14 +138,29 @@ public class Statistics {
         return moduleNumDiff;
     }
 
+    /**
+     * Returns the number of files in difference.
+     *
+     * @return the number of files in difference
+     */
     public final int getFileNumDiff() {
         return fileNumDiff;
     }
 
+    /**
+     * Returns the map storing severity numbers for base source.
+     *
+     * @return the map storing severity numbers for base source
+     */
     public final Map<String, BigInteger> getSeverityNumBase() {
         return severityNumBase;
     }
 
+    /**
+     * Returns the map storing module numbers for base source.
+     *
+     * @return the map storing module numbers for base source
+     */
     public final Map<String, BigInteger> getModuleNumBase() {
         return moduleNumBase;
     }
@@ -163,10 +178,20 @@ public class Statistics {
         return totalSeverityNumber;
     }
 
+    /**
+     * Builds the severity statistics patch.
+     *
+     * @return the severity statistics patch
+     */
     public final Map<String, String> getSeverityStatisticsPatch() {
         return buildStatisticsMap(severityNumPatch, severityNumDiffRemoved, severityNumDiffAdded);
     }
 
+    /**
+     * Builds the module statistics patch.
+     *
+     * @return the module statistics patch
+     */
     public final Map<String, String> getModuleStatisticsPatch() {
         return buildStatisticsMap(moduleNumPatch, moduleNumDiffRemoved, moduleNumDiffAdded);
     }
@@ -202,10 +227,20 @@ public class Statistics {
             }));
     }
 
+    /**
+     * Returns the number of files in the base source.
+     *
+     * @return the number of files in the base source
+     */
     public final int getFileNumBase() {
         return fileNumBase;
     }
 
+    /**
+     * Returns the number of unique messages in the base source.
+     *
+     * @return the number of unique messages in the base source
+     */
     public final int getUniqueMessagesBase() {
         return uniqueMessagesBase;
     }
@@ -274,10 +309,20 @@ public class Statistics {
         return result.toString();
     }
 
+    /**
+     * Returns the number of files in the patch source.
+     *
+     * @return the number of files in the patch source
+     */
     public final int getFileNumPatch() {
         return fileNumPatch;
     }
 
+    /**
+     * Returns the number of unique messages in the patch source.
+     *
+     * @return the number of unique messages in the patch source
+     */
     public final int getUniqueMessagesPatch() {
         return uniqueMessagesPatch;
     }

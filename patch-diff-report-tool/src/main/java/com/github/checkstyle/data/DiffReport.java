@@ -57,6 +57,11 @@ public final class DiffReport {
         return records;
     }
 
+    /**
+     * Returns the container for statistical data.
+     *
+     * @return the container for statistical data
+     */
     public Statistics getStatistics() {
         return statistics;
     }
