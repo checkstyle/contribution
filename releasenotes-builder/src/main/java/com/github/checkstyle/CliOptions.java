@@ -110,118 +110,263 @@ public final class CliOptions {
     private CliOptions() {
     }
 
+    /**
+     * Returns the path to a local git repository.
+     *
+     * @return the path to a local git repository
+     */
     public String getLocalRepoPath() {
         return localRepoPath;
     }
 
+    /**
+     * Returns the path to remote github repository.
+     *
+     * @return the path to remote github repository
+     */
     public String getRemoteRepoPath() {
         return remoteRepoPath;
     }
 
+    /**
+     * Returns the start reference.
+     *
+     * @return the start reference
+     */
     public String getStartRef() {
         return startRef;
     }
 
+    /**
+     * Returns the end reference.
+     *
+     * @return the end reference
+     */
     public String getEndRef() {
         return endRef;
     }
 
+    /**
+     * Returns the release number.
+     *
+     * @return the release number
+     */
     public String getReleaseNumber() {
         return releaseNumber;
     }
 
+    /**
+     * Returns the auth token.
+     *
+     * @return the auth token
+     */
     public String getAuthToken() {
         return authToken;
     }
 
+    /**
+     * Returns the output file location.
+     *
+     * @return the output file location
+     */
     public String getOutputLocation() {
         return outputLocation;
     }
 
+    /**
+     * Returns whether to generate all posts.
+     *
+     * @return whether to generate all posts
+     */
     public boolean isGenerateAll() {
         return generateAll;
     }
 
+    /**
+     * Returns whether to generate a post for xdoc.
+     *
+     * @return whether to generate a post for xdoc
+     */
     public boolean isGenerateXdoc() {
         return generateXdoc;
     }
 
+    /**
+     * Returns whether to generate a post for Twitter.
+     *
+     * @return whether to generate a post for Twitter
+     */
     public boolean isGenerateTw() {
         return generateTw;
     }
 
+    /**
+     * Returns whether to generate a post for RSS.
+     *
+     * @return whether to generate a post for RSS
+     */
     public boolean isGenerateRss() {
         return generateRss;
     }
 
+    /**
+     * Returns whether to generate a post for mailing list.
+     *
+     * @return whether to generate a post for mailing list
+     */
     public boolean isGenerateMlist() {
         return generateMlist;
     }
 
+    /**
+     * Returns the file location for xdoc template.
+     *
+     * @return the file location for xdoc template
+     */
     public String getXdocTemplate() {
         return xdocTemplate;
     }
 
+    /**
+     * Returns the file location for twitter template.
+     *
+     * @return the file location for twitter template
+     */
     public String getTwitterTemplate() {
         return twitterTemplate;
     }
 
+    /**
+     * Returns the file location for rss template.
+     *
+     * @return the file location for rss template
+     */
     public String getRssTemplate() {
         return rssTemplate;
     }
 
+    /**
+     * Returns the file location for mailing list template.
+     *
+     * @return the file location for mailing list template
+     */
     public String getMlistTemplate() {
         return mlistTemplate;
     }
 
+    /**
+     * Returns whether to publish all social posts.
+     *
+     * @return whether to publish all social posts
+     */
     public boolean isPublishAllSocial() {
         return publishAllSocial;
     }
 
+    /**
+     * Returns whether to publish on Twitter.
+     *
+     * @return whether to publish on Twitter
+     */
     public boolean isPublishTwit() {
         return publishTwit;
     }
 
+    /**
+     * Returns the consumer key for Twitter.
+     *
+     * @return the consumer key for Twitter
+     */
     public String getTwitterConsumerKey() {
         return twitterConsumerKey;
     }
 
+    /**
+     * Returns the .
+     *
+     * @return the
+     */
     public String getTwitterConsumerSecret() {
         return twitterConsumerSecret;
     }
 
+    /**
+     * Returns the consumer secret for Twitter.
+     *
+     * @return the consumer secret for Twitter
+     */
     public String getTwitterAccessToken() {
         return twitterAccessToken;
     }
 
+    /**
+     * Returns the access token secret for Twitter.
+     *
+     * @return the access token secret for Twitter
+     */
     public String getTwitterAccessTokenSecret() {
         return twitterAccessTokenSecret;
     }
 
+    /**
+     * Returns whether to publish xdoc.
+     *
+     * @return whether to publish xdoc
+     */
     public boolean isPublishXdoc() {
         return publishXdoc;
     }
 
+    /**
+     * Returns whether to publish xdoc with push.
+     *
+     * @return whether to publish xdoc with push
+     */
     public boolean isPublishXdocWithPush() {
         return publishXdocWithPush;
     }
 
+    /**
+     * Returns whether to publish to mailing list.
+     *
+     * @return whether to publish to mailing list
+     */
     public boolean isPublishMlist() {
         return publishMlist;
     }
 
+    /**
+     * Returns the username to publish to mailing list.
+     *
+     * @return the username to publish to mailing list
+     */
     public String getMlistUsername() {
         return mlistUsername;
     }
 
+    /**
+     * Returns the password to publish to mailing list.
+     *
+     * @return the password to publish to mailing list
+     */
     public String getMlistPassword() {
         return mlistPassword;
     }
 
+    /**
+     * Returns whether to publish to RSS.
+     *
+     * @return whether to publish to RSS
+     */
     public boolean isPublishSfRss() {
         return publishSfRss;
     }
 
+    /**
+     * Returns the bearer token for Sourceforge to publish to RSS.
+     *
+     * @return the bearer token for Sourceforge to publish to RSS
+     */
     public String getSfRssBearerToken() {
         return sfRssBearerToken;
     }

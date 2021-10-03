@@ -69,18 +69,38 @@ public final class ReleaseNotesMessage {
         this.author = author;
     }
 
+    /**
+     * Returns the issue number.
+     *
+     * @return the issue number
+     */
     public int getIssueNo() {
         return issueNo;
     }
 
+    /**
+     * Returns the title.
+     *
+     * @return the title
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Returns the short width title.
+     *
+     * @return the short width title
+     */
     public String getShortWidthTitle() {
         return shortWidthTitle;
     }
 
+    /**
+     * Returns the author.
+     *
+     * @return the author
+     */
     public String getAuthor() {
         return author;
     }
