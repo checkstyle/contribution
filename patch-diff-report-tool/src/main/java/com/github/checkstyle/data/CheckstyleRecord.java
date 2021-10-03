@@ -117,42 +117,82 @@ public final class CheckstyleRecord implements Comparable<CheckstyleRecord> {
     }
 
     /**
-     * Below are multiple getters.
+     * Returns internal index of the file.
      *
-     * @return internal index of the file.
+     * @return internal index of the file
      */
     public int getIndex() {
         return index;
     }
 
+    /**
+     * Returns the line index.
+     *
+     * @return the line index
+     */
     public int getLine() {
         return line;
     }
 
+    /**
+     * Returns the column index.
+     *
+     * @return the column index
+     */
     public int getColumn() {
         return column;
     }
 
+    /**
+     * Returns the name of the check that generated this record.
+     *
+     * @return the name of the check
+     */
     public String getSource() {
         return source;
     }
 
+    /**
+     * Returns the message.
+     *
+     * @return the message
+     */
     public String getMessage() {
         return message;
     }
 
+    /**
+     * Returns the message in HTML format.
+     *
+     * @return the message in HTML format
+     */
     public String getMessageHtml() {
         return StringUtils.escapeXml(message).replace("\n", "<br />\n");
     }
 
+    /**
+     * Returns the record xref.
+     *
+     * @return the record xref
+     */
     public String getXref() {
         return xref;
     }
 
+    /**
+     * Setter for the record xref.
+     *
+     * @param xref the new xref
+     */
     public void setXref(String xref) {
         this.xref = xref;
     }
 
+    /**
+     * Returns the record severity.
+     *
+     * @return the record severity
+     */
     public String getSeverity() {
         return severity;
     }

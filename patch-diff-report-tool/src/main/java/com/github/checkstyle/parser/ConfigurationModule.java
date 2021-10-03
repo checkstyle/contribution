@@ -59,14 +59,29 @@ class ConfigurationModule {
         this.name = name;
     }
 
+    /**
+     * Returns the module name.
+     *
+     * @return the module name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns the submodules of this module.
+     *
+     * @return the submodules of this module
+     */
     public List<ConfigurationModule> getChildren() {
         return children;
     }
 
+    /**
+     * Returns the properties of this module.
+     *
+     * @return the properties of this module
+     */
     public Map<String, List<String>> getProperties() {
         return properties;
     }
