@@ -63,14 +63,29 @@ public final class Result {
         }
     }
 
+    /**
+     * Returns the list of error messages.
+     *
+     * @return the list of error messages
+     */
     public List<String> getErrorMessages() {
         return Collections.unmodifiableList(errorMessages);
     }
 
+    /**
+     * Returns the list of warning messages.
+     *
+     * @return the list of warning messages
+     */
     public List<String> getWarningMessages() {
         return Collections.unmodifiableList(warningMessages);
     }
 
+    /**
+     * Returns the release notes as a map.
+     *
+     * @return the rRelease notes as a map
+     */
     public Multimap<String, ReleaseNotesMessage> getReleaseNotes() {
         return ArrayListMultimap.create(releaseNotes);
     }
