@@ -1,3 +1,8 @@
+version: ~> 1.0
+dist: focal
+# this arch is required as is for Partner Queue Solution - DO NOT MODIFY
+arch: ppc64le
+
 language: java
 sudo: false
 
@@ -25,16 +30,22 @@ matrix:
         - CMD="./.ci/travis.sh patch-diff-report-tool"
 
     - jdk: openjdk8
+      arch: amd64
+      dist: xenial
       env:
         - DESC="checkstyle-tester (diff.groovy) on linux"
         - CMD="./.ci/travis.sh checkstyle-tester-diff-groovy-patch"
 
     - jdk: openjdk8
+      arch: amd64
+      dist: xenial
       env:
         - DESC="checkstyle-tester (diff.groovy) on linux with base and patch configs"
         - CMD="./.ci/travis.sh checkstyle-tester-diff-groovy-base-patch"
 
     - jdk: openjdk8
+      arch: amd64
+      dist: xenial
       env:
         - DESC="checkstyle-tester (diff.groovy) on linux with enabled patchOnly"
         - CMD="./.ci/travis.sh checkstyle-tester-diff-groovy-patch-only"
@@ -53,10 +64,24 @@ addons:
       - groovy
 
 before_script:
+    - |
+      if [[ $TRAVIS_CPU_ARCH == 'ppc64le' ]]; then
+          export JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-ppc64el
+          export PATH=$JAVA_HOME/bin:$PATH
+      fi
     - groovy --version
 
 script:
-  - xmlstarlet ed --inplace -d "//mirrors" /home/travis/.m2/settings.xml
+  - |
+    set -e
+    MVN_SETTINGS=${TRAVIS_HOME}/.m2/settings.xml
+    if [[ -f ${MVN_SETTINGS} ]]; then
+      if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
+        sed -i'' -e "/<mirrors>/,/<\/mirrors>/ d" $MVN_SETTINGS
+      else
+        xmlstarlet ed --inplace -d "//mirrors" $MVN_SETTINGS
+      fi
+    fi
   - |
     set -e
     eval $CMD
