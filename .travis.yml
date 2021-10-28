@@ -42,7 +42,8 @@ matrix:
     - jdk: openjdk8
       env:
         - DESC="checkstyle-tester (diff.groovy) on linux with enabled patchOnly"
-        - CMD="./.ci/travis.sh checkstyle-tester-diff-groovy-patch-only"
+        - CMD1="export JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-ppc64el/bin"
+        - CMD=$CMD1" && ""./.ci/travis.sh checkstyle-tester-diff-groovy-patch-only"
 
     # disabled till https://github.com/checkstyle/contribution/issues/448
     # - jdk: openjdk8
