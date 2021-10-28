@@ -57,6 +57,7 @@ checkstyle-tester-diff-groovy-patch-only)
   cd .ci-temp/checkstyle
   git checkout -b patch-branch
   cd ../../checkstyle-tester
+  ls -la /usr/lib/jvm/
   groovy diff.groovy -l projects-for-travis.properties \
     -pc my_check.xml -p patch-branch -r ../.ci-temp/checkstyle -m single
   ;;
