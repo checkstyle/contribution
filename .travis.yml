@@ -55,6 +55,7 @@ addons:
     packages:
       - xmlstarlet
       - ruby
+      - groovy
 
 script:
   - |
