@@ -8,8 +8,10 @@ RUN_MASTER=true
 PACKAGE_PULL=true
 RUN_PULL=true
 RUN_REPORTS=true
-USE_CUSTOM_CONFIG=false
-CUSTOM_CONFIG=""
+USE_CUSTOM_BASE_CONFIG=false
+CUSTOM_BASE_CONFIG=""
+USE_CUSTOM_PATCH_CONFIG=false
+CUSTOM_PATCH_CONFIG=""
 USE_CUSTOM_MASTER=false
 CUSTOM_MASTER=""
 PATCH_ONLY=false
@@ -71,8 +73,20 @@ function parse_arguments {
 				shift
 				;;
 			-config)
-				USE_CUSTOM_CONFIG=true
-				CUSTOM_CONFIG=$2
+				USE_CUSTOM_BASE_CONFIG=true
+				USE_CUSTOM_PATCH_CONFIG=true
+				CUSTOM_BASE_CONFIG=$2
+				CUSTOM_PATCH_CONFIG=$2
+				shift
+				;;
+			-baseConfig)
+				USE_CUSTOM_BASE_CONFIG=true
+				CUSTOM_BASE_CONFIG=$2
+				shift
+				;;
+			-patchConfig)
+				USE_CUSTOM_PATCH_CONFIG=true
+				CUSTOM_PATCH_CONFIG=$2
 				shift
 				;;
 			-output)
@@ -191,29 +205,18 @@ function launch {
 				exit 1
 			fi
 
-			CONFIG=""
-			if $USE_CUSTOM_CONFIG ; then
-				CONFIG=$CUSTOM_CONFIG
-			else
-				CONFIG="$TESTER_DIR/my_checks_$REPO_NAME.xml"
-
-				if [ ! -f $CONFIG ] ; then
-					CONFIG="$TESTER_DIR/my_checks.xml"
-				fi
-			fi
-
 			if [ ! -d "$1/$REPO_NAME" ]; then
 				mkdir $1/$REPO_NAME
 			fi
 
-			echo "Running Checkstyle with config $CONFIG ... with excludes $EXCLUDES"
+			echo "Running Checkstyle with config $2 ... with excludes $EXCLUDES"
 
 			if [ "$EXCLUDES" == "" ]; then
-				echo "java -Xmx3024m -jar $CS_JAR -c $CONFIG -f xml -o $1/$REPO_NAME/results.xml $CURRENT_REPO_DIR"
-				java -Xmx3024m -jar $CS_JAR -c $CONFIG -f xml -o $1/$REPO_NAME/results.xml $CURRENT_REPO_DIR
+				echo "java -Xmx3024m -jar $CS_JAR -c $2 -f xml -o $1/$REPO_NAME/results.xml $CURRENT_REPO_DIR --executeIgnoredModules"
+				java -Xmx3024m -jar $CS_JAR -c $2 -f xml -o $1/$REPO_NAME/results.xml $CURRENT_REPO_DIR --executeIgnoredModules
 			else
-				echo "java -Xmx3024m -jar $CS_JAR -c $CONFIG -f xml -o $1/$REPO_NAME/results.xml -x '$EXCLUDES' $CURRENT_REPO_DIR"
-				java -Xmx3024m -jar $CS_JAR -c $CONFIG -f xml -o $1/$REPO_NAME/results.xml -x "$EXCLUDES" $CURRENT_REPO_DIR
+				echo "java -Xmx3024m -jar $CS_JAR -c $2 -f xml -o $1/$REPO_NAME/results.xml -x '$EXCLUDES' $CURRENT_REPO_DIR --executeIgnoredModules"
+				java -Xmx3024m -jar $CS_JAR -c $2 -f xml -o $1/$REPO_NAME/results.xml -x "$EXCLUDES" $CURRENT_REPO_DIR --executeIgnoredModules
 			fi
 
 			if [ "$?" == "-2" ] || [ "$?" == "-1" ];
@@ -289,7 +292,18 @@ if $RUN_MASTER ; then
 
 	rm -rf $SITE_SAVE_MASTER_DIR
 
-	launch $SITE_SAVE_MASTER_DIR
+	BASE_CONFIG=""
+	if $USE_CUSTOM_BASE_CONFIG ; then
+		BASE_CONFIG=$CUSTOM_BASE_CONFIG
+	else
+		BASE_CONFIG="$TESTER_DIR/my_checks_$REPO_NAME.xml"
+
+		if [ ! -f $BASE_CONFIG ] ; then
+			BASE_CONFIG="$TESTER_DIR/my_checks.xml"
+		fi
+	fi
+
+	launch $SITE_SAVE_MASTER_DIR $BASE_CONFIG
 else
 	echo "Skipping Launch Master"
 fi
@@ -320,7 +334,18 @@ if $RUN_PULL ; then
 
 	rm -rf $SITE_SAVE_PULL_DIR
 
-	launch $SITE_SAVE_PULL_DIR
+	PATCH_CONFIG=""
+	if $USE_CUSTOM_PATCH_CONFIG ; then
+		PATCH_CONFIG=$CUSTOM_PATCH_CONFIG
+	else
+		PATCH_CONFIG="$TESTER_DIR/my_checks_$REPO_NAME.xml"
+
+		if [ ! -f $PATCH_CONFIG ] ; then
+			PATCH_CONFIG="$TESTER_DIR/my_checks.xml"
+		fi
+	fi
+
+	launch $SITE_SAVE_PULL_DIR $PATCH_CONFIG
 else
 	echo "Skipping Launch PR $1"
 fi
@@ -352,7 +377,10 @@ if $RUN_REPORTS ; then
 	if [ -f $OUTPUT_FILE ] ; then
 		rm $OUTPUT_FILE
 	fi
-	echo "<html><body>" >> $OUTPUT_FILE
+	echo "<html><head>" >> $OUTPUT_FILE
+	echo "<link rel='icon' href='https://checkstyle.org/images/favicon.png' type='image/x-icon' />" >> $OUTPUT_FILE
+	echo "<title>Checkstyle Tester Report Diff Summary</title>" >> $OUTPUT_FILE
+	echo "</head><body>" >> $OUTPUT_FILE
 	echo "<h3><span style=\"color: #ff0000;\">" >> $OUTPUT_FILE
 	echo "<strong>WARNING: Excludes are ignored by diff.groovy.</strong>" >> $OUTPUT_FILE
 	echo "</span></h3>" >> $OUTPUT_FILE
@@ -387,33 +415,49 @@ if $RUN_REPORTS ; then
 		echo "Patch branch last commit message: $MSG<br />" >> $OUTPUT_FILE
 		echo "</h6>" >> $OUTPUT_FILE
 	fi
+	echo "Tested projects: ${#EXTPROJECTS[@]}" >> $OUTPUT_FILE
+	echo "<br /><br /><br />" >> $OUTPUT_FILE
 
 	for extp in "${EXTPROJECTS[@]}"
 	do
 		if [ ! -d "$FINAL_RESULTS_DIR/$extp" ]; then
-			CONFIG=""
-			if $USE_CUSTOM_CONFIG ; then
-				if [[ "$CUSTOM_CONFIG" = /* ]]; then
-					CONFIG=$CUSTOM_CONFIG
+			BASE_CONFIG=""
+			PATCH_CONFIG=""
+			if $USE_CUSTOM_BASE_CONFIG ; then
+				if [[ "$CUSTOM_BASE_CONFIG" = /* ]]; then
+					BASE_CONFIG=$CUSTOM_BASE_CONFIG
 				else
-					CONFIG="$TESTER_DIR/$CUSTOM_CONFIG"
+					BASE_CONFIG="$TESTER_DIR/$CUSTOM_BASE_CONFIG"
 				fi
 			else
-				CONFIG="$TESTER_DIR/my_checks_$extp.xml"
+				BASE_CONFIG="$TESTER_DIR/my_checks_$extp.xml"
 
-				if [ ! -f $CONFIG ] ; then
-					CONFIG="$TESTER_DIR/my_checks.xml"
+				if [ ! -f $BASE_CONFIG ] ; then
+					BASE_CONFIG="$TESTER_DIR/my_checks.xml"
+				fi
+			fi
+			if $USE_CUSTOM_PATCH_CONFIG ; then
+				if [[ "$CUSTOM_PATCH_CONFIG" = /* ]]; then
+					PATCH_CONFIG=$CUSTOM_PATCH_CONFIG
+				else
+					PATCH_CONFIG="$TESTER_DIR/$CUSTOM_PATCH_CONFIG"
+				fi
+			else
+				PATCH_CONFIG="$TESTER_DIR/my_checks_$extp.xml"
+
+				if [ ! -f $PATCH_CONFIG ] ; then
+					PATCH_CONFIG="$TESTER_DIR/my_checks.xml"
 				fi
 			fi
 
 			if $PATCH_ONLY ; then
-				echo "java -jar $DIFF_JAR --patchReport $SITE_SAVE_PULL_DIR/$extp/results.xml --output $FINAL_RESULTS_DIR/$extp --patchConfig $CONFIG --refFiles $REPOSITORIES_DIR/$extp"
+				echo "java -jar $DIFF_JAR --patchReport $SITE_SAVE_PULL_DIR/$extp/results.xml --output $FINAL_RESULTS_DIR/$extp --patchConfig $PATCH_CONFIG --refFiles $REPOSITORIES_DIR/$extp"
 
-				java -jar $DIFF_JAR --patchReport $SITE_SAVE_PULL_DIR/$extp/results.xml --output $FINAL_RESULTS_DIR/$extp --patchConfig $CONFIG --refFiles $REPOSITORIES_DIR/$extp
+				java -jar $DIFF_JAR --patchReport $SITE_SAVE_PULL_DIR/$extp/results.xml --output $FINAL_RESULTS_DIR/$extp --patchConfig $PATCH_CONFIG --refFiles $REPOSITORIES_DIR/$extp
 			else
-				echo "java -jar $DIFF_JAR --baseReport $SITE_SAVE_MASTER_DIR/$extp/results.xml --patchReport $SITE_SAVE_PULL_DIR/$extp/results.xml --output $FINAL_RESULTS_DIR/$extp --baseConfig $CONFIG --patchConfig $CONFIG --refFiles $REPOSITORIES_DIR/$extp"
+				echo "java -jar $DIFF_JAR --baseReport $SITE_SAVE_MASTER_DIR/$extp/results.xml --patchReport $SITE_SAVE_PULL_DIR/$extp/results.xml --output $FINAL_RESULTS_DIR/$extp --baseConfig $BASE_CONFIG --patchConfig $PATCH_CONFIG --refFiles $REPOSITORIES_DIR/$extp"
 
-				java -jar $DIFF_JAR --baseReport $SITE_SAVE_MASTER_DIR/$extp/results.xml --patchReport $SITE_SAVE_PULL_DIR/$extp/results.xml --output $FINAL_RESULTS_DIR/$extp --baseConfig $CONFIG --patchConfig $CONFIG --refFiles $REPOSITORIES_DIR/$extp
+				java -jar $DIFF_JAR --baseReport $SITE_SAVE_MASTER_DIR/$extp/results.xml --patchReport $SITE_SAVE_PULL_DIR/$extp/results.xml --output $FINAL_RESULTS_DIR/$extp --baseConfig $BASE_CONFIG --patchConfig $PATCH_CONFIG --refFiles $REPOSITORIES_DIR/$extp
 			fi
 
 			if [ "$?" != "0" ]

@@ -149,7 +149,7 @@ else
 fi
 
 if [ "$2" == "pitest--all" ]; then
-	reports=(pitest-misc pitest-annotation pitest-blocks pitest-coding pitest-design pitest-header pitest-imports pitest-indentation pitest-javadoc pitest-metrics pitest-modifier pitest-naming pitest-regexp pitest-sizes pitest-whitespace pitest-ant pitest-packagenamesloader pitest-common pitest-common-2 pitest-main pitest-tree-walker pitest-api pitest-filters pitest-utils pitest-gui pitest-xpath)
+	reports=(pitest-misc pitest-annotation pitest-blocks pitest-coding pitest-design pitest-header pitest-imports pitest-indentation pitest-javadoc pitest-metrics pitest-modifier pitest-naming pitest-regexp pitest-sizes pitest-whitespace pitest-ant pitest-packagenamesloader pitest-common pitest-common-2 pitest-main pitest-tree-walker pitest-api pitest-filters pitest-utils pitest-gui pitest-xpath pitest-java-ast-visitor)
 
 	for report in "${reports[@]}"
 	do
@@ -162,7 +162,10 @@ if [ "$2" == "pitest--all" ]; then
 	if [ -f $OUTPUT_FILE ] ; then
 		rm $OUTPUT_FILE
 	fi
-	echo "<html><body>" >> $OUTPUT_FILE
+	echo "<html><head>" >> $OUTPUT_FILE
+	echo "<link rel='icon' href='https://checkstyle.org/images/favicon.png' type='image/x-icon' />" >> $OUTPUT_FILE
+	echo "<title>Checkstyle Tester Report Pitest Summary</title>" >> $OUTPUT_FILE
+	echo "</head><body>" >> $OUTPUT_FILE
 	echo "<h3><span style=\"color: #ff0000;\">" >> $OUTPUT_FILE
 	echo "</span></h3>" >> $OUTPUT_FILE
 
