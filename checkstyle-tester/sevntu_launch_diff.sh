@@ -209,11 +209,11 @@ function launch {
 			echo "Running Checkstyle with config $CONFIG ... with excludes $EXCLUDES"
 
 			#if [ "$EXCLUDES" == "" ]; then
-				echo "java -Xmx3024m -jar $CS_JAR -c $CONFIG -f xml -o $1/$REPO_NAME/results.xml $CURRENT_REPO_DIR"
-				java -Xmx3024m -jar $CS_JAR -c $CONFIG -f xml -o $1/$REPO_NAME/results.xml $CURRENT_REPO_DIR
+				echo "java -Xmx3024m -jar $CS_JAR -c $CONFIG -f xml -o $1/$REPO_NAME/results.xml $CURRENT_REPO_DIR --executeIgnoredModules"
+				java -Xmx3024m -jar $CS_JAR -c $CONFIG -f xml -o $1/$REPO_NAME/results.xml $CURRENT_REPO_DIR --executeIgnoredModules
 			#else
-			#	echo "java -Xmx3024m -jar $CS_JAR -c $CONFIG -f xml -o $1/$REPO_NAME/results.xml -x '$EXCLUDES' $CURRENT_REPO_DIR"
-			#	java -Xmx3024m -jar $CS_JAR -c $CONFIG -f xml -o $1/$REPO_NAME/results.xml -x "$EXCLUDES" $CURRENT_REPO_DIR
+			#	echo "java -Xmx3024m -jar $CS_JAR -c $CONFIG -f xml -o $1/$REPO_NAME/results.xml -x '$EXCLUDES' --executeIgnoredModules $CURRENT_REPO_DIR"
+			#	java -Xmx3024m -jar $CS_JAR -c $CONFIG -f xml -o $1/$REPO_NAME/results.xml -x "$EXCLUDES" --executeIgnoredModules $CURRENT_REPO_DIR
 			#fi
 
 			if [ "$?" == "-2" ] || [ "$?" == "-1" ];
@@ -344,7 +344,6 @@ if $PACKAGE_PULL ; then
 		exit 1
 	fi
 
-	git reset --hard HEAD
 	git checkout $PULL_REMOTE/$1
 	git clean -f -d
 
@@ -417,7 +416,10 @@ if $RUN_REPORTS ; then
 	if [ -f $OUTPUT_FILE ] ; then
 		rm $OUTPUT_FILE
 	fi
-	echo "<html><body>" >> $OUTPUT_FILE
+	echo "<html><head>" >> $OUTPUT_FILE
+	echo "<link rel='icon' href='https://checkstyle.org/images/favicon.png' type='image/x-icon' />" >> $OUTPUT_FILE
+	echo "<title>Checkstyle Sevntu Tester Report Diff Summary</title>" >> $OUTPUT_FILE
+	echo "</head><body>" >> $OUTPUT_FILE
 	echo "<h3><span style=\"color: #ff0000;\">" >> $OUTPUT_FILE
 	echo "<strong>WARNING: Excludes are ignored by diff.groovy.</strong>" >> $OUTPUT_FILE
 	echo "</span></h3>" >> $OUTPUT_FILE
@@ -452,6 +454,8 @@ if $RUN_REPORTS ; then
 		echo "Patch branch last commit message: $MSG<br />" >> $OUTPUT_FILE
 		echo "</h6>" >> $OUTPUT_FILE
 	fi
+	echo "Tested projects: ${#EXTPROJECTS[@]}" >> $OUTPUT_FILE
+	echo "<br /><br /><br />" >> $OUTPUT_FILE
 
 	for extp in "${EXTPROJECTS[@]}"
 	do

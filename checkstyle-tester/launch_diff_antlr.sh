@@ -273,7 +273,10 @@ OUTPUT_FILE="$FINAL_RESULTS_DIR/index.html"
 if [ -f $OUTPUT_FILE ] ; then
 	rm $OUTPUT_FILE
 fi
-echo "<html><body>" >> $OUTPUT_FILE
+echo "<html><head>" >> $OUTPUT_FILE
+echo "<link rel='icon' href='https://checkstyle.org/images/favicon.png' type='image/x-icon' />" >> $OUTPUT_FILE
+echo "<title>Checkstyle Tester Report Diff Summary</title>" >> $OUTPUT_FILE
+echo "</head><body>" >> $OUTPUT_FILE
 
 if $USE_CUSTOM_MASTER ; then
 	REMOTE="$PULL_REMOTE/$CUSTOM_MASTER"
@@ -302,6 +305,9 @@ echo "Patch branch: $REMOTE<br />" >> $OUTPUT_FILE
 echo "Patch branch last commit SHA: $HASH<br />" >> $OUTPUT_FILE
 echo "Patch branch last commit message: $MSG<br />" >> $OUTPUT_FILE
 echo "</h6>" >> $OUTPUT_FILE
+
+echo "Tested projects: ${#EXTPROJECTS[@]}" >> $OUTPUT_FILE
+echo "<br /><br /><br />" >> $OUTPUT_FILE
 
 for extp in "${EXTPROJECTS[@]}"
 do
