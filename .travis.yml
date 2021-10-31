@@ -50,6 +50,10 @@ addons:
     packages:
       - xmlstarlet
       - ruby
+      - groovy
+
+before_script:
+    - groovy --version
 
 script:
   - xmlstarlet ed --inplace -d "//mirrors" /home/travis/.m2/settings.xml
