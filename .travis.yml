@@ -17,6 +17,7 @@ addons:
       - xmlstarlet
       - ruby
       - groovy
+      - ant-optional
 
 branches:
   only:
@@ -46,22 +47,16 @@ matrix:
         - CMD="./.ci/travis.sh patch-diff-report-tool"
 
     - jdk: openjdk8
-      arch: amd64
-      dist: xenial
       env:
         - DESC="checkstyle-tester (diff.groovy) on linux"
         - CMD="./.ci/travis.sh checkstyle-tester-diff-groovy-patch"
 
     - jdk: openjdk8
-      arch: amd64
-      dist: xenial
       env:
         - DESC="checkstyle-tester (diff.groovy) on linux with base and patch configs"
         - CMD="./.ci/travis.sh checkstyle-tester-diff-groovy-base-patch"
 
     - jdk: openjdk8
-      arch: amd64
-      dist: xenial
       env:
         - DESC="checkstyle-tester (diff.groovy) on linux with enabled patchOnly"
         - CMD="./.ci/travis.sh checkstyle-tester-diff-groovy-patch-only"
