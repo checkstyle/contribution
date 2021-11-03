@@ -6,6 +6,22 @@ arch: ppc64le
 language: java
 sudo: false
 
+cache:
+  apt: true
+  directories:
+  - ~/.m2
+
+addons:
+  apt:
+    packages:
+      - xmlstarlet
+      - ruby
+      - groovy
+
+branches:
+  only:
+    - master
+
 # until https://github.com/checkstyle/contribution/issues/534
 # install:
 #   - gem install mdl
@@ -56,12 +72,6 @@ matrix:
     #     - DESC="codenarc validation for groovy files"
     #     - CMD="./.ci/travis.sh codenarc"
 
-addons:
-  apt:
-    packages:
-      - xmlstarlet
-      - ruby
-      - groovy
 
 before_script:
     - |
@@ -87,11 +97,3 @@ script:
     eval $CMD
 
 after_success:
-
-cache:
-  directories:
-  - ~/.m2
-
-branches:
-  only:
-    - master
