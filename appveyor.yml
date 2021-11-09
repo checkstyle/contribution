@@ -23,7 +23,7 @@ install:
       Add-Type -AssemblyName System.IO.Compression.FileSystem
       if (!(Test-Path -Path "C:\groovy\groovy-2.4.8" )) {
         (new-object System.Net.WebClient).DownloadFile(
-          'https://dl.bintray.com/groovy/maven/apache-groovy-binary-2.4.8.zip',
+          'https://groovy.jfrog.io/ui/native/dist-release-local/groovy-zips/apache-groovy-binary-2.4.8.zip',
           'C:\groovy-bin.zip'
         )
         [System.IO.Compression.ZipFile]::ExtractToDirectory("C:\groovy-bin.zip", "C:\groovy")
