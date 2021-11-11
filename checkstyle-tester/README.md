@@ -65,8 +65,9 @@ This option is useful for Windows users where they are restricted to maximum dir
 to maven during the Checkstyle regression run.  For example, if you want to skip site generation, you
 would add `--extraMvnRegressionOptions "-Dmaven.site.skip=true"` to `diff.groovy` execution.
 
-**allowExcludes** (g) - this option tells `diff.groovy` to allow paths and files defined in the file specified for
-the `--listOfProjects (-l)` argument to be excluded from report generation (optional, default is false). This option is
+**allowExcludes** (g) - this option tells `diff.groovy` to allow paths and files defined in the file
+ specified for the `--listOfProjects (-l)` argument to be excluded from report generation
+ (optional, default is false). This option is
  used for files that are not compilable or that Checkstyle cannot parse.
 
 ## Outputs
@@ -99,30 +100,33 @@ You can generate report in different ways:
 
 To generate report using github action, you need to add specific line(s) to your PR description.
 Please note:
+
 - Each item should be on new line.
 - There should be at least one config (items 1-3).
 - Placeholders should be replaced with links to ["raw" versions of files](./README_GET_RAW_LINK.md).
 
 Lines to add:
 1) **Conditional** `Diff Regression config: {{URI to my_checks.xml}}`
-Report configuration([template](https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/my_check.xml)) when both
+Report configuration [template][template_my_check] when both
 master branch and patch branch have same config (most cases like bugfixes, code enhancements, etc.).
 
 2) **Conditional** `Diff Regression patch config: {{URI to patch_config.xml}}`
 If you want to generate [Difference Report with Different Base and Patch Config](./README_MANUAL_EXECUTION.md#difference-report-with-different-base-and-patch-config)
 (for split properties, change property types, add a new property, etc...) you must add this line.
-Should be used with `Diff Regression config: `
+Should be used with `Diff Regression config:`
 
 3) **Conditional** `New module config: {{URI to new_module_config.xml}}`
-Report configuration([template](https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/my_check.xml)) for new modules, e.g. for new check.
+Report configuration [template][template_my_check] for new modules, e.g. for new check.
 
 4) **Optional** `Diff Regression projects: {{URI to projects-to-test-on.properties}}`
-Link to custom list of projects([template](https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/projects-to-test-on.properties)).
-If no list is provided, [default](https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/projects-to-test-on-for-github-action.properties) list is taken.
+Link to custom list of projects ([template][projects-to-test-on_prp]).
+If no list is provided, [default][for-github-action_prp] list is taken.
 
 5) **Optional** `Report label: here is some label`
-Everything between "Report label: " and EOL will be taken as a label for the report. For the example above,
-label will be `here is some label`. This text will be added in bot message before link to report. Can be useful if you are generating many reports and want to distinguish them.
+Everything between "Report label: " and EOL will be taken as a label for the report.
+For the example above,
+label will be `here is some label`. This text will be added in bot message before link to report.
+Can be useful if you are generating many reports and want to distinguish them.
 
 **Required** Last step - you need to create specific comment `GitHub, generate report`
 (case-insensitive, no text/spaces/line feeds before and after) to trigger generation of the report.
@@ -317,3 +321,7 @@ groovy diff.groovy --localGitRepo ...
 ```
 
 Windows users should use the `SET` command instead of the `export` command.
+
+[template_my_check]:https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/my_check.xml
+[for-github-action_prp]:https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/projects-to-test-on-for-github-action.properties
+[projects-to-test-on_prp]:https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/projects-to-test-on.properties
