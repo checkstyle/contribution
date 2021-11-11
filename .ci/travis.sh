@@ -94,7 +94,7 @@ checkstyle-tester-diff-groovy-regression-single)
 
 codenarc)
   cd checkstyle-tester
-  ./codenarc.sh . diff.groovy > diff.log && cat diff.log && grep '(p1=0; p2=0; p3=0)' diff.log
+  ./codenarc.sh . diff.groovy > diff.log && cat diff.log && grep '(p1=0; p2=13; p3=17)' diff.log
   ;;
 
 markdownlint)
