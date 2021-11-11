@@ -23,18 +23,16 @@ branches:
   only:
     - master
 
-# until https://github.com/checkstyle/contribution/issues/534
-# install:
-#   - gem install mdl
+install:
+  - gem install mdl
 
 matrix:
   fast_finish: true
   include:
-    # until https://github.com/checkstyle/contribution/issues/534
-    # - jdk: openjdk8
-    #   env:
-    #     - DESC="markdown lint"
-    #     - CMD="./.ci/travis.sh markdownlint"
+    - jdk: openjdk8
+      env:
+        - DESC="markdown lint"
+        - CMD="./.ci/travis.sh markdownlint"
 
     - jdk: openjdk8
       env:
