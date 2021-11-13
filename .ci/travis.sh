@@ -20,6 +20,17 @@ function checkout_from {
 
 case $1 in
 
+update-settings-xml)
+  MVN_SETTINGS=${TRAVIS_HOME}/.m2/settings.xml
+  if [[ -f ${MVN_SETTINGS} ]]; then
+    if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
+      sed -i'' -e "/<mirrors>/,/<\/mirrors>/ d" $MVN_SETTINGS
+    else
+      xmlstarlet ed --inplace -d "//mirrors" $MVN_SETTINGS
+    fi
+  fi
+  ;;
+
 releasenotes-builder)
   cd releasenotes-builder
   mvn clean verify

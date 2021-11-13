@@ -74,18 +74,7 @@ before_script:
     - groovy --version
 
 script:
-  - |
-    set -e
-    MVN_SETTINGS=${TRAVIS_HOME}/.m2/settings.xml
-    if [[ -f ${MVN_SETTINGS} ]]; then
-      if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
-        sed -i'' -e "/<mirrors>/,/<\/mirrors>/ d" $MVN_SETTINGS
-      else
-        xmlstarlet ed --inplace -d "//mirrors" $MVN_SETTINGS
-      fi
-    fi
-  - |
-    set -e
-    eval $CMD
+  - ./.ci/travis.sh update-settings-xml
+  - eval $CMD
 
 after_success:
