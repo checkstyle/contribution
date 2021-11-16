@@ -19,24 +19,22 @@ install:
         )
         [System.IO.Compression.ZipFile]::ExtractToDirectory("C:\maven-bin.zip", "C:\maven")
       }
-  # disabled until https://github.com/checkstyle/contribution/issues/576
-  # - ps: |
-  #     Add-Type -AssemblyName System.IO.Compression.FileSystem
-  #     if (!(Test-Path -Path "C:\groovy\groovy-2.4.8" )) {
-  #       (new-object System.Net.WebClient).DownloadFile(
-  #         'https://groovy.jfrog.io/ui/native/dist-release-local/groovy-zips/apache-groovy-binary-2.4.8.zip',
-  #         'C:\groovy-bin.zip'
-  #       )
-  #       [System.IO.Compression.ZipFile]::ExtractToDirectory("C:\groovy-bin.zip", "C:\groovy")
-  #     }
+  - ps: |
+      Add-Type -AssemblyName System.IO.Compression.FileSystem
+      if (!(Test-Path -Path "C:\groovy\groovy-2.4.8" )) {
+        (new-object System.Net.WebClient).DownloadFile(
+          'https://groovy.jfrog.io/ui/api/v1/download?repoKey=dist-release-local&path=groovy-zips%252Fapache-groovy-binary-2.4.8.zip',
+          'C:\groovy-bin.zip'
+        )
+        [System.IO.Compression.ZipFile]::ExtractToDirectory("C:\groovy-bin.zip", "C:\groovy")
+      }
   - cmd: SET M2_HOME=C:\maven\apache-maven-3.2.5
   - cmd: SET GROOVY_HOME=C:\groovy\groovy-2.4.8
   - cmd: SET PATH=%GROOVY_HOME%\bin;%JAVA_HOME%\bin;%M2_HOME%\bin;%PATH%
   - cmd: git config --global core.autocrlf
   - cmd: mvn --version
   - cmd: java -version
-  # disabled until https://github.com/checkstyle/contribution/issues/576
-  # - cmd: groovy -version
+  - cmd: groovy -version
 
 cache:
   - C:\maven\apache-maven-3.2.5
@@ -69,24 +67,23 @@ environment:
     - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
       DESC: "patch-diff-report-tool"
       CMD1: "cd patch-diff-report-tool && mvn clean install"
-    # disabled until https://github.com/checkstyle/contribution/issues/576
     # checkstyle-tester
-    # - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
-    #   DESC: "checkstyle-tester (diff.groovy) on guava"
-    #   CMD1: " git clone -q --depth=10 --branch=master "
-    #   CMD2: "      https://github.com/checkstyle/checkstyle C:\\projects\\contribution\\checkstyle "
-    #   CMD3: " && cd checkstyle && git checkout -b patch-branch"
-    #   CMD4: " "
-    #   CMD5: " && cd ..\\checkstyle-tester "
-    #   CMD6: " && groovy diff.groovy -l projects-for-travis.properties -c my_check.xml -b master -p patch-branch -r C:\\projects\\contribution\\checkstyle -s"
-    # - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
-    #   DESC: "checkstyle-tester (diff.groovy with base and patch configs) on guava"
-    #   CMD1: " git clone -q --depth=10 --branch=master "
-    #   CMD2: "      https://github.com/checkstyle/checkstyle C:\\projects\\contribution\\checkstyle "
-    #   CMD3: " && cd checkstyle && git checkout -b patch-branch"
-    #   CMD4: " "
-    #   CMD5: " && cd ..\\checkstyle-tester "
-    #   CMD6: " && groovy diff.groovy -l projects-for-travis.properties -bc my_check.xml -pc my_check.xml -b master -p patch-branch -r C:\\projects\\contribution\\checkstyle -s"
+    - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
+      DESC: "checkstyle-tester (diff.groovy) on guava"
+      CMD1: " git clone -q --depth=10 --branch=master "
+      CMD2: "      https://github.com/checkstyle/checkstyle C:\\projects\\contribution\\checkstyle "
+      CMD3: " && cd checkstyle && git checkout -b patch-branch"
+      CMD4: " "
+      CMD5: " && cd ..\\checkstyle-tester "
+      CMD6: " && groovy diff.groovy -l projects-for-travis.properties -c my_check.xml -b master -p patch-branch -r C:\\projects\\contribution\\checkstyle -s"
+    - JAVA_HOME: C:\Program Files\Java\jdk1.8.0
+      DESC: "checkstyle-tester (diff.groovy with base and patch configs) on guava"
+      CMD1: " git clone -q --depth=10 --branch=master "
+      CMD2: "      https://github.com/checkstyle/checkstyle C:\\projects\\contribution\\checkstyle "
+      CMD3: " && cd checkstyle && git checkout -b patch-branch"
+      CMD4: " "
+      CMD5: " && cd ..\\checkstyle-tester "
+      CMD6: " && groovy diff.groovy -l projects-for-travis.properties -bc my_check.xml -pc my_check.xml -b master -p patch-branch -r C:\\projects\\contribution\\checkstyle -s"
 
 build_script:
   - ps: >
@@ -106,7 +103,6 @@ build_script:
   - appveyor.cmd
   - ps: echo "Size of caches (bytes):"
   - ps: Get-ChildItem -Recurse 'C:\maven\apache-maven-3.2.5' | Measure-Object -Property Length -Sum
-  # disabled until https://github.com/checkstyle/contribution/issues/576
-  #- ps: Get-ChildItem -Recurse 'C:\groovy\groovy-2.4.8' | Measure-Object -Property Length -Sum
+  - ps: Get-ChildItem -Recurse 'C:\groovy\groovy-2.4.8' | Measure-Object -Property Length -Sum
   - ps: Get-ChildItem -Recurse 'C:\Users\appveyor\.m2' | Measure-Object -Property Length -Sum
 
