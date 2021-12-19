@@ -37,7 +37,8 @@ static void main(String[] args) {
             moveDir(cfg.tmpReportsDir, cfg.reportsDir)
 
             generateDiffReport(cfg.diffToolConfig)
-            generateSummaryIndexHtml(cfg.diffDir, checkstyleBaseReportInfo, checkstylePatchReportInfo, configFilesList)
+            generateSummaryIndexHtml(cfg.diffDir, checkstyleBaseReportInfo,
+                checkstylePatchReportInfo, configFilesList, cfg.allowExcludes)
         }
     }
     else {
@@ -457,7 +458,8 @@ def getTextTransform() {
     return textTransform;
 }
 
-def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo, checkstylePatchReportInfo, configFilesList) {
+def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo,
+                             checkstylePatchReportInfo, configFilesList, allowExcludes) {
     println 'Starting creating report summary page ...'
     def projectsStatistic = getProjectsStatistic(diffDir)
     def summaryIndexHtml = new File("$diffDir/index.html")
@@ -468,9 +470,11 @@ def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo, checkstylePatchR
     summaryIndexHtml << ('<title>Checkstyle Tester Report Diff Summary</title>')
     summaryIndexHtml << ('</head><body>')
     summaryIndexHtml << ('\n')
-    summaryIndexHtml << ('<h3><span style="color: #ff0000;">')
-    summaryIndexHtml << ('<strong>WARNING: Excludes are ignored by diff.groovy.</strong>')
-    summaryIndexHtml << ('</span></h3>')
+    if (!allowExcludes) {
+        summaryIndexHtml << ('<h3><span style="color: #ff0000;">')
+        summaryIndexHtml << ('<strong>WARNING: Excludes are ignored by diff.groovy.</strong>')
+        summaryIndexHtml << ('</span></h3>')
+    }
     printReportInfoSection(summaryIndexHtml, checkstyleBaseReportInfo, checkstylePatchReportInfo, projectsStatistic)
     printConfigSection(diffDir, configFilesList, summaryIndexHtml);
 
