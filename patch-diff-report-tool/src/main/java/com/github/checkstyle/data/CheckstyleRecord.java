@@ -236,18 +236,18 @@ public final class CheckstyleRecord implements Comparable<CheckstyleRecord> {
      *         record, or a positive integer if this record is after the specified record.
      */
     public int compareTo(final CheckstyleRecord other) {
-        int diff = Integer.compare(this.line, other.line);
+        int diff = Integer.compare(line, other.line);
         if (diff == 0) {
-            diff = Integer.compare(this.column, other.column);
+            diff = Integer.compare(column, other.column);
         }
         if (diff == 0) {
-            diff = compareSeverity(this.severity, other.severity);
+            diff = compareSeverity(severity, other.severity);
         }
         if (diff == 0) {
-            diff = this.message.compareTo(other.message);
+            diff = message.compareTo(other.message);
         }
         if (diff == 0) {
-            diff = this.source.compareTo(other.source);
+            diff = source.compareTo(other.source);
         }
         return diff;
     }

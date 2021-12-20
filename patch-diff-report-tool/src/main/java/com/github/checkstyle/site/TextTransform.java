@@ -162,7 +162,7 @@ public final class TextTransform {
     private void transform(Reader sourceReader, Writer destWriter, Locale outputLocale,
             String outputEncoding) throws IOException {
         this.locale = outputLocale;
-        this.encoding = outputEncoding;
+        encoding = outputEncoding;
 
         final BufferedReader input = new BufferedReader(sourceReader);
         final PrintWriter output = new PrintWriter(destWriter);
@@ -192,7 +192,7 @@ public final class TextTransform {
      *            the writer where the header is appended to
      */
     private void appendHeader(PrintWriter out) {
-        String outputEncoding = this.encoding;
+        String outputEncoding = encoding;
         if (outputEncoding == null) {
             outputEncoding = "ISO-8859-1";
         }

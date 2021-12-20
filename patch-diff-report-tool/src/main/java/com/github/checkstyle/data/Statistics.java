@@ -333,7 +333,7 @@ public class Statistics {
      * @param fileNumDiff1 number of files in difference.
      */
     public final void setFileNumDiff(final int fileNumDiff1) {
-        this.fileNumDiff = fileNumDiff1;
+        fileNumDiff = fileNumDiff1;
     }
 
     /**
@@ -413,10 +413,10 @@ public class Statistics {
      */
     public final void incrementFileCount(int index) {
         if (index == CheckstyleReportsParser.BASE_REPORT_INDEX) {
-            this.fileNumBase++;
+            fileNumBase++;
         }
         else if (index == CheckstyleReportsParser.PATCH_REPORT_INDEX) {
-            this.fileNumPatch++;
+            fileNumPatch++;
         }
     }
 
@@ -455,10 +455,10 @@ public class Statistics {
      */
     public void incrementUniqueMessageCount(int index) {
         if (index == CheckstyleReportsParser.BASE_REPORT_INDEX) {
-            this.uniqueMessagesBase++;
+            uniqueMessagesBase++;
         }
         else if (index == CheckstyleReportsParser.PATCH_REPORT_INDEX) {
-            this.uniqueMessagesPatch++;
+            uniqueMessagesPatch++;
         }
     }
 }
