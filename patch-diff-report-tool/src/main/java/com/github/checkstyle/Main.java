@@ -53,18 +53,25 @@ public final class Main {
      * Help message.
      */
     public static final String MSG_HELP = "This program creates symmetric difference "
-            + "from two checkstyle-result.xml reports\n" + "generated for checkstyle build.\n"
+            + "from two checkstyle-result.xml reports\n"
+            + "generated for checkstyle build.\n"
             + "Command line arguments:\n"
-            + "\t--baseReportPath - path to the base checkstyle-result.xml (optional, if absent "
+            + "--compareMode - type of comparison to do with the files; 'XML' parses the report "
+            + "files as Checkstyle XML files with violation results. 'TEXT' parses the report "
+            + "files as pure text files, line by line. (required argument); default: XML"
+            + "\t--baseReport - path to the base checkstyle-result.xml (optional, if absent "
             + "then only configuration and violations for patch will be in the report)\n"
-            + "\t--patchReportPath - path to the patch checkstyle-result.xml, "
+            + "\t--patchReport - path to the patch checkstyle-result.xml, "
             + "obligatory argument;\n"
-            + "\t--sourcePath - path to the data under check (optional, if absent then file "
-            + "structure for cross reference files won't be relativized, "
-            + "full paths will be used);\n"
+            + "\t--refFiles - path to the source files under check (optional)\n"
             + "\t--output - path to store the resulting diff report (optional, if absent then "
             + "default path will be used: ~/XMLDiffGen_report_yyyy.mm.dd_hh_mm_ss), remember, "
             + "if this folder exists its content will be purged;\n"
+            + "\t--baseConfig - path to the base checkstyle configuration xml file (optional)"
+            + "\t--patchConfig - path to the patch checkstyle configuration xml (optional)"
+            + "\t--shortFilePaths - Option to save report file paths as a shorter version to "
+            + "prevent long paths. This option is useful for Windows users where they are "
+            + "restricted to maximum directory depth. "
             + "\t-h - simply shows help message.";
 
     /**

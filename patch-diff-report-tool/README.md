@@ -26,6 +26,9 @@ You have 2 different checkstyle repos, original (base) and forked (patch), for e
 
 8) Now execute this utility with 6 command line arguments:
 
+`--compareMode` - type of comparison to do with the files; `XML` parses the report files as
+   Checkstyle XML files with violation results. `TEXT` parses the report files as pure text
+   files, line by line. (required argument); default: XML \
 `--baseReport` - path to the base checkstyle-result.xml (optional argument,
    if absent then only configuration and violations for patch will be in the report); \
 `--patchReport` - path to the patch checkstyle-result.xml (required argument); \
