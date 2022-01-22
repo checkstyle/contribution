@@ -204,7 +204,7 @@ public class Statistics {
      * @param numDiffAddedMap map with added numbers.
      * @return statistics of records per severity.
      */
-    private Map<String, String> buildStatisticsMap(
+    private static Map<String, String> buildStatisticsMap(
         Map<String, BigInteger> numPatchMap,
         Map<String, BigInteger> numDiffRemovedMap,
         Map<String, BigInteger> numDiffAddedMap) {
@@ -289,7 +289,7 @@ public class Statistics {
      * @param addedNumber the added number.
      * @return the statistics string.
      */
-    private String buildStatisticsString(
+    private static String buildStatisticsString(
         BigInteger totalNumber, BigInteger removedNumber, BigInteger addedNumber) {
         final StringBuilder result = new StringBuilder();
         result.append(totalNumber);

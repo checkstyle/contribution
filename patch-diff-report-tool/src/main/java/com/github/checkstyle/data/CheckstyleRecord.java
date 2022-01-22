@@ -235,6 +235,7 @@ public final class CheckstyleRecord implements Comparable<CheckstyleRecord> {
      * @return 0 if the objects are equal, a negative integer if this record is before the specified
      *         record, or a positive integer if this record is after the specified record.
      */
+    @Override
     public int compareTo(final CheckstyleRecord other) {
         int diff = Integer.compare(line, other.line);
         if (diff == 0) {
@@ -261,7 +262,7 @@ public final class CheckstyleRecord implements Comparable<CheckstyleRecord> {
      *         a value less than {@code 0} if severity1 should be first and
      *         a value greater than {@code 0} if severity2 should be first
      */
-    private int compareSeverity(String severity1, String severity2) {
+    private static int compareSeverity(String severity1, String severity2) {
         final int result;
         if (severity1.equals(severity2)) {
             result = 0;
