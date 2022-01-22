@@ -33,7 +33,7 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 import com.github.checkstyle.Main;
 import com.github.checkstyle.data.CheckstyleRecord;
-import com.github.checkstyle.data.CliPaths;
+import com.github.checkstyle.data.CliOptions;
 import com.github.checkstyle.data.DiffReport;
 import com.github.checkstyle.data.MergedConfigurationModule;
 import com.github.checkstyle.data.Statistics;
@@ -75,26 +75,26 @@ public final class SiteGenerator {
      *        container with parsed data.
      * @param diffConfiguration
      *        merged configurations from both reports.
-     * @param paths
-     *        CLI paths.
+     * @param options
+     *        CLI options.
      * @throws IOException
      *         on failure to write site to disc.
      */
     public static void generate(DiffReport diffReport, MergedConfigurationModule diffConfiguration,
-            CliPaths paths) throws IOException {
+            CliOptions options) throws IOException {
         // setup thymeleaf engine
         final TemplateEngine tplEngine = getTemplateEngine();
         // setup xreference generator
-        final XrefGenerator xrefGenerator = new XrefGenerator(paths.getRefFilesPath(),
-                paths.getOutputPath().resolve(Main.XREF_FILEPATH), paths.getOutputPath());
+        final XrefGenerator xrefGenerator = new XrefGenerator(options.getRefFilesPath(),
+                options.getOutputPath().resolve(Main.XREF_FILEPATH), options.getOutputPath());
         // html generation
-        final Path sitepath = paths.getOutputPath().resolve(SITEPATH);
+        final Path sitepath = options.getOutputPath().resolve(SITEPATH);
         final FileWriter writer = new FileWriter(sitepath.toString());
         try {
             // write statistics
             generateHeader(tplEngine, writer, diffReport.getStatistics(), diffConfiguration);
             // write parsed content
-            generateBody(tplEngine, writer, diffReport, paths, xrefGenerator);
+            generateBody(tplEngine, writer, diffReport, options, xrefGenerator);
             // write html footer
             tplEngine.process("footer", new Context(), writer);
         }
@@ -147,16 +147,16 @@ public final class SiteGenerator {
      *        file writer.
      * @param diffReport
      *        difference between two checkstyle reports.
-     * @param paths
-     *        CLI paths.
+     * @param options
+     *        CLI options.
      * @param xrefGenerator
      *        xReference generator.
      */
     private static void generateBody(TemplateEngine tplEngine, FileWriter writer,
-            DiffReport diffReport, CliPaths paths, XrefGenerator xrefGenerator) {
+            DiffReport diffReport, CliOptions options, XrefGenerator xrefGenerator) {
         final AnchorCounter anchorCounter = new AnchorCounter();
 
-        final Path refFilesPath = paths.getRefFilesPath();
+        final Path refFilesPath = options.getRefFilesPath();
         for (Map.Entry<String, List<CheckstyleRecord>> entry : diffReport.getRecords().entrySet()) {
             final List<CheckstyleRecord> records = entry.getValue();
             String filename = entry.getKey();
@@ -165,7 +165,7 @@ public final class SiteGenerator {
 
             for (CheckstyleRecord checkstyleRecord : records) {
                 final String xreference = xrefGenerator.generateXref(checkstyleRecord.getXref(),
-                            paths.isShortFilePaths());
+                            options.isShortFilePaths());
                 checkstyleRecord.setXref(xreference);
             }
 
