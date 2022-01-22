@@ -32,7 +32,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-import com.github.checkstyle.data.CliPaths;
+import com.github.checkstyle.data.CliOptions;
 import com.github.checkstyle.data.CompareMode;
 import com.github.checkstyle.data.DiffReport;
 import com.github.checkstyle.data.MergedConfigurationModule;
@@ -155,28 +155,28 @@ public final class Main {
             System.out.println(MSG_HELP);
         }
         else {
-            final CliPaths paths = getCliPaths(commandLine);
+            final CliOptions options = getCliOptions(commandLine);
             final DiffReport diffReport;
 
-            if (paths.getCompareMode() == CompareMode.XML) {
+            if (options.getCompareMode() == CompareMode.XML) {
                 // XML parsing stage
                 System.out.println("XML parsing is started.");
-                diffReport = CheckstyleReportsParser.parse(paths.getBaseReportPath(),
-                        paths.getPatchReportPath(), XML_PARSE_PORTION_SIZE);
+                diffReport = CheckstyleReportsParser.parse(options.getBaseReportPath(),
+                        options.getPatchReportPath(), XML_PARSE_PORTION_SIZE);
             }
             else {
                 // file parsing stage
                 System.out.println("File parsing is started.");
-                diffReport = CheckstyleTextParser.parse(paths.getBaseReportPath(),
-                        paths.getPatchReportPath());
+                diffReport = CheckstyleTextParser.parse(options.getBaseReportPath(),
+                        options.getPatchReportPath());
             }
 
             // Configuration processing stage.
             MergedConfigurationModule diffConfiguration = null;
-            if (paths.configurationPresent()) {
+            if (options.configurationPresent()) {
                 System.out.println("Creation of configuration report is started.");
-                diffConfiguration = CheckstyleConfigurationsParser.parse(paths.getBaseConfigPath(),
-                        paths.getPatchConfigPath());
+                diffConfiguration = CheckstyleConfigurationsParser
+                        .parse(options.getBaseConfigPath(), options.getPatchConfigPath());
             }
             else {
                 System.out.println(
@@ -186,8 +186,8 @@ public final class Main {
             // Site and XREF generation stage
             System.out.println("Creation of diff html site is started.");
             try {
-                exportResources(paths);
-                SiteGenerator.generate(diffReport, diffConfiguration, paths);
+                exportResources(options);
+                SiteGenerator.generate(diffReport, diffConfiguration, options);
             }
             finally {
                 for (String message : JxrDummyLog.getLogs()) {
@@ -216,29 +216,29 @@ public final class Main {
     }
 
     /**
-     * Generates a CliPaths instance from commandLine and checks it for
+     * Generates a CliOptions instance from commandLine and checks it for
      * validity.
      *
      * @param commandLine
      *        CLI arguments.
-     * @return CliPaths instance.
+     * @return CliOptions instance.
      */
-    private static CliPaths getCliPaths(CommandLine commandLine) {
-        final CliPaths paths = parseCliToPojo(commandLine);
-        CliArgsValidator.checkPaths(paths);
-        return paths;
+    private static CliOptions getCliOptions(CommandLine commandLine) {
+        final CliOptions options = parseCliToPojo(commandLine);
+        CliArgsValidator.validate(options);
+        return options;
     }
 
     /**
      * Exports to disc necessary static resources.
      *
-     * @param paths
-     *        POJO holding all input paths.
+     * @param options
+     *        POJO holding all options.
      * @throws IOException
      *         thrown on failure to perform checks.
      */
-    private static void exportResources(CliPaths paths) throws IOException {
-        final Path outputPath = paths.getOutputPath();
+    private static void exportResources(CliOptions options) throws IOException {
+        final Path outputPath = options.getOutputPath();
         Files.createDirectories(outputPath);
         FilesystemUtils.createOverwriteDirectory(outputPath.resolve(CSS_FILEPATH));
         FilesystemUtils.createOverwriteDirectory(outputPath.resolve(XREF_FILEPATH));
@@ -286,7 +286,7 @@ public final class Main {
      * @throws IllegalArgumentException
      *         on failure to find necessary arguments.
      */
-    private static CliPaths parseCliToPojo(CommandLine commandLine)
+    private static CliOptions parseCliToPojo(CommandLine commandLine)
             throws IllegalArgumentException {
         final CompareMode compareMode = getCompareMode(OPTION_COMPARE_MODE, commandLine,
                 CompareMode.XML);
@@ -300,7 +300,7 @@ public final class Main {
         final Path configBasePath = getPath(OPTION_BASE_CONFIG_PATH, commandLine, null);
         final Path configPatchPath = getPath(OPTION_PATCH_CONFIG_PATH, commandLine, null);
         final boolean shortFilePaths = commandLine.hasOption(OPTION_SHORT_PATHS);
-        return new CliPaths(compareMode, xmlBasePath, xmlPatchPath, refFilesPath, outputPath,
+        return new CliOptions(compareMode, xmlBasePath, xmlPatchPath, refFilesPath, outputPath,
                 configBasePath, configPatchPath, shortFilePaths);
     }
 

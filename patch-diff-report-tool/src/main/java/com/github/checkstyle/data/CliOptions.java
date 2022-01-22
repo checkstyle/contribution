@@ -22,11 +22,11 @@ package com.github.checkstyle.data;
 import java.nio.file.Path;
 
 /**
- * POJO class that hold input paths.
+ * POJO class that hold input CLI options.
  *
  * @author attatrol
  */
-public final class CliPaths {
+public final class CliOptions {
     /**
      * Option to control which type of diff comparison to do.
      */
@@ -88,7 +88,7 @@ public final class CliPaths {
      *           {@code true} if only short file names should be used with no paths.
      */
     // -@cs[ParameterNumber] Helper class to pass all CLI attributes around.
-    public CliPaths(CompareMode compareMode, Path baseReportPath, Path patchReportPath,
+    public CliOptions(CompareMode compareMode, Path baseReportPath, Path patchReportPath,
             Path refFilesPath, Path outputPath, Path baseConfigPath, Path patchConfigPath,
             boolean shortFilePaths) {
         this.compareMode = compareMode;
