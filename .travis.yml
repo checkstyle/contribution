@@ -29,37 +29,37 @@ install:
 matrix:
   fast_finish: true
   include:
-    - jdk: openjdk8
+    - jdk: openjdk11
       env:
         - DESC="markdown lint"
         - CMD="./.ci/travis.sh markdownlint"
 
-    - jdk: openjdk8
+    - jdk: openjdk11
       env:
         - DESC="releasenotes-builder"
         - CMD="./.ci/travis.sh releasenotes-builder"
 
-    - jdk: openjdk8
+    - jdk: openjdk11
       env:
         - DESC="patch-diff-report-tool"
         - CMD="./.ci/travis.sh patch-diff-report-tool"
 
-    - jdk: openjdk8
+    - jdk: openjdk11
       env:
         - DESC="checkstyle-tester (diff.groovy) on linux"
         - CMD="./.ci/travis.sh checkstyle-tester-diff-groovy-patch"
 
-    - jdk: openjdk8
+    - jdk: openjdk11
       env:
         - DESC="checkstyle-tester (diff.groovy) on linux with base and patch configs"
         - CMD="./.ci/travis.sh checkstyle-tester-diff-groovy-base-patch"
 
-    - jdk: openjdk8
+    - jdk: openjdk11
       env:
         - DESC="checkstyle-tester (diff.groovy) on linux with enabled patchOnly"
         - CMD="./.ci/travis.sh checkstyle-tester-diff-groovy-patch-only"
 
-    - jdk: openjdk8
+    - jdk: openjdk11
       env:
         - DESC="codenarc validation for groovy files"
         - CMD="./.ci/travis.sh codenarc"
@@ -68,7 +68,7 @@ matrix:
 before_script:
     - |
       if [[ $TRAVIS_CPU_ARCH == 'ppc64le' ]]; then
-          export JAVA_HOME=/usr/lib/jvm/adoptopenjdk-8-hotspot-ppc64el
+          export JAVA_HOME=/usr/lib/jvm/adoptopenjdk-11-hotspot-ppc64el
           export PATH=$JAVA_HOME/bin:$PATH
       fi
     - groovy --version
