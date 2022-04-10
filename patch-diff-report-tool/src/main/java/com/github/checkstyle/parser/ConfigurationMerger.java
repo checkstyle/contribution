@@ -82,9 +82,9 @@ final class ConfigurationMerger {
             doubledModule.addChild(merge(module, patchSibling, doubledModule.getFullModuleName()));
         }
         // processing of residual patch siblings
-        for (int i = 0; i < patchChildren.size(); i++) {
-            if (!usedPatchParentChildren[i]) {
-                doubledModule.addChild(merge(null, patchChildren.get(i),
+        for (int index = 0; index < patchChildren.size(); index++) {
+            if (!usedPatchParentChildren[index]) {
+                doubledModule.addChild(merge(null, patchChildren.get(index),
                         doubledModule.getFullModuleName()));
             }
         }
@@ -140,12 +140,12 @@ final class ConfigurationMerger {
     private static ConfigurationModule getSibling(String moduleName,
             List<ConfigurationModule> moduleList, boolean[] useFlags) {
         ConfigurationModule result = null;
-        for (int i = 0; i < moduleList.size(); i++) {
-            if (!useFlags[i]) {
-                final ConfigurationModule module = moduleList.get(i);
+        for (int index = 0; index < moduleList.size(); index++) {
+            if (!useFlags[index]) {
+                final ConfigurationModule module = moduleList.get(index);
                 if (module.getName().equals(moduleName)) {
                     result = module;
-                    useFlags[i] = true;
+                    useFlags[index] = true;
                     break;
                 }
             }
