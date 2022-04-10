@@ -121,9 +121,9 @@ public class XdocPublisher {
         final List<String> noteLines = Files.readAllLines(Paths.get(postFilename));
 
         int placeIndex = -1;
-        for (int i = 0; i < xdocLines.size(); i++) {
-            if (xdocLines.get(i).contains(PLACEHOLDER_TEXT)) {
-                placeIndex = i + 1;
+        for (int index = 0; index < xdocLines.size(); index++) {
+            if (xdocLines.get(index).contains(PLACEHOLDER_TEXT)) {
+                placeIndex = index + 1;
                 break;
             }
         }

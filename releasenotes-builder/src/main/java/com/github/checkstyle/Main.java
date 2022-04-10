@@ -125,8 +125,8 @@ public final class Main {
      */
     private static void printListOf(List<String> entities) {
         System.out.println();
-        for (String e : entities) {
-            System.out.println(e);
+        for (String entity : entities) {
+            System.out.println(entity);
         }
     }
 }
