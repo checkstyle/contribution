@@ -5,8 +5,8 @@ sequenceDiagram
     actor Maintainer
     participant Github
     participant CI
-    Maintainer->>Maintainer: mvn version:set
-    Maintainer->>Github: create tag 'pre-10.4.1'
+    Maintainer->>Maintainer: mvn version:set '10.4.1'
+    Maintainer->>Github: create tag 'prepare-10.4.1'
     Github->>CI: trigger job
     CI->>CI: update xdoc/releasenotes.xml
     CI->>CI: mvn release:prepare
