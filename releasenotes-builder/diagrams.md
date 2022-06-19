@@ -1,4 +1,4 @@
-Here is a simple flow chart:
+Flow chart when user play need to do preparation for relase:
 
 ```mermaid
 sequenceDiagram
