@@ -6,6 +6,7 @@ sequenceDiagram
     participant Github
     participant CI
     Maintainer->>Maintainer: mvn version:set '10.4.1'
+    Maintainer->>Github: push changes for version bump
     Maintainer->>Github: create tag 'prepare-10.4.1'
     Github->>CI: trigger job
     CI->>CI: update xdoc/releasenotes.xml
