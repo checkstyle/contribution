@@ -1,4 +1,4 @@
-# Flow chart when user play need to do preparation for relase:
+# Flow chart when user play need to do preparation for release
 
 ```mermaid
 sequenceDiagram
