@@ -1,5 +1,7 @@
 # Flow chart when user play need to do preparation for release
 
+[Mermaid syntax](https://mermaid-js.github.io/mermaid/#/sequenceDiagram).
+
 ```mermaid
 sequenceDiagram
     actor Maintainer
