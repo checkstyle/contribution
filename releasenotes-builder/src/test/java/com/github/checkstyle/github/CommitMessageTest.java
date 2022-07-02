@@ -24,6 +24,9 @@ import org.junit.Test;
 
 public class CommitMessageTest {
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testIssue() {
         final CommitMessage message = new CommitMessage(
@@ -31,6 +34,9 @@ public class CommitMessageTest {
         Assert.assertTrue("Message should match issue/pull pattern", message.isIssueOrPull());
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testPull() {
         final CommitMessage message = new CommitMessage(
@@ -38,6 +44,9 @@ public class CommitMessageTest {
         Assert.assertTrue("Message should match issue/pull pattern", message.isIssueOrPull());
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testRevert() {
         final CommitMessage message = new CommitMessage(
@@ -52,6 +61,9 @@ public class CommitMessageTest {
             "5fe5bcee40e39eb6a23864f7f55128cbf2f10641", message.getRevertedCommitReference());
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testRevertNotInBeginningOfMessage() {
         final CommitMessage message = new CommitMessage(
@@ -61,6 +73,9 @@ public class CommitMessageTest {
         Assert.assertTrue("Message should match revert pattern", message.isRevert());
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testReleaseIsIgnored() {
         final CommitMessage message = new CommitMessage(
@@ -68,6 +83,9 @@ public class CommitMessageTest {
         Assert.assertTrue("Message should match ignore pattern", message.isIgnored());
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testUpdateToIsIgnored() {
         final CommitMessage message = new CommitMessage(
@@ -75,6 +93,9 @@ public class CommitMessageTest {
         Assert.assertTrue("Message should match ignore pattern", message.isIgnored());
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testDocReleaseNotesIsIgnored() {
         final CommitMessage message = new CommitMessage(
@@ -82,6 +103,9 @@ public class CommitMessageTest {
         Assert.assertTrue("Message should match ignore pattern", message.isIgnored());
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testConfigIsIgnored() {
         final CommitMessage message = new CommitMessage(
@@ -89,6 +113,9 @@ public class CommitMessageTest {
         Assert.assertTrue("Message should match ignore pattern", message.isIgnored());
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testDependencyIsIgnored() {
         final CommitMessage message = new CommitMessage(
@@ -111,6 +138,9 @@ public class CommitMessageTest {
         Assert.assertTrue("Message should match ignore pattern", message.isIgnored());
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testInfraIsIgnored() {
         final CommitMessage message = new CommitMessage(
@@ -118,6 +148,9 @@ public class CommitMessageTest {
         Assert.assertTrue("Message should match ignore pattern", message.isIgnored());
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testMinorIsIgnored() {
         final CommitMessage message = new CommitMessage(
@@ -125,6 +158,9 @@ public class CommitMessageTest {
         Assert.assertTrue("Message should match ignore pattern", message.isIgnored());
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testSupplementalIsIgnored() {
         final CommitMessage message = new CommitMessage(
@@ -132,6 +168,9 @@ public class CommitMessageTest {
         Assert.assertTrue("Message should match ignore pattern", message.isIgnored());
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testMarkersNotInBeginningOfMessage() {
         final CommitMessage message = new CommitMessage(
@@ -148,6 +187,9 @@ public class CommitMessageTest {
         Assert.assertFalse("Message should not match ignore pattern", message.isIgnored());
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testUnclassifiedCommit() {
         final CommitMessage message = new CommitMessage(

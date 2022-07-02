@@ -60,9 +60,12 @@ public class TemplateProcessorTest {
         temporaryFolder.create();
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testGenerateOnlyBreakingCompatibility() throws Exception {
-        final List<String> errors = MainProcess.run(
+        final List<String> errors = MainProcess.runMainProcess(
             createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
                 .setGenerateAll(true).build());
 
@@ -75,9 +78,12 @@ public class TemplateProcessorTest {
         assertFile("githubPageBreakingCompatibility.txt", MainProcess.GITHUB_FILENAME);
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testGenerateOnlyNewFeature() throws Exception {
-        final List<String> errors = MainProcess.run(
+        final List<String> errors = MainProcess.runMainProcess(
             createNotes(null, createAllNotes(), null, null, null), createBaseCliOptions()
                 .setGenerateAll(true).build());
 
@@ -90,9 +96,12 @@ public class TemplateProcessorTest {
         assertFile("githubPageNew.txt", MainProcess.GITHUB_FILENAME);
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testGenerateOnlyBug() throws Exception {
-        final List<String> errors = MainProcess.run(
+        final List<String> errors = MainProcess.runMainProcess(
             createNotes(null, null, createAllNotes(), null, null), createBaseCliOptions()
                 .setGenerateAll(true).build());
 
@@ -105,9 +114,12 @@ public class TemplateProcessorTest {
         assertFile("githubPageBug.txt", MainProcess.GITHUB_FILENAME);
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testGenerateOnlyMisc() throws Exception {
-        final List<String> errors = MainProcess.run(
+        final List<String> errors = MainProcess.runMainProcess(
             createNotes(null, null, null, createAllNotes(), null), createBaseCliOptions()
                 .setGenerateAll(true).build());
 
@@ -119,9 +131,12 @@ public class TemplateProcessorTest {
         assertFile("rssMlistMisc.txt", MainProcess.MLIST_FILENAME);
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testGenerateOnlyNewModule() throws Exception {
-        final List<String> errors = MainProcess.run(
+        final List<String> errors = MainProcess.runMainProcess(
             createNotes(null, null, null, null, createAllNotes()), createBaseCliOptions()
                 .setGenerateAll(true).build());
 
@@ -134,9 +149,12 @@ public class TemplateProcessorTest {
         assertFile("githubPageNew.txt", MainProcess.GITHUB_FILENAME);
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testGenerateAll() throws Exception {
-        final List<String> errors = MainProcess.run(
+        final List<String> errors = MainProcess.runMainProcess(
             createNotes(
                 Collections.singletonList(createReleaseNotesMessage("Title 1", "Author 1")),
                 Collections.singletonList(createReleaseNotesMessage(2, "Title 2", "Author 2")),
@@ -154,9 +172,12 @@ public class TemplateProcessorTest {
         assertFile("githubPageAll.txt", MainProcess.GITHUB_FILENAME);
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testGenerateOnlyXdoc() throws Exception {
-        final List<String> errors = MainProcess.run(
+        final List<String> errors = MainProcess.runMainProcess(
             createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
                 .setGenerateXdoc(true).build());
 
@@ -169,9 +190,12 @@ public class TemplateProcessorTest {
         assertFile(MainProcess.GITHUB_FILENAME);
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testGenerateOnlyTwitter() throws Exception {
-        final List<String> errors = MainProcess.run(
+        final List<String> errors = MainProcess.runMainProcess(
             createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
                 .setGenerateTw(true).build());
 
@@ -184,9 +208,12 @@ public class TemplateProcessorTest {
         assertFile(MainProcess.GITHUB_FILENAME);
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testGenerateOnlyRss() throws Exception {
-        final List<String> errors = MainProcess.run(
+        final List<String> errors = MainProcess.runMainProcess(
             createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
                 .setGenerateRss(true).build());
 
@@ -199,9 +226,12 @@ public class TemplateProcessorTest {
         assertFile(MainProcess.GITHUB_FILENAME);
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testGenerateOnlyMlist() throws Exception {
-        final List<String> errors = MainProcess.run(
+        final List<String> errors = MainProcess.runMainProcess(
             createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
                 .setGenerateMlist(true).build());
 
@@ -214,6 +244,9 @@ public class TemplateProcessorTest {
         assertFile("rssMlistBreakingCompatibility.txt", MainProcess.MLIST_FILENAME);
     }
 
+    /**
+     * @noinspection JUnitTestMethodWithNoAssertions
+     */
     @Test
     public void testGenerateOnlyGitHub() throws Exception {
         final List<String> errors = MainProcess.run(
@@ -235,7 +268,7 @@ public class TemplateProcessorTest {
         FileUtils.writeStringToFile(file, "hello world");
         final String template = file.getAbsolutePath();
 
-        final List<String> errors = MainProcess.run(
+        final List<String> errors = MainProcess.runMainProcess(
                 createNotes(createAllNotes(), createAllNotes(), createAllNotes(), createAllNotes(),
                         createAllNotes()),
                 createBaseCliOptions().setGenerateAll(true).setXdocTemplate(template)
@@ -328,15 +361,17 @@ public class TemplateProcessorTest {
                                 .format(DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.US)),
                         "XX.XX.XXXX");
 
-        Assert.assertEquals(expectedXdoc, actualXdoc);
+        Assert.assertEquals("Actual filename does not match expected filename",
+            expectedXdoc, actualXdoc);
     }
 
     private void assertFile(String actualName) {
-        Assert.assertFalse(new File(temporaryFolder.getRoot(), actualName).exists());
+        Assert.assertFalse("File does not exist.",
+            new File(temporaryFolder.getRoot(), actualName).exists());
     }
 
     private static String getFileContents(File file) throws IOException {
-        final StringBuilder result = new StringBuilder();
+        final StringBuilder result = new StringBuilder(1024);
 
         try (BufferedReader br = Files.newBufferedReader(file.toPath())) {
             do {
