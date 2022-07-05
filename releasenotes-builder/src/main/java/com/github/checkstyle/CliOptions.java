@@ -85,11 +85,6 @@ public final class CliOptions {
     /** Properties for connection to Twitter. */
     private String twitterProperties;
 
-    /** Whether to publish xdoc. */
-    private boolean publishXdoc;
-    /** Whether to publish xdoc with push. */
-    private boolean publishXdocWithPush;
-
     /** Whether to publish to mailing list. */
     private boolean publishMlist;
     /** Username to publish to mailing list. */
@@ -306,24 +301,6 @@ public final class CliOptions {
      */
     public String getTwitterAccessTokenSecret() {
         return twitterAccessTokenSecret;
-    }
-
-    /**
-     * Returns whether to publish xdoc.
-     *
-     * @return whether to publish xdoc
-     */
-    public boolean isPublishXdoc() {
-        return publishXdoc;
-    }
-
-    /**
-     * Returns whether to publish xdoc with push.
-     *
-     * @return whether to publish xdoc with push
-     */
-    public boolean isPublishXdocWithPush() {
-        return publishXdocWithPush;
     }
 
     /**
@@ -666,30 +643,6 @@ public final class CliOptions {
         }
 
         /**
-         * Specify to publish Xdoc update.
-         *
-         * @param pubXdoc flag to publish xdoc file update
-         * @return Builder Object
-         * @noinspection ReturnOfInnerClass
-         */
-        public Builder setPublishXdoc(boolean pubXdoc) {
-            publishXdoc = pubXdoc;
-            return this;
-        }
-
-        /**
-         * Specify to publish xdoc update and do push to remote git.
-         *
-         * @param pubXdocWithPush flag to publish xdoc and push to remote repo
-         * @return Builder Object
-         * @noinspection ReturnOfInnerClass
-         */
-        public Builder setPublishXdocWithPush(boolean pubXdocWithPush) {
-            publishXdocWithPush = pubXdocWithPush;
-            return this;
-        }
-
-        /**
          * Specify to do publication only for mailing list.
          *
          * @param pubMlist flag to publish to mailing list
@@ -949,8 +902,6 @@ public final class CliOptions {
             cliOptions.twitterAccessToken = twitterAccessToken;
             cliOptions.twitterAccessTokenSecret = twitterAccessTokenSecret;
             cliOptions.twitterProperties = twitterProperties;
-            cliOptions.publishXdoc = publishXdoc;
-            cliOptions.publishXdocWithPush = publishXdocWithPush;
             cliOptions.publishMlist = publishMlist;
             cliOptions.mlistUsername = mlistUsername;
             cliOptions.mlistPassword = mlistPassword;
