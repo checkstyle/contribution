@@ -23,7 +23,6 @@ java -jar releasenotes-builder-1.0-all.jar -localRepoPath <arg> \
      -releaseNumber <arg> [-outputLocation <args>] [-githubAuthToken <arg>] \
      [-generateAll] [-generateXdoc] [-generateTwit] [-generateRss] [-generateMlist] \
      [-xdocTemplate] [-twitterTemplate] [-rssTemplate] [-mlistTemplate] \
-     [-publishXdoc] [-publishXdocWithPush] \
      [-publishAllSocial] [-publishTwit] [-twitterConsumerKey <arg>] [-twitterConsumerSecret <arg>] \
      [-twiterAccessToken <arg>] [-twitterAccessTokenSecret <arg>] [-twitterProperties <arg>] \
      [-publishMlist] [-mlistUsername <arg>] [-mlistPassword <arg>] [-mlistProperties <arg>] \
@@ -76,11 +75,6 @@ Generated files will be at specified output location.
 **rssTemplate** - (optional) path to the external rss freemarker template file.
 
 **mlistTemplate** - (optional) path to the external mailing list freemarker template file.
-
-**publishXdoc** - (optional) Make commit in local checkstyle repo with releasenotes.
-Notes are read from ```xdoc.xml```.
-
-**publishXdocWithPush** - (optional) Make push of a commit from ```publishXdoc```.
 
 **publishAllSocial** - (optional) publish all possible posts. Posts are read from generated files.
 

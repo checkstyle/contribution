@@ -95,10 +95,6 @@ public class CliProcessor {
     private static final String OPTION_PUBLISH_ALL_SOCIAL = "publishAllSocial";
     /** Name for the option 'publishTwit'. */
     private static final String OPTION_PUBLISH_TWIT = "publishTwit";
-    /** Name for the option 'publishXdoc'. */
-    private static final String OPTION_PUBLISH_XDOC = "publishXdoc";
-    /** Name for the option 'publishXdocWithPush'. */
-    private static final String OPTION_PUBLISH_XDOC_WITH_PUSH = "publishXdocWithPush";
     /** Name for the option 'publishMlist'. */
     private static final String OPTION_PUBLISH_MLIST = "publishMlist";
     /** Name for the option 'publishSfRss'. */
@@ -184,10 +180,6 @@ public class CliProcessor {
             result.add("Release number has not been specified!");
         }
 
-        if (cmdLine.hasOption(OPTION_PUBLISH_XDOC_WITH_PUSH)
-                && cmdLine.getOptionValue(OPTION_AUTH_TOKEN) == null) {
-            result.add("Auth token should not be null for xdoc publication with push.");
-        }
         if (cmdLine.hasOption(OPTION_XDOC_TEMPLATE)) {
             final String path = cmdLine.getOptionValue(OPTION_XDOC_TEMPLATE);
             if (!Files.isRegularFile(Paths.get(path))) {
@@ -241,8 +233,6 @@ public class CliProcessor {
             .setMlistTemplate(cmdLine.getOptionValue(OPTION_MLIST_TEMPLATE))
             .setPublishAllSocial(cmdLine.hasOption(OPTION_PUBLISH_ALL_SOCIAL))
             .setPublishTwit(cmdLine.hasOption(OPTION_PUBLISH_TWIT))
-            .setPublishXdoc(cmdLine.hasOption(OPTION_PUBLISH_XDOC))
-            .setPublishXdocWithPush(cmdLine.hasOption(OPTION_PUBLISH_XDOC_WITH_PUSH))
             .setTwitterConsumerKey(cmdLine.getOptionValue(OPTION_TWITTER_CONSUMER_KEY))
             .setTwitterConsumerSecret(cmdLine.getOptionValue(OPTION_TWITTER_CONSUMER_SECRET))
             .setTwitterAccessToken(cmdLine.getOptionValue(OPTION_TWITTER_ACCESS_TOKEN))
@@ -293,8 +283,6 @@ public class CliProcessor {
             "Access token secret for Twitter.");
         options.addOption(OPTION_TWITTER_PROPERTIES, true,
             "Properties for publication on Twitter.");
-        options.addOption(OPTION_PUBLISH_XDOC, "Whether to publish xdoc.");
-        options.addOption(OPTION_PUBLISH_XDOC_WITH_PUSH, "Whether to publish xdoc with push.");
         return options;
     }
 

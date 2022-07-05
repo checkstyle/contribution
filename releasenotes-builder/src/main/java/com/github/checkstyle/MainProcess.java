@@ -28,7 +28,6 @@ import com.github.checkstyle.globals.ReleaseNotesMessage;
 import com.github.checkstyle.publishers.MailingListPublisher;
 import com.github.checkstyle.publishers.SourceforgeRssPublisher;
 import com.github.checkstyle.publishers.TwitterPublisher;
-import com.github.checkstyle.publishers.XdocPublisher;
 import com.github.checkstyle.templates.TemplateProcessor;
 import com.google.common.collect.Multimap;
 import freemarker.template.TemplateException;
@@ -126,9 +125,6 @@ public final class MainProcess {
      */
     private static List<String> runPostPublication(CliOptions cliOptions) {
         final List<String> errors = new ArrayList<>();
-        if (cliOptions.isPublishXdoc()) {
-            runXdocPublication(cliOptions, errors);
-        }
         if (cliOptions.isPublishAllSocial() || cliOptions.isPublishTwit()) {
             runTwitterPublication(cliOptions, errors);
         }
@@ -139,26 +135,6 @@ public final class MainProcess {
             runSfRssPublication(cliOptions, errors);
         }
         return errors;
-    }
-
-    /**
-     * Publish on xdoc.
-     *
-     * @param cliOptions command line options.
-     * @param errors list of publication errors.
-     */
-    private static void runXdocPublication(CliOptions cliOptions, List<String> errors) {
-        final XdocPublisher xdocPublisher = new XdocPublisher(
-            cliOptions.getOutputLocation() + XDOC_FILENAME, cliOptions.getLocalRepoPath(),
-            cliOptions.getReleaseNumber(), cliOptions.isPublishXdocWithPush(),
-            cliOptions.getAuthToken());
-        try {
-            xdocPublisher.publish();
-        }
-        // -@cs[IllegalCatch] We should execute all publishers, so cannot fail-fast
-        catch (Exception ex) {
-            errors.add(ex.toString());
-        }
     }
 
     /**
