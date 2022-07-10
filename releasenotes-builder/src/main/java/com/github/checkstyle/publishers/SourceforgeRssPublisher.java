@@ -108,9 +108,11 @@ public class SourceforgeRssPublisher {
      */
     private static int getPostsCount() throws IOException {
         final HttpURLConnection conn = (HttpURLConnection) new URL(POST_URL).openConnection();
-        final BufferedReader br = new BufferedReader(
-                new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
-        final Matcher matcher = NUMBER_PATTERN.matcher(br.readLine());
+        final Matcher matcher;
+        try (BufferedReader br = new BufferedReader(
+            new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+            matcher = NUMBER_PATTERN.matcher(br.readLine());
+        }
         int count = -1;
         if (matcher.find()) {
             count = Integer.parseInt(matcher.group());

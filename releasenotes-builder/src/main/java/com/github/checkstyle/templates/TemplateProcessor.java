@@ -99,6 +99,7 @@ public final class TemplateProcessor {
      * @return The contents of the template.
      * @throws FileNotFoundException if the supplied file can't be found.
      * @throws IllegalStateException if the resource can't be found.
+     * @noinspection IOStreamConstructor
      */
     private static String loadTemplate(String fileName, String defaultResource)
             throws FileNotFoundException {
