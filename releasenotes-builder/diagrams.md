@@ -8,7 +8,7 @@ sequenceDiagram
     participant Github
     participant CI
     Note left of Maintainer: version 10.4-SNAPSHOT
-    Maintainer->>Maintainer: mvn version:set '10.3.1'
+    Maintainer->>Maintainer: mvn version:set '10.3.1-SNAPSHOT'
     Maintainer->>Github: push changes for version bump
     Maintainer->>Github: update milestone name from 10.4 to 10.3.1
     Maintainer->>Github: create tag 'prepare-10.3.1'
