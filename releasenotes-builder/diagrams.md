@@ -32,6 +32,7 @@ sequenceDiagram
     Note left of Maintainer: version 10.3.2-SNAPSHOT
     par if version bump is not as sequential
         Maintainer->>Maintainer: mvn version:set '10.4-SNAPSHOT' from 10.3.2-SNAPSHOT
+        Maintainer->>Github: push changes for version bump
         Maintainer->>Github: update milestone name from 10.3.2 to 10.4
     end
     Note left of Maintainer: version 10.4-SNAPSHOT
