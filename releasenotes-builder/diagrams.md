@@ -26,5 +26,6 @@ sequenceDiagram
     CI->>CI: tweet to public (before release page update)
     CI->>CI: update githut release page with release notes
 
+    Maintainer->>Maintainer: mvn version:set '10.4-SNAPSHOT' from 10.3.2-SNAPSHOT
     Maintainer->>Github: update milestone name from 10.3.2 to 10.4
 ```
