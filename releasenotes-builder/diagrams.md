@@ -30,7 +30,7 @@ sequenceDiagram
     Github->>CI: trigger by tag '10.3.1'
     CI->>CI: mvn release:perform
     CI->>CI: create/update Githubs milestone
-    CI->>CI: update githut release page and deploy '-all.jar'
+    CI->>CI: update github release page and deploy '-all.jar'
     
     Github->>CI: trigger by tag '10.3.1'
     CI->>CI: copy site to sourceforge
@@ -38,7 +38,7 @@ sequenceDiagram
     Github->>CI: trigger by tag '10.3.1'
     CI->>CI: run releasenotes-builder
     CI->>CI: tweet to public
-    CI->>CI: update githut release page with release notes
+    CI->>CI: update github release page with release notes
 
     Note left of Maintainer: version 10.3.2-SNAPSHOT
     Maintainer->>Github: run Github action "set version '10.4-SNAPSHOT'"
