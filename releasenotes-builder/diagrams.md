@@ -30,7 +30,7 @@ sequenceDiagram
     Github->>CI: trigger by tag '10.3.1'
     CI->>CI: mvn release:perform
     CI->>CI: create/update Githubs milestone
-    CI->>CI: update github release page and deploy '-all.jar'
+    CI->>CI: create github release page and deploy '-all.jar'
     
     Github->>CI: trigger by tag '10.3.1'
     CI->>CI: copy site to sourceforge
