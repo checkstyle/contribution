@@ -16,6 +16,7 @@ sequenceDiagram
     Note left of Maintainer: version 10.3.1-SNAPSHOT
     Maintainer->>Github: create tag 'prepare-10.3.1'
     Github->>CI: trigger job
+    CI->>CI: run releasenotes-builder
     CI->>CI: update xdoc/releasenotes.xml
     CI->>CI: mvn release:prepare
     CI->>Github: push code update and tag '10.3.1'
@@ -23,10 +24,13 @@ sequenceDiagram
     Github->>CI: trigger by tag '10.3.1'
     CI->>CI: mvn release:perform
     CI->>CI: create/update Githubs milestone and deploy '-all.jar'
+    
+    Github->>CI: trigger by tag '10.3.1'
     CI->>CI: copy site to sourceforge
 
     Github->>CI: trigger by tag '10.3.1'
-    CI->>CI: tweet to public (before release page update)
+    CI->>CI: run releasenotes-builder
+    CI->>CI: tweet to public
     CI->>CI: update githut release page with release notes
 
     Note left of Maintainer: version 10.3.2-SNAPSHOT
