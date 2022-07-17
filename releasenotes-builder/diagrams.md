@@ -25,6 +25,8 @@ sequenceDiagram
     CI->>CI: mvn release:prepare
     CI->>Github: push code update and tag '10.3.1'
 
+    Note left of CI: further jobs triggers in parallel
+    
     Github->>CI: trigger by tag '10.3.1'
     CI->>CI: mvn release:perform
     CI->>CI: create/update Githubs milestone and deploy '-all.jar'
