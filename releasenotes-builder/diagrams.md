@@ -10,7 +10,7 @@ sequenceDiagram
     
     Note left of Maintainer: version 10.4-SNAPSHOT
     Maintainer->>Github: run Github action "set version '10.3.1-SNAPSHOT'"
-    par
+    par Github action
         Github->>Github: mvn version:set '10.3.1-SNAPSHOT'
         Github->>Github: push changes for version bump
         Github->>Github: update milestone name from 10.4 to 10.3.1
@@ -39,7 +39,7 @@ sequenceDiagram
 
     Note left of Maintainer: version 10.3.2-SNAPSHOT
     Maintainer->>Github: run Github action "set version '10.4-SNAPSHOT'"
-    par
+    par Github action
         Github->>Github: mvn version:set '10.4-SNAPSHOT' from 10.3.2-SNAPSHOT
         Github->>Github: push changes for version bump
         Github->>Github: update milestone name from 10.3.2 to 10.4
