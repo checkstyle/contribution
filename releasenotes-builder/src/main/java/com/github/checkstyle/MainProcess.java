@@ -43,6 +43,8 @@ public final class MainProcess {
     public static final String RSS_FILENAME = "rss.txt";
     /** Filename for a generated Mailing List post. */
     public static final String MLIST_FILENAME = "mailing_list.txt";
+    /** Filename for a generated GitHub Post. */
+    public static final String GITHUB_FILENAME = "github_post.txt";
 
     /** FreeMarker xdoc template file name. */
     public static final String FREEMARKER_XDOC_TEMPLATE_FILE =
@@ -56,6 +58,9 @@ public final class MainProcess {
     /** Mailing List template file name. */
     public static final String MLIST_TEMPLATE_FILE =
         "com/github/checkstyle/templates/mailing_list.template";
+    /** GitHub Post template file name. */
+    public static final String GITHUB_TEMPLATE_FILE =
+        "com/github/checkstyle/templates/github_post.template";
 
     /** Default constructor. */
     private MainProcess() {
@@ -114,6 +119,11 @@ public final class MainProcess {
             TemplateProcessor.generateWithFreemarker(templateVariables,
                     outputLocation + MLIST_FILENAME, cliOptions.getMlistTemplate(),
                     MLIST_TEMPLATE_FILE);
+        }
+        if (cliOptions.isGenerateAll() || cliOptions.isGenerateGitHub()) {
+            TemplateProcessor.generateWithFreemarker(templateVariables,
+                    outputLocation + GITHUB_FILENAME, cliOptions.getGitHubTemplate(),
+                   GITHUB_TEMPLATE_FILE);
         }
     }
 
