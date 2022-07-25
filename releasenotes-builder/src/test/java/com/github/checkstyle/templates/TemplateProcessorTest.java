@@ -72,6 +72,7 @@ public class TemplateProcessorTest {
         assertFile("twitterBreakingCompatibility.txt", MainProcess.TWITTER_FILENAME);
         assertFile("rssMlistBreakingCompatibility.txt", MainProcess.RSS_FILENAME);
         assertFile("rssMlistBreakingCompatibility.txt", MainProcess.MLIST_FILENAME);
+        assertFile("githubPageBreakingCompatibility.txt", MainProcess.GITHUB_FILENAME);
     }
 
     @Test
@@ -86,6 +87,7 @@ public class TemplateProcessorTest {
         assertFile("twitterNew.txt", MainProcess.TWITTER_FILENAME);
         assertFile("rssMlistNew.txt", MainProcess.RSS_FILENAME);
         assertFile("rssMlistNew.txt", MainProcess.MLIST_FILENAME);
+        assertFile("githubPageNew.txt", MainProcess.GITHUB_FILENAME);
     }
 
     @Test
@@ -100,6 +102,7 @@ public class TemplateProcessorTest {
         assertFile("twitterBug.txt", MainProcess.TWITTER_FILENAME);
         assertFile("rssMlistBug.txt", MainProcess.RSS_FILENAME);
         assertFile("rssMlistBug.txt", MainProcess.MLIST_FILENAME);
+        assertFile("githubPageBug.txt", MainProcess.GITHUB_FILENAME);
     }
 
     @Test
@@ -128,6 +131,7 @@ public class TemplateProcessorTest {
         assertFile("twitterNew.txt", MainProcess.TWITTER_FILENAME);
         assertFile("rssMlistNew.txt", MainProcess.RSS_FILENAME);
         assertFile("rssMlistNew.txt", MainProcess.MLIST_FILENAME);
+        assertFile("githubPageNew.txt", MainProcess.GITHUB_FILENAME);
     }
 
     @Test
@@ -146,6 +150,7 @@ public class TemplateProcessorTest {
         assertFile("xdocAll.txt", MainProcess.XDOC_FILENAME);
         assertFile("twitterAll.txt", MainProcess.TWITTER_FILENAME);
         assertFile("rssMlistAll.txt", MainProcess.RSS_FILENAME);
+        assertFile("githubPageAll.txt", MainProcess.GITHUB_FILENAME);
         assertFile("rssMlistAll.txt", MainProcess.MLIST_FILENAME);
     }
 
@@ -161,6 +166,7 @@ public class TemplateProcessorTest {
         assertFile(MainProcess.TWITTER_FILENAME);
         assertFile(MainProcess.RSS_FILENAME);
         assertFile(MainProcess.MLIST_FILENAME);
+        assertFile(MainProcess.GITHUB_FILENAME);
     }
 
     @Test
@@ -175,6 +181,7 @@ public class TemplateProcessorTest {
         assertFile("twitterBreakingCompatibility.txt", MainProcess.TWITTER_FILENAME);
         assertFile(MainProcess.RSS_FILENAME);
         assertFile(MainProcess.MLIST_FILENAME);
+        assertFile(MainProcess.GITHUB_FILENAME);
     }
 
     @Test
@@ -189,6 +196,7 @@ public class TemplateProcessorTest {
         assertFile(MainProcess.TWITTER_FILENAME);
         assertFile("rssMlistBreakingCompatibility.txt", MainProcess.RSS_FILENAME);
         assertFile(MainProcess.MLIST_FILENAME);
+        assertFile(MainProcess.GITHUB_FILENAME);
     }
 
     @Test
@@ -202,7 +210,23 @@ public class TemplateProcessorTest {
         assertFile(MainProcess.XDOC_FILENAME);
         assertFile(MainProcess.TWITTER_FILENAME);
         assertFile(MainProcess.RSS_FILENAME);
+        assertFile(MainProcess.GITHUB_FILENAME);
         assertFile("rssMlistBreakingCompatibility.txt", MainProcess.MLIST_FILENAME);
+    }
+
+    @Test
+    public void testGenerateOnlyGitHub() throws Exception {
+        final List<String> errors = MainProcess.run(
+            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
+                .setGenerateGitHub(true).build());
+
+        Assert.assertEquals("no errors", 0, errors.size());
+
+        assertFile(MainProcess.XDOC_FILENAME);
+        assertFile(MainProcess.TWITTER_FILENAME);
+        assertFile(MainProcess.RSS_FILENAME);
+        assertFile(MainProcess.MLIST_FILENAME);
+        assertFile("githubPageBreakingCompatibility.txt", MainProcess.GITHUB_FILENAME);
     }
 
     @Test
@@ -216,7 +240,8 @@ public class TemplateProcessorTest {
                         createAllNotes()),
                 createBaseCliOptions().setGenerateAll(true).setXdocTemplate(template)
                         .setTwitterTemplate(template)
-                        .setRssTemplate(template).setMlistTemplate(template).build());
+                        .setRssTemplate(template).setMlistTemplate(template)
+                        .setGitHubTemplate(template).build());
 
         Assert.assertEquals("no errors", 0, errors.size());
 
@@ -224,6 +249,7 @@ public class TemplateProcessorTest {
         assertFile("customTemplate.txt", MainProcess.TWITTER_FILENAME);
         assertFile("customTemplate.txt", MainProcess.RSS_FILENAME);
         assertFile("customTemplate.txt", MainProcess.MLIST_FILENAME);
+        assertFile("customTemplate.txt", MainProcess.GITHUB_FILENAME);
     }
 
     private static List<ReleaseNotesMessage> createAllNotes() throws Exception {

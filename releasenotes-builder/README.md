@@ -21,8 +21,9 @@ Jar file which includes all required dependencies will be located at
 java -jar releasenotes-builder-1.0-all.jar -localRepoPath <arg> \
      -remoteRepoPath <arg> -startRef <arg> [-endRef <arg>] \
      -releaseNumber <arg> [-outputLocation <args>] [-githubAuthToken <arg>] \
-     [-generateAll] [-generateXdoc] [-generateTwit] [-generateRss] [-generateMlist] \
-     [-xdocTemplate] [-twitterTemplate] [-rssTemplate] [-mlistTemplate] \
+     [-generateAll] [-generateXdoc] [-generateTwit] [-generateRss] [-generateMlist] [-generateGitHub] \
+     [-xdocTemplate] [-twitterTemplate] [-rssTemplate] [-mlistTemplate] [-gitHubTemplate] \
+     [-publishXdoc] [-publishXdocWithPush] \
      [-publishAllSocial] [-publishTwit] [-twitterConsumerKey <arg>] [-twitterConsumerSecret <arg>] \
      [-twiterAccessToken <arg>] [-twitterAccessTokenSecret <arg>] [-twitterProperties <arg>] \
      [-publishMlist] [-mlistUsername <arg>] [-mlistPassword <arg>] [-mlistProperties <arg>] \
@@ -65,6 +66,9 @@ Generated file will be ```rss.txt```.
 **generateMlist** - (optional) generate a release notes post to publish on Mailing list.
 Generated file will be ```mailing_list.txt```.
 
+**generateGitHub** - (optional) generate a release notes post to publish on GitHub Page.
+Generated file will be ```github_post.txt```.
+
 **generateAll** - (optional) generate all possible posts.
 Generated files will be at specified output location.
 
@@ -75,6 +79,8 @@ Generated files will be at specified output location.
 **rssTemplate** - (optional) path to the external rss freemarker template file.
 
 **mlistTemplate** - (optional) path to the external mailing list freemarker template file.
+
+**gitHubTemplate** - (optional) path to the external GitHub Page freemarker template file.
 
 **publishAllSocial** - (optional) publish all possible posts. Posts are read from generated files.
 

@@ -1,0 +1,18 @@
+Checkstyle 1.0.0 - https://checkstyle.org/releasenotes.html#Release_1.0.0
+
+Breaking backward compatibility:
+
+  Title 1
+
+New:
+
+  Title 2
+  Title 5
+
+Bug fixes:
+
+  Title 3
+
+Notes:
+
+  Title 4
