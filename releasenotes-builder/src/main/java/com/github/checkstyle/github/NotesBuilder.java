@@ -25,6 +25,7 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -70,6 +71,11 @@ public final class NotesBuilder {
                             + " Please set label at"
                             + GITHUB_ISSUE_TEMPLATE;
 
+    /** String format pattern for error if more than one label on issue. */
+    private static final String MESSAGE_MORE_THAN_ONE_RELEASE_LABEL =
+        "[ERROR] Issue #%d have more than one release label! Please set only one label from %s at"
+            + GITHUB_ISSUE_TEMPLATE;
+
     /** Default constructor. */
     private NotesBuilder() {
     }
@@ -87,7 +93,8 @@ public final class NotesBuilder {
      * @throws GitAPIException if an error occurs when accessing Git API.
      */
     public static Result buildResult(String localRepoPath, String authToken, String remoteRepoPath,
-        String startRef, String endRef) throws IOException, GitAPIException {
+                                     String startRef, String endRef) throws IOException,
+                                      GitAPIException {
 
         final Result result = new Result();
 
@@ -103,26 +110,58 @@ public final class NotesBuilder {
                 System.out.println(commitMessage.getMessage());
                 commitMessage = new CommitMessage(commitMessage.getRevertedCommitMessage());
             }
-            if (commitMessage.isIssueOrPull()) {
-                final int issueNo = commitMessage.getIssueNumber();
-                if (processedIssueNumbers.contains(issueNo)) {
-                    continue;
-                }
-                processedIssueNumbers.add(issueNo);
+            buildResultWithLabel(remoteRepoPath, result, remoteRepo, commitsForRelease,
+                                 processedIssueNumbers,
+                                 commit,
+                                 commitMessage);
+        }
+        return result;
+    }
 
+    /**
+     * Forms release notes as a map.
+     *
+     * @param remoteRepoPath path to remote git repository.
+     * @param result result
+     * @param remoteRepo remote repository
+     * @param commitsForRelease commit with release label
+     * @param processedIssueNumbers issue number.
+     * @param commit commit information.
+     * @param commitMessage commit message.
+     * @throws IOException if an I/O error occurs.
+     * @throws GitAPIException if an error occurs when accessing Git API.
+     */
+    private static void buildResultWithLabel(String remoteRepoPath, Result result,
+                                             GHRepository remoteRepo,
+                                             Set<RevCommit> commitsForRelease,
+                                             Set<Integer> processedIssueNumbers, RevCommit commit,
+                                             CommitMessage commitMessage) throws IOException {
+        if (commitMessage.isIssueOrPull()) {
+            final int issueNo = commitMessage.getIssueNumber();
+            if (!processedIssueNumbers.contains(issueNo)) {
+                processedIssueNumbers.add(issueNo);
                 final GHIssue issue = remoteRepo.getIssue(issueNo);
                 if (issue.getState() != GHIssueState.CLOSED) {
-                    result.addWarning(String.format(MESSAGE_NOT_CLOSED,
-                        issueNo, issue.getTitle(), remoteRepoPath, issueNo));
+                    result.addWarning(String.format(MESSAGE_NOT_CLOSED, issueNo, issue.getTitle(),
+                                                    remoteRepoPath, issueNo));
                 }
 
                 final String issueLabel = getIssueLabelFrom(issue);
                 if (issueLabel.isEmpty()) {
                     final String error = String.format(MESSAGE_NO_LABEL,
-                        issueNo,
-                        Arrays.stream(Constants.ISSUE_LABELS)
-                                .collect(Collectors.joining(SEPARATOR)),
-                        remoteRepoPath, issueNo);
+                                                       issueNo,
+                                                       Arrays.stream(Constants.ISSUE_LABELS)
+                                                           .collect(Collectors.joining(SEPARATOR)),
+                                                       remoteRepoPath, issueNo);
+                    result.addError(error);
+                }
+                final List<GHLabel> releaseLabels = getAllIssueLabels(issue);
+                if (releaseLabels.size() > 1) {
+                    final String error = String.format(MESSAGE_MORE_THAN_ONE_RELEASE_LABEL,
+                                                       issueNo,
+                                                       Arrays.stream(Constants.ISSUE_LABELS)
+                                                           .collect(Collectors.joining(SEPARATOR)),
+                                                       remoteRepoPath, issueNo);
                     result.addError(error);
                 }
                 final Set<RevCommit> issueCommits = getCommitsForIssue(commitsForRelease, issueNo);
@@ -131,16 +170,15 @@ public final class NotesBuilder {
                     new ReleaseNotesMessage(issue, authors);
                 result.putReleaseNotesMessage(issueLabel, releaseNotesMessage);
             }
-            else {
-                // Commits that have messages which do not contain issue or pull number
-                final String commitShortMessage = commit.getShortMessage();
-                final String author = commit.getAuthorIdent().getName();
-                final ReleaseNotesMessage releaseNotesMessage =
-                    new ReleaseNotesMessage(commitShortMessage, author);
-                result.putReleaseNotesMessage(Constants.MISCELLANEOUS_LABEL, releaseNotesMessage);
-            }
         }
-        return result;
+        else {
+            // Commits that have messages which do not contain issue or pull number
+            final String commitShortMessage = commit.getShortMessage();
+            final String author = commit.getAuthorIdent().getName();
+            final ReleaseNotesMessage releaseNotesMessage =
+                new ReleaseNotesMessage(commitShortMessage, author);
+            result.putReleaseNotesMessage(Constants.MISCELLANEOUS_LABEL, releaseNotesMessage);
+        }
     }
 
     /**
@@ -303,5 +341,19 @@ public final class NotesBuilder {
             .filter(input -> Arrays.binarySearch(Constants.ISSUE_LABELS, input.getName()) >= 0)
             .findFirst();
         return label.map(GHLabel::getName).orElse("");
+    }
+
+    /**
+     * Returns release label for release notes.
+     *
+     * @param issue issue.
+     * @return release label for release notes
+     * @throws IOException if an I/o error occurs.
+     */
+    private static List<GHLabel> getAllIssueLabels(GHIssue issue) throws IOException {
+        final Collection<GHLabel> issueLabels = issue.getLabels();
+        return issueLabels.stream()
+            .filter(input -> Arrays.binarySearch(Constants.ISSUE_LABELS, input.getName()) >= 0)
+            .collect(Collectors.toList());
     }
 }
