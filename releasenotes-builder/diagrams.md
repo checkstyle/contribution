@@ -7,7 +7,7 @@ sequenceDiagram
     actor Maintainer
     participant Github
     participant CI
-    
+
     Note left of Maintainer: version 10.4-SNAPSHOT
     Maintainer->>Github: run Github action "set version '10.3.1-SNAPSHOT'"
     par Github action
@@ -15,7 +15,7 @@ sequenceDiagram
         Github->>Github: push changes for version bump
         Github->>Github: update milestone name from 10.4 to 10.3.1
     end
-    
+
     Note left of Maintainer: version 10.3.1-SNAPSHOT
     Maintainer->>Github: create tag 'prepare-10.3.1'
     
@@ -26,12 +26,12 @@ sequenceDiagram
     CI->>Github: push code update and tag '10.3.1'
 
     Note left of CI: further jobs triggers in parallel
-    
+
     Github->>CI: trigger by tag '10.3.1'
     CI->>CI: mvn release:perform
     CI->>CI: create/update Githubs milestone
     CI->>CI: create github release page and deploy '-all.jar'
-    
+
     Github->>CI: trigger by tag '10.3.1'
     CI->>CI: copy site to sourceforge
 
