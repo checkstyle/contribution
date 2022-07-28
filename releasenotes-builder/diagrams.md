@@ -18,7 +18,7 @@ sequenceDiagram
 
     Note left of Maintainer: version 10.3.1-SNAPSHOT
     Maintainer->>Github: create tag 'prepare-10.3.1'
-    
+
     Github->>CI: trigger by tag 'prepare-10.3.1'
     CI->>CI: run releasenotes-builder
     CI->>CI: update xdoc/releasenotes.xml
