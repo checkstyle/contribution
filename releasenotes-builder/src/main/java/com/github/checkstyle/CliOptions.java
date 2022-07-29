@@ -59,6 +59,8 @@ public final class CliOptions {
     private boolean generateRss;
     /** Whether to generate a post for Mailing List. */
     private boolean generateMlist;
+    /** Whether to generate a post for GitHub Page. */
+    private boolean generateGitHub;
 
     /** File location for xdoc template. */
     private String xdocTemplate;
@@ -68,6 +70,8 @@ public final class CliOptions {
     private String rssTemplate;
     /** File location for mailing list template. */
     private String mlistTemplate;
+    /** File location for GitHub page template. */
+    private String gitHubTemplate;
 
     /** Whether to publish all social posts. */
     private boolean publishAllSocial;
@@ -214,6 +218,15 @@ public final class CliOptions {
     }
 
     /**
+     * Returns whether to generate a post for GitHub page.
+     *
+     * @return whether to generate a post for GitHub page.
+     */
+    public boolean isGenerateGitHub() {
+        return generateGitHub;
+    }
+
+    /**
      * Returns the file location for xdoc template.
      *
      * @return the file location for xdoc template
@@ -247,6 +260,15 @@ public final class CliOptions {
      */
     public String getMlistTemplate() {
         return mlistTemplate;
+    }
+
+    /**
+     * Returns the file location for GitHub Post template.
+     *
+     * @return the file location for GitHub Post template
+     */
+    public String getGitHubTemplate() {
+        return gitHubTemplate;
     }
 
     /**
@@ -511,6 +533,18 @@ public final class CliOptions {
         }
 
         /**
+         * Specify GitHub post template.
+         *
+         * @param genGitHub gitHub post
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
+        public Builder setGenerateGitHub(boolean genGitHub) {
+            generateGitHub = genGitHub;
+            return this;
+        }
+
+        /**
          * Specify xdoc template.
          *
          * @param xdocTemp xdoc template
@@ -555,6 +589,18 @@ public final class CliOptions {
          */
         public Builder setMlistTemplate(String mlistTemp) {
             mlistTemplate = mlistTemp;
+            return this;
+        }
+
+        /**
+         * Specify GitHub Post template.
+         *
+         * @param gitHubPageTemp GitHub post template
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         */
+        public Builder setGitHubTemplate(String gitHubPageTemp) {
+            gitHubTemplate = gitHubPageTemp;
             return this;
         }
 
@@ -891,10 +937,12 @@ public final class CliOptions {
             cliOptions.generateTw = generateTw;
             cliOptions.generateRss = generateRss;
             cliOptions.generateMlist = generateMlist;
+            cliOptions.generateGitHub = generateGitHub;
             cliOptions.xdocTemplate = xdocTemplate;
             cliOptions.twitterTemplate = twitterTemplate;
             cliOptions.rssTemplate = rssTemplate;
             cliOptions.mlistTemplate = mlistTemplate;
+            cliOptions.gitHubTemplate = gitHubTemplate;
             cliOptions.publishAllSocial = publishAllSocial;
             cliOptions.publishTwit = publishTwit;
             cliOptions.twitterConsumerKey = twitterConsumerKey;
