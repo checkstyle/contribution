@@ -81,6 +81,8 @@ public class CliProcessor {
     private static final String OPTION_GENERATE_RSS = "generateRss";
     /** Name for the option 'generateMlist'. */
     private static final String OPTION_GENERATE_MLIST = "generateMlist";
+    /** Name for the option 'generateGitHub'. */
+    private static final String OPTION_GENERATE_GITHUB = "generateGitHub";
 
     /** Name for the option 'xdocTemplate'. */
     private static final String OPTION_XDOC_TEMPLATE = "xdocTemplate";
@@ -90,6 +92,8 @@ public class CliProcessor {
     private static final String OPTION_RSS_TEMPLATE = "rssTemplate";
     /** Name for the option 'xdocTemplate'. */
     private static final String OPTION_MLIST_TEMPLATE = "mlistTemplate";
+    /** Name for the option 'gitHubTemplate'. */
+    private static final String OPTION_GITHUB_TEMPLATE = "gitHubTemplate";
 
     /** Name for the option 'publishAllSocial'. */
     private static final String OPTION_PUBLISH_ALL_SOCIAL = "publishAllSocial";
@@ -204,7 +208,12 @@ public class CliProcessor {
                 result.add(String.format("Could not find mailing list template '%s'!", path));
             }
         }
-
+        if (cmdLine.hasOption(OPTION_GITHUB_TEMPLATE)) {
+            final String path = cmdLine.getOptionValue(OPTION_GITHUB_TEMPLATE);
+            if (!Files.isRegularFile(Paths.get(path))) {
+                result.add(String.format("Could not find github post template '%s'!", path));
+            }
+        }
         return result;
     }
 
@@ -226,11 +235,12 @@ public class CliProcessor {
             .setGenerateXdoc(cmdLine.hasOption(OPTION_GENERATE_XDOC))
             .setGenerateTw(cmdLine.hasOption(OPTION_GENERATE_TW))
             .setGenerateRss(cmdLine.hasOption(OPTION_GENERATE_RSS))
-            .setGenerateMlist(cmdLine.hasOption(OPTION_GENERATE_MLIST))
+            .setGenerateGitHub(cmdLine.hasOption(OPTION_GENERATE_GITHUB))
             .setXdocTemplate(cmdLine.getOptionValue(OPTION_XDOC_TEMPLATE))
             .setTwitterTemplate(cmdLine.getOptionValue(OPTION_TWITTER_TEMPLATE))
             .setRssTemplate(cmdLine.getOptionValue(OPTION_RSS_TEMPLATE))
             .setMlistTemplate(cmdLine.getOptionValue(OPTION_MLIST_TEMPLATE))
+            .setGitHubTemplate(cmdLine.getOptionValue(OPTION_GITHUB_TEMPLATE))
             .setPublishAllSocial(cmdLine.hasOption(OPTION_PUBLISH_ALL_SOCIAL))
             .setPublishTwit(cmdLine.hasOption(OPTION_PUBLISH_TWIT))
             .setTwitterConsumerKey(cmdLine.getOptionValue(OPTION_TWITTER_CONSUMER_KEY))
@@ -272,10 +282,13 @@ public class CliProcessor {
             "Whether a mailing list post should be generated.");
         options.addOption(OPTION_XDOC_TEMPLATE, true, "Path to xdoc template");
         options.addOption(OPTION_TWITTER_TEMPLATE, true, "Path to twitter template");
+        options.addOption(OPTION_GENERATE_GITHUB,
+                          "Whether a github post should be generated.");
         options.addOption(OPTION_RSS_TEMPLATE, true, "Path to rss template");
         options.addOption(OPTION_MLIST_TEMPLATE, true, "Path to mailing list template");
         options.addOption(OPTION_PUBLISH_ALL_SOCIAL, "Whether to publish all social posts");
         options.addOption(OPTION_PUBLISH_TWIT, "Whether to publish a Twitter post.");
+        options.addOption(OPTION_GITHUB_TEMPLATE, true, "Path to github page template");
         options.addOption(OPTION_TWITTER_CONSUMER_KEY, true, "Consumer key for Twitter.");
         options.addOption(OPTION_TWITTER_CONSUMER_SECRET, true, "Consumer secret for Twitter.");
         options.addOption(OPTION_TWITTER_ACCESS_TOKEN, true, "Access token for Twitter.");
