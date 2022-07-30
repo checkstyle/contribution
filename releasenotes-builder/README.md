@@ -36,7 +36,7 @@ Command line options are:
 
 **localRepoPath** - path to the local git repository. For example,  ```/home/user/checkstyle``` .
 
-**remoteRepoPath** - path to the remote github repository. For example, ```checkstyle/checkstyle``` .
+**remoteRepoPath** - path to the remote GitHub repository. For example, ```checkstyle/checkstyle``` .
 
 **startRef** - specifies the commit reference or tag from which to start the generation of
 release notes. For example, ```753bc06``` or just tag ```checkstyle-6.12.1``` .

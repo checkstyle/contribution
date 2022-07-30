@@ -59,7 +59,7 @@ public final class NotesBuilder {
     /** Array elements separator. */
     private static final String SEPARATOR = ", ";
 
-    /** String format pattern for github issue. */
+    /** String format pattern for GitHub issue. */
     private static final String GITHUB_ISSUE_TEMPLATE =
             " https://github.com/%s/issues/%d";
     /** String format pattern for warning if issue is not closed. */

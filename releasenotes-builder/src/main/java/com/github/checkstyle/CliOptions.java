@@ -36,7 +36,7 @@ public final class CliOptions {
 
     /** Path to a local git repository. */
     private String localRepoPath;
-    /** Path to remote github repository. */
+    /** Path to remote GitHub repository. */
     private String remoteRepoPath;
     /** Start reference. */
     private String startRef;
@@ -115,9 +115,9 @@ public final class CliOptions {
     }
 
     /**
-     * Returns the path to remote github repository.
+     * Returns the path to remote GitHub repository.
      *
-     * @return the path to remote github repository
+     * @return the path to remote GitHub repository
      */
     public String getRemoteRepoPath() {
         return remoteRepoPath;
@@ -277,18 +277,18 @@ public final class CliOptions {
     }
 
     /**
-     * Returns the .
+     * Returns the twitter consumer secret.
      *
-     * @return the
+     * @return the twitter consumer secret
      */
     public String getTwitterConsumerSecret() {
         return twitterConsumerSecret;
     }
 
     /**
-     * Returns the consumer secret for Twitter.
+     * Returns the access token for Twitter.
      *
-     * @return the consumer secret for Twitter
+     * @return the access token for Twitter
      */
     public String getTwitterAccessToken() {
         return twitterAccessToken;
