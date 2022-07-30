@@ -18,6 +18,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 /**
- * Contains classes for retrieving github issues.
+ * Contains classes for retrieving GitHub issues.
  */
 package com.github.checkstyle.github;
