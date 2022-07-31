@@ -43,6 +43,8 @@ public final class Constants {
      * The array which represents the issue labels for release notes.
      *
      * @noinspection PublicStaticArrayField
+     * @noinspectionreason PublicStaticArrayField - Security hazard is not a concern
+     *      for ISSUE_LABELS content, we only use this in generation of release notes.
      */
     public static final String[] ISSUE_LABELS;
 
