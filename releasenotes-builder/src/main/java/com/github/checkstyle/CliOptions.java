@@ -394,6 +394,7 @@ public final class CliOptions {
          * @param path Local repository path
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setLocalRepoPath(String path) {
             localRepoPath = path;
@@ -406,6 +407,7 @@ public final class CliOptions {
          * @param path Remote repository path
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setRemoteRepoPath(String path) {
             remoteRepoPath = path;
@@ -418,6 +420,7 @@ public final class CliOptions {
          * @param ref Start reference
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setStartRef(String ref) {
             startRef = ref;
@@ -430,6 +433,7 @@ public final class CliOptions {
          * @param ref End reference
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setEndRef(String ref) {
             endRef = ref;
@@ -442,6 +446,7 @@ public final class CliOptions {
          * @param number Release Number
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setReleaseNumber(String number) {
             releaseNumber = number;
@@ -454,6 +459,7 @@ public final class CliOptions {
          * @param token Auth Token
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setAuthToken(String token) {
             authToken = token;
@@ -466,6 +472,7 @@ public final class CliOptions {
          * @param outputLoc Output location
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setOutputLocation(String outputLoc) {
             outputLocation = outputLoc;
@@ -478,6 +485,7 @@ public final class CliOptions {
          * @param genAll flag to generate all
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setGenerateAll(boolean genAll) {
             generateAll = genAll;
@@ -490,6 +498,7 @@ public final class CliOptions {
          * @param genXdoc flag to generate xdoc
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setGenerateXdoc(boolean genXdoc) {
             generateXdoc = genXdoc;
@@ -502,6 +511,7 @@ public final class CliOptions {
          * @param genTw flag to generate twitt
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setGenerateTw(boolean genTw) {
             generateTw = genTw;
@@ -514,6 +524,7 @@ public final class CliOptions {
          * @param genRss flag to generate RSS post
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setGenerateRss(boolean genRss) {
             generateRss = genRss;
@@ -526,6 +537,7 @@ public final class CliOptions {
          * @param genMlist flag to generate mail-list post
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setGenerateMlist(boolean genMlist) {
             generateMlist = genMlist;
@@ -538,6 +550,7 @@ public final class CliOptions {
          * @param genGitHub gitHub post
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setGenerateGitHub(boolean genGitHub) {
             generateGitHub = genGitHub;
@@ -550,6 +563,7 @@ public final class CliOptions {
          * @param xdocTemp xdoc template
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setXdocTemplate(String xdocTemp) {
             xdocTemplate = xdocTemp;
@@ -562,6 +576,7 @@ public final class CliOptions {
          * @param twitterTemp twitter template
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setTwitterTemplate(String twitterTemp) {
             twitterTemplate = twitterTemp;
@@ -574,6 +589,7 @@ public final class CliOptions {
          * @param rssTemp rss template
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setRssTemplate(String rssTemp) {
             rssTemplate = rssTemp;
@@ -586,6 +602,7 @@ public final class CliOptions {
          * @param mlistTemp mailing list template
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setMlistTemplate(String mlistTemp) {
             mlistTemplate = mlistTemp;
@@ -598,6 +615,7 @@ public final class CliOptions {
          * @param gitHubPageTemp GitHub post template
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setGitHubTemplate(String gitHubPageTemp) {
             gitHubTemplate = gitHubPageTemp;
@@ -610,6 +628,7 @@ public final class CliOptions {
          * @param pubAllSocial flag to generate all social posts
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setPublishAllSocial(boolean pubAllSocial) {
             publishAllSocial = pubAllSocial;
@@ -622,6 +641,7 @@ public final class CliOptions {
          * @param publishTw flag to publish twitt
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setPublishTwit(boolean publishTw) {
             publishTwit = publishTw;
@@ -634,6 +654,7 @@ public final class CliOptions {
          * @param twConsKey twitter consumer key
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setTwitterConsumerKey(String twConsKey) {
             twitterConsumerKey = twConsKey;
@@ -646,6 +667,7 @@ public final class CliOptions {
          * @param twConsSecret twitter consumer secret
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setTwitterConsumerSecret(String twConsSecret) {
             twitterConsumerSecret = twConsSecret;
@@ -658,6 +680,7 @@ public final class CliOptions {
          * @param twAccessToken twitter access token
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setTwitterAccessToken(String twAccessToken) {
             twitterAccessToken = twAccessToken;
@@ -670,6 +693,7 @@ public final class CliOptions {
          * @param twAccessTokenSecret twitter access token secret
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setTwitterAccessTokenSecret(String twAccessTokenSecret) {
             twitterAccessTokenSecret = twAccessTokenSecret;
@@ -682,6 +706,7 @@ public final class CliOptions {
          * @param twProperties twitter properties
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setTwitterProperties(String twProperties) {
             twitterProperties = twProperties;
@@ -694,6 +719,7 @@ public final class CliOptions {
          * @param pubMlist flag to publish to mailing list
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setPublishMlist(boolean pubMlist) {
             publishMlist = pubMlist;
@@ -706,6 +732,7 @@ public final class CliOptions {
          * @param username mailing list username
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setMlistUsername(String username) {
             mlistUsername = username;
@@ -718,6 +745,7 @@ public final class CliOptions {
          * @param password mailing list password
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setMlistPassword(String password) {
             mlistPassword = password;
@@ -730,6 +758,7 @@ public final class CliOptions {
          * @param mlistProps mailing list properties
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setMlistProperties(String mlistProps) {
             mlistProperties = mlistProps;
@@ -742,6 +771,7 @@ public final class CliOptions {
          * @param pubRss flag to publish to RSS
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setPublishSfRss(boolean pubRss) {
             publishSfRss = pubRss;
@@ -754,6 +784,7 @@ public final class CliOptions {
          * @param token sourceforge bearer token
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setSfBearerToken(String token) {
             sfRssBearerToken = token;
@@ -766,6 +797,7 @@ public final class CliOptions {
          * @param rssProps mailing list properties
          * @return Builder Object
          * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setSfRssProperties(String rssProps) {
             sfRssProperties = rssProps;
