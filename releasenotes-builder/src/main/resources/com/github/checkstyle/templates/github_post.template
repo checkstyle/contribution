@@ -27,10 +27,9 @@ Bug fixes:
 <#if notesMessages?has_content>
 <details>
 <summary>Other Changes:</summary>
-<br>
 <#list notesMessages as message>
-  ${message.title}
-<br />
+<br/>
+  ${message.title} <br/>
 </#list>
 </details>
 </#if>

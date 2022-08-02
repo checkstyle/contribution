@@ -15,7 +15,6 @@ Bug fixes:
 
 <details>
 <summary>Other Changes:</summary>
-<br>
-  Title 4
-<br />
+<br/>
+  Title 4 <br/>
 </details>
