@@ -6,7 +6,7 @@
   <param name="authMethod" value="PASSWORD" />
   <param name="branch" value="master" />
   <param name="ignoreKnownHosts" value="true" />
-  <param name="secure:password" value="credentialsJSON:aa055ab7-7ff8-4cdc-8bfb-51494f0f87de" />
+  <param name="secure:password" value="credentialsJSON:b23a1996-d670-4a0c-adc8-3e6c243be8e7" />
   <param name="submoduleCheckout" value="CHECKOUT" />
   <param name="teamcity:branchSpec" value="+:refs/pull/*/head" />
   <param name="url" value="https://github.com/checkstyle/contribution" />
