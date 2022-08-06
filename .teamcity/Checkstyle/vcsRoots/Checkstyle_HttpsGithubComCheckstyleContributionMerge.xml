@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<vcs-root xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="6b070e83-3115-4ae0-a02c-d0e938105c8a" type="jetbrains.git" modification-check-interval="60" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2021.1/project-config.xsd">
+  <name>https://github.com/checkstyle/contribution - merge</name>
+  <param name="agentCleanFilesPolicy" value="ALL_UNTRACKED" />
+  <param name="agentCleanPolicy" value="ALWAYS" />
+  <param name="authMethod" value="PASSWORD" />
+  <param name="branch" value="master" />
+  <param name="ignoreKnownHosts" value="true" />
+  <param name="secure:password" value="credentialsJSON:aa055ab7-7ff8-4cdc-8bfb-51494f0f87de" />
+  <param name="submoduleCheckout" value="CHECKOUT" />
+  <param name="teamcity:branchSpec" value="+:refs/pull/*/head" />
+  <param name="url" value="https://github.com/checkstyle/contribution" />
+  <param name="useAlternates" value="USE_MIRRORS" />
+  <param name="username" value="nick-mancuso" />
+  <param name="usernameStyle" value="USERID" />
+</vcs-root>
+

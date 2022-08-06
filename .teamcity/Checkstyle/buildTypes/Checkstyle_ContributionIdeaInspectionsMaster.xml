@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="35f24346-3bb5-49c3-9e74-f7175b8e9a2b" xsi:noNamespaceSchemaLocation="https://www.jetbrains.com/teamcity/schemas/2021.1/project-config.xsd">
+  <name>contribution: IDEA Inspections Master</name>
+  <description />
+  <settings>
+    <options>
+      <option name="executionTimeoutMin" value="30" />
+    </options>
+    <parameters />
+    <build-runners>
+      <runner id="RUNNER_910" name="Inspections (IntelliJ IDEA)" type="Inspection">
+        <parameters>
+          <param name="idea.app.home" value="%teamcity.tool.intellij.ideaIU-2020.1.1%" />
+          <param name="inspection.profile.file" value="releasenotes-builder/config/intellij-idea-inspections.xml" />
+          <param name="iprInfoRunParam" value="&lt;iprInfo path-to-ipr=&quot;releasenotes-builder/pom.xml&quot; /&gt;" />
+          <param name="jvmArgs" value="-Xmx512m -XX:ReservedCodeCacheSize=240m" />
+          <param name="target.jdk.home" value="%env.JDK_11_0_x64%" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+    </build-runners>
+    <vcs-settings>
+      <vcs-entry-ref root-id="Checkstyle_HttpsGithubComCheckstyleContributionRefsHeadsMaster" />
+    </vcs-settings>
+    <requirements />
+    <build-triggers>
+      <build-trigger id="vcsTrigger" type="vcsTrigger">
+        <parameters>
+          <param name="enableQueueOptimization" value="true" />
+          <param name="quietPeriodMode" value="DO_NOT_USE" />
+        </parameters>
+      </build-trigger>
+    </build-triggers>
+    <build-extensions>
+      <extension id="BUILD_EXT_135" type="BuildFailureOnMetric">
+        <parameters>
+          <param name="metricKey" value="InspectionStatsE" />
+          <param name="metricThreshold" value="69" />
+          <param name="metricUnits" value="metricUnitsDefault" />
+          <param name="moreOrLess" value="more" />
+          <param name="withBuildAnchor" value="false" />
+        </parameters>
+      </extension>
+      <extension id="BUILD_EXT_136" type="BuildFailureOnMetric">
+        <parameters>
+          <param name="metricKey" value="InspectionStatsW" />
+          <param name="metricThreshold" value="7" />
+          <param name="metricUnits" value="metricUnitsDefault" />
+          <param name="moreOrLess" value="more" />
+          <param name="withBuildAnchor" value="false" />
+        </parameters>
+      </extension>
+    </build-extensions>
+    <cleanup />
+  </settings>
+</build-type>
+
