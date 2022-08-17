@@ -6,7 +6,6 @@
 sequenceDiagram
     actor Maintainer
     participant Github
-    participant CI
 
     Note left of Maintainer: version 10.4-SNAPSHOT
     Maintainer->>Github: run Github action "Bump version and Update Milestone '10.3.1'"
