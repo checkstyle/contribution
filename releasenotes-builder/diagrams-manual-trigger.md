@@ -45,7 +45,7 @@ sequenceDiagram
         Github->>Github:copy site to sourceforge
     end
 
-    Maintainer->>Github: run Github action "Copy site to sourceforge '10.3.1'"
+    Maintainer->>Github: run Github action "Publish release notes outside '10.3.1'"
     par Github action
         Github->>Github:run releasenotes-builder
         Github->>Github:tweet to public
