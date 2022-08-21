@@ -8,7 +8,7 @@
   <param name="ignoreKnownHosts" value="true" />
   <param name="secure:password" value="credentialsJSON:b23a1996-d670-4a0c-adc8-3e6c243be8e7" />
   <param name="submoduleCheckout" value="CHECKOUT" />
-  <param name="teamcity:branchSpec" value="refs/heads/*" />
+  <param name="teamcity:branchSpec" value="+:*" />
   <param name="url" value="https://github.com/checkstyle/contribution" />
   <param name="useAlternates" value="AUTO" />
   <param name="username" value="nick-mancuso" />
