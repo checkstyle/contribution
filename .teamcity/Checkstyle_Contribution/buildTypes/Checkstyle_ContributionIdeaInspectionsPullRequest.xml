@@ -18,7 +18,7 @@
     <build-runners>
       <runner id="RUNNER_439" name="" type="Inspection">
         <parameters>
-          <param name="idea.app.home" value="%teamcity.tool.intellij.ideaIU-2020.1.1%" />
+          <param name="idea.app.home" value="%teamcity.tool.intellij.ideaIU-2021.2.3%" />
           <param name="inspection.profile.file" value="releasenotes-builder/config/intellij-idea-inspections.xml" />
           <param name="iprInfoRunParam" value="&lt;iprInfo path-to-ipr=&quot;releasenotes-builder/pom.xml&quot; /&gt;" />
           <param name="jvmArgs" value="-Xmx512m -XX:MaxPermSize=150m" />
