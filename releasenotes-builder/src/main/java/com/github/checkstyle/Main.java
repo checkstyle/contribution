@@ -47,6 +47,8 @@ public final class Main {
      * Entry point.
      *
      * @param args command line arguments.
+     * @noinspection UseOfSystemOutOrSystemErr
+     * @noinspectionreason UseOfSystemOutOrSystemErr - used for CLI output
      */
     public static void main(String... args) {
         int errorCounter;
@@ -122,6 +124,8 @@ public final class Main {
      * Prints a list of elements in standard out.
      *
      * @param entities a list.
+     * @noinspection UseOfSystemOutOrSystemErr
+     * @noinspectionreason UseOfSystemOutOrSystemErr - used for CLI output
      */
     private static void printListOf(List<String> entities) {
         System.out.println();

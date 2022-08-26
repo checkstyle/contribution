@@ -91,6 +91,8 @@ public final class NotesBuilder {
      * @return a map which represents release notes.
      * @throws IOException if an I/O error occurs.
      * @throws GitAPIException if an error occurs when accessing Git API.
+     * @noinspection UseOfSystemOutOrSystemErr
+     * @noinspectionreason UseOfSystemOutOrSystemErr - used for CLI output
      */
     public static Result buildResult(String localRepoPath, String authToken, String remoteRepoPath,
                                      String startRef, String endRef) throws IOException,
