@@ -62,7 +62,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testGenerateOnlyBreakingCompatibility() throws Exception {
-        final List<String> errors = MainProcess.run(
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
             createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
                 .setGenerateAll(true).build());
 
@@ -77,7 +77,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testGenerateOnlyNewFeature() throws Exception {
-        final List<String> errors = MainProcess.run(
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
             createNotes(null, createAllNotes(), null, null, null), createBaseCliOptions()
                 .setGenerateAll(true).build());
 
@@ -92,7 +92,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testGenerateOnlyBug() throws Exception {
-        final List<String> errors = MainProcess.run(
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
             createNotes(null, null, createAllNotes(), null, null), createBaseCliOptions()
                 .setGenerateAll(true).build());
 
@@ -107,7 +107,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testGenerateOnlyMisc() throws Exception {
-        final List<String> errors = MainProcess.run(
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
             createNotes(null, null, null, createAllNotes(), null), createBaseCliOptions()
                 .setGenerateAll(true).build());
 
@@ -121,7 +121,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testGenerateOnlyNewModule() throws Exception {
-        final List<String> errors = MainProcess.run(
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
             createNotes(null, null, null, null, createAllNotes()), createBaseCliOptions()
                 .setGenerateAll(true).build());
 
@@ -136,7 +136,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testGenerateAll() throws Exception {
-        final List<String> errors = MainProcess.run(
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
             createNotes(
                 Collections.singletonList(createReleaseNotesMessage("Title 1", "Author 1")),
                 Collections.singletonList(createReleaseNotesMessage(2, "Title 2", "Author 2")),
@@ -156,7 +156,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testGenerateOnlyXdoc() throws Exception {
-        final List<String> errors = MainProcess.run(
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
             createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
                 .setGenerateXdoc(true).build());
 
@@ -171,7 +171,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testGenerateOnlyTwitter() throws Exception {
-        final List<String> errors = MainProcess.run(
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
             createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
                 .setGenerateTw(true).build());
 
@@ -186,7 +186,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testGenerateOnlyRss() throws Exception {
-        final List<String> errors = MainProcess.run(
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
             createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
                 .setGenerateRss(true).build());
 
@@ -201,7 +201,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testGenerateOnlyMlist() throws Exception {
-        final List<String> errors = MainProcess.run(
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
             createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
                 .setGenerateMlist(true).build());
 
@@ -216,7 +216,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testGenerateOnlyGitHub() throws Exception {
-        final List<String> errors = MainProcess.run(
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
             createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
                 .setGenerateGitHub(true).build());
 
@@ -235,7 +235,7 @@ public class TemplateProcessorTest {
         FileUtils.writeStringToFile(file, "hello world");
         final String template = file.getAbsolutePath();
 
-        final List<String> errors = MainProcess.run(
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
                 createNotes(createAllNotes(), createAllNotes(), createAllNotes(), createAllNotes(),
                         createAllNotes()),
                 createBaseCliOptions().setGenerateAll(true).setXdocTemplate(template)

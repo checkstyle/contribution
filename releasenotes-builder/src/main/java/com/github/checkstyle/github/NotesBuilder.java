@@ -131,7 +131,9 @@ public final class NotesBuilder {
      * @param commit commit information.
      * @param commitMessage commit message.
      * @throws IOException if an I/O error occurs.
-     * @throws GitAPIException if an error occurs when accessing Git API.
+     * @noinspection MethodWithTooManyParameters
+     * @noinspectionreason MethodWithTooManyParameters - Method requires a lot of parameters to
+     *                     build the result with label.
      */
     private static void buildResultWithLabel(String remoteRepoPath, Result result,
                                              GHRepository remoteRepo,
