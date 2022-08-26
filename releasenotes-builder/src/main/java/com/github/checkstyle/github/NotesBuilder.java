@@ -274,7 +274,7 @@ public final class NotesBuilder {
             actualObjectId = repo.resolve(ref);
         }
         else {
-            final Ref repoPeeled = repo.peel(referenceObj);
+            final Ref repoPeeled = repo.getRefDatabase().peel(referenceObj);
             actualObjectId = Optional.ofNullable(repoPeeled.getPeeledObjectId())
                 .orElse(referenceObj.getObjectId());
         }
