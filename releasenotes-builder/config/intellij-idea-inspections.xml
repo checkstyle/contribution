@@ -4440,9 +4440,6 @@
         <option value="WeakerAccess"/>
         <!-- we need to work with AntClassLoader, there is no way to avoid this -->
         <option value="ClassLoaderInstantiation"/>
-        <!-- There are asserts in DetailAstImplTest#checkNode,
-                       but idea does not see them -->
-        <option value="JUnitTestMethodWithNoAssertions"/>
         <!-- we use it in Main class -->
         <option value="CallToSystemExit"/>
         <!-- we use it for testing purposes -->
@@ -4612,6 +4609,7 @@
                    enabled_by_default="true">
     <option name="assertionMethods"
             value="org.junit.jupiter.api.Assertions,assert.*|fail.*, ,
+    ,org.junit.Assert,assert.*|fail.*, ,
     ,org.mockito.Mockito,verify.*, ,
     ,org.mockito.InOrder,verify, ,
     ,org.hamcrest.MatcherAssert,assertThat, ,
