@@ -75,8 +75,9 @@ public final class MainProcess {
      * @throws IOException if I/O error occurs.
      * @throws TemplateException if an error occurs while generating freemarker template.
      */
-    public static List<String> run(Multimap<String, ReleaseNotesMessage> releaseNotes,
-            CliOptions cliOptions) throws IOException, TemplateException {
+    public static List<String> runPostGenerationAndPublication(
+            Multimap<String, ReleaseNotesMessage> releaseNotes, CliOptions cliOptions)
+            throws IOException, TemplateException {
         runPostGeneration(releaseNotes, cliOptions);
         return runPostPublication(cliOptions);
     }

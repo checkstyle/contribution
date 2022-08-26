@@ -66,8 +66,8 @@ public final class Main {
                 final Result notesBuilderResult = runGithubNotesBuilder(cliOptions);
                 errorCounter = notesBuilderResult.getErrorMessages().size();
                 if (errorCounter == 0) {
-                    publicationErrors = MainProcess.run(notesBuilderResult.getReleaseNotes(),
-                            cliOptions);
+                    publicationErrors = MainProcess.runPostGenerationAndPublication(
+                        notesBuilderResult.getReleaseNotes(), cliOptions);
                 }
             }
         }
