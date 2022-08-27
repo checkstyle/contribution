@@ -47,8 +47,9 @@ public final class Main {
      * Entry point.
      *
      * @param args command line arguments.
-     * @noinspection UseOfSystemOutOrSystemErr
+     * @noinspection UseOfSystemOutOrSystemErr, CallToSystemExit
      * @noinspectionreason UseOfSystemOutOrSystemErr - used for CLI output
+     * @noinspectionreason CallToSystemExit - main method must exit with code
      */
     public static void main(String... args) {
         int errorCounter;
@@ -77,17 +78,17 @@ public final class Main {
         }
         if (errorCounter == 0) {
             if (publicationErrors != null && !publicationErrors.isEmpty()) {
-                System.out.println(String.format("%nPublication ends with %d errors:",
-                        publicationErrors.size()));
+                System.out.printf("%nPublication ends with %d errors:%n",
+                                  publicationErrors.size());
                 printListOf(publicationErrors);
             }
             else {
-                System.out.println(String.format("%nExecution succeeded!"));
+                System.out.printf("%nExecution succeeded!%n");
             }
         }
         else {
-            System.out.println(String.format("%nGeneration ends with %d errors.",
-                errorCounter));
+            System.out.printf("%nGeneration ends with %d errors.%n",
+                              errorCounter);
             System.exit(ERROR_EXIT_CODE);
         }
     }

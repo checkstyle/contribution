@@ -336,7 +336,7 @@ public class TemplateProcessorTest {
     }
 
     private static String getFileContents(File file) throws IOException {
-        final StringBuilder result = new StringBuilder();
+        final StringBuilder result = new StringBuilder(256);
 
         try (BufferedReader br = Files.newBufferedReader(file.toPath())) {
             do {
