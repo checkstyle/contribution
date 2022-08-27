@@ -47,10 +47,10 @@ java -jar releasenotes-builder-1.0-all.jar -localRepoPath /home/user/opensource/
 where twitter.properties looks like:
 
 ```properties
-twitterConsumerKey=Fgsdf456sdffe8f4cs1dcsd8S
-twitterConsumerSecret=VvGSzCIFDCSzscS64cCSc8c4sczSCCScs41Ew2vJZ5TKyYhP6F
 twitterAccessToken=712345678921234567-4SVDS6sdvzx1vdVDV54dVDP5RcaDaEz
 twitterAccessTokenSecret=t5N3IoGVSHAvcvTCvJ465c4ZCXcc66548CS48SCFC1ccz
+twitterConsumerKey=Fgsdf456sdffe8f4cs1dcsd8S
+twitterConsumerSecret=VvGSzCIFDCSzscS64cCSc8c4sczSCCScs41Ew2vJZ5TKyYhP6F
 ```
 
 ## Mailing list
@@ -74,8 +74,8 @@ java -jar releasenotes-builder-1.0-all.jar -localRepoPath /home/user/opensource/
 where mlist.properties looks like:
 
 ```properties
-mlistUsername=username
 mlistPassword=password
+mlistUsername=username
 ```
 
 ## RSS feed
