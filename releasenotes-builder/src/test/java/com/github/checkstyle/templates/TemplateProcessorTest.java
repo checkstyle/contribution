@@ -241,7 +241,8 @@ public class TemplateProcessorTest {
                 createBaseCliOptions().setGenerateAll(true).setXdocTemplate(template)
                         .setTwitterTemplate(template)
                         .setRssTemplate(template).setMlistTemplate(template)
-                        .setGitHubTemplate(template).build());
+                        .setGitHubTemplate(template)
+                        .setValidateVersion(true).build());
 
         Assert.assertEquals("no errors", 0, errors.size());
 
@@ -250,6 +251,42 @@ public class TemplateProcessorTest {
         assertFile("customTemplate.txt", MainProcess.RSS_FILENAME);
         assertFile("customTemplate.txt", MainProcess.MLIST_FILENAME);
         assertFile("customTemplate.txt", MainProcess.GITHUB_FILENAME);
+    }
+
+    @Test
+    public void testVersionValidationForBreakingCompatibility() throws Exception {
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
+                .setValidateVersion(true).build());
+
+        Assert.assertEquals("no version validation error", 0, errors.size());
+    }
+
+    @Test
+    public void testVersionValidationForNewFeature() throws Exception {
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+            createNotes(null, null, null, null, createAllNotes()), createBaseCliOptions()
+                .setValidateVersion(true).build());
+
+        Assert.assertEquals("no version validation error", 0, errors.size());
+    }
+
+    @Test
+    public void testVersionValidationForBreakingCompatibilityError() throws Exception {
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
+                .setValidateVersion(false).build());
+
+        Assert.assertEquals("version validation error", 0, errors.size());
+    }
+
+    @Test
+    public void testVersionValidationForNewFeatureError() throws Exception {
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+            createNotes(null, null, null, null, createAllNotes()), createBaseCliOptions()
+                .setValidateVersion(false).build());
+
+        Assert.assertEquals("version validation error", 0, errors.size());
     }
 
     private static List<ReleaseNotesMessage> createAllNotes() throws Exception {

@@ -105,6 +105,9 @@ public final class CliOptions {
     /** Properties to publish to RSS. */
     private String sfRssProperties;
 
+    /** To validate pom version */
+    private Boolean validateVersion;
+
     /** Default constructor. */
     private CliOptions() {
     }
@@ -368,6 +371,15 @@ public final class CliOptions {
      */
     public String getSfRssBearerToken() {
         return sfRssBearerToken;
+    }
+
+    /**
+     * Return true or false based on the pom version.
+     *
+     * @return version to validate pom version
+     */
+    public Boolean isValidateVersion() {
+        return validateVersion;
     }
 
     /**
@@ -805,6 +817,17 @@ public final class CliOptions {
         }
 
         /**
+         * Specify pom version.
+         *
+         * @param version pom version.
+         * @return Builder Object
+         */
+        public Builder setValidateVersion(Boolean version) {
+            validateVersion = version;
+            return this;
+        }
+
+        /**
          * Verify options and set defaults.
          *
          * @return new CliOption instance
@@ -989,6 +1012,7 @@ public final class CliOptions {
             cliOptions.publishSfRss = publishSfRss;
             cliOptions.sfRssBearerToken = sfRssBearerToken;
             cliOptions.sfRssProperties = sfRssProperties;
+            cliOptions.validateVersion = validateVersion;
             return cliOptions;
         }
 

@@ -111,6 +111,9 @@ public class CliProcessor {
     /** Name for the option 'sfRssProperties'. */
     private static final String OPTION_SF_RSS_PROPERTIES = "sfRssProperties";
 
+    /** Name for the option 'validateVersion'. */
+    private static final String OPTION_VALIDATE_VERSION = "validateVersion";
+
     /** Command line cmdArgs. */
     private final String[] cmdArgs;
     /** Command line object. */
@@ -256,6 +259,7 @@ public class CliProcessor {
             .setPublishSfRss(cmdLine.hasOption(OPTION_PUBLISH_SF_RSS))
             .setSfBearerToken(cmdLine.getOptionValue(OPTION_SF_RSS_BEARER_TOKEN))
             .setSfRssProperties(cmdLine.getOptionValue(OPTION_SF_RSS_PROPERTIES))
+            .setValidateVersion(Boolean.valueOf(cmdLine.getOptionValue(OPTION_VALIDATE_VERSION)))
             .build();
     }
 
@@ -296,6 +300,7 @@ public class CliProcessor {
             "Access token secret for Twitter.");
         options.addOption(OPTION_TWITTER_PROPERTIES, true,
             "Properties for publication on Twitter.");
+        options.addOption(OPTION_VALIDATE_VERSION, false, "Pom version to validate.");
         return options;
     }
 

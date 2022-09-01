@@ -21,9 +21,11 @@ package com.github.checkstyle;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import com.github.checkstyle.globals.Constants;
 import com.github.checkstyle.globals.ReleaseNotesMessage;
 import com.github.checkstyle.publishers.MailingListPublisher;
 import com.github.checkstyle.publishers.SourceforgeRssPublisher;
@@ -79,7 +81,10 @@ public final class MainProcess {
             Multimap<String, ReleaseNotesMessage> releaseNotes, CliOptions cliOptions)
             throws IOException, TemplateException {
         runPostGeneration(releaseNotes, cliOptions);
-        return runPostPublication(cliOptions);
+        ArrayList<String> errors = new ArrayList<String>();
+        errors.addAll(validateNotes(releaseNotes, cliOptions));
+        errors.addAll(runPostPublication(cliOptions));
+        return errors;
     }
 
     /**

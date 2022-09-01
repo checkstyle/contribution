@@ -22,6 +22,9 @@ package com.github.checkstyle;
 import java.io.IOException;
 import java.util.List;
 
+import com.github.checkstyle.globals.Constants;
+import com.github.checkstyle.globals.ReleaseNotesMessage;
+import com.google.common.collect.Multimap;
 import org.apache.commons.cli.ParseException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
@@ -65,6 +68,24 @@ public final class Main {
                 final CliOptions cliOptions = cliProcessor.getCliOptions();
                 final Result notesBuilderResult = runGithubNotesBuilder(cliOptions);
                 errorCounter = notesBuilderResult.getErrorMessages().size();
+
+                final String version = cliOptions.getReleaseNumber();
+                final long numberOfPeriods = version.chars().filter(ch -> ch == '.').count();
+
+                Multimap<String, ReleaseNotesMessage> releaseNotes = notesBuilderResult.getReleaseNotes();
+                if (numberOfPeriods == 1) {
+                    if(releaseNotes.containsKey(Constants.BREAKING_COMPATIBILITY_LABEL)
+                        || releaseNotes.containsKey(Constants.NEW_FEATURE_LABEL)) {
+                        System.out.println("Correct validation of version");
+                    }
+                }
+                else if (numberOfPeriods == 2) {
+                    if (!releaseNotes.containsKey(Constants.BREAKING_COMPATIBILITY_LABEL)
+                        || !releaseNotes.containsKey(Constants.NEW_FEATURE_LABEL)) {
+                        System.out.println("[ERROR] validation of version");
+                        errorCounter++;
+                    }
+                }
                 if (errorCounter == 0) {
                     publicationErrors = MainProcess.runPostGenerationAndPublication(
                         notesBuilderResult.getReleaseNotes(), cliOptions);
