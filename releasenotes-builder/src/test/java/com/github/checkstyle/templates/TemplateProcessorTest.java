@@ -313,11 +313,24 @@ public class TemplateProcessorTest {
         titleField.setAccessible(true);
         titleField.set(issue, title);
 
+        final Field escapedField = issue.getClass().getDeclaredField("title");
+        escapedField.setAccessible(true);
+        escapedField.set(issue, title);
+        escape(issue, escapedField);
+
         final Field numberField = issue.getClass().getDeclaredField("number");
         numberField.setAccessible(true);
         numberField.set(issue, number);
 
         return new ReleaseNotesMessage(issue, author);
+    }
+
+    private static void escape(
+        Object associatedObject, Field stringField) throws IllegalAccessException {
+        stringField.setAccessible(true);
+        final String fieldValue = (String) stringField.get(associatedObject);
+        final String escapedFieldValue = fieldValue.replace("@", "`@`");
+        stringField.set(associatedObject, escapedFieldValue);
     }
 
     private void assertFile(String expectedName, String actualName) throws IOException {
