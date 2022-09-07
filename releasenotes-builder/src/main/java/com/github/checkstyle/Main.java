@@ -47,8 +47,9 @@ public final class Main {
      * Entry point.
      *
      * @param args command line arguments.
-     * @noinspection UseOfSystemOutOrSystemErr, CallToSystemExit
+     * @noinspection UseOfSystemOutOrSystemErr, CallToSystemExit, CallToPrintStackTrace
      * @noinspectionreason UseOfSystemOutOrSystemErr - used for CLI output
+     * @noinspectionreason CallToPrintStackTrace - used for CLI output
      * @noinspectionreason CallToSystemExit - main method must exit with code
      */
     public static void main(String... args) {
@@ -73,7 +74,7 @@ public final class Main {
         }
         catch (ParseException | GitAPIException | IOException | TemplateException ex) {
             errorCounter = 1;
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
             CliProcessor.printUsage();
         }
         if (errorCounter == 0) {
