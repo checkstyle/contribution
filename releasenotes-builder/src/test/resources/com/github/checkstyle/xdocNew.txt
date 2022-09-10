@@ -1,4 +1,3 @@
-  
     <section name="Release 1.0.0">
       <div class="releaseDate">XX.XX.XXXX</div>
       <p>New:</p>
@@ -28,8 +27,8 @@
           </li>
           <li>
             Mock issue title 6
-L12345678901234567890123456789012345678901234567890123456789012345678-
-90ooooooooooooooooooooooooooooooooooooooooooooooooong&#39;&quot;.
+L1234567890123456789012345678901234567890123456789012345678901234567890ooooooooooooooooooooooooooo-
+oooooooooooooooooooooong&#39;&quot;.
             Author: Author 1
           </li>
         </ul>

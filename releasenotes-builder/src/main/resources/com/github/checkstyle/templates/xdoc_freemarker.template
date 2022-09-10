@@ -1,4 +1,4 @@
-  <#escape x as x?html>
+<#escape x as x?html>
     <section name="Release ${releaseNo}">
       <div class="releaseDate">${todaysDate}</div>
       <#if breakingMessages?has_content>
@@ -50,4 +50,4 @@
         </ul>
       </#if>
     </section>
-  </#escape>
+</#escape>

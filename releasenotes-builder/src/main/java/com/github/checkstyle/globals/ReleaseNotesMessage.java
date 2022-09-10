@@ -29,7 +29,7 @@ import org.kohsuke.github.GHIssue;
 public final class ReleaseNotesMessage {
 
     /** Max size of line. */
-    private static final int MAX_TITLE_LINE_SIZE = 70;
+    private static final int MAX_TITLE_LINE_SIZE = 99;
 
     /** Converted size of html character. */
     private static final int HTML_CHAR_SIZE = 5;
