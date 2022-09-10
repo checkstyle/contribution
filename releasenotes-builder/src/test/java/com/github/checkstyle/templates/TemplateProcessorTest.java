@@ -230,6 +230,16 @@ public class TemplateProcessorTest {
     }
 
     @Test
+    public void testGitHub() throws Exception {
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
+                .setGenerateGitHub(true).build());
+
+        Assert.assertEquals("no errors", 0, errors.size());
+        assertFile("githubPageBreakingCompatibility.txt", MainProcess.GITHUB_FILENAME);
+    }
+
+    @Test
     public void testGenerateCustomTemplate() throws Exception {
         final File file = temporaryFolder.newFile("temp.template");
         FileUtils.writeStringToFile(file, "hello world");
