@@ -227,10 +227,12 @@ public final class NotesBuilder {
         Verify.verifyNotNull(startCommit, "Start reference \"" + startRef + "\" is invalid!");
 
         final ObjectId endCommit = getActualRefObjectId(repo, endRef);
-        final Iterable<RevCommit> commits =
-            new Git(repo).log().addRange(startCommit, endCommit).call();
+        try (Git git = new Git(repo)) {
+            final Iterable<RevCommit> commits =
+                git.log().addRange(startCommit, endCommit).call();
 
-        return Sets.newLinkedHashSet(commits);
+            return Sets.newLinkedHashSet(commits);
+        }
     }
 
     /**
