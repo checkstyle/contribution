@@ -51,6 +51,8 @@ public class MailingListPublisher {
     private static final String SMTP_PORT = "587";
     /** Template for a subject. */
     private static final String SUBJECT_TEMPLATE = "Checkstyle %s";
+    /** True constant. */
+    private static final String TRUE = "true";
 
     /** Sender username. */
     private final String username;
@@ -85,12 +87,12 @@ public class MailingListPublisher {
      */
     public void publish() throws MessagingException, IOException {
         final Properties props = System.getProperties();
-        props.put("mail.smtp.starttls.enable", true);
-        props.put("mail.smtp.host", SMTP_HOST);
-        props.put("mail.smtp.user", username);
-        props.put("mail.smtp.password", password);
-        props.put("mail.smtp.port", SMTP_PORT);
-        props.put("mail.smtp.auth", true);
+        props.setProperty("mail.smtp.starttls.enable", TRUE);
+        props.setProperty("mail.smtp.host", SMTP_HOST);
+        props.setProperty("mail.smtp.user", username);
+        props.setProperty("mail.smtp.password", password);
+        props.setProperty("mail.smtp.port", SMTP_PORT);
+        props.setProperty("mail.smtp.auth", TRUE);
 
         final Session session = Session.getInstance(props, null);
         final MimeMessage mimeMessage = new MimeMessage(session);
