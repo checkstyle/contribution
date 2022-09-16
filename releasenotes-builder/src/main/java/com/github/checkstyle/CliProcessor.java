@@ -75,7 +75,7 @@ public class CliProcessor {
     private static final String OPTION_GENERATE_ALL = "generateAll";
     /** Name for the option 'generateXdoc'. */
     private static final String OPTION_GENERATE_XDOC = "generateXdoc";
-    /** Name for the option 'generateTw'it. */
+    /** Name for the option 'generateTwit'. */
     private static final String OPTION_GENERATE_TW = "generateTwit";
     /** Name for the option 'generateRss'. */
     private static final String OPTION_GENERATE_RSS = "generateRss";

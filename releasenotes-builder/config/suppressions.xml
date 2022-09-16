@@ -6,7 +6,7 @@
 
 <suppressions>
     <suppress checks="UncommentedMain" files="Main.java"/>
-    <!-- this is a builder, there to much methods to get its options -->
+    <!-- this is a builder, there is to many methods to get its options -->
     <suppress checks="MethodCount" files="CliOptions.java"/>
 
     <!-- Tone down the checking for test code -->
