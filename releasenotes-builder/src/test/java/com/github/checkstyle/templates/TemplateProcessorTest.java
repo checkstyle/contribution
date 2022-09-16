@@ -338,11 +338,12 @@ public class TemplateProcessorTest {
                                 .format(DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.US)),
                         "XX.XX.XXXX");
 
-        Assert.assertEquals(expectedXdoc, actualXdoc);
+        Assert.assertEquals("expected xdoc", expectedXdoc, actualXdoc);
     }
 
     private void assertFile(String actualName) {
-        Assert.assertFalse(new File(temporaryFolder.getRoot(), actualName).exists());
+        Assert.assertFalse("file does not exist",
+            new File(temporaryFolder.getRoot(), actualName).exists());
     }
 
     private static String getFileContents(File file) throws IOException {
