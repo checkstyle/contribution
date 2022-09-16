@@ -154,8 +154,8 @@ public final class NotesBuilder {
                 if (issueLabel.isEmpty()) {
                     final String error = String.format(MESSAGE_NO_LABEL,
                                                        issueNo,
-                                                       Arrays.stream(Constants.ISSUE_LABELS)
-                                                           .collect(Collectors.joining(SEPARATOR)),
+                                                       String.join(SEPARATOR,
+                                                           Constants.ISSUE_LABELS),
                                                        remoteRepoPath, issueNo);
                     result.addError(error);
                 }
@@ -163,8 +163,8 @@ public final class NotesBuilder {
                 if (releaseLabels.size() > 1) {
                     final String error = String.format(MESSAGE_MORE_THAN_ONE_RELEASE_LABEL,
                                                        issueNo,
-                                                       Arrays.stream(Constants.ISSUE_LABELS)
-                                                           .collect(Collectors.joining(SEPARATOR)),
+                                                       String.join(SEPARATOR,
+                                                           Constants.ISSUE_LABELS),
                                                        remoteRepoPath, issueNo);
                     result.addError(error);
                 }
@@ -314,7 +314,7 @@ public final class NotesBuilder {
      */
     private static String getAuthorsOf(Set<RevCommit> commits) {
         final Set<String> commitAuthors = findCommitAuthors(commits);
-        return commitAuthors.stream().collect(Collectors.joining(SEPARATOR));
+        return String.join(SEPARATOR, commitAuthors);
     }
 
     /**
