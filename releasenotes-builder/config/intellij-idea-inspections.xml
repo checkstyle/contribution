@@ -14,8 +14,8 @@
   </inspection_tool>
   <inspection_tool class="AbstractClassNeverImplemented" enabled="true" level="ERROR"
                    enabled_by_default="true"/>
-  <!-- we are not limited in resources
-         and we are a library so there are more usages outside of our code -->
+  <!-- we are not limited in resources,
+         and we are a library so there are more usages outside our code -->
   <inspection_tool class="AbstractClassWithOnlyOneDirectInheritor" enabled="false" level="ERROR"
                    enabled_by_default="true"/>
   <inspection_tool class="AbstractClassWithoutAbstractMethods" enabled="true" level="ERROR"
@@ -981,7 +981,7 @@
     <option name="ignoreOverflowingByteCasts" value="false"/>
   </inspection_tool>
   <!-- this is valid but there are many false-positives as we use reflection to load modules
-     after recheck by instanceof and we restricted in by existing api types, but some cases
+     after recheck by instanceof, and we restricted in by existing api types, but some cases
      are valid, inspection lack of properties to make it less demanding -->
   <inspection_tool class="CastToConcreteClass" enabled="false" level="ERROR"
                    enabled_by_default="false"/>
@@ -1075,7 +1075,7 @@
   <inspection_tool class="ClashingTraitMethods" enabled="false" level="ERROR"
                    enabled_by_default="false"/>
   <!-- we use design model to keep all logic for class in one file.
-    So, we have a lot of completely isolated classes and we cannot put them to
+    So, we have a lot of completely isolated classes, and we cannot put them to
     separate package as it will affect users configs -->
   <inspection_tool class="ClassComplexity" enabled="false" level="ERROR"
                    enabled_by_default="false">
@@ -1145,7 +1145,7 @@
                    enabled_by_default="true"/>
   <inspection_tool class="ClassReferencesSubclass" enabled="true" level="ERROR"
                    enabled_by_default="true"/>
-  <!-- we are library(interfaces are used outside of our code base)
+  <!-- we are library(interfaces are used outside our code base)
          we can not follow this rule -->
   <inspection_tool class="ClassUnconnectedToPackage" enabled="false" level="ERROR"
                    enabled_by_default="false"/>
@@ -1301,7 +1301,7 @@
                    enabled_by_default="true"/>
   <inspection_tool class="ConstantConditionalExpressionJS" enabled="true" level="ERROR"
                    enabled_by_default="true"/>
-  <!-- We cannot use IF_ELSE as it will force us to make code coverage
+  <!-- We cannot use IF_ELSE as it will force us to make code coverage,
          and we will not find Input to satisfy coverage,
          creation of non-real test case is against our policy of testing. -->
   <inspection_tool class="ConstantConditions" enabled="false" level="WARNING"
@@ -1476,7 +1476,7 @@
                    enabled_by_default="true"/>
   <inspection_tool class="CustomSecurityManager" enabled="true" level="ERROR"
                    enabled_by_default="true"/>
-  <!-- we can not afford this now, api cleanup is in progress and it is hard and takes time for
+  <!-- we can not afford this now, api cleanup is in progress, and it is hard and takes time for
      deprecation process -->
   <inspection_tool class="CyclicClassDependency" enabled="false" level="ERROR"
                    enabled_by_default="false"/>
@@ -2389,7 +2389,7 @@
   </inspection_tool>
   <inspection_tool class="HtmlUnknownTarget" enabled="true" level="ERROR"
                    enabled_by_default="true"/>
-  <!-- all links are to general web sites, we can not use https -->
+  <!-- all links are to general websites, we can not use https -->
   <inspection_tool class="HttpUrlsUsage" enabled="false" level="WEAK WARNING"
                    enabled_by_default="false" />
   <inspection_tool class="IOResource" enabled="true" level="WARNING" enabled_by_default="true">
@@ -2958,7 +2958,7 @@
                    enabled_by_default="true"/>
   <inspection_tool class="LoadLibraryWithNonConstantString" enabled="true" level="ERROR"
                    enabled_by_default="true"/>
-  <!-- finds false positives and we already have our own FinalLocalVariableCheck
+  <!-- finds false positives, and we already have our own FinalLocalVariableCheck
          for this purpose -->
   <inspection_tool class="LocalCanBeFinal" enabled="false" level="ERROR"
                    enabled_by_default="false"/>
@@ -3049,7 +3049,7 @@
   <!-- behavior is different from local execution, no violations on local -->
   <inspection_tool class="MavenModelInspection" enabled="false" level="ERROR"
                    enabled_by_default="false"/>
-  <!-- we use maven plugin for this and github action bot -->
+  <!-- we use maven plugin for this and GitHub action bot -->
   <inspection_tool class="MavenPackageUpdate" enabled="false" level="WARNING"
                    enabled_by_default="false" />
   <inspection_tool class="MavenRedundantGroupId" enabled="true" level="ERROR"
@@ -3664,7 +3664,7 @@
   </inspection_tool>
   <inspection_tool class="PublicFieldAccessedInSynchronizedContext" enabled="true" level="WARNING"
                    enabled_by_default="true"/>
-  <!-- we are not fanatics of interfaces, we use concept 'the less abstractions the better -->
+  <!-- we are not fanatics of interfaces, we use concept 'the less abstractions the better' -->
   <inspection_tool class="PublicMethodNotExposedInInterface" enabled="false" level="ERROR"
                    enabled_by_default="false">
     <option name="ignorableAnnotations">
@@ -3895,7 +3895,7 @@
   <inspection_tool class="SamePackageImport" enabled="true" level="ERROR"
                    enabled_by_default="true"/>
   <!-- too much false positives as it does not consider fact that public method is called
-         from outside of the class, some values come from config files,
+         from outside the class, some values come from config files,
          also it highlights most of the static methods that are candidates
          for utils package, but we have not decided yet. -->
   <inspection_tool class="SameParameterValue" enabled="false" level="WARNING"
