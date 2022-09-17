@@ -337,9 +337,8 @@ public final class NotesBuilder {
      *
      * @param issue issue.
      * @return issue label for release notes
-     * @throws IOException if an I/o error occurs.
      */
-    private static String getIssueLabelFrom(GHIssue issue) throws IOException {
+    private static String getIssueLabelFrom(GHIssue issue) {
         final Collection<GHLabel> issueLabels = issue.getLabels();
         final Optional<GHLabel> label = issueLabels.stream()
             .filter(input -> Arrays.binarySearch(Constants.ISSUE_LABELS, input.getName()) >= 0)
@@ -352,9 +351,8 @@ public final class NotesBuilder {
      *
      * @param issue issue.
      * @return release label for release notes
-     * @throws IOException if an I/o error occurs.
      */
-    private static List<GHLabel> getAllIssueLabels(GHIssue issue) throws IOException {
+    private static List<GHLabel> getAllIssueLabels(GHIssue issue) {
         final Collection<GHLabel> issueLabels = issue.getLabels();
         return issueLabels.stream()
             .filter(input -> Arrays.binarySearch(Constants.ISSUE_LABELS, input.getName()) >= 0)
