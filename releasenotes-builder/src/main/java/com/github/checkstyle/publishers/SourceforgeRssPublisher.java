@@ -83,7 +83,7 @@ public class SourceforgeRssPublisher {
         conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 
         try (OutputStream os = conn.getOutputStream()) {
-            final String postText = new String(Files.readAllBytes(Paths.get(postFilename)),
+            final String postText = Files.readString(Paths.get(postFilename),
                 StandardCharsets.UTF_8);
             os.write(String.format(POST_TEMPLATE, bearerToken, releaseNumber, postText)
                 .getBytes(StandardCharsets.UTF_8));

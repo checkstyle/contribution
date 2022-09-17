@@ -77,8 +77,7 @@ public class TwitterPublisher {
         twitter.setOAuthConsumer(consumerKey, consumerSecret);
         final AccessToken token = new AccessToken(accessToken, accessTokenSecret);
         twitter.setOAuthAccessToken(token);
-        final String post = new String(Files.readAllBytes(Paths.get(postFilename)),
-            StandardCharsets.UTF_8);
+        final String post = Files.readString(Paths.get(postFilename), StandardCharsets.UTF_8);
         twitter.updateStatus(post);
     }
 }
