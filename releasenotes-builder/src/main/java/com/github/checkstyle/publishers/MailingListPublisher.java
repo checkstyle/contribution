@@ -102,8 +102,7 @@ public class MailingListPublisher {
         mimeMessage.addRecipients(Message.RecipientType.TO,
                 InternetAddress.parse(RECIPIENT_ADDRESS));
 
-        final String post = new String(Files.readAllBytes(Paths.get(postFilename)),
-                StandardCharsets.UTF_8);
+        final String post = Files.readString(Paths.get(postFilename), StandardCharsets.UTF_8);
 
         final BodyPart messageBodyPart = new MimeBodyPart();
         messageBodyPart.setContent(post, "text/plain");
