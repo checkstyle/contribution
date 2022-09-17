@@ -10,13 +10,13 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.plugin.guava.version>30.1.1-jre</maven.plugin.guava.version>
+        <maven.plugin.guava.version>31.1-jre</maven.plugin.guava.version>
         <maven.plugin.checkstyle.version>3.1.2</maven.plugin.checkstyle.version>
-        <maven.plugin.github-api.version>1.99</maven.plugin.github-api.version>
+        <maven.plugin.github-api.version>1.308</maven.plugin.github-api.version>
         <maven.plugin.jgit.version>5.4.2.201908231537-r</maven.plugin.jgit.version>
-        <maven.plugin.slf4j.version>1.7.12</maven.plugin.slf4j.version>
-        <maven.plugin.freemarker.version>2.3.29</maven.plugin.freemarker.version>
-        <maven.plugin.apache.commons.cli.version>1.4</maven.plugin.apache.commons.cli.version>
+        <maven.plugin.slf4j.version>2.0.1</maven.plugin.slf4j.version>
+        <maven.plugin.freemarker.version>2.3.31</maven.plugin.freemarker.version>
+        <maven.plugin.apache.commons.cli.version>1.5.0</maven.plugin.apache.commons.cli.version>
         <maven.plugin.apache.commons.lang.version>2.6</maven.plugin.apache.commons.lang.version>
         <maven.plugin.twitter4j.version>4.0.7</maven.plugin.twitter4j.version>
         <maven.plugin.javax.mail.version>1.5.0-b01</maven.plugin.javax.mail.version>
@@ -25,7 +25,7 @@
         <tools.jar.path>${java.home}/../lib/tools.jar</tools.jar.path>
         <checkstyle.version>10.3.3</checkstyle.version>
         <checkstyle.configLocation>https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-${checkstyle.version}/config/checkstyle_checks.xml</checkstyle.configLocation>
-        <junit.version>4.13.1</junit.version>
+        <junit.version>4.13.2</junit.version>
     </properties>
 
     <dependencies>
@@ -33,19 +33,6 @@
             <groupId>org.kohsuke</groupId>
             <artifactId>github-api</artifactId>
             <version>${maven.plugin.github-api.version}</version>
-            <!-- till github-api next version above 1.95 -->
-            <exclusions>
-              <exclusion>
-                <artifactId>com.fasterxml.jackson.core</artifactId>
-                <groupId>jackson-databind</groupId>
-              </exclusion>
-            </exclusions>
-        </dependency>
-        <!-- till github-api next version above 1.95 -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.12.6.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
@@ -100,7 +87,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
+                <version>3.10.1</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -109,7 +96,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>2.4.2</version>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
@@ -129,6 +116,7 @@
                                     </excludes>
                                 </filter>
                             </filters>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>com.github.checkstyle.Main</mainClass>
