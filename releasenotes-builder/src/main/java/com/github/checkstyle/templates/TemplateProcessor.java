@@ -98,6 +98,9 @@ public final class TemplateProcessor {
      * @return The contents of the template.
      * @throws IOException if the supplied file can't be found.
      * @throws IllegalStateException if the resource can't be found.
+     * @noinspection resource, IOResourceOpenedButNotSafelyClosed
+     * @noinspectionreason resource - no easy way to use try-with-resource
+     * @noinspectionreason IOResourceOpenedButNotSafelyClosed - no easy way to use try-with-resource
      */
     private static String loadTemplate(String fileName, String defaultResource)
             throws IOException {
