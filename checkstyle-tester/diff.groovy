@@ -7,42 +7,44 @@ import java.util.regex.Pattern
 
 static void main(String[] args) {
     def cliOptions = getCliOptions(args)
-    if (areValidCliOptions(cliOptions)) {
-        def cfg = new Config(cliOptions)
-        def configFilesList = [cfg.config, cfg.baseConfig, cfg.patchConfig, cfg.listOfProjects]
-        copyConfigFilesAndUpdatePaths(configFilesList)
+    if (cliOptions != null) {
+        if (areValidCliOptions(cliOptions)) {
+            def cfg = new Config(cliOptions)
+            def configFilesList = [cfg.config, cfg.baseConfig, cfg.patchConfig, cfg.listOfProjects]
+            copyConfigFilesAndUpdatePaths(configFilesList)
 
-        if (cfg.localGitRepo && hasUnstagedChanges(cfg.localGitRepo)) {
-            def exMsg = "Error: git repository ${cfg.localGitRepo.path} has unstaged changes!"
-            throw new IllegalStateException(exMsg)
+            if (cfg.localGitRepo && hasUnstagedChanges(cfg.localGitRepo)) {
+                def exMsg = "Error: git repository ${cfg.localGitRepo.path} has unstaged changes!"
+                throw new IllegalStateException(exMsg)
+            }
+
+            // Delete work directories to avoid conflicts with previous reports generation
+            if (new File(cfg.reportsDir).exists()) {
+                deleteDir(cfg.reportsDir)
+            }
+            if (new File(cfg.tmpReportsDir).exists()) {
+                deleteDir(cfg.tmpReportsDir)
+            }
+
+            def checkstyleBaseReportInfo = null
+            if (cfg.isDiffMode()) {
+                checkstyleBaseReportInfo = launchCheckstyleReport(cfg.checkstyleToolBaseConfig)
+            }
+
+            def checkstylePatchReportInfo = launchCheckstyleReport(cfg.checkstyleToolPatchConfig)
+
+            if (checkstylePatchReportInfo) {
+                deleteDir(cfg.reportsDir)
+                moveDir(cfg.tmpReportsDir, cfg.reportsDir)
+
+                generateDiffReport(cfg.diffToolConfig)
+                generateSummaryIndexHtml(cfg.diffDir, checkstyleBaseReportInfo,
+                    checkstylePatchReportInfo, configFilesList, cfg.allowExcludes)
+            }
         }
-
-        // Delete work directories to avoid conflicts with previous reports generation
-        if (new File(cfg.reportsDir).exists()) {
-            deleteDir(cfg.reportsDir)
+        else {
+            throw new IllegalArgumentException('Error: invalid command line arguments!')
         }
-        if (new File(cfg.tmpReportsDir).exists()) {
-            deleteDir(cfg.tmpReportsDir)
-        }
-
-        def checkstyleBaseReportInfo = null
-        if (cfg.isDiffMode()) {
-            checkstyleBaseReportInfo = launchCheckstyleReport(cfg.checkstyleToolBaseConfig)
-        }
-
-        def checkstylePatchReportInfo = launchCheckstyleReport(cfg.checkstyleToolPatchConfig)
-
-        if (checkstylePatchReportInfo) {
-            deleteDir(cfg.reportsDir)
-            moveDir(cfg.tmpReportsDir, cfg.reportsDir)
-
-            generateDiffReport(cfg.diffToolConfig)
-            generateSummaryIndexHtml(cfg.diffDir, checkstyleBaseReportInfo,
-                checkstylePatchReportInfo, configFilesList, cfg.allowExcludes)
-        }
-    }
-    else {
-        throw new IllegalArgumentException('Error: invalid command line arguments!')
     }
 }
 
