@@ -88,7 +88,6 @@ def areValidCliOptions(cliOptions) {
     def toolMode = cliOptions.mode
     def patchBranch = cliOptions.patchBranch
     def baseBranch = cliOptions.baseBranch
-    def extraMvnRegressionOptions = cliOptions.extraMvnRegressionOptions
     def listOfProjectsFile = new File(cliOptions.listOfProjects)
     def localGitRepo = cliOptions.localGitRepo
 
@@ -351,6 +350,7 @@ def getCloneCmd(repoType, repoUrl, srcDestinationDir) {
         default:
             throw new IllegalArgumentException("Error! Unknown $repoType repository.")
     }
+    return cloneCmd
 }
 
 def cloneRepository(repoName, repoType, repoUrl, commitId, srcDir) {
@@ -712,6 +712,7 @@ def getResetCmd(repoType, commitId) {
         default:
             throw new IllegalArgumentException("Error! Unknown $repoType repository.")
     }
+    return resetCmd
 }
 
 def getLastProjectCommitSha(repoType, srcDestinationDir) {
