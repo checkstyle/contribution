@@ -482,7 +482,7 @@ def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo,
         project, diffCount ->
             summaryIndexHtml << ("<a href='$project/index.html'>$project</a>")
             if (diffCount[0] != 0) {
-                if(diffCount[1] == 0) {
+                if (diffCount[1] == 0) {
                     summaryIndexHtml << (" ( &#177;${diffCount[0]}, <span style=\"color: red;\">-${diffCount[2]}</span> )")
                 }
                 else if (diffCount[2] == 0) {
@@ -632,7 +632,7 @@ def runMavenExecution(srcDir, excludes, checkstyleConfig, failsOnError,
         mvnSite = mvnSite + " -Dcheckstyle.version=$checkstyleVersion"
     }
     if (extraMvnRegressionOptions) {
-        if (!extraMvnRegressionOptions.startsWith("-")){
+        if (!extraMvnRegressionOptions.startsWith("-")) {
             extraMvnRegressionOptions = "-" + extraMvnRegressionOptions
         }
         mvnSite = mvnSite + " " + extraMvnRegressionOptions
@@ -758,7 +758,7 @@ class Config {
     def allowExcludes
 
     Config(cliOptions) {
-        if(cliOptions.localGitRepo) {
+        if (cliOptions.localGitRepo) {
             localGitRepo = new File(cliOptions.localGitRepo)
         }
 
