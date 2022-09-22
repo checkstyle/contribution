@@ -1,5 +1,5 @@
 import static java.lang.System.err
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING
 
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -171,9 +171,9 @@ def isExistingGitBranch(gitRepo, branchName) {
 
 def copyConfigFilesAndUpdatePaths(configFilesList) {
     // Remove boolean value for single config in case of different base and patch config
-    configFilesList.removeIf { it instanceof Boolean };
+    configFilesList.removeIf { it instanceof Boolean }
     // Remove dups in case of single config
-    configFilesList = configFilesList.unique();
+    configFilesList = configFilesList.unique()
 
     for (filename in configFilesList) {
         def sourceFile = new File(filename)
@@ -209,7 +209,7 @@ def getCheckstyleVersionFromPomXml(pathToPomXml, xmlTagName) {
 }
 
 def launchCheckstyleReport(cfg) {
-    CheckstyleReportInfo reportInfo;
+    CheckstyleReportInfo reportInfo
     def isRegressionTesting = cfg.branch && cfg.localGitRepo
 
     // If "no exception" testing, these may not be defined in repos other than checkstyle
@@ -457,7 +457,7 @@ def getTextTransform() {
     this.class.classLoader.rootLoader.addURL(new URL("file:$diffToolJarPath"))
     def textTransform = Class.forName("com.github.checkstyle.site.TextTransform").newInstance()
 
-    return textTransform;
+    return textTransform
 }
 
 def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo,
@@ -478,7 +478,7 @@ def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo,
         summaryIndexHtml << ('</span></h3>')
     }
     printReportInfoSection(summaryIndexHtml, checkstyleBaseReportInfo, checkstylePatchReportInfo, projectsStatistic)
-    printConfigSection(diffDir, configFilesList, summaryIndexHtml);
+    printConfigSection(diffDir, configFilesList, summaryIndexHtml)
 
     projectsStatistic.sort { it.key.toLowerCase() }.sort { it.value == 0 ? 1 : 0 }.each {
         project, diffCount ->
@@ -503,7 +503,7 @@ def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo,
 }
 
 def printConfigSection(diffDir, configFilesList, summaryIndexHtml) {
-    def textTransform = getTextTransform();
+    def textTransform = getTextTransform()
     for (filename in configFilesList) {
         def configFile = new File(filename)
         generateAndPrintConfigHtmlFile(diffDir, configFile, textTransform,
@@ -524,9 +524,9 @@ def generateAndPrintConfigHtmlFile(diffDir, configFile, textTransform, summaryIn
 
 def getFilenameWithoutExtension(filename) {
     def filenameWithoutExtension
-    int pos = filename.lastIndexOf(".");
+    int pos = filename.lastIndexOf(".")
     if (pos > 0) {
-        filenameWithoutExtension = filename.substring(0, pos);
+        filenameWithoutExtension = filename.substring(0, pos)
     }
     return filenameWithoutExtension
 }
@@ -547,7 +547,7 @@ def createWorkDirsIfNotExist(srcDirPath, repoDirPath, reportsDirPath) {
 }
 
 def printReportInfoSection(summaryIndexHtml, checkstyleBaseReportInfo, checkstylePatchReportInfo, projectsStatistic) {
-    def date = new Date();
+    def date = new Date()
     summaryIndexHtml << ('<h6>')
     if (checkstyleBaseReportInfo) {
         summaryIndexHtml << "Base branch: $checkstyleBaseReportInfo.branch"
@@ -597,7 +597,7 @@ def getProjectsStatistic(diffDir) {
                             if (removedPatchLineMatcher.find()) {
                                 removedDiff = Integer.valueOf(removedPatchLineMatcher.group('totalRemoved'))
                             } else {
-                                removedDiff = 0;
+                                removedDiff = 0
                             }
 
                             def addPatchLinePattern = Pattern.compile("(?<totalAdd>[0-9]++) added")
@@ -605,7 +605,7 @@ def getProjectsStatistic(diffDir) {
                             if (addPatchLineMatcher.find()) {
                                 addedDiff = Integer.valueOf(addPatchLineMatcher.group('totalAdd'))
                             } else {
-                                addedDiff = 0;
+                                addedDiff = 0
                             }
                         }
 
