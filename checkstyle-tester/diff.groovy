@@ -485,13 +485,15 @@ def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo,
             summaryIndexHtml << ("<a href='$project/index.html'>$project</a>")
             if (diffCount[0] != 0) {
                 if (diffCount[1] == 0) {
-                    summaryIndexHtml << (" ( &#177;${diffCount[0]}, <span style=\"color: red;\">-${diffCount[2]}</span> )")
+                    summaryIndexHtml << (" ( &#177;${diffCount[0]}, <span style=\"color: red;\">" +
+                        "-${diffCount[2]}</span> )")
                 }
                 else if (diffCount[2] == 0) {
                     summaryIndexHtml << (" ( &#177;${diffCount[0]}, <span style=\"color: green;\">+${diffCount[1]} )")
                 }
                 else {
-                    summaryIndexHtml << (" ( &#177;${diffCount[0]}, <span style=\"color: red;\">-${diffCount[2]}</span>, <span style=\"color: green;\">+${diffCount[1]}</span> )")
+                    summaryIndexHtml << (" ( &#177;${diffCount[0]}, <span style=\"color: red;\">" +
+                        "-${diffCount[2]}</span>, <span style=\"color: green;\">+${diffCount[1]}</span> )")
                 }
             }
             summaryIndexHtml << ('<br />')
