@@ -257,7 +257,6 @@ def generateCheckstyleReport(cfg) {
 
     def checkstyleConfig = cfg.checkstyleCfg
     def checkstyleVersion = cfg.checkstyleVersion
-    def failsOnError = cfg.failsOnError
     def allowExcludes = cfg.allowExcludes
     def listOfProjectsFile = new File(cfg.listOfProjects)
     def projects = listOfProjectsFile.readLines()
@@ -290,7 +289,7 @@ def generateCheckstyleReport(cfg) {
                     cloneRepository(repoName, repoType, repoUrl, commitId, reposDir)
                     copyDir(getOsSpecificPath("$reposDir", "$repoName"), getOsSpecificPath("$srcDir", "$repoName"))
                 }
-                runMavenExecution(srcDir, excludes, checkstyleConfig, failsOnError,
+                runMavenExecution(srcDir, excludes, checkstyleConfig,
                     checkstyleVersion, extraMvnRegressionOptions)
                 def repoPath = repoUrl
                 if (repoType != 'local') {
@@ -624,7 +623,7 @@ def getProjectsStatistic(diffDir) {
     return projectsStatistic
 }
 
-def runMavenExecution(srcDir, excludes, checkstyleConfig, failsOnError,
+def runMavenExecution(srcDir, excludes, checkstyleConfig,
                       checkstyleVersion, extraMvnRegressionOptions) {
     println "Running 'mvn clean' on $srcDir ..."
     def mvnClean = "mvn --batch-mode clean"
@@ -758,7 +757,6 @@ class Config {
 
     def checkstyleVersion
     def sevntuVersion
-    def failsOnError
     def allowExcludes
 
     Config(cliOptions) {
