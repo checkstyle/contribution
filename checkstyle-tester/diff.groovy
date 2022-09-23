@@ -172,10 +172,9 @@ def isExistingGitBranch(gitRepo, branchName) {
 def copyConfigFilesAndUpdatePaths(configFilesList) {
     // Remove boolean value for single config in case of different base and patch config
     configFilesList.removeIf { it instanceof Boolean }
-    // Remove dups in case of single config
-    configFilesList = configFilesList.unique()
 
-    for (filename in configFilesList) {
+    // Remove dups in case of single config
+    for (filename in configFilesList.unique()) {
         def sourceFile = new File(filename)
         def checkstyleTesterDir = new File("").getCanonicalFile()
         def destFile = new File("${checkstyleTesterDir.toPath()}/${sourceFile.getName()}")
@@ -635,10 +634,12 @@ def runMavenExecution(srcDir, excludes, checkstyleConfig,
         mvnSite = mvnSite + " -Dcheckstyle.version=$checkstyleVersion"
     }
     if (extraMvnRegressionOptions) {
+        mvnSite = mvnSite + " "
+
         if (!extraMvnRegressionOptions.startsWith("-")) {
-            extraMvnRegressionOptions = "-" + extraMvnRegressionOptions
+            mvnSite = mvnSite + "-"
         }
-        mvnSite = mvnSite + " " + extraMvnRegressionOptions
+        mvnSite = mvnSite + extraMvnRegressionOptions
     }
     println(mvnSite)
     executeCmd(mvnSite)
