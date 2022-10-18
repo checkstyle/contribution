@@ -105,6 +105,9 @@ public final class CliOptions {
     /** Properties to publish to RSS. */
     private String sfRssProperties;
 
+    /** Validate that release version matches issues labels. */
+    private boolean validateVersion;
+
     /** Default constructor. */
     private CliOptions() {
     }
@@ -368,6 +371,15 @@ public final class CliOptions {
      */
     public String getSfRssBearerToken() {
         return sfRssBearerToken;
+    }
+
+    /**
+     * Returns whether to validate release version to issues labels.
+     *
+     * @return whether to validate release version.
+     */
+    public Boolean isValidateVersion() {
+        return validateVersion;
     }
 
     /**
@@ -805,6 +817,17 @@ public final class CliOptions {
         }
 
         /**
+         * Specify whether to validate release version.
+         *
+         * @param validate flag to validate release version.
+         * @return Builder Object
+         */
+        public Builder setValidateVersion(Boolean validate) {
+            validateVersion = validate;
+            return this;
+        }
+
+        /**
          * Verify options and set defaults.
          *
          * @return new CliOption instance
@@ -989,6 +1012,7 @@ public final class CliOptions {
             cliOptions.publishSfRss = publishSfRss;
             cliOptions.sfRssBearerToken = sfRssBearerToken;
             cliOptions.sfRssProperties = sfRssProperties;
+            cliOptions.validateVersion = validateVersion;
             return cliOptions;
         }
 

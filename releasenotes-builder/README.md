@@ -28,7 +28,7 @@ java -jar releasenotes-builder-1.0-all.jar -localRepoPath <arg> \
      [-twitterConsumerSecret <arg>] \
      [-twiterAccessToken <arg>] [-twitterAccessTokenSecret <arg>] [-twitterProperties <arg>] \
      [-publishMlist] [-mlistUsername <arg>] [-mlistPassword <arg>] [-mlistProperties <arg>] \
-     [-publishSfRss] [-sfRssBearerToken <arg>] [-sfRssProperties <arg>]
+     [-publishSfRss] [-sfRssBearerToken <arg>] [-sfRssProperties <arg>] [-validateVersion]
 ```
 
 Release notes builder will do the generation of release notes and report warnings and errors to
@@ -110,6 +110,8 @@ Generated files will be at specified output location.
 **sfRssBearerToken** - (optional) bearer token for Sourceforge to publish to RSS.
 
 **sfRssProperties** - (optional) path to a properties file for publication to RSS.
+
+**validateVersion** - (optional) validate that release version matches issues labels.
 
 _**Please, notice!**_
 Options in property files have the same names as in command line and have lower priority.

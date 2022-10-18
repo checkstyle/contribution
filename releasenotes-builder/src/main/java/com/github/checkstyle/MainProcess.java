@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.github.checkstyle.globals.Constants;
 import com.github.checkstyle.globals.ReleaseNotesMessage;
 import com.github.checkstyle.publishers.MailingListPublisher;
 import com.github.checkstyle.publishers.SourceforgeRssPublisher;
@@ -79,7 +80,84 @@ public final class MainProcess {
             Multimap<String, ReleaseNotesMessage> releaseNotes, CliOptions cliOptions)
             throws IOException, TemplateException {
         runPostGeneration(releaseNotes, cliOptions);
-        return runPostPublication(cliOptions);
+        final List<String> errors = new ArrayList<>();
+        if (cliOptions.isValidateVersion()) {
+            errors.addAll(validateNotes(releaseNotes, cliOptions));
+        }
+        errors.addAll(runPostPublication(cliOptions));
+        return errors;
+    }
+
+    /**
+     * Validate that pom version matches issues labels in release notes.
+     *
+     * @param releaseNotes map of release notes messages.
+     * @param cliOptions command line options.
+     * @return list of notes validation errors.
+     */
+    private static List<String> validateNotes(Multimap<String, ReleaseNotesMessage> releaseNotes,
+                                              CliOptions cliOptions) {
+        final String releaseVersion = cliOptions.getReleaseNumber();
+        final long amountOfCommas = getAmountOfCommasInReleaseVersion(releaseVersion);
+        final boolean containsNewOrBreakingCompatabilityLabel =
+            releaseNotes.containsKey(Constants.NEW_FEATURE_LABEL)
+                || releaseNotes.containsKey(Constants.NEW_MODULE_LABEL)
+                || releaseNotes.containsKey(Constants.BREAKING_COMPATIBILITY_LABEL);
+
+        final List<String> errors = new ArrayList<>();
+        final String errorBeginning = "Validation of release number failed.";
+        final String errorEnding = "Please correct release number by running https://github.com/"
+            + "checkstyle/checkstyle/actions/workflows/bump-version-and-update-milestone.yml";
+
+        if (isPatch(amountOfCommas) && containsNewOrBreakingCompatabilityLabel) {
+            errors.add(
+                String.format("%s Release number is a patch(%s), but release notes contain 'new' "
+                        + "or 'breaking compatability' labels. %s",
+                    errorBeginning, releaseVersion, errorEnding)
+            );
+        }
+        else if (isMinor(amountOfCommas) && !containsNewOrBreakingCompatabilityLabel) {
+            errors.add(
+                String.format("%s Release number is minor(%s), but release notes do not contain "
+                    + "'new' or 'breaking compatability' labels. %s",
+                    errorBeginning, releaseVersion, errorEnding)
+            );
+        }
+
+        return errors;
+    }
+
+    /**
+     * Retrieves the amount of commas in the release version. For instance,
+     * 10.3.3 would return {@code 2}.
+     *
+     * @param releaseVersion release number in the command line interface.
+     * @return amount of commas in release version.
+     */
+    private static long getAmountOfCommasInReleaseVersion(String releaseVersion) {
+        return releaseVersion.chars().filter(character -> character == '.').count();
+    }
+
+    /**
+     * Returns {@code true} if amount of commas is 2. This means
+     * the release is a patch.
+     *
+     * @param amountOfCommas amount of commas in release number.
+     * @return {@code true} if amount of commas is 2.
+     */
+    private static boolean isPatch(long amountOfCommas) {
+        return amountOfCommas == 2;
+    }
+
+    /**
+     * Returns {@code true} if amount of commas is 1. This means
+     * the release is minor.
+     *
+     * @param amountOfCommas amount of commas in release number.
+     * @return {@code true} if amount of commas is 1.
+     */
+    private static boolean isMinor(long amountOfCommas) {
+        return amountOfCommas == 1;
     }
 
     /**

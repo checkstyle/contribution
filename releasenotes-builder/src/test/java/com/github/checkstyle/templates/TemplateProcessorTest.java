@@ -51,6 +51,17 @@ import com.google.common.collect.Multimap;
 
 public class TemplateProcessorTest {
 
+    private static final String MSG_RELEASE_IS_MINOR =
+        "Validation of release number failed. Release number is minor(1.0), but "
+            + "release notes do not contain 'new' or 'breaking compatability' labels. Please "
+            + "correct release number by running https://github.com/checkstyle/checkstyle/"
+            + "actions/workflows/bump-version-and-update-milestone.yml";
+    private static final String MSG_RELEASE_IS_PATCH =
+        "Validation of release number failed. Release number is a patch(1.0.0), but "
+            + "release notes contain 'new' or 'breaking compatability' labels. Please correct "
+            + "release number by running https://github.com/checkstyle/checkstyle/actions/"
+            + "workflows/bump-version-and-update-milestone.yml";
+
     @Rule
     public final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
@@ -262,6 +273,162 @@ public class TemplateProcessorTest {
         assertFile("customTemplate.txt", MainProcess.GITHUB_FILENAME);
     }
 
+    @Test
+    public void testValidateNotesMinorNoNotes() throws Exception {
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+            createNotes(null, null, null, null, null), createBaseCliOptions("1.0")
+                .setValidateVersion(true).build());
+
+        Assert.assertEquals("one error", 1, errors.size());
+        Assert.assertEquals(errors.get(0), MSG_RELEASE_IS_MINOR);
+    }
+
+    @Test
+    public void testValidateNotesMinorBreaking() throws Exception {
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0")
+                .setValidateVersion(true).build());
+
+        Assert.assertEquals("no errors", 0, errors.size());
+    }
+
+    @Test
+    public void testValidateNotesMinorNewFeature() throws Exception {
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+            createNotes(null, createAllNotes(), null, null, null), createBaseCliOptions("1.0")
+                .setValidateVersion(true).build());
+
+        Assert.assertEquals("no errors", 0, errors.size());
+    }
+
+    @Test
+    public void testValidateNotesMinorBug() throws Exception {
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+            createNotes(null, null, createAllNotes(), null, null), createBaseCliOptions("1.0")
+                .setValidateVersion(true).build());
+
+        Assert.assertEquals("one error", 1, errors.size());
+        Assert.assertEquals(errors.get(0), MSG_RELEASE_IS_MINOR);
+    }
+
+    @Test
+    public void testValidateNotesMinorMiscellaneous() throws Exception {
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+            createNotes(null, null, null, createAllNotes(), null), createBaseCliOptions("1.0")
+                .setValidateVersion(true).build());
+
+        Assert.assertEquals("one error", 1, errors.size());
+        Assert.assertEquals(errors.get(0), MSG_RELEASE_IS_MINOR);
+    }
+
+    @Test
+    public void testValidateNotesMinorNewModule() throws Exception {
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+            createNotes(null, null, null, null, createAllNotes()), createBaseCliOptions("1.0")
+                .setValidateVersion(true).build());
+
+        Assert.assertEquals("no errors", 0, errors.size());
+    }
+
+    @Test
+    public void testValidateNotesMinorBugAndMiscellaneous() throws Exception {
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+            createNotes(null, null,
+                createAllNotes(), createAllNotes(), null), createBaseCliOptions("1.0")
+                .setValidateVersion(true).build());
+
+        Assert.assertEquals("one error", 1, errors.size());
+        Assert.assertEquals(errors.get(0), MSG_RELEASE_IS_MINOR);
+    }
+
+    @Test
+    public void testValidateNotesMinorNewModuleNewFeatureAndBreaking() throws Exception {
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+            createNotes(createAllNotes(), createAllNotes(),
+                null, null, createAllNotes()), createBaseCliOptions("1.0")
+                .setValidateVersion(true).build());
+
+        Assert.assertEquals("no errors", 0, errors.size());
+    }
+
+    @Test
+    public void testValidateNotesPatchNoNotes() throws Exception {
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+            createNotes(null, null, null, null, null), createBaseCliOptions("1.0.0")
+                .setValidateVersion(true).build());
+
+        Assert.assertEquals("no errors", 0, errors.size());
+    }
+
+    @Test
+    public void testValidateNotesPatchBreaking() throws Exception {
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0.0")
+                .setValidateVersion(true).build());
+
+        Assert.assertEquals("one error", 1, errors.size());
+        Assert.assertEquals(errors.get(0), MSG_RELEASE_IS_PATCH);
+    }
+
+    @Test
+    public void testValidateNotesPatchNewFeature() throws Exception {
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+            createNotes(null, createAllNotes(), null, null, null), createBaseCliOptions("1.0.0")
+                .setValidateVersion(true).build());
+
+        Assert.assertEquals("one error", 1, errors.size());
+        Assert.assertEquals(errors.get(0), MSG_RELEASE_IS_PATCH);
+    }
+
+    @Test
+    public void testValidateNotesPatchBug() throws Exception {
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+            createNotes(null, null, createAllNotes(), null, null), createBaseCliOptions("1.0.0")
+                .setValidateVersion(true).build());
+
+        Assert.assertEquals("no errors", 0, errors.size());
+    }
+
+    @Test
+    public void testValidateNotesPatchMiscellaneous() throws Exception {
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+            createNotes(null, null, null, createAllNotes(), null), createBaseCliOptions("1.0.0")
+                .setValidateVersion(true).build());
+
+        Assert.assertEquals("no errors", 0, errors.size());
+    }
+
+    @Test
+    public void testValidateNotesPatchNewModule() throws Exception {
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+            createNotes(null, null, null, null, createAllNotes()), createBaseCliOptions("1.0.0")
+                .setValidateVersion(true).build());
+
+        Assert.assertEquals("one error", 1, errors.size());
+        Assert.assertEquals(errors.get(0), MSG_RELEASE_IS_PATCH);
+    }
+
+    @Test
+    public void testValidateNotesPatchNewFeatureNewModuleAndBreaking() throws Exception {
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+            createNotes(createAllNotes(), createAllNotes(),
+                null, null, createAllNotes()), createBaseCliOptions("1.0.0")
+                .setValidateVersion(true).build());
+
+        Assert.assertEquals("one error", 1, errors.size());
+        Assert.assertEquals(errors.get(0), MSG_RELEASE_IS_PATCH);
+    }
+
+    @Test
+    public void testValidateNotesPatchBugAndMiscellaneous() throws Exception {
+        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+            createNotes(null, null,
+                createAllNotes(), createAllNotes(), null), createBaseCliOptions("1.0.0")
+                .setValidateVersion(true).build());
+
+        Assert.assertEquals("no errors", 0, errors.size());
+    }
+
     private static List<ReleaseNotesMessage> createAllNotes() throws Exception {
         return Arrays.asList(
             createReleaseNotesMessage("Mock issue title 1", "Author 1"),
@@ -275,11 +442,15 @@ public class TemplateProcessorTest {
     }
 
     private Builder createBaseCliOptions() {
+        return createBaseCliOptions("1.0.0");
+    }
+
+    private Builder createBaseCliOptions(String releaseNumber) {
         final Builder result = CliOptions.newBuilder();
 
         result.setOutputLocation(temporaryFolder.getRoot().getAbsolutePath() + File.separator);
         result.setRemoteRepoPath("checkstyle/checkstyle");
-        result.setReleaseNumber("1.0.0");
+        result.setReleaseNumber(releaseNumber);
         result.setLocalRepoPath("dummy");
         result.setStartRef("dummy");
 
