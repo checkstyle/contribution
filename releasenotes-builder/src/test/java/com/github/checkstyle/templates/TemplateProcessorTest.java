@@ -275,7 +275,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testValidateNotesMinorNoNotes() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+        final List<String> errors = MainProcess.validateNotes(
             createNotes(null, null, null, null, null), createBaseCliOptions("1.0")
                 .setValidateVersion(true).build());
 
@@ -285,7 +285,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testValidateNotesMinorBreaking() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+        final List<String> errors = MainProcess.validateNotes(
             createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0")
                 .setValidateVersion(true).build());
 
@@ -294,7 +294,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testValidateNotesMinorNewFeature() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+        final List<String> errors = MainProcess.validateNotes(
             createNotes(null, createAllNotes(), null, null, null), createBaseCliOptions("1.0")
                 .setValidateVersion(true).build());
 
@@ -303,7 +303,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testValidateNotesMinorBug() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+        final List<String> errors = MainProcess.validateNotes(
             createNotes(null, null, createAllNotes(), null, null), createBaseCliOptions("1.0")
                 .setValidateVersion(true).build());
 
@@ -313,7 +313,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testValidateNotesMinorMiscellaneous() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+        final List<String> errors = MainProcess.validateNotes(
             createNotes(null, null, null, createAllNotes(), null), createBaseCliOptions("1.0")
                 .setValidateVersion(true).build());
 
@@ -323,7 +323,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testValidateNotesMinorNewModule() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+        final List<String> errors = MainProcess.validateNotes(
             createNotes(null, null, null, null, createAllNotes()), createBaseCliOptions("1.0")
                 .setValidateVersion(true).build());
 
@@ -332,7 +332,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testValidateNotesMinorBugAndMiscellaneous() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+        final List<String> errors = MainProcess.validateNotes(
             createNotes(null, null,
                 createAllNotes(), createAllNotes(), null), createBaseCliOptions("1.0")
                 .setValidateVersion(true).build());
@@ -343,7 +343,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testValidateNotesMinorNewModuleNewFeatureAndBreaking() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+        final List<String> errors = MainProcess.validateNotes(
             createNotes(createAllNotes(), createAllNotes(),
                 null, null, createAllNotes()), createBaseCliOptions("1.0")
                 .setValidateVersion(true).build());
@@ -353,7 +353,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testValidateNotesPatchNoNotes() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+        final List<String> errors = MainProcess.validateNotes(
             createNotes(null, null, null, null, null), createBaseCliOptions("1.0.0")
                 .setValidateVersion(true).build());
 
@@ -362,7 +362,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testValidateNotesPatchBreaking() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+        final List<String> errors = MainProcess.validateNotes(
             createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0.0")
                 .setValidateVersion(true).build());
 
@@ -372,7 +372,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testValidateNotesPatchNewFeature() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+        final List<String> errors = MainProcess.validateNotes(
             createNotes(null, createAllNotes(), null, null, null), createBaseCliOptions("1.0.0")
                 .setValidateVersion(true).build());
 
@@ -382,7 +382,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testValidateNotesPatchBug() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+        final List<String> errors = MainProcess.validateNotes(
             createNotes(null, null, createAllNotes(), null, null), createBaseCliOptions("1.0.0")
                 .setValidateVersion(true).build());
 
@@ -391,7 +391,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testValidateNotesPatchMiscellaneous() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+        final List<String> errors = MainProcess.validateNotes(
             createNotes(null, null, null, createAllNotes(), null), createBaseCliOptions("1.0.0")
                 .setValidateVersion(true).build());
 
@@ -400,7 +400,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testValidateNotesPatchNewModule() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+        final List<String> errors = MainProcess.validateNotes(
             createNotes(null, null, null, null, createAllNotes()), createBaseCliOptions("1.0.0")
                 .setValidateVersion(true).build());
 
@@ -410,7 +410,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testValidateNotesPatchNewFeatureNewModuleAndBreaking() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+        final List<String> errors = MainProcess.validateNotes(
             createNotes(createAllNotes(), createAllNotes(),
                 null, null, createAllNotes()), createBaseCliOptions("1.0.0")
                 .setValidateVersion(true).build());
@@ -421,7 +421,7 @@ public class TemplateProcessorTest {
 
     @Test
     public void testValidateNotesPatchBugAndMiscellaneous() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
+        final List<String> errors = MainProcess.validateNotes(
             createNotes(null, null,
                 createAllNotes(), createAllNotes(), null), createBaseCliOptions("1.0.0")
                 .setValidateVersion(true).build());

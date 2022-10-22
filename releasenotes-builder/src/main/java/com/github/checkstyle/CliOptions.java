@@ -378,7 +378,7 @@ public final class CliOptions {
      *
      * @return whether to validate release version.
      */
-    public Boolean isValidateVersion() {
+    public boolean isValidateVersion() {
         return validateVersion;
     }
 
@@ -822,7 +822,7 @@ public final class CliOptions {
          * @param validate flag to validate release version.
          * @return Builder Object
          */
-        public Builder setValidateVersion(Boolean validate) {
+        public Builder setValidateVersion(boolean validate) {
             validateVersion = validate;
             return this;
         }

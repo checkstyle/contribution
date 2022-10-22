@@ -65,6 +65,11 @@ public final class Main {
             else {
                 final CliOptions cliOptions = cliProcessor.getCliOptions();
                 final Result notesBuilderResult = runGithubNotesBuilder(cliOptions);
+                if (cliOptions.isValidateVersion()) {
+                    final List<String> validationErrors = MainProcess
+                        .validateNotes(notesBuilderResult.getReleaseNotes(), cliOptions);
+                    notesBuilderResult.addErrors(validationErrors);
+                }
                 errorCounter = notesBuilderResult.getErrorMessages().size();
                 if (errorCounter == 0) {
                     publicationErrors = MainProcess.runPostGenerationAndPublication(

@@ -80,12 +80,7 @@ public final class MainProcess {
             Multimap<String, ReleaseNotesMessage> releaseNotes, CliOptions cliOptions)
             throws IOException, TemplateException {
         runPostGeneration(releaseNotes, cliOptions);
-        final List<String> errors = new ArrayList<>();
-        if (cliOptions.isValidateVersion()) {
-            errors.addAll(validateNotes(releaseNotes, cliOptions));
-        }
-        errors.addAll(runPostPublication(cliOptions));
-        return errors;
+        return runPostPublication(cliOptions);
     }
 
     /**
@@ -95,7 +90,7 @@ public final class MainProcess {
      * @param cliOptions command line options.
      * @return list of notes validation errors.
      */
-    private static List<String> validateNotes(Multimap<String, ReleaseNotesMessage> releaseNotes,
+    public static List<String> validateNotes(Multimap<String, ReleaseNotesMessage> releaseNotes,
                                               CliOptions cliOptions) {
         final String releaseVersion = cliOptions.getReleaseNumber();
         final long amountOfCommas = getAmountOfCommasInReleaseVersion(releaseVersion);
