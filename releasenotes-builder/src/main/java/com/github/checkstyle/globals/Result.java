@@ -100,6 +100,15 @@ public final class Result {
     }
 
     /**
+     * Adds multiple error messages into result.
+     *
+     * @param messages list of error messages.
+     */
+    public void addErrors(List<String> messages) {
+        errorMessages.addAll(messages);
+    }
+
+    /**
      * Adds warning message into result.
      *
      * @param message warning message.

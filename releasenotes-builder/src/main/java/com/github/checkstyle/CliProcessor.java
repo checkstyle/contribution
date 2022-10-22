@@ -259,7 +259,7 @@ public class CliProcessor {
             .setPublishSfRss(cmdLine.hasOption(OPTION_PUBLISH_SF_RSS))
             .setSfBearerToken(cmdLine.getOptionValue(OPTION_SF_RSS_BEARER_TOKEN))
             .setSfRssProperties(cmdLine.getOptionValue(OPTION_SF_RSS_PROPERTIES))
-            .setValidateVersion(Boolean.valueOf(cmdLine.getOptionValue(OPTION_VALIDATE_VERSION)))
+            .setValidateVersion(cmdLine.hasOption(OPTION_VALIDATE_VERSION))
             .build();
     }
 
@@ -300,7 +300,7 @@ public class CliProcessor {
             "Access token secret for Twitter.");
         options.addOption(OPTION_TWITTER_PROPERTIES, true,
             "Properties for publication on Twitter.");
-        options.addOption(OPTION_VALIDATE_VERSION,
+        options.addOption(OPTION_VALIDATE_VERSION, false,
             "Whether release number should be validated to match release notes labels.");
         return options;
     }
