@@ -11,7 +11,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.plugin.guava.version>31.1-jre</maven.plugin.guava.version>
-        <maven.plugin.checkstyle.version>3.1.2</maven.plugin.checkstyle.version>
+        <maven.plugin.antrun.version>3.1.0</maven.plugin.antrun.version>
         <maven.plugin.github-api.version>1.308</maven.plugin.github-api.version>
         <maven.plugin.jgit.version>5.4.2.201908231537-r</maven.plugin.jgit.version>
         <maven.plugin.slf4j.version>2.0.1</maven.plugin.slf4j.version>
@@ -127,35 +127,32 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${maven.plugin.checkstyle.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>${checkstyle.version}</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <id>check</id>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <includeResources>false</includeResources>
-                            <includeTestResources>false</includeTestResources>
-                            <configLocation>${checkstyle.configLocation}</configLocation>
-                            <propertiesLocation>config/checkstyle.properties</propertiesLocation>
-                            <failOnViolation>true</failOnViolation>
-                            <linkXRef>false</linkXRef>
-                            <sourceDirectories>
-                              <sourceDirectory>${project.basedir}/src</sourceDirectory>
-                            </sourceDirectories>
-                        </configuration>
-                    </execution>
-                </executions>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-antrun-plugin</artifactId>
+              <version>${maven.plugin.antrun.version}</version>
+              <executions>
+                <execution>
+                  <id>ant-phase-verify</id>
+                  <phase>verify</phase>
+                  <goals>
+                    <goal>run</goal>
+                  </goals>
+                  <configuration>
+                    <target>
+                      <property name="mvn.project.build.directory" value="${project.build.directory}" />
+                      <property name="checkstyle.configLocation" value="${checkstyle.configLocation}" />
+                      <ant antfile="config/ant-phase-verify.xml" />
+                    </target>
+                  </configuration>
+                </execution>
+              </executions>
+              <dependencies>
+                <dependency>
+                  <groupId>com.puppycrawl.tools</groupId>
+                  <artifactId>checkstyle</artifactId>
+                  <version>${checkstyle.version}</version>
+                </dependency>
+              </dependencies>
             </plugin>
         </plugins>
     </build>

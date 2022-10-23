@@ -11,7 +11,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <checkstyle.version>10.3.4</checkstyle.version>
         <checkstyle.configLocation>https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-${checkstyle.version}/config/checkstyle_checks.xml</checkstyle.configLocation>
-        <maven.plugin.checkstyle.version>3.1.1</maven.plugin.checkstyle.version>
+        <maven.plugin.antrun.version>3.1.0</maven.plugin.antrun.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
@@ -81,37 +81,32 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${maven.plugin.checkstyle.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.puppycrawl.tools</groupId>
-                        <artifactId>checkstyle</artifactId>
-                        <version>${checkstyle.version}</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <id>check</id>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <includeResources>false</includeResources>
-                            <includeTestResources>false</includeTestResources>
-                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
-                            <configLocation>${checkstyle.configLocation}</configLocation>
-                            <propertiesLocation>config/checkstyle.properties</propertiesLocation>
-                            <failOnViolation>true</failOnViolation>
-                            <logViolationsToConsole>true</logViolationsToConsole>
-                            <maxAllowedViolations>0</maxAllowedViolations>
-                            <violationSeverity>error</violationSeverity>
-                            <outputFileFormat>xml</outputFileFormat>
-                            <outputFile>${project.build.directory}/checkstyle/checkstyle-report.xml</outputFile>
-                        </configuration>
-                    </execution>
-                </executions>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-antrun-plugin</artifactId>
+              <version>${maven.plugin.antrun.version}</version>
+              <executions>
+                <execution>
+                  <id>ant-phase-verify</id>
+                  <phase>verify</phase>
+                  <goals>
+                    <goal>run</goal>
+                  </goals>
+                  <configuration>
+                    <target>
+                      <property name="mvn.project.build.directory" value="${project.build.directory}" />
+                      <property name="checkstyle.configLocation" value="${checkstyle.configLocation}" />
+                      <ant antfile="config/ant-phase-verify.xml" />
+                    </target>
+                  </configuration>
+                </execution>
+              </executions>
+              <dependencies>
+                <dependency>
+                  <groupId>com.puppycrawl.tools</groupId>
+                  <artifactId>checkstyle</artifactId>
+                  <version>${checkstyle.version}</version>
+                </dependency>
+              </dependencies>
             </plugin>
         </plugins>
     </build>
