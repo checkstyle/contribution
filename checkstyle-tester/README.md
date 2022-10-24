@@ -16,7 +16,10 @@ The contribution repository must be cloned and all the folders must be kept toge
 like they are on the server. Not only does the tool use the `checkstyle-tester` directory
 and it's layout, but it also uses `patch-diff-report-tool` to help with building the final report.
 The tool consists of one Groovy script: `diff.groovy`. Thus, in order to use the tool make sure
-you have the Groovy runtime installed on your developer machine (min required version is 2.4.8).
+you have the Groovy runtime installed on your developer machine.
+`Very specific old version of groovy (2.4.8) is required to execute`.
+you can download it from
+[here](https://groovy.jfrog.io/ui/api/v1/download?repoKey=dist-release-local&path=groovy-zips%252Fapache-groovy-binary-2.4.8.zip).
 The tool runs Checkstyle through maven and makes use of your checkstyle branches,
 so maven and git is required to be installed as well.
 Depending on the type of external projects you wish to generate reports for,
