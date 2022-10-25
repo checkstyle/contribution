@@ -8,6 +8,8 @@ Breaking backward compatibility:
   Mock issue title 4
   Mock issue title 5 ==> test
   Mock issue title 6 L1234567890123456789012345678901234567890123456789012345678901234567890ooooooooooooooooooooooooooooooooooooooooooooooooong'"
+  Mock issue title 7 thisIssueTitleIsExactly87CharactersLongAndThenYouThe13ChrIndentation
+  Mock issue title 8 thisIssueTitleIsExactly100CharactersLongAndWeExpectItToGetWrappedDueToBeingTooLng
 
 
 

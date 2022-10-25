@@ -28,9 +28,18 @@
           </li>
           <li>
             Mock issue title 6
-L12345678901234567890123456789012345678901234567890123456789012345678-
-90ooooooooooooooooooooooooooooooooooooooooooooooooong&#39;&quot;.
+            L1234567890123456789012345678901234567890123456789012345678901234567890oooooooooooooooo-
+            ooooooooooooooooooooooooooooooooong&#39;&quot;.
             Author: Author 1
+          </li>
+          <li>
+            Mock issue title 7 thisIssueTitleIsExactly87CharactersLongAndThenYouThe13ChrIndentation.
+            Author: Author 10
+          </li>
+          <li>
+            Mock issue title 8
+            thisIssueTitleIsExactly100CharactersLongAndWeExpectItToGetWrappedDueToBeingTooLng.
+            Author: Author 11
           </li>
         </ul>
     </section>
