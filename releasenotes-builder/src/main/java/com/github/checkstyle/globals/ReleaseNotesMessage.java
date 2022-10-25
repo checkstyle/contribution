@@ -19,6 +19,8 @@
 
 package com.github.checkstyle.globals;
 
+import java.util.Collections;
+
 import org.kohsuke.github.GHIssue;
 
 /**
@@ -29,10 +31,17 @@ import org.kohsuke.github.GHIssue;
 public final class ReleaseNotesMessage {
 
     /** Max size of line. */
-    private static final int MAX_TITLE_LINE_SIZE = 70;
+    private static final int MAX_TITLE_LINE_SIZE = 100;
 
     /** Converted size of html character. */
     private static final int HTML_CHAR_SIZE = 5;
+
+    /** Amount of whitespace characters preceding the title. */
+    private static final int TITLE_INDENTATION = 12;
+
+    /** Twelve spaces. */
+    private static final String TWELVE_SPACES = String.join(
+        "", Collections.nCopies(TITLE_INDENTATION, " "));
 
     /** Issue number. */
     private final int issueNo;
@@ -131,7 +140,8 @@ public final class ReleaseNotesMessage {
      */
     // -@cs[CyclomaticComplexity|ExecutableStatementCount] Can't be split apart easily.
     private static String split(String str) {
-        final int length = str.length();
+        final String indentedStr = TWELVE_SPACES + str;
+        final int length = indentedStr.length();
         final StringBuilder sb = new StringBuilder(length);
         int index = 0;
         int splitStart = index;
@@ -140,7 +150,7 @@ public final class ReleaseNotesMessage {
         int lastSpaceOutPosition = -1;
 
         while (index < length) {
-            final char ch = str.charAt(index);
+            final char ch = indentedStr.charAt(index);
             final int charSize;
 
             if (ch == '>' || ch == '<' || ch == '&' || ch == '\'' || ch == '"') {
@@ -154,19 +164,20 @@ public final class ReleaseNotesMessage {
 
             if (outPosition > MAX_TITLE_LINE_SIZE) {
                 if (lastSpacePosition == -1) {
-                    sb.append(str, splitStart, index - 1);
+                    sb.append(indentedStr, splitStart, index - 1);
                     sb.append("-");
 
                     splitStart = index - 1;
                     outPosition = 0;
                 }
                 else {
-                    sb.append(str, splitStart, lastSpacePosition);
+                    sb.append(indentedStr, splitStart, lastSpacePosition);
                     splitStart = lastSpacePosition + 1;
-                    outPosition -= lastSpaceOutPosition;
+                    outPosition -= lastSpaceOutPosition - TITLE_INDENTATION;
                 }
 
                 sb.append(System.lineSeparator());
+                sb.append(TWELVE_SPACES);
                 lastSpacePosition = -1;
                 lastSpaceOutPosition = -1;
             }
@@ -184,7 +195,7 @@ public final class ReleaseNotesMessage {
         }
 
         if (splitStart != index) {
-            sb.append(str.substring(splitStart));
+            sb.append(indentedStr.substring(splitStart));
         }
 
         return sb.toString();

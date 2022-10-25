@@ -438,7 +438,12 @@ public class TemplateProcessorTest {
             createReleaseNotesMessage(123, "Mock issue title 5 ==> test", "Author 6, Author 7"),
             createReleaseNotesMessage("Mock issue title 6 L12345678901234567890123456789012345678"
                 + "90123456789012345678901234567890oooooooooooooooooooooooooooooooooooooooooooooo"
-                + "ooong'\"", "Author 1"));
+                + "ooong'\"", "Author 1"),
+            createReleaseNotesMessage("Mock issue title 7 thisIssueTitleIsExactly87Characters"
+                + "LongAndThenYouThe13ChrIndentation", "Author 10"),
+            createReleaseNotesMessage("Mock issue title 8 thisIssueTitleIsExactly100Characters"
+                + "LongAndWeExpectItToGetWrappedDueToBeingTooLng", "Author 11"));
+
     }
 
     private Builder createBaseCliOptions() {
