@@ -20,6 +20,7 @@
 package com.github.checkstyle;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.cli.ParseException;
@@ -53,48 +54,32 @@ public final class Main {
      * @noinspectionreason CallToSystemExit - main method must exit with code
      */
     public static void main(String... args) {
-        int errorCounter;
-        List<String> publicationErrors = null;
+        final List<String> errors = new ArrayList<>();
         try {
             final CliProcessor cliProcessor = new CliProcessor(args);
             cliProcessor.process();
             if (cliProcessor.hasErrors()) {
-                printListOf(cliProcessor.getErrorMessages());
-                errorCounter = cliProcessor.getErrorMessages().size();
+                errors.addAll(cliProcessor.getErrorMessages());
             }
             else {
                 final CliOptions cliOptions = cliProcessor.getCliOptions();
                 final Result notesBuilderResult = runGithubNotesBuilder(cliOptions);
-                if (cliOptions.isValidateVersion()) {
-                    final List<String> validationErrors = MainProcess
-                        .validateNotes(notesBuilderResult.getReleaseNotes(), cliOptions);
-                    notesBuilderResult.addErrors(validationErrors);
-                }
-                errorCounter = notesBuilderResult.getErrorMessages().size();
-                if (errorCounter == 0) {
-                    publicationErrors = MainProcess.runPostGenerationAndPublication(
-                        notesBuilderResult.getReleaseNotes(), cliOptions);
-                }
+                errors.addAll(notesBuilderResult.getErrorMessages());
+                errors.addAll(MainProcess.runPostGenerationAndPublication(
+                    notesBuilderResult.getReleaseNotes(), cliOptions, errors.isEmpty()));
             }
         }
         catch (ParseException | GitAPIException | IOException | TemplateException ex) {
-            errorCounter = 1;
             ex.printStackTrace();
+            errors.add("[ERROR] An exception was thrown. See above for more details.");
             CliProcessor.printUsage();
         }
-        if (errorCounter == 0) {
-            if (publicationErrors != null && !publicationErrors.isEmpty()) {
-                System.out.printf("%nPublication ends with %d errors:%n",
-                                  publicationErrors.size());
-                printListOf(publicationErrors);
-            }
-            else {
-                System.out.printf("%nExecution succeeded!%n");
-            }
+        if (errors.isEmpty()) {
+            System.out.printf("%nExecution succeeded!%n");
         }
         else {
-            System.out.printf("%nGeneration ends with %d errors.%n",
-                              errorCounter);
+            System.out.printf("%nGeneration ends with %d errors.%n", errors.size());
+            printListOf(errors);
             System.exit(ERROR_EXIT_CODE);
         }
     }
@@ -120,9 +105,6 @@ public final class Main {
                 startRef, endRef);
         if (result.hasWarnings()) {
             printListOf(result.getWarningMessages());
-        }
-        if (result.hasErrors()) {
-            printListOf(result.getErrorMessages());
         }
         return result;
     }

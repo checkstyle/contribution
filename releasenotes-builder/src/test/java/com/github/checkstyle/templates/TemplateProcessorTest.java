@@ -52,12 +52,12 @@ import com.google.common.collect.Multimap;
 public class TemplateProcessorTest {
 
     private static final String MSG_RELEASE_IS_MINOR =
-        "Validation of release number failed. Release number is minor(1.0), but "
+        "[ERROR] Validation of release number failed. Release number is minor(1.0), but "
             + "release notes do not contain 'new' or 'breaking compatability' labels. Please "
             + "correct release number by running https://github.com/checkstyle/checkstyle/"
             + "actions/workflows/bump-version-and-update-milestone.yml";
     private static final String MSG_RELEASE_IS_PATCH =
-        "Validation of release number failed. Release number is a patch(1.0.0), but "
+        "[ERROR] Validation of release number failed. Release number is a patch(1.0.0), but "
             + "release notes contain 'new' or 'breaking compatability' labels. Please correct "
             + "release number by running https://github.com/checkstyle/checkstyle/actions/"
             + "workflows/bump-version-and-update-milestone.yml";
@@ -75,7 +75,7 @@ public class TemplateProcessorTest {
     public void testGenerateOnlyBreakingCompatibility() throws Exception {
         final List<String> errors = MainProcess.runPostGenerationAndPublication(
             createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
-                .setGenerateAll(true).build());
+                .setGenerateAll(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
 
@@ -90,7 +90,7 @@ public class TemplateProcessorTest {
     public void testGenerateOnlyNewFeature() throws Exception {
         final List<String> errors = MainProcess.runPostGenerationAndPublication(
             createNotes(null, createAllNotes(), null, null, null), createBaseCliOptions()
-                .setGenerateAll(true).build());
+                .setGenerateAll(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
 
@@ -105,7 +105,7 @@ public class TemplateProcessorTest {
     public void testGenerateOnlyBug() throws Exception {
         final List<String> errors = MainProcess.runPostGenerationAndPublication(
             createNotes(null, null, createAllNotes(), null, null), createBaseCliOptions()
-                .setGenerateAll(true).build());
+                .setGenerateAll(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
 
@@ -120,7 +120,7 @@ public class TemplateProcessorTest {
     public void testGenerateOnlyMisc() throws Exception {
         final List<String> errors = MainProcess.runPostGenerationAndPublication(
             createNotes(null, null, null, createAllNotes(), null), createBaseCliOptions()
-                .setGenerateAll(true).build());
+                .setGenerateAll(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
 
@@ -134,7 +134,7 @@ public class TemplateProcessorTest {
     public void testGenerateOnlyNewModule() throws Exception {
         final List<String> errors = MainProcess.runPostGenerationAndPublication(
             createNotes(null, null, null, null, createAllNotes()), createBaseCliOptions()
-                .setGenerateAll(true).build());
+                .setGenerateAll(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
 
@@ -154,7 +154,7 @@ public class TemplateProcessorTest {
                 Collections.singletonList(createReleaseNotesMessage("Title 3", "Author 3")),
                 Collections.singletonList(createReleaseNotesMessage(4, "Title 4", "Author 4")),
                 Collections.singletonList(createReleaseNotesMessage("Title 5", "Author 5"))
-            ), createBaseCliOptions().setGenerateAll(true).build());
+            ), createBaseCliOptions().setGenerateAll(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
 
@@ -169,7 +169,7 @@ public class TemplateProcessorTest {
     public void testGenerateOnlyXdoc() throws Exception {
         final List<String> errors = MainProcess.runPostGenerationAndPublication(
             createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
-                .setGenerateXdoc(true).build());
+                .setGenerateXdoc(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
 
@@ -184,7 +184,7 @@ public class TemplateProcessorTest {
     public void testGenerateOnlyTwitter() throws Exception {
         final List<String> errors = MainProcess.runPostGenerationAndPublication(
             createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
-                .setGenerateTw(true).build());
+                .setGenerateTw(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
 
@@ -199,7 +199,7 @@ public class TemplateProcessorTest {
     public void testGenerateOnlyRss() throws Exception {
         final List<String> errors = MainProcess.runPostGenerationAndPublication(
             createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
-                .setGenerateRss(true).build());
+                .setGenerateRss(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
 
@@ -214,7 +214,7 @@ public class TemplateProcessorTest {
     public void testGenerateOnlyMlist() throws Exception {
         final List<String> errors = MainProcess.runPostGenerationAndPublication(
             createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
-                .setGenerateMlist(true).build());
+                .setGenerateMlist(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
 
@@ -229,7 +229,7 @@ public class TemplateProcessorTest {
     public void testGenerateOnlyGitHub() throws Exception {
         final List<String> errors = MainProcess.runPostGenerationAndPublication(
             createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
-                .setGenerateGitHub(true).build());
+                .setGenerateGitHub(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
 
@@ -244,7 +244,7 @@ public class TemplateProcessorTest {
     public void testGitHub() throws Exception {
         final List<String> errors = MainProcess.runPostGenerationAndPublication(
             createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
-                .setGenerateGitHub(true).build());
+                .setGenerateGitHub(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
         assertFile("githubPageBreakingCompatibility.txt", MainProcess.GITHUB_FILENAME);
@@ -262,7 +262,7 @@ public class TemplateProcessorTest {
                 createBaseCliOptions().setGenerateAll(true).setXdocTemplate(template)
                         .setTwitterTemplate(template)
                         .setRssTemplate(template).setMlistTemplate(template)
-                        .setGitHubTemplate(template).build());
+                        .setGitHubTemplate(template).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
 
