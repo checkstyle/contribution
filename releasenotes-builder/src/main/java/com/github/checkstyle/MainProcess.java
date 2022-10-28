@@ -72,15 +72,24 @@ public final class MainProcess {
      *
      * @param releaseNotes map of release notes messages.
      * @param cliOptions command line options.
+     * @param shouldRunPublication if post publication should be run
      * @return list of publication errors.
      * @throws IOException if I/O error occurs.
      * @throws TemplateException if an error occurs while generating freemarker template.
      */
     public static List<String> runPostGenerationAndPublication(
-            Multimap<String, ReleaseNotesMessage> releaseNotes, CliOptions cliOptions)
+            Multimap<String, ReleaseNotesMessage> releaseNotes, CliOptions cliOptions,
+            boolean shouldRunPublication)
             throws IOException, TemplateException {
         runPostGeneration(releaseNotes, cliOptions);
-        return runPostPublication(cliOptions);
+        final List<String> errors = new ArrayList<>();
+        if (cliOptions.isValidateVersion()) {
+            errors.addAll(validateNotes(releaseNotes, cliOptions));
+        }
+        if (shouldRunPublication && errors.isEmpty()) {
+            errors.addAll(runPostPublication(cliOptions));
+        }
+        return errors;
     }
 
     /**
@@ -100,7 +109,7 @@ public final class MainProcess {
                 || releaseNotes.containsKey(Constants.BREAKING_COMPATIBILITY_LABEL);
 
         final List<String> errors = new ArrayList<>();
-        final String errorBeginning = "Validation of release number failed.";
+        final String errorBeginning = "[ERROR] Validation of release number failed.";
         final String errorEnding = "Please correct release number by running https://github.com/"
             + "checkstyle/checkstyle/actions/workflows/bump-version-and-update-milestone.yml";
 
