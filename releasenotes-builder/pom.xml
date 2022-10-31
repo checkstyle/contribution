@@ -14,7 +14,7 @@
         <maven.plugin.antrun.version>3.1.0</maven.plugin.antrun.version>
         <maven.plugin.github-api.version>1.308</maven.plugin.github-api.version>
         <maven.plugin.jgit.version>5.4.2.201908231537-r</maven.plugin.jgit.version>
-        <maven.plugin.slf4j.version>2.0.1</maven.plugin.slf4j.version>
+        <maven.plugin.slf4j.version>2.0.3</maven.plugin.slf4j.version>
         <maven.plugin.freemarker.version>2.3.31</maven.plugin.freemarker.version>
         <maven.plugin.apache.commons.cli.version>1.5.0</maven.plugin.apache.commons.cli.version>
         <maven.plugin.apache.commons.lang.version>2.6</maven.plugin.apache.commons.lang.version>
