@@ -2,14 +2,11 @@ version: ~> 1.0
 dist: focal
 # this arch is required as is for Partner Queue Solution - DO NOT MODIFY
 arch: ppc64le
-
 language: java
-sudo: false
 
 cache:
-  apt: true
   directories:
-  - ~/.m2
+    - ~/.m2
 
 addons:
   apt:
@@ -26,7 +23,8 @@ branches:
 install:
   - gem install mdl
 
-matrix:
+
+jobs:
   fast_finish: true
   include:
     - jdk: openjdk11
@@ -64,17 +62,15 @@ matrix:
         - DESC="codenarc validation for groovy files"
         - CMD="./.ci/travis.sh codenarc"
 
-
-before_script:
-    - |
-      if [[ $TRAVIS_CPU_ARCH == 'ppc64le' ]]; then
-          export JAVA_HOME=/usr/lib/jvm/adoptopenjdk-11-hotspot-ppc64el
-          export PATH=$JAVA_HOME/bin:$PATH
-      fi
-    - groovy --version
-
 script:
-  - ./.ci/travis.sh update-settings-xml
-  - eval $CMD
+  # required to run javadoc in travis
+  # this must be in yml to pass to other scripts
+  - export JAVA_HOME="/usr/lib/jvm/"$(ls /usr/lib/jvm/ | head -n 1)"/"
+  - echo "JAVA_HOME="$JAVA_HOME
+  - export PATH=$JAVA_HOME:$PATH
+  - echo "PATH="$PATH
+  - ./.ci/travis.sh init-m2-repo
+  - ./.ci/travis.sh run-command "$CMD"
+  - sleep 5s
 
 after_success:

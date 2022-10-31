@@ -2,6 +2,8 @@
 # Attention, there is no "-x" to avoid problems on Travis
 set -e
 
+export RUN_JOB=1
+
 function checkout_from {
   CLONE_URL=$1
   PROJECT=$(echo "$CLONE_URL" | sed -nE 's/.*\/(.*).git/\1/p')
@@ -20,13 +22,16 @@ function checkout_from {
 
 case $1 in
 
-update-settings-xml)
-  MVN_SETTINGS=${TRAVIS_HOME}/.m2/settings.xml
-  if [[ -f ${MVN_SETTINGS} ]]; then
-    if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
-      sed -i'' -e "/<mirrors>/,/<\/mirrors>/ d" $MVN_SETTINGS
-    else
-      xmlstarlet ed --inplace -d "//mirrors" $MVN_SETTINGS
+init-m2-repo)
+  if [[ $RUN_JOB == 1 ]]; then
+    MVN_SETTINGS=${TRAVIS_HOME}/.m2/settings.xml
+
+    if [[ -f ${MVN_SETTINGS} ]]; then
+      if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
+        sed -i'' -e "/<mirrors>/,/<\/mirrors>/ d" "$MVN_SETTINGS"
+      else
+        xmlstarlet ed --inplace -d "//mirrors" "$MVN_SETTINGS"
+      fi
     fi
   fi
   ;;
@@ -112,6 +117,15 @@ markdownlint)
   # The folder "comment-action" is excluded since it contains many 3rd party files that do not pass the validation
   files=$(git ls-files -- '*.md' ':!:comment-action')
   mdl ${files}
+  ;;
+
+run-command)
+  if [[ $RUN_JOB == 1 ]]; then
+    echo "eval of CMD is starting";
+    echo "CMD=$2";
+    eval "$2";
+    echo "eval of CMD is completed";
+  fi
   ;;
 
 *)
