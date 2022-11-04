@@ -39,7 +39,6 @@ import com.github.checkstyle.data.MergedConfigurationModule;
 import com.github.checkstyle.parser.CheckstyleConfigurationsParser;
 import com.github.checkstyle.parser.CheckstyleReportsParser;
 import com.github.checkstyle.parser.CheckstyleTextParser;
-import com.github.checkstyle.site.JxrDummyLog;
 import com.github.checkstyle.site.SiteGenerator;
 
 /**
@@ -192,15 +191,8 @@ public final class Main {
 
             // Site and XREF generation stage
             System.out.println("Creation of diff html site is started.");
-            try {
-                exportResources(options);
-                SiteGenerator.generate(diffReport, diffConfiguration, options);
-            }
-            finally {
-                for (String message : JxrDummyLog.getLogs()) {
-                    System.out.println(message);
-                }
-            }
+            exportResources(options);
+            SiteGenerator.generate(diffReport, diffConfiguration, options);
             System.out.println("Creation of the result site succeed.");
         }
         System.out.println("patch-diff-report-tool execution finished.");
