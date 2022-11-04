@@ -79,9 +79,9 @@ class XrefGenerator {
     private static TextTransform textTransform;
 
     static {
-        pacman = new PackageManager(new JxrDummyLog(),
-                new FileManager());
-        codeTransform = new JavaCodeTransform(pacman);
+        final FileManager fileManager = new FileManager();
+        pacman = new PackageManager(fileManager);
+        codeTransform = new JavaCodeTransform(pacman, fileManager);
         textTransform = new TextTransform();
     }
 
