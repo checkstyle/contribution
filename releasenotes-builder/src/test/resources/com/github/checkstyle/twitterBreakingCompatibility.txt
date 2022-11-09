@@ -1,2 +1,2 @@
 Checkstyle 1.0.0 - https://checkstyle.org/releasenotes.html#Release_1.0.0
-Breaking backward compatibility: 8
+Breaking backward compatibility: 10

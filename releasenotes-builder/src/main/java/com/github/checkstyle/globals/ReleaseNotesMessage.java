@@ -49,6 +49,8 @@ public final class ReleaseNotesMessage {
     private final String title;
     /** Short Width Title. */
     private final String shortWidthTitle;
+    /** Title with escaped GitHub characters. */
+    private final String githubEscapedTitle;
     /** Author. */
     private final String author;
 
@@ -62,6 +64,7 @@ public final class ReleaseNotesMessage {
         issueNo = issue.getNumber();
         title = getActualTitle(issue);
         shortWidthTitle = split(title);
+        githubEscapedTitle = escapeGithubCharacters(title);
         this.author = author;
     }
 
@@ -75,6 +78,7 @@ public final class ReleaseNotesMessage {
         issueNo = -1;
         this.title = title;
         shortWidthTitle = split(title);
+        githubEscapedTitle = escapeGithubCharacters(title);
         this.author = author;
     }
 
@@ -94,6 +98,15 @@ public final class ReleaseNotesMessage {
      */
     public String getTitle() {
         return title;
+    }
+
+    /**
+     * Returns the GitHub escaped title.
+     *
+     * @return the GitHub escaped title.
+     */
+    public String getGithubEscapedTitle() {
+        return githubEscapedTitle;
     }
 
     /**
@@ -199,5 +212,15 @@ public final class ReleaseNotesMessage {
         }
 
         return sb.toString();
+    }
+
+    /**
+     * Escapes GitHub characters by placing them inside code block.
+     *
+     * @param str string to escape.
+     * @return escaped string.
+     */
+    private static String escapeGithubCharacters(String str) {
+        return str.replaceAll("(@|<|>|&)", "`$1`");
     }
 }
