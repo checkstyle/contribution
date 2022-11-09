@@ -442,8 +442,9 @@ public class TemplateProcessorTest {
             createReleaseNotesMessage("Mock issue title 7 thisIssueTitleIsExactly87Characters"
                 + "LongAndThenYouThe13ChrIndentation", "Author 10"),
             createReleaseNotesMessage("Mock issue title 8 thisIssueTitleIsExactly100Characters"
-                + "LongAndWeExpectItToGetWrappedDueToBeingTooLng", "Author 11"));
-
+                + "LongAndWeExpectItToGetWrappedDueToBeingTooLng", "Author 11"),
+            createReleaseNotesMessage("Mock issue title 9 escape @ and @@@@@", "Author 12"),
+            createReleaseNotesMessage("Mock issue title 10 escape < > & <&<>&<<", "Author 13"));
     }
 
     private Builder createBaseCliOptions() {

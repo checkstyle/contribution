@@ -41,5 +41,13 @@
             thisIssueTitleIsExactly100CharactersLongAndWeExpectItToGetWrappedDueToBeingTooLng.
             Author: Author 11
           </li>
+          <li>
+            Mock issue title 9 escape @ and @@@@@.
+            Author: Author 12
+          </li>
+          <li>
+            Mock issue title 10 escape &lt; &gt; &amp; &lt;&amp;&lt;&gt;&amp;&lt;&lt;.
+            Author: Author 13
+          </li>
         </ul>
     </section>

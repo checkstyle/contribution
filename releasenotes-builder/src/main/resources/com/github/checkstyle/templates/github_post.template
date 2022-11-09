@@ -4,7 +4,7 @@ Checkstyle ${releaseNo} - https://checkstyle.org/releasenotes.html#Release_${rel
 Breaking backward compatibility:
 
 <#list breakingMessages as message>
-  #${message.issueNo} - ${message.title}
+  #${message.issueNo} - ${message.githubEscapedTitle}
 </#list>
 </#if>
 
@@ -12,7 +12,7 @@ Breaking backward compatibility:
 New:
 
 <#list newMessages as message>
-  #${message.issueNo} - ${message.title}
+  #${message.issueNo} - ${message.githubEscapedTitle}
 </#list>
 </#if>
 
@@ -20,7 +20,7 @@ New:
 Bug fixes:
 
 <#list bugMessages as message>
-  #${message.issueNo} - ${message.title}
+  #${message.issueNo} - ${message.githubEscapedTitle}
 </#list>
 </#if>
 
@@ -29,7 +29,7 @@ Bug fixes:
 <summary>Other Changes:</summary>
 <br/>
 <#list notesMessages as message>
-  ${message.title} <br/>
+  ${message.githubEscapedTitle} <br/>
 </#list>
 </details>
 </#if>
