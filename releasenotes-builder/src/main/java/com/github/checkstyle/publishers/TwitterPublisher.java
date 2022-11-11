@@ -26,8 +26,6 @@ import java.nio.file.Paths;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.auth.AccessToken;
 
 /**
  * Class for Twitter post publication.
@@ -73,11 +71,9 @@ public class TwitterPublisher {
      * @throws IOException if there are problems with reading file with the post text.
      */
     public void publish() throws TwitterException, IOException {
-        final Twitter twitter = new TwitterFactory().getInstance();
-        twitter.setOAuthConsumer(consumerKey, consumerSecret);
-        final AccessToken token = new AccessToken(accessToken, accessTokenSecret);
-        twitter.setOAuthAccessToken(token);
         final String post = Files.readString(Paths.get(postFilename), StandardCharsets.UTF_8);
-        twitter.updateStatus(post);
+        final Twitter twitter = Twitter.newBuilder().oAuthConsumer(consumerKey, consumerSecret)
+            .oAuthAccessToken(accessToken, accessTokenSecret).build();
+        twitter.v1().tweets().updateStatus(post);
     }
 }
