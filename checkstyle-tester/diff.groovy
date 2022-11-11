@@ -453,7 +453,7 @@ def getTextTransform() {
         .toFile()
     def diffToolJarPath = getPathToDiffToolJar(diffToolDir)
     this.class.classLoader.rootLoader.addURL(new URL("file:$diffToolJarPath"))
-    def textTransform = Class.forName("com.github.checkstyle.site.TextTransform").newInstance()
+    def textTransform = this.class.getClassLoader().loadClass("com.github.checkstyle.site.TextTransform").newInstance()
 
     return textTransform
 }

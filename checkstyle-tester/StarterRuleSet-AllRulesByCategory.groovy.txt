@@ -134,7 +134,7 @@ ruleset {
     // rulesets/dry.xml
     DuplicateListLiteral
     DuplicateMapLiteral
-    DuplicateNumberLiteral
+    //DuplicateNumberLiteral  // it is ok to use simple duplication in scripts
     //DuplicateStringLiteral  // it is ok to use simple duplication in scripts
 
     // rulesets/enhanced.xml
