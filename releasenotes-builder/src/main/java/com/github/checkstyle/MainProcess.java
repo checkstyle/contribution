@@ -81,8 +81,8 @@ public final class MainProcess {
             Multimap<String, ReleaseNotesMessage> releaseNotes, CliOptions cliOptions,
             boolean shouldRunPublication)
             throws IOException, TemplateException {
-        runPostGeneration(releaseNotes, cliOptions);
         final List<String> errors = new ArrayList<>();
+        errors.addAll(runPostGeneration(releaseNotes, cliOptions));
         if (cliOptions.isValidateVersion()) {
             errors.addAll(validateNotes(releaseNotes, cliOptions));
         }
@@ -169,13 +169,15 @@ public final class MainProcess {
      *
      * @param releaseNotes map of release notes messages.
      * @param cliOptions command line options.
+     * @return list of post generation errors.
      * @throws IOException if I/O error occurs.
      * @throws TemplateException if an error occurs while generating freemarker template.
      */
     // -@cs[CyclomaticComplexity|NPathComplexity] This code is not complicated
     // and is better to keep in one method
-    private static void runPostGeneration(Multimap<String, ReleaseNotesMessage> releaseNotes,
-            CliOptions cliOptions) throws IOException, TemplateException {
+    private static List<String> runPostGeneration(
+        Multimap<String, ReleaseNotesMessage> releaseNotes,
+        CliOptions cliOptions) throws IOException, TemplateException {
 
         final String remoteRepoPath = cliOptions.getRemoteRepoPath();
         final String releaseNumber = cliOptions.getReleaseNumber();
@@ -203,11 +205,27 @@ public final class MainProcess {
                     outputLocation + MLIST_FILENAME, cliOptions.getMlistTemplate(),
                     MLIST_TEMPLATE_FILE);
         }
+        final List<String> errors = new ArrayList<>();
         if (cliOptions.isGenerateAll() || cliOptions.isGenerateGitHub()) {
+            errors.addAll(checkForDoubleQuotes(releaseNotes));
             TemplateProcessor.generateWithFreemarker(templateVariables,
                     outputLocation + GITHUB_FILENAME, cliOptions.getGitHubTemplate(),
                     GITHUB_TEMPLATE_FILE);
         }
+        return errors;
+    }
+
+    private static List<String> checkForDoubleQuotes(
+        Multimap<String, ReleaseNotesMessage> releaseNotes) {
+        final List<String> errors = new ArrayList<>();
+        for (ReleaseNotesMessage releaseNotesMessage : releaseNotes.values()) {
+            final String title = releaseNotesMessage.getTitle();
+            if (releaseNotesMessage.getTitle().contains("\"")) {
+                errors.add(String.format(
+                    "[ERROR] Relaease title %s contains double quotes(\").", title));
+            }
+        }
+        return errors;
     }
 
     /**

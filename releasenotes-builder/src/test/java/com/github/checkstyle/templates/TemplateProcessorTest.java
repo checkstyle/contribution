@@ -77,7 +77,7 @@ public class TemplateProcessorTest {
             createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
                 .setGenerateAll(true).build(), true);
 
-        Assert.assertEquals("no errors", 0, errors.size());
+        Assert.assertEquals("one error", 1, errors.size());
 
         assertFile("xdocBreakingCompatibility.txt", MainProcess.XDOC_FILENAME);
         assertFile("twitterBreakingCompatibility.txt", MainProcess.TWITTER_FILENAME);
@@ -92,7 +92,7 @@ public class TemplateProcessorTest {
             createNotes(null, createAllNotes(), null, null, null), createBaseCliOptions()
                 .setGenerateAll(true).build(), true);
 
-        Assert.assertEquals("no errors", 0, errors.size());
+        Assert.assertEquals("one error", 1, errors.size());
 
         assertFile("xdocNew.txt", MainProcess.XDOC_FILENAME);
         assertFile("twitterNew.txt", MainProcess.TWITTER_FILENAME);
@@ -107,7 +107,7 @@ public class TemplateProcessorTest {
             createNotes(null, null, createAllNotes(), null, null), createBaseCliOptions()
                 .setGenerateAll(true).build(), true);
 
-        Assert.assertEquals("no errors", 0, errors.size());
+        Assert.assertEquals("one error", 1, errors.size());
 
         assertFile("xdocBug.txt", MainProcess.XDOC_FILENAME);
         assertFile("twitterBug.txt", MainProcess.TWITTER_FILENAME);
@@ -122,7 +122,7 @@ public class TemplateProcessorTest {
             createNotes(null, null, null, createAllNotes(), null), createBaseCliOptions()
                 .setGenerateAll(true).build(), true);
 
-        Assert.assertEquals("no errors", 0, errors.size());
+        Assert.assertEquals("one error", 1, errors.size());
 
         assertFile("xdocMisc.txt", MainProcess.XDOC_FILENAME);
         assertFile("twitterMisc.txt", MainProcess.TWITTER_FILENAME);
@@ -136,6 +136,8 @@ public class TemplateProcessorTest {
             createNotes(null, null, null, null, createAllNotes()), createBaseCliOptions()
                 .setGenerateAll(true).build(), true);
 
+        System.out.println(errors.get(0));
+        System.out.println(errors.get(1));
         Assert.assertEquals("no errors", 0, errors.size());
 
         assertFile("xdocNew.txt", MainProcess.XDOC_FILENAME);
@@ -231,7 +233,7 @@ public class TemplateProcessorTest {
             createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
                 .setGenerateGitHub(true).build(), true);
 
-        Assert.assertEquals("no errors", 0, errors.size());
+        Assert.assertEquals("one error", 1, errors.size());
 
         assertFile(MainProcess.XDOC_FILENAME);
         assertFile(MainProcess.TWITTER_FILENAME);
@@ -246,7 +248,7 @@ public class TemplateProcessorTest {
             createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
                 .setGenerateGitHub(true).build(), true);
 
-        Assert.assertEquals("no errors", 0, errors.size());
+        Assert.assertEquals("one error", 1, errors.size());
         assertFile("githubPageBreakingCompatibility.txt", MainProcess.GITHUB_FILENAME);
     }
 
