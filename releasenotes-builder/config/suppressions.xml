@@ -8,6 +8,8 @@
     <suppress checks="UncommentedMain" files="Main.java"/>
     <!-- this is a builder, there is to many methods to get its options -->
     <suppress checks="MethodCount" files="CliOptions.java"/>
+    <!-- there are many options to consider -->
+    <suppress checks="ExecutableStatementCount" files="CliProcessor.java"/>
 
     <!-- Tone down the checking for test code -->
     <suppress message="Missing a Javadoc comment|Missing package-info.java file|Expected @throws tag for|missing @author tag" files=".*[\\/]src[\\/]test[\\/]"/>
