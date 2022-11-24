@@ -284,20 +284,26 @@ public class CliProcessor {
         options.addOption(OPTION_GENERATE_RSS, "Whether a RSS post should be generated.");
         options.addOption(OPTION_GENERATE_MLIST,
             "Whether a mailing list post should be generated.");
-        options.addOption(OPTION_XDOC_TEMPLATE, true, "Path to xdoc template");
-        options.addOption(OPTION_TWITTER_TEMPLATE, true, "Path to twitter template");
+        options.addOption(OPTION_XDOC_TEMPLATE, true, "Path to xdoc template.");
+        options.addOption(OPTION_TWITTER_TEMPLATE, true, "Path to twitter template.");
         options.addOption(OPTION_GENERATE_GITHUB,
                           "Whether a github post should be generated.");
-        options.addOption(OPTION_RSS_TEMPLATE, true, "Path to rss template");
-        options.addOption(OPTION_MLIST_TEMPLATE, true, "Path to mailing list template");
-        options.addOption(OPTION_PUBLISH_ALL_SOCIAL, "Whether to publish all social posts");
+        options.addOption(OPTION_RSS_TEMPLATE, true, "Path to rss template.");
+        options.addOption(OPTION_MLIST_USERNAME, true, "Username for mailing list.");
+        options.addOption(OPTION_MLIST_PASSWORD, true, "Password for mailing list.");
+        options.addOption(OPTION_MLIST_TEMPLATE, true, "Path to mailing list template.");
+        options.addOption(OPTION_PUBLISH_ALL_SOCIAL, "Whether to publish all social posts.");
         options.addOption(OPTION_PUBLISH_TWIT, "Whether to publish a Twitter post.");
-        options.addOption(OPTION_GITHUB_TEMPLATE, true, "Path to github page template");
+        options.addOption(OPTION_PUBLISH_MLIST, "Whether to publish a mailing list post.");
+        options.addOption(OPTION_PUBLISH_SF_RSS, "Whether to publish a RSS post.");
+        options.addOption(OPTION_GITHUB_TEMPLATE, true, "Path to github page template.");
         options.addOption(OPTION_TWITTER_CONSUMER_KEY, true, "Consumer key for Twitter.");
         options.addOption(OPTION_TWITTER_CONSUMER_SECRET, true, "Consumer secret for Twitter.");
         options.addOption(OPTION_TWITTER_ACCESS_TOKEN, true, "Access token for Twitter.");
         options.addOption(OPTION_TWITTER_ACCESS_TOKEN_SECRET, true,
             "Access token secret for Twitter.");
+        options.addOption(OPTION_SF_RSS_BEARER_TOKEN, true,
+                "Bearer token for RSS.");
         options.addOption(OPTION_TWITTER_PROPERTIES, true,
             "Properties for publication on Twitter.");
         options.addOption(OPTION_VALIDATE_VERSION, false,

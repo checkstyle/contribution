@@ -26,7 +26,7 @@ java -jar releasenotes-builder-1.0-all.jar -localRepoPath <arg> \
      [-xdocTemplate] [-twitterTemplate] [-rssTemplate] [-mlistTemplate] [-gitHubTemplate] \
      [-publishAllSocial] [-publishTwit] [-twitterConsumerKey <arg>]
      [-twitterConsumerSecret <arg>] \
-     [-twiterAccessToken <arg>] [-twitterAccessTokenSecret <arg>] [-twitterProperties <arg>] \
+     [-twitterAccessToken <arg>] [-twitterAccessTokenSecret <arg>] [-twitterProperties <arg>] \
      [-publishMlist] [-mlistUsername <arg>] [-mlistPassword <arg>] [-mlistProperties <arg>] \
      [-publishSfRss] [-sfRssBearerToken <arg>] [-sfRssProperties <arg>] [-validateVersion]
 ```
