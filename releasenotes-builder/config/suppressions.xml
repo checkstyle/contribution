@@ -17,6 +17,8 @@
     <suppress checks="AvoidStaticImport" files=".*[\\/]src[\\/]test[\\/]"/>
     <suppress checks="WriteTag" files=".*[\\/]src[\\/]test[\\/]"/>
     <suppress checks="MagicNumber" files=".*[\\/]src[\\/]test[\\/]"/>
+    <suppress checks="AnonInnerLength" files=".*[\\/]src[\\/]test[\\/]"/>
+    <suppress checks="IllegalCatch" files=".*[\\/]src[\\/]test[\\/]"/>
 
     <suppress id="ImportControlMain" message=".* - java\.time\..*"/>
 
