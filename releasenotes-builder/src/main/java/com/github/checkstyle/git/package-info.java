@@ -17,36 +17,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-package com.github.checkstyle.publishers;
-
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-
 /**
- * Class for Twitter post publication.
- *
- * @author Vladislav Lisetskii
+ * Contains classes for accessing Git repo.
  */
-public final class TwitterPublisher {
-
-    /** Private constructor. */
-    private TwitterPublisher() {
-    }
-
-    /**
-     * Publish post.
-     *
-     * @param consumerKey consumer key.
-     * @param consumerSecret consumer secret.
-     * @param accessToken access token.
-     * @param accessTokenSecret access token secret.
-     * @param post the exact post to publish.
-     * @throws TwitterException if an error occurs while publishing.
-     */
-    public static void publish(String consumerKey, String consumerSecret,
-            String accessToken, String accessTokenSecret, String post) throws TwitterException {
-        final Twitter twitter = Twitter.newBuilder().oAuthConsumer(consumerKey, consumerSecret)
-            .oAuthAccessToken(accessToken, accessTokenSecret).build();
-        twitter.v1().tweets().updateStatus(post);
-    }
-}
+package com.github.checkstyle.git;
