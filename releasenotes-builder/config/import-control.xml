@@ -22,10 +22,16 @@
     <allow class="com.google.common.base.Verify"/>
   </file>
 
-  <subpackage name="github">
+  <subpackage name="git">
     <allow class="com.google.common.base.Verify"/>
     <allow class="com.google.common.collect.Sets"/>
     <allow pkg="org.eclipse.jgit"/>
+  </subpackage>
+
+  <subpackage name="github">
+    <allow class="com.github.checkstyle.git.CsGit"/>
+    <allow pkg="org.eclipse.jgit.api.errors"/>
+    <allow pkg="org.eclipse.jgit.revwalk"/>
     <allow pkg="org.kohsuke.github"/>
   </subpackage>
 

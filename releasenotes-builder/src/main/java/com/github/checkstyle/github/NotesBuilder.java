@@ -20,8 +20,6 @@
 package com.github.checkstyle.github;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -30,24 +28,17 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.kohsuke.github.GHIssue;
 import org.kohsuke.github.GHIssueState;
 import org.kohsuke.github.GHLabel;
 import org.kohsuke.github.GHRepository;
-import org.kohsuke.github.GitHub;
 
+import com.github.checkstyle.git.CsGit;
 import com.github.checkstyle.globals.Constants;
 import com.github.checkstyle.globals.ReleaseNotesMessage;
 import com.github.checkstyle.globals.Result;
-import com.google.common.base.Verify;
-import com.google.common.collect.Sets;
 
 /**
  * Contains methods for release notes generation.
@@ -100,9 +91,9 @@ public final class NotesBuilder {
 
         final Result result = new Result();
 
-        final GHRepository remoteRepo = createRemoteRepo(authToken, remoteRepoPath);
+        final GHRepository remoteRepo = CsGitHub.createRemoteRepo(authToken, remoteRepoPath);
         final Set<RevCommit> commitsForRelease =
-            getCommitsBetweenReferences(localRepoPath, startRef, endRef);
+                CsGit.getCommitsBetweenReferences(localRepoPath, startRef, endRef);
         commitsForRelease.removeAll(getIgnoredCommits(commitsForRelease));
 
         final Set<Integer> processedIssueNumbers = new HashSet<>();
@@ -186,56 +177,6 @@ public final class NotesBuilder {
     }
 
     /**
-     * Creates the connection to the remote repository.
-     *
-     * @param authToken the authorization token.
-     * @param remoteRepoPath path to remote git repository.
-     * @return the remote repository object.
-     * @throws IOException if an I/O error occurs.
-     */
-    private static GHRepository createRemoteRepo(String authToken, String remoteRepoPath)
-            throws IOException {
-        final GitHub connection;
-        if (authToken == null) {
-            connection = GitHub.connectAnonymously();
-        }
-        else {
-            connection = GitHub.connectUsingOAuth(authToken);
-        }
-
-        return connection.getRepository(remoteRepoPath);
-    }
-
-    /**
-     * Returns a list of commits between two references.
-     *
-     * @param repoPath path to local git repository.
-     * @param startRef start reference.
-     * @param endRef end reference.
-     * @return a list of commits.
-     * @throws IOException if I/O error occurs.
-     * @throws GitAPIException if an error occurs when accessing Git API.
-     */
-    private static Set<RevCommit> getCommitsBetweenReferences(String repoPath, String startRef,
-            String endRef) throws IOException, GitAPIException {
-
-        final FileRepositoryBuilder builder = new FileRepositoryBuilder();
-        final Path path = Paths.get(repoPath);
-        final Repository repo = builder.findGitDir(path.toFile()).readEnvironment().build();
-
-        final ObjectId startCommit = getActualRefObjectId(repo, startRef);
-        Verify.verifyNotNull(startCommit, "Start reference \"" + startRef + "\" is invalid!");
-
-        final ObjectId endCommit = getActualRefObjectId(repo, endRef);
-        try (Git git = new Git(repo)) {
-            final Iterable<RevCommit> commits =
-                git.log().addRange(startCommit, endCommit).call();
-
-            return Sets.newLinkedHashSet(commits);
-        }
-    }
-
-    /**
      * Returns a set of ignored commits.
      * Ignored commits are 'revert' commits and commits which were reverted by the 'revert' commits
      * in current release.
@@ -263,28 +204,6 @@ public final class NotesBuilder {
             }
         }
         return ignoredCommits;
-    }
-
-    /**
-     * Returns actual SHA-1 object by commit reference.
-     *
-     * @param repo git repository.
-     * @param ref string representation of commit reference.
-     * @return actual SHA-1 object.
-     * @throws IOException if an I/O error occurs.
-     */
-    private static ObjectId getActualRefObjectId(Repository repo, String ref) throws IOException {
-        final ObjectId actualObjectId;
-        final Ref referenceObj = repo.findRef(ref);
-        if (referenceObj == null) {
-            actualObjectId = repo.resolve(ref);
-        }
-        else {
-            final Ref repoPeeled = repo.getRefDatabase().peel(referenceObj);
-            actualObjectId = Optional.ofNullable(repoPeeled.getPeeledObjectId())
-                .orElse(referenceObj.getObjectId());
-        }
-        return actualObjectId;
     }
 
     /**

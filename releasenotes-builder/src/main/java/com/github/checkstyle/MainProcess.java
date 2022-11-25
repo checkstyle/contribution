@@ -20,6 +20,9 @@
 package com.github.checkstyle;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -207,12 +210,14 @@ public final class MainProcess {
      * @param errors list of publication errors.
      */
     private static void runTwitterPublication(CliOptions cliOptions, List<String> errors) {
-        final TwitterPublisher twitterPublisher = new TwitterPublisher(
-            cliOptions.getOutputLocation() + TWITTER_FILENAME,
-            cliOptions.getTwitterConsumerKey(), cliOptions.getTwitterConsumerSecret(),
-            cliOptions.getTwitterAccessToken(), cliOptions.getTwitterAccessTokenSecret());
         try {
-            twitterPublisher.publish();
+            final String post = Files.readString(
+                    Paths.get(cliOptions.getOutputLocation() + TWITTER_FILENAME),
+                    StandardCharsets.UTF_8);
+
+            TwitterPublisher.publish(cliOptions.getTwitterConsumerKey(),
+                    cliOptions.getTwitterConsumerSecret(), cliOptions.getTwitterAccessToken(),
+                    cliOptions.getTwitterAccessTokenSecret(), post);
         }
         // -@cs[IllegalCatch] We should execute all publishers, so cannot fail-fast
         catch (Exception ex) {
