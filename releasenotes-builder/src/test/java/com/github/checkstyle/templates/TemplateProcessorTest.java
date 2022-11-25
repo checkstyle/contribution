@@ -52,12 +52,12 @@ import com.google.common.collect.Multimap;
 public class TemplateProcessorTest {
 
     private static final String MSG_RELEASE_IS_MINOR =
-        "[ERROR] Validation of release number failed. Release number is minor(1.0), but "
+        "[ERROR] Validation of release number failed. Release number is minor(1.0.0), but "
             + "release notes do not contain 'new' or 'breaking compatability' labels. Please "
             + "correct release number by running https://github.com/checkstyle/checkstyle/"
             + "actions/workflows/bump-version-and-update-milestone.yml";
     private static final String MSG_RELEASE_IS_PATCH =
-        "[ERROR] Validation of release number failed. Release number is a patch(1.0.0), but "
+        "[ERROR] Validation of release number failed. Release number is a patch(1.0.1), but "
             + "release notes contain 'new' or 'breaking compatability' labels. Please correct "
             + "release number by running https://github.com/checkstyle/checkstyle/actions/"
             + "workflows/bump-version-and-update-milestone.yml";
@@ -74,7 +74,7 @@ public class TemplateProcessorTest {
     @Test
     public void testGenerateOnlyBreakingCompatibility() throws Exception {
         final List<String> errors = MainProcess.runPostGenerationAndPublication(
-            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
+            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0.0")
                 .setGenerateAll(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
@@ -89,7 +89,7 @@ public class TemplateProcessorTest {
     @Test
     public void testGenerateOnlyNewFeature() throws Exception {
         final List<String> errors = MainProcess.runPostGenerationAndPublication(
-            createNotes(null, createAllNotes(), null, null, null), createBaseCliOptions()
+            createNotes(null, createAllNotes(), null, null, null), createBaseCliOptions("1.0.0")
                 .setGenerateAll(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
@@ -104,7 +104,7 @@ public class TemplateProcessorTest {
     @Test
     public void testGenerateOnlyBug() throws Exception {
         final List<String> errors = MainProcess.runPostGenerationAndPublication(
-            createNotes(null, null, createAllNotes(), null, null), createBaseCliOptions()
+            createNotes(null, null, createAllNotes(), null, null), createBaseCliOptions("1.0.1")
                 .setGenerateAll(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
@@ -119,7 +119,7 @@ public class TemplateProcessorTest {
     @Test
     public void testGenerateOnlyMisc() throws Exception {
         final List<String> errors = MainProcess.runPostGenerationAndPublication(
-            createNotes(null, null, null, createAllNotes(), null), createBaseCliOptions()
+            createNotes(null, null, null, createAllNotes(), null), createBaseCliOptions("1.0.1")
                 .setGenerateAll(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
@@ -133,7 +133,7 @@ public class TemplateProcessorTest {
     @Test
     public void testGenerateOnlyNewModule() throws Exception {
         final List<String> errors = MainProcess.runPostGenerationAndPublication(
-            createNotes(null, null, null, null, createAllNotes()), createBaseCliOptions()
+            createNotes(null, null, null, null, createAllNotes()), createBaseCliOptions("1.0.0")
                 .setGenerateAll(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
@@ -154,7 +154,7 @@ public class TemplateProcessorTest {
                 Collections.singletonList(createReleaseNotesMessage("Title 3", "Author 3")),
                 Collections.singletonList(createReleaseNotesMessage(4, "Title 4", "Author 4")),
                 Collections.singletonList(createReleaseNotesMessage("Title 5", "Author 5"))
-            ), createBaseCliOptions().setGenerateAll(true).build(), true);
+            ), createBaseCliOptions("1.0.0").setGenerateAll(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
 
@@ -168,7 +168,7 @@ public class TemplateProcessorTest {
     @Test
     public void testGenerateOnlyXdoc() throws Exception {
         final List<String> errors = MainProcess.runPostGenerationAndPublication(
-            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
+            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0.0")
                 .setGenerateXdoc(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
@@ -183,7 +183,7 @@ public class TemplateProcessorTest {
     @Test
     public void testGenerateOnlyTwitter() throws Exception {
         final List<String> errors = MainProcess.runPostGenerationAndPublication(
-            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
+            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0.0")
                 .setGenerateTw(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
@@ -198,7 +198,7 @@ public class TemplateProcessorTest {
     @Test
     public void testGenerateOnlyRss() throws Exception {
         final List<String> errors = MainProcess.runPostGenerationAndPublication(
-            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
+            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0.0")
                 .setGenerateRss(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
@@ -213,7 +213,7 @@ public class TemplateProcessorTest {
     @Test
     public void testGenerateOnlyMlist() throws Exception {
         final List<String> errors = MainProcess.runPostGenerationAndPublication(
-            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
+            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0.0")
                 .setGenerateMlist(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
@@ -228,7 +228,7 @@ public class TemplateProcessorTest {
     @Test
     public void testGenerateOnlyGitHub() throws Exception {
         final List<String> errors = MainProcess.runPostGenerationAndPublication(
-            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
+            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0.0")
                 .setGenerateGitHub(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
@@ -243,7 +243,7 @@ public class TemplateProcessorTest {
     @Test
     public void testGitHub() throws Exception {
         final List<String> errors = MainProcess.runPostGenerationAndPublication(
-            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions()
+            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0.0")
                 .setGenerateGitHub(true).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
@@ -276,7 +276,7 @@ public class TemplateProcessorTest {
     @Test
     public void testValidateNotesMinorNoNotes() throws Exception {
         final List<String> errors = MainProcess.validateNotes(
-            createNotes(null, null, null, null, null), createBaseCliOptions("1.0")
+            createNotes(null, null, null, null, null), createBaseCliOptions("1.0.0")
                 .setValidateVersion(true).build());
 
         Assert.assertEquals("one error", 1, errors.size());
@@ -286,7 +286,7 @@ public class TemplateProcessorTest {
     @Test
     public void testValidateNotesMinorBreaking() throws Exception {
         final List<String> errors = MainProcess.validateNotes(
-            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0")
+            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0.0")
                 .setValidateVersion(true).build());
 
         Assert.assertEquals("no errors", 0, errors.size());
@@ -295,7 +295,7 @@ public class TemplateProcessorTest {
     @Test
     public void testValidateNotesMinorNewFeature() throws Exception {
         final List<String> errors = MainProcess.validateNotes(
-            createNotes(null, createAllNotes(), null, null, null), createBaseCliOptions("1.0")
+            createNotes(null, createAllNotes(), null, null, null), createBaseCliOptions("1.0.0")
                 .setValidateVersion(true).build());
 
         Assert.assertEquals("no errors", 0, errors.size());
@@ -304,7 +304,7 @@ public class TemplateProcessorTest {
     @Test
     public void testValidateNotesMinorBug() throws Exception {
         final List<String> errors = MainProcess.validateNotes(
-            createNotes(null, null, createAllNotes(), null, null), createBaseCliOptions("1.0")
+            createNotes(null, null, createAllNotes(), null, null), createBaseCliOptions("1.0.0")
                 .setValidateVersion(true).build());
 
         Assert.assertEquals("one error", 1, errors.size());
@@ -314,7 +314,7 @@ public class TemplateProcessorTest {
     @Test
     public void testValidateNotesMinorMiscellaneous() throws Exception {
         final List<String> errors = MainProcess.validateNotes(
-            createNotes(null, null, null, createAllNotes(), null), createBaseCliOptions("1.0")
+            createNotes(null, null, null, createAllNotes(), null), createBaseCliOptions("1.0.0")
                 .setValidateVersion(true).build());
 
         Assert.assertEquals("one error", 1, errors.size());
@@ -324,7 +324,7 @@ public class TemplateProcessorTest {
     @Test
     public void testValidateNotesMinorNewModule() throws Exception {
         final List<String> errors = MainProcess.validateNotes(
-            createNotes(null, null, null, null, createAllNotes()), createBaseCliOptions("1.0")
+            createNotes(null, null, null, null, createAllNotes()), createBaseCliOptions("1.0.0")
                 .setValidateVersion(true).build());
 
         Assert.assertEquals("no errors", 0, errors.size());
@@ -334,7 +334,7 @@ public class TemplateProcessorTest {
     public void testValidateNotesMinorBugAndMiscellaneous() throws Exception {
         final List<String> errors = MainProcess.validateNotes(
             createNotes(null, null,
-                createAllNotes(), createAllNotes(), null), createBaseCliOptions("1.0")
+                createAllNotes(), createAllNotes(), null), createBaseCliOptions("1.0.0")
                 .setValidateVersion(true).build());
 
         Assert.assertEquals("one error", 1, errors.size());
@@ -345,7 +345,7 @@ public class TemplateProcessorTest {
     public void testValidateNotesMinorNewModuleNewFeatureAndBreaking() throws Exception {
         final List<String> errors = MainProcess.validateNotes(
             createNotes(createAllNotes(), createAllNotes(),
-                null, null, createAllNotes()), createBaseCliOptions("1.0")
+                null, null, createAllNotes()), createBaseCliOptions("1.0.0")
                 .setValidateVersion(true).build());
 
         Assert.assertEquals("no errors", 0, errors.size());
@@ -354,7 +354,7 @@ public class TemplateProcessorTest {
     @Test
     public void testValidateNotesPatchNoNotes() throws Exception {
         final List<String> errors = MainProcess.validateNotes(
-            createNotes(null, null, null, null, null), createBaseCliOptions("1.0.0")
+            createNotes(null, null, null, null, null), createBaseCliOptions("1.0.1")
                 .setValidateVersion(true).build());
 
         Assert.assertEquals("no errors", 0, errors.size());
@@ -363,7 +363,7 @@ public class TemplateProcessorTest {
     @Test
     public void testValidateNotesPatchBreaking() throws Exception {
         final List<String> errors = MainProcess.validateNotes(
-            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0.0")
+            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0.1")
                 .setValidateVersion(true).build());
 
         Assert.assertEquals("one error", 1, errors.size());
@@ -373,7 +373,7 @@ public class TemplateProcessorTest {
     @Test
     public void testValidateNotesPatchNewFeature() throws Exception {
         final List<String> errors = MainProcess.validateNotes(
-            createNotes(null, createAllNotes(), null, null, null), createBaseCliOptions("1.0.0")
+            createNotes(null, createAllNotes(), null, null, null), createBaseCliOptions("1.0.1")
                 .setValidateVersion(true).build());
 
         Assert.assertEquals("one error", 1, errors.size());
@@ -383,7 +383,7 @@ public class TemplateProcessorTest {
     @Test
     public void testValidateNotesPatchBug() throws Exception {
         final List<String> errors = MainProcess.validateNotes(
-            createNotes(null, null, createAllNotes(), null, null), createBaseCliOptions("1.0.0")
+            createNotes(null, null, createAllNotes(), null, null), createBaseCliOptions("1.0.1")
                 .setValidateVersion(true).build());
 
         Assert.assertEquals("no errors", 0, errors.size());
@@ -392,7 +392,7 @@ public class TemplateProcessorTest {
     @Test
     public void testValidateNotesPatchMiscellaneous() throws Exception {
         final List<String> errors = MainProcess.validateNotes(
-            createNotes(null, null, null, createAllNotes(), null), createBaseCliOptions("1.0.0")
+            createNotes(null, null, null, createAllNotes(), null), createBaseCliOptions("1.0.1")
                 .setValidateVersion(true).build());
 
         Assert.assertEquals("no errors", 0, errors.size());
@@ -401,7 +401,7 @@ public class TemplateProcessorTest {
     @Test
     public void testValidateNotesPatchNewModule() throws Exception {
         final List<String> errors = MainProcess.validateNotes(
-            createNotes(null, null, null, null, createAllNotes()), createBaseCliOptions("1.0.0")
+            createNotes(null, null, null, null, createAllNotes()), createBaseCliOptions("1.0.1")
                 .setValidateVersion(true).build());
 
         Assert.assertEquals("one error", 1, errors.size());
@@ -412,7 +412,7 @@ public class TemplateProcessorTest {
     public void testValidateNotesPatchNewFeatureNewModuleAndBreaking() throws Exception {
         final List<String> errors = MainProcess.validateNotes(
             createNotes(createAllNotes(), createAllNotes(),
-                null, null, createAllNotes()), createBaseCliOptions("1.0.0")
+                null, null, createAllNotes()), createBaseCliOptions("1.0.1")
                 .setValidateVersion(true).build());
 
         Assert.assertEquals("one error", 1, errors.size());
@@ -423,7 +423,7 @@ public class TemplateProcessorTest {
     public void testValidateNotesPatchBugAndMiscellaneous() throws Exception {
         final List<String> errors = MainProcess.validateNotes(
             createNotes(null, null,
-                createAllNotes(), createAllNotes(), null), createBaseCliOptions("1.0.0")
+                createAllNotes(), createAllNotes(), null), createBaseCliOptions("1.0.1")
                 .setValidateVersion(true).build());
 
         Assert.assertEquals("no errors", 0, errors.size());
@@ -448,7 +448,7 @@ public class TemplateProcessorTest {
     }
 
     private Builder createBaseCliOptions() {
-        return createBaseCliOptions("1.0.0");
+        return createBaseCliOptions("1.0.1");
     }
 
     private Builder createBaseCliOptions(String releaseNumber) {

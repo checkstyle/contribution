@@ -102,7 +102,6 @@ public final class MainProcess {
     public static List<String> validateNotes(Multimap<String, ReleaseNotesMessage> releaseNotes,
                                               CliOptions cliOptions) {
         final String releaseVersion = cliOptions.getReleaseNumber();
-        final long amountOfCommas = getAmountOfCommasInReleaseVersion(releaseVersion);
         final boolean containsNewOrBreakingCompatabilityLabel =
             releaseNotes.containsKey(Constants.NEW_FEATURE_LABEL)
                 || releaseNotes.containsKey(Constants.NEW_MODULE_LABEL)
@@ -113,14 +112,14 @@ public final class MainProcess {
         final String errorEnding = "Please correct release number by running https://github.com/"
             + "checkstyle/checkstyle/actions/workflows/bump-version-and-update-milestone.yml";
 
-        if (isPatch(amountOfCommas) && containsNewOrBreakingCompatabilityLabel) {
+        if (isPatch(releaseVersion) && containsNewOrBreakingCompatabilityLabel) {
             errors.add(
                 String.format("%s Release number is a patch(%s), but release notes contain 'new' "
                         + "or 'breaking compatability' labels. %s",
                     errorBeginning, releaseVersion, errorEnding)
             );
         }
-        else if (isMinor(amountOfCommas) && !containsNewOrBreakingCompatabilityLabel) {
+        else if (isMinor(releaseVersion) && !containsNewOrBreakingCompatabilityLabel) {
             errors.add(
                 String.format("%s Release number is minor(%s), but release notes do not contain "
                     + "'new' or 'breaking compatability' labels. %s",
@@ -132,36 +131,35 @@ public final class MainProcess {
     }
 
     /**
-     * Retrieves the amount of commas in the release version. For instance,
-     * 10.3.3 would return {@code 2}.
+     * Check if a release version is minor. A release version is minor when
+     * it ends with a zero(0), for example 10.4.0.
      *
-     * @param releaseVersion release number in the command line interface.
-     * @return amount of commas in release version.
+     * @param releaseVersion checkstyle release version.
+     * @return {@code true} if release version is minor.
      */
-    private static long getAmountOfCommasInReleaseVersion(String releaseVersion) {
-        return releaseVersion.chars().filter(character -> character == '.').count();
+    private static boolean isMinor(String releaseVersion) {
+        return endsWithZero(releaseVersion);
     }
 
     /**
-     * Returns {@code true} if amount of commas is 2. This means
-     * the release is a patch.
+     * Check if a release version is minor. A release version is minor when
+     * it ends with any other digit but a zero(0), for example 10.4.1.
      *
-     * @param amountOfCommas amount of commas in release number.
-     * @return {@code true} if amount of commas is 2.
+     * @param releaseVersion checkstyle release version.
+     * @return {@code true} if release version is patch.
      */
-    private static boolean isPatch(long amountOfCommas) {
-        return amountOfCommas == 2;
+    private static boolean isPatch(String releaseVersion) {
+        return !endsWithZero(releaseVersion);
     }
 
     /**
-     * Returns {@code true} if amount of commas is 1. This means
-     * the release is minor.
+     * Check if provided string ends with a zero(0).
      *
-     * @param amountOfCommas amount of commas in release number.
-     * @return {@code true} if amount of commas is 1.
+     * @param str string to check.
+     * @return {@code true} if string to check ends with a zero(0).
      */
-    private static boolean isMinor(long amountOfCommas) {
-        return amountOfCommas == 1;
+    private static boolean endsWithZero(String str) {
+        return !str.isEmpty() && str.charAt(str.length() - 1) == '0';
     }
 
     /**
