@@ -1,4 +1,4 @@
-Checkstyle 1.0.0 - https://checkstyle.org/releasenotes.html#Release_1.0.0
+Checkstyle 1.0.1 - https://checkstyle.org/releasenotes.html#Release_1.0.1
 
 
 

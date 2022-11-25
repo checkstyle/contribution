@@ -1,5 +1,5 @@
   
-    <section name="Release 1.0.0">
+    <section name="Release 1.0.1">
       <div class="releaseDate">XX.XX.XXXX</div>
       <p>Notes:</p>
         <ul>
