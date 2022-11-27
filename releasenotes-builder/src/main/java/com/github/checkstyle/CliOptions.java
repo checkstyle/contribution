@@ -55,10 +55,6 @@ public final class CliOptions {
     private boolean generateXdoc;
     /** Whether to generate a post for Twitter. */
     private boolean generateTw;
-    /** Whether to generate a post for RSS. */
-    private boolean generateRss;
-    /** Whether to generate a post for Mailing List. */
-    private boolean generateMlist;
     /** Whether to generate a post for GitHub Page. */
     private boolean generateGitHub;
 
@@ -66,10 +62,6 @@ public final class CliOptions {
     private String xdocTemplate;
     /** File location for twitter template. */
     private String twitterTemplate;
-    /** File location for rss template. */
-    private String rssTemplate;
-    /** File location for mailing list template. */
-    private String mlistTemplate;
     /** File location for GitHub page template. */
     private String gitHubTemplate;
 
@@ -88,22 +80,6 @@ public final class CliOptions {
     private String twitterAccessTokenSecret;
     /** Properties for connection to Twitter. */
     private String twitterProperties;
-
-    /** Whether to publish to mailing list. */
-    private boolean publishMlist;
-    /** Username to publish to mailing list. */
-    private String mlistUsername;
-    /** Password to publish to mailing list. */
-    private String mlistPassword;
-    /** Properties to publish to mailing list. */
-    private String mlistProperties;
-
-    /** Whether to publish to RSS. */
-    private boolean publishSfRss;
-    /** Bearer token for Sourceforge to publish to RSS. */
-    private String sfRssBearerToken;
-    /** Properties to publish to RSS. */
-    private String sfRssProperties;
 
     /** Validate that release version matches issues labels. */
     private boolean validateVersion;
@@ -203,24 +179,6 @@ public final class CliOptions {
     }
 
     /**
-     * Returns whether to generate a post for RSS.
-     *
-     * @return whether to generate a post for RSS
-     */
-    public boolean isGenerateRss() {
-        return generateRss;
-    }
-
-    /**
-     * Returns whether to generate a post for mailing list.
-     *
-     * @return whether to generate a post for mailing list
-     */
-    public boolean isGenerateMlist() {
-        return generateMlist;
-    }
-
-    /**
      * Returns whether to generate a post for GitHub page.
      *
      * @return whether to generate a post for GitHub page.
@@ -245,24 +203,6 @@ public final class CliOptions {
      */
     public String getTwitterTemplate() {
         return twitterTemplate;
-    }
-
-    /**
-     * Returns the file location for rss template.
-     *
-     * @return the file location for rss template
-     */
-    public String getRssTemplate() {
-        return rssTemplate;
-    }
-
-    /**
-     * Returns the file location for mailing list template.
-     *
-     * @return the file location for mailing list template
-     */
-    public String getMlistTemplate() {
-        return mlistTemplate;
     }
 
     /**
@@ -326,51 +266,6 @@ public final class CliOptions {
      */
     public String getTwitterAccessTokenSecret() {
         return twitterAccessTokenSecret;
-    }
-
-    /**
-     * Returns whether to publish to mailing list.
-     *
-     * @return whether to publish to mailing list
-     */
-    public boolean isPublishMlist() {
-        return publishMlist;
-    }
-
-    /**
-     * Returns the username to publish to mailing list.
-     *
-     * @return the username to publish to mailing list
-     */
-    public String getMlistUsername() {
-        return mlistUsername;
-    }
-
-    /**
-     * Returns the password to publish to mailing list.
-     *
-     * @return the password to publish to mailing list
-     */
-    public String getMlistPassword() {
-        return mlistPassword;
-    }
-
-    /**
-     * Returns whether to publish to RSS.
-     *
-     * @return whether to publish to RSS
-     */
-    public boolean isPublishSfRss() {
-        return publishSfRss;
-    }
-
-    /**
-     * Returns the bearer token for Sourceforge to publish to RSS.
-     *
-     * @return the bearer token for Sourceforge to publish to RSS
-     */
-    public String getSfRssBearerToken() {
-        return sfRssBearerToken;
     }
 
     /**
@@ -531,32 +426,6 @@ public final class CliOptions {
         }
 
         /**
-         * Specify flag to generate RSS post.
-         *
-         * @param genRss flag to generate RSS post
-         * @return Builder Object
-         * @noinspection ReturnOfInnerClass
-         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
-         */
-        public Builder setGenerateRss(boolean genRss) {
-            generateRss = genRss;
-            return this;
-        }
-
-        /**
-         * Spacify flag to generate Mail-list post.
-         *
-         * @param genMlist flag to generate mail-list post
-         * @return Builder Object
-         * @noinspection ReturnOfInnerClass
-         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
-         */
-        public Builder setGenerateMlist(boolean genMlist) {
-            generateMlist = genMlist;
-            return this;
-        }
-
-        /**
          * Specify GitHub post template.
          *
          * @param genGitHub gitHub post
@@ -592,32 +461,6 @@ public final class CliOptions {
          */
         public Builder setTwitterTemplate(String twitterTemp) {
             twitterTemplate = twitterTemp;
-            return this;
-        }
-
-        /**
-         * Specify rss template.
-         *
-         * @param rssTemp rss template
-         * @return Builder Object
-         * @noinspection ReturnOfInnerClass
-         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
-         */
-        public Builder setRssTemplate(String rssTemp) {
-            rssTemplate = rssTemp;
-            return this;
-        }
-
-        /**
-         * Specify mailing list template.
-         *
-         * @param mlistTemp mailing list template
-         * @return Builder Object
-         * @noinspection ReturnOfInnerClass
-         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
-         */
-        public Builder setMlistTemplate(String mlistTemp) {
-            mlistTemplate = mlistTemp;
             return this;
         }
 
@@ -726,97 +569,6 @@ public final class CliOptions {
         }
 
         /**
-         * Specify to do publication only for mailing list.
-         *
-         * @param pubMlist flag to publish to mailing list
-         * @return Builder Object
-         * @noinspection ReturnOfInnerClass
-         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
-         */
-        public Builder setPublishMlist(boolean pubMlist) {
-            publishMlist = pubMlist;
-            return this;
-        }
-
-        /**
-         * Specify username to publish to mailing list.
-         *
-         * @param username mailing list username
-         * @return Builder Object
-         * @noinspection ReturnOfInnerClass
-         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
-         */
-        public Builder setMlistUsername(String username) {
-            mlistUsername = username;
-            return this;
-        }
-
-        /**
-         * Specify password to publish to mailing list.
-         *
-         * @param password mailing list password
-         * @return Builder Object
-         * @noinspection ReturnOfInnerClass
-         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
-         */
-        public Builder setMlistPassword(String password) {
-            mlistPassword = password;
-            return this;
-        }
-
-        /**
-         * Specify mailing list properties.
-         *
-         * @param mlistProps mailing list properties
-         * @return Builder Object
-         * @noinspection ReturnOfInnerClass
-         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
-         */
-        public Builder setMlistProperties(String mlistProps) {
-            mlistProperties = mlistProps;
-            return this;
-        }
-
-        /**
-         * Specify to do publication only for RSS.
-         *
-         * @param pubRss flag to publish to RSS
-         * @return Builder Object
-         * @noinspection ReturnOfInnerClass
-         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
-         */
-        public Builder setPublishSfRss(boolean pubRss) {
-            publishSfRss = pubRss;
-            return this;
-        }
-
-        /**
-         * Specify mailing list properties.
-         *
-         * @param token sourceforge bearer token
-         * @return Builder Object
-         * @noinspection ReturnOfInnerClass
-         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
-         */
-        public Builder setSfBearerToken(String token) {
-            sfRssBearerToken = token;
-            return this;
-        }
-
-        /**
-         * Specify RSS properties.
-         *
-         * @param rssProps mailing list properties
-         * @return Builder Object
-         * @noinspection ReturnOfInnerClass
-         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
-         */
-        public Builder setSfRssProperties(String rssProps) {
-            sfRssProperties = rssProps;
-            return this;
-        }
-
-        /**
          * Specify whether to validate release version.
          *
          * @param validate flag to validate release version.
@@ -859,21 +611,6 @@ public final class CliOptions {
                     "Access token secret for Twitter is expected!");
             }
 
-            if (shouldLoadMlistProperties()) {
-                Verify.verifyNotNull(mlistProperties, "Properties file for mailing list is "
-                    + "expected if some of the following options are not entered: mlistUsername, "
-                    + "mlistPassword.");
-                loadMlistProperties();
-                Verify.verifyNotNull(mlistUsername, "Username for mailing list is expected!");
-                Verify.verifyNotNull(mlistPassword, "Password for mailing list is expected!");
-            }
-
-            if ((publishAllSocial || publishSfRss) && sfRssBearerToken == null) {
-                Verify.verifyNotNull(sfRssProperties, "Properties file for RSS is expected"
-                        + " if some of the following options are not entered: sfRssBearerToken.");
-                loadSfRssProperties();
-                Verify.verifyNotNull(sfRssBearerToken, "sfRssBearerToken for RSS is expected!");
-            }
             return getNewCliOptionsInstance();
         }
 
@@ -922,57 +659,6 @@ public final class CliOptions {
         }
 
         /**
-         * Whether RSS properties should be loaded.
-         *
-         * @return true, if RSS properties should be loaded.
-         */
-        private boolean shouldLoadMlistProperties() {
-            return (publishAllSocial || publishMlist)
-                    && (mlistUsername == null || mlistPassword == null);
-        }
-
-        /**
-         * Load options for mailing list publication from properties if they were not set.
-         *
-         * @throws IllegalStateException when there is problem to load properties
-         */
-        private void loadMlistProperties() {
-            try (InputStream propStream = new FileInputStream(mlistProperties)) {
-                final Properties props = new Properties();
-                props.load(propStream);
-
-                if (mlistUsername == null) {
-                    mlistUsername = props.getProperty(CliProcessor.OPTION_MLIST_USERNAME);
-                }
-                if (mlistPassword == null) {
-                    mlistPassword = props.getProperty(CliProcessor.OPTION_MLIST_PASSWORD);
-                }
-            }
-            catch (IOException ex) {
-                throw new IllegalStateException("Mailing list properties file has access problems"
-                    + " (mlistProperties=" + mlistProperties + ')', ex);
-            }
-        }
-
-        /**
-         * Load options for RSS publication from properties if they were not set.
-         *
-         * @throws IllegalStateException when there is problem to load properties
-         */
-        private void loadSfRssProperties() {
-            try (InputStream propStream = new FileInputStream(sfRssProperties)) {
-                final Properties props = new Properties();
-                props.load(propStream);
-
-                sfRssBearerToken = props.getProperty(CliProcessor.OPTION_SF_RSS_BEARER_TOKEN);
-            }
-            catch (IOException ex) {
-                throw new IllegalStateException("RSS properties file has access problems"
-                    + " (sfRssProperties=" + sfRssProperties + ')', ex);
-            }
-        }
-
-        /**
          * Get new CliOptions instance.
          *
          * @return new CliOptions instance.
@@ -990,13 +676,9 @@ public final class CliOptions {
             cliOptions.generateAll = generateAll;
             cliOptions.generateXdoc = generateXdoc;
             cliOptions.generateTw = generateTw;
-            cliOptions.generateRss = generateRss;
-            cliOptions.generateMlist = generateMlist;
             cliOptions.generateGitHub = generateGitHub;
             cliOptions.xdocTemplate = xdocTemplate;
             cliOptions.twitterTemplate = twitterTemplate;
-            cliOptions.rssTemplate = rssTemplate;
-            cliOptions.mlistTemplate = mlistTemplate;
             cliOptions.gitHubTemplate = gitHubTemplate;
             cliOptions.publishAllSocial = publishAllSocial;
             cliOptions.publishTwit = publishTwit;
@@ -1005,13 +687,6 @@ public final class CliOptions {
             cliOptions.twitterAccessToken = twitterAccessToken;
             cliOptions.twitterAccessTokenSecret = twitterAccessTokenSecret;
             cliOptions.twitterProperties = twitterProperties;
-            cliOptions.publishMlist = publishMlist;
-            cliOptions.mlistUsername = mlistUsername;
-            cliOptions.mlistPassword = mlistPassword;
-            cliOptions.mlistProperties = mlistProperties;
-            cliOptions.publishSfRss = publishSfRss;
-            cliOptions.sfRssBearerToken = sfRssBearerToken;
-            cliOptions.sfRssProperties = sfRssProperties;
             cliOptions.validateVersion = validateVersion;
             return cliOptions;
         }
