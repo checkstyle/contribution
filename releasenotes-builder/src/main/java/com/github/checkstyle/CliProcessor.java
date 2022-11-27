@@ -48,14 +48,6 @@ public class CliProcessor {
     /** Name for the option 'twitterAccessTokenSecret'. */
     public static final String OPTION_TWITTER_ACCESS_TOKEN_SECRET = "twitterAccessTokenSecret";
 
-    /** Name for the option 'mlistUsername'. */
-    public static final String OPTION_MLIST_USERNAME = "mlistUsername";
-    /** Name for the option 'mlistPassword'. */
-    public static final String OPTION_MLIST_PASSWORD = "mlistPassword";
-
-    /** Name for the option 'sfRssBearerToken'. */
-    public static final String OPTION_SF_RSS_BEARER_TOKEN = "sfRssBearerToken";
-
     /** Name for the option 'localRepoPath'. */
     private static final String OPTION_LOCAL_REPO_PATH = "localRepoPath";
     /** Name for the option 'remoteRepoPath'. */
@@ -77,10 +69,6 @@ public class CliProcessor {
     private static final String OPTION_GENERATE_XDOC = "generateXdoc";
     /** Name for the option 'generateTwit'. */
     private static final String OPTION_GENERATE_TW = "generateTwit";
-    /** Name for the option 'generateRss'. */
-    private static final String OPTION_GENERATE_RSS = "generateRss";
-    /** Name for the option 'generateMlist'. */
-    private static final String OPTION_GENERATE_MLIST = "generateMlist";
     /** Name for the option 'generateGitHub'. */
     private static final String OPTION_GENERATE_GITHUB = "generateGitHub";
 
@@ -88,10 +76,6 @@ public class CliProcessor {
     private static final String OPTION_XDOC_TEMPLATE = "xdocTemplate";
     /** Name for the option 'twitterTemplate'. */
     private static final String OPTION_TWITTER_TEMPLATE = "twitterTemplate";
-    /** Name for the option 'rssTemplate'. */
-    private static final String OPTION_RSS_TEMPLATE = "rssTemplate";
-    /** Name for the option 'xdocTemplate'. */
-    private static final String OPTION_MLIST_TEMPLATE = "mlistTemplate";
     /** Name for the option 'gitHubTemplate'. */
     private static final String OPTION_GITHUB_TEMPLATE = "gitHubTemplate";
 
@@ -99,17 +83,9 @@ public class CliProcessor {
     private static final String OPTION_PUBLISH_ALL_SOCIAL = "publishAllSocial";
     /** Name for the option 'publishTwit'. */
     private static final String OPTION_PUBLISH_TWIT = "publishTwit";
-    /** Name for the option 'publishMlist'. */
-    private static final String OPTION_PUBLISH_MLIST = "publishMlist";
-    /** Name for the option 'publishSfRss'. */
-    private static final String OPTION_PUBLISH_SF_RSS = "publishSfRss";
 
     /** Name for the option 'twitterProperties'. */
     private static final String OPTION_TWITTER_PROPERTIES = "twitterProperties";
-    /** Name for the option 'mlistProperties'. */
-    private static final String OPTION_MLIST_PROPERTIES = "mlistProperties";
-    /** Name for the option 'sfRssProperties'. */
-    private static final String OPTION_SF_RSS_PROPERTIES = "sfRssProperties";
 
     /** Name for the option 'validateVersion'. */
     private static final String OPTION_VALIDATE_VERSION = "validateVersion";
@@ -199,18 +175,6 @@ public class CliProcessor {
                 result.add(String.format("Could not find twitter template '%s'!", path));
             }
         }
-        if (cmdLine.hasOption(OPTION_RSS_TEMPLATE)) {
-            final String path = cmdLine.getOptionValue(OPTION_RSS_TEMPLATE);
-            if (!Files.isRegularFile(Paths.get(path))) {
-                result.add(String.format("Could not find rss template '%s'!", path));
-            }
-        }
-        if (cmdLine.hasOption(OPTION_MLIST_TEMPLATE)) {
-            final String path = cmdLine.getOptionValue(OPTION_MLIST_TEMPLATE);
-            if (!Files.isRegularFile(Paths.get(path))) {
-                result.add(String.format("Could not find mailing list template '%s'!", path));
-            }
-        }
         if (cmdLine.hasOption(OPTION_GITHUB_TEMPLATE)) {
             final String path = cmdLine.getOptionValue(OPTION_GITHUB_TEMPLATE);
             if (!Files.isRegularFile(Paths.get(path))) {
@@ -237,12 +201,9 @@ public class CliProcessor {
             .setGenerateAll(cmdLine.hasOption(OPTION_GENERATE_ALL))
             .setGenerateXdoc(cmdLine.hasOption(OPTION_GENERATE_XDOC))
             .setGenerateTw(cmdLine.hasOption(OPTION_GENERATE_TW))
-            .setGenerateRss(cmdLine.hasOption(OPTION_GENERATE_RSS))
             .setGenerateGitHub(cmdLine.hasOption(OPTION_GENERATE_GITHUB))
             .setXdocTemplate(cmdLine.getOptionValue(OPTION_XDOC_TEMPLATE))
             .setTwitterTemplate(cmdLine.getOptionValue(OPTION_TWITTER_TEMPLATE))
-            .setRssTemplate(cmdLine.getOptionValue(OPTION_RSS_TEMPLATE))
-            .setMlistTemplate(cmdLine.getOptionValue(OPTION_MLIST_TEMPLATE))
             .setGitHubTemplate(cmdLine.getOptionValue(OPTION_GITHUB_TEMPLATE))
             .setPublishAllSocial(cmdLine.hasOption(OPTION_PUBLISH_ALL_SOCIAL))
             .setPublishTwit(cmdLine.hasOption(OPTION_PUBLISH_TWIT))
@@ -252,13 +213,6 @@ public class CliProcessor {
             .setTwitterAccessTokenSecret(
                 cmdLine.getOptionValue(OPTION_TWITTER_ACCESS_TOKEN_SECRET))
             .setTwitterProperties(cmdLine.getOptionValue(OPTION_TWITTER_PROPERTIES))
-            .setPublishMlist(cmdLine.hasOption(OPTION_PUBLISH_MLIST))
-            .setMlistUsername(cmdLine.getOptionValue(OPTION_MLIST_USERNAME))
-            .setMlistPassword(cmdLine.getOptionValue(OPTION_MLIST_PASSWORD))
-            .setMlistProperties(cmdLine.getOptionValue(OPTION_MLIST_PROPERTIES))
-            .setPublishSfRss(cmdLine.hasOption(OPTION_PUBLISH_SF_RSS))
-            .setSfBearerToken(cmdLine.getOptionValue(OPTION_SF_RSS_BEARER_TOKEN))
-            .setSfRssProperties(cmdLine.getOptionValue(OPTION_SF_RSS_PROPERTIES))
             .setValidateVersion(cmdLine.hasOption(OPTION_VALIDATE_VERSION))
             .build();
     }
@@ -281,29 +235,18 @@ public class CliProcessor {
         options.addOption(OPTION_GENERATE_ALL, "Whether all posts should be generated.");
         options.addOption(OPTION_GENERATE_XDOC, "Whether a xdoc should be generated.");
         options.addOption(OPTION_GENERATE_TW, "Whether a twitter post should be generated.");
-        options.addOption(OPTION_GENERATE_RSS, "Whether a RSS post should be generated.");
-        options.addOption(OPTION_GENERATE_MLIST,
-            "Whether a mailing list post should be generated.");
         options.addOption(OPTION_XDOC_TEMPLATE, true, "Path to xdoc template.");
         options.addOption(OPTION_TWITTER_TEMPLATE, true, "Path to twitter template.");
         options.addOption(OPTION_GENERATE_GITHUB,
                           "Whether a github post should be generated.");
-        options.addOption(OPTION_RSS_TEMPLATE, true, "Path to rss template.");
-        options.addOption(OPTION_MLIST_USERNAME, true, "Username for mailing list.");
-        options.addOption(OPTION_MLIST_PASSWORD, true, "Password for mailing list.");
-        options.addOption(OPTION_MLIST_TEMPLATE, true, "Path to mailing list template.");
         options.addOption(OPTION_PUBLISH_ALL_SOCIAL, "Whether to publish all social posts.");
         options.addOption(OPTION_PUBLISH_TWIT, "Whether to publish a Twitter post.");
-        options.addOption(OPTION_PUBLISH_MLIST, "Whether to publish a mailing list post.");
-        options.addOption(OPTION_PUBLISH_SF_RSS, "Whether to publish a RSS post.");
         options.addOption(OPTION_GITHUB_TEMPLATE, true, "Path to github page template.");
         options.addOption(OPTION_TWITTER_CONSUMER_KEY, true, "Consumer key for Twitter.");
         options.addOption(OPTION_TWITTER_CONSUMER_SECRET, true, "Consumer secret for Twitter.");
         options.addOption(OPTION_TWITTER_ACCESS_TOKEN, true, "Access token for Twitter.");
         options.addOption(OPTION_TWITTER_ACCESS_TOKEN_SECRET, true,
             "Access token secret for Twitter.");
-        options.addOption(OPTION_SF_RSS_BEARER_TOKEN, true,
-                "Bearer token for RSS.");
         options.addOption(OPTION_TWITTER_PROPERTIES, true,
             "Properties for publication on Twitter.");
         options.addOption(OPTION_VALIDATE_VERSION, false,

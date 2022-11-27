@@ -81,8 +81,6 @@ public class TemplateProcessorTest {
 
         assertFile("xdocBreakingCompatibility.txt", MainProcess.XDOC_FILENAME);
         assertFile("twitterBreakingCompatibility.txt", MainProcess.TWITTER_FILENAME);
-        assertFile("rssMlistBreakingCompatibility.txt", MainProcess.RSS_FILENAME);
-        assertFile("rssMlistBreakingCompatibility.txt", MainProcess.MLIST_FILENAME);
         assertFile("githubPageBreakingCompatibility.txt", MainProcess.GITHUB_FILENAME);
     }
 
@@ -96,8 +94,6 @@ public class TemplateProcessorTest {
 
         assertFile("xdocNew.txt", MainProcess.XDOC_FILENAME);
         assertFile("twitterNew.txt", MainProcess.TWITTER_FILENAME);
-        assertFile("rssMlistNew.txt", MainProcess.RSS_FILENAME);
-        assertFile("rssMlistNew.txt", MainProcess.MLIST_FILENAME);
         assertFile("githubPageNew.txt", MainProcess.GITHUB_FILENAME);
     }
 
@@ -111,8 +107,6 @@ public class TemplateProcessorTest {
 
         assertFile("xdocBug.txt", MainProcess.XDOC_FILENAME);
         assertFile("twitterBug.txt", MainProcess.TWITTER_FILENAME);
-        assertFile("rssMlistBug.txt", MainProcess.RSS_FILENAME);
-        assertFile("rssMlistBug.txt", MainProcess.MLIST_FILENAME);
         assertFile("githubPageBug.txt", MainProcess.GITHUB_FILENAME);
     }
 
@@ -126,8 +120,6 @@ public class TemplateProcessorTest {
 
         assertFile("xdocMisc.txt", MainProcess.XDOC_FILENAME);
         assertFile("twitterMisc.txt", MainProcess.TWITTER_FILENAME);
-        assertFile("rssMlistMisc.txt", MainProcess.RSS_FILENAME);
-        assertFile("rssMlistMisc.txt", MainProcess.MLIST_FILENAME);
     }
 
     @Test
@@ -140,8 +132,6 @@ public class TemplateProcessorTest {
 
         assertFile("xdocNew.txt", MainProcess.XDOC_FILENAME);
         assertFile("twitterNew.txt", MainProcess.TWITTER_FILENAME);
-        assertFile("rssMlistNew.txt", MainProcess.RSS_FILENAME);
-        assertFile("rssMlistNew.txt", MainProcess.MLIST_FILENAME);
         assertFile("githubPageNew.txt", MainProcess.GITHUB_FILENAME);
     }
 
@@ -160,8 +150,6 @@ public class TemplateProcessorTest {
 
         assertFile("xdocAll.txt", MainProcess.XDOC_FILENAME);
         assertFile("twitterAll.txt", MainProcess.TWITTER_FILENAME);
-        assertFile("rssMlistAll.txt", MainProcess.RSS_FILENAME);
-        assertFile("rssMlistAll.txt", MainProcess.MLIST_FILENAME);
         assertFile("githubPageAll.txt", MainProcess.GITHUB_FILENAME);
     }
 
@@ -175,8 +163,6 @@ public class TemplateProcessorTest {
 
         assertFile("xdocBreakingCompatibility.txt", MainProcess.XDOC_FILENAME);
         assertFile(MainProcess.TWITTER_FILENAME);
-        assertFile(MainProcess.RSS_FILENAME);
-        assertFile(MainProcess.MLIST_FILENAME);
         assertFile(MainProcess.GITHUB_FILENAME);
     }
 
@@ -190,39 +176,7 @@ public class TemplateProcessorTest {
 
         assertFile(MainProcess.XDOC_FILENAME);
         assertFile("twitterBreakingCompatibility.txt", MainProcess.TWITTER_FILENAME);
-        assertFile(MainProcess.RSS_FILENAME);
-        assertFile(MainProcess.MLIST_FILENAME);
         assertFile(MainProcess.GITHUB_FILENAME);
-    }
-
-    @Test
-    public void testGenerateOnlyRss() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
-            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0.0")
-                .setGenerateRss(true).build(), true);
-
-        Assert.assertEquals("no errors", 0, errors.size());
-
-        assertFile(MainProcess.XDOC_FILENAME);
-        assertFile(MainProcess.TWITTER_FILENAME);
-        assertFile("rssMlistBreakingCompatibility.txt", MainProcess.RSS_FILENAME);
-        assertFile(MainProcess.MLIST_FILENAME);
-        assertFile(MainProcess.GITHUB_FILENAME);
-    }
-
-    @Test
-    public void testGenerateOnlyMlist() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
-            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0.0")
-                .setGenerateMlist(true).build(), true);
-
-        Assert.assertEquals("no errors", 0, errors.size());
-
-        assertFile(MainProcess.XDOC_FILENAME);
-        assertFile(MainProcess.TWITTER_FILENAME);
-        assertFile(MainProcess.RSS_FILENAME);
-        assertFile(MainProcess.GITHUB_FILENAME);
-        assertFile("rssMlistBreakingCompatibility.txt", MainProcess.MLIST_FILENAME);
     }
 
     @Test
@@ -235,8 +189,6 @@ public class TemplateProcessorTest {
 
         assertFile(MainProcess.XDOC_FILENAME);
         assertFile(MainProcess.TWITTER_FILENAME);
-        assertFile(MainProcess.RSS_FILENAME);
-        assertFile(MainProcess.MLIST_FILENAME);
         assertFile("githubPageBreakingCompatibility.txt", MainProcess.GITHUB_FILENAME);
     }
 
@@ -261,20 +213,17 @@ public class TemplateProcessorTest {
                         createAllNotes()),
                 createBaseCliOptions().setGenerateAll(true).setXdocTemplate(template)
                         .setTwitterTemplate(template)
-                        .setRssTemplate(template).setMlistTemplate(template)
                         .setGitHubTemplate(template).build(), true);
 
         Assert.assertEquals("no errors", 0, errors.size());
 
         assertFile("customTemplate.txt", MainProcess.XDOC_FILENAME);
         assertFile("customTemplate.txt", MainProcess.TWITTER_FILENAME);
-        assertFile("customTemplate.txt", MainProcess.RSS_FILENAME);
-        assertFile("customTemplate.txt", MainProcess.MLIST_FILENAME);
         assertFile("customTemplate.txt", MainProcess.GITHUB_FILENAME);
     }
 
     @Test
-    public void testValidateNotesMinorNoNotes() throws Exception {
+    public void testValidateNotesMinorNoNotes() {
         final List<String> errors = MainProcess.validateNotes(
             createNotes(null, null, null, null, null), createBaseCliOptions("1.0.0")
                 .setValidateVersion(true).build());
@@ -352,7 +301,7 @@ public class TemplateProcessorTest {
     }
 
     @Test
-    public void testValidateNotesPatchNoNotes() throws Exception {
+    public void testValidateNotesPatchNoNotes() {
         final List<String> errors = MainProcess.validateNotes(
             createNotes(null, null, null, null, null), createBaseCliOptions("1.0.1")
                 .setValidateVersion(true).build());

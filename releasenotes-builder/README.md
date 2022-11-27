@@ -21,14 +21,13 @@ Jar file which includes all required dependencies will be located at
 java -jar releasenotes-builder-1.0-all.jar -localRepoPath <arg> \
      -remoteRepoPath <arg> -startRef <arg> [-endRef <arg>] \
      -releaseNumber <arg> [-outputLocation <args>] [-githubAuthToken <arg>] \
-     [-generateAll] [-generateXdoc] [-generateTwit] [-generateRss] [-generateMlist]
+     [-generateAll] [-generateXdoc] [-generateTwit]
      [-generateGitHub] \
-     [-xdocTemplate] [-twitterTemplate] [-rssTemplate] [-mlistTemplate] [-gitHubTemplate] \
+     [-xdocTemplate] [-twitterTemplate] [-gitHubTemplate] \
      [-publishAllSocial] [-publishTwit] [-twitterConsumerKey <arg>]
      [-twitterConsumerSecret <arg>] \
      [-twitterAccessToken <arg>] [-twitterAccessTokenSecret <arg>] [-twitterProperties <arg>] \
-     [-publishMlist] [-mlistUsername <arg>] [-mlistPassword <arg>] [-mlistProperties <arg>] \
-     [-publishSfRss] [-sfRssBearerToken <arg>] [-sfRssProperties <arg>] [-validateVersion]
+     [-validateVersion]
 ```
 
 Release notes builder will do the generation of release notes and report warnings and errors to
@@ -61,12 +60,6 @@ private connection to remote repository. For example, `0f95514f36200ebaadb8f28d8
 **generateTwit** - (optional) generate a release notes post to publish on Twitter.
 Generated file will be ```twitter.txt```.
 
-**generateRss** - (optional) generate a release notes post to publish on RSS.
-Generated file will be ```rss.txt```.
-
-**generateMlist** - (optional) generate a release notes post to publish on Mailing list.
-Generated file will be ```mailing_list.txt```.
-
 **generateGitHub** - (optional) generate a release notes post to publish on GitHub Page.
 Generated file will be ```github_post.txt```.
 
@@ -76,10 +69,6 @@ Generated files will be at specified output location.
 **xdocTemplate** - (optional) path to the external xdoc freemarker template file.
 
 **twitterTemplate** - (optional) path to the external twitter freemarker template file.
-
-**rssTemplate** - (optional) path to the external rss freemarker template file.
-
-**mlistTemplate** - (optional) path to the external mailing list freemarker template file.
 
 **publishAllSocial** - (optional) publish all possible posts. Posts are read from generated files.
 
@@ -96,20 +85,6 @@ Generated files will be at specified output location.
 **twitterAccessTokenSecret** - (optional) access token secret for Twitter.
 
 **twitterProperties** - (optional) path to a properties file for connection to Twitter.
-
-**publishMlist** - (optional) publish to mailing list from ```mailing_list.txt```.
-
-**mlistUsername** - (optional) username key for mailing list.
-
-**mlistPassword** - (optional) password key for mailing list.
-
-**mlistProperties** - (optional) path to a properties file for publication to mailing list.
-
-**publishSfRss** - (optional) publish to RSS from ```RSS.txt```.
-
-**sfRssBearerToken** - (optional) bearer token for Sourceforge to publish to RSS.
-
-**sfRssProperties** - (optional) path to a properties file for publication to RSS.
 
 **validateVersion** - (optional) validate that release version matches issues labels.
 
