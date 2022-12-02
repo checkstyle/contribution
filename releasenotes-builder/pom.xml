@@ -13,7 +13,7 @@
         <maven.plugin.guava.version>31.1-jre</maven.plugin.guava.version>
         <maven.plugin.antrun.version>3.1.0</maven.plugin.antrun.version>
         <maven.plugin.github-api.version>1.313</maven.plugin.github-api.version>
-        <maven.plugin.jgit.version>6.3.0.202209071007-r</maven.plugin.jgit.version>
+        <maven.plugin.jgit.version>6.4.0.202211300538-r</maven.plugin.jgit.version>
         <maven.plugin.slf4j.version>2.0.5</maven.plugin.slf4j.version>
         <maven.plugin.freemarker.version>2.3.31</maven.plugin.freemarker.version>
         <maven.plugin.apache.commons.cli.version>1.5.0</maven.plugin.apache.commons.cli.version>
