@@ -30,11 +30,7 @@ public final class RevCommitUtil {
     private RevCommitUtil() {
     }
 
-    public static RevCommit create(String commitMessage) {
-        return create("CheckstyleUser", commitMessage);
-    }
-
-    public static RevCommit create(String author, String commitMessage) {
+    public static RevCommit create(String commitMessage, String author) {
         final String commitData = String.format("tree %040x\n"
             + "parent %040x\n"
             + "author " + author + " <test@email.com> %d +0100\n"

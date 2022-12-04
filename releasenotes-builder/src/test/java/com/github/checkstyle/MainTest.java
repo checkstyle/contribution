@@ -19,89 +19,13 @@
 
 package com.github.checkstyle;
 
-import static org.junit.Assert.fail;
 import static org.kohsuke.github.GHIssueState.OPEN;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.kohsuke.github.GHFileNotFoundException;
-import org.kohsuke.github.GHIssue;
-import org.kohsuke.github.GHRepository;
-import org.mockito.MockedStatic;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
-import com.github.checkstyle.git.CsGit;
-import com.github.checkstyle.github.CsGitHub;
-import com.github.checkstyle.globals.Constants;
-import com.github.checkstyle.internal.GhIssueUtil;
-import com.github.checkstyle.internal.RevCommitUtil;
-import com.github.checkstyle.publishers.TwitterPublisher;
+import com.github.checkstyle.internal.AbstractReleaseNotesTestSupport;
 
-public class MainTest {
-    private static final String MISC = Constants.MISCELLANEOUS_LABEL;
-
-    private static final Set<RevCommit> TEST_COMMITS = new HashSet<>();
-
-    private static final Set<GHIssue> TEST_ISSUES = new HashSet<>();
-
-    private static final Answer<GHIssue> ISSUE_ANSWER = new Answer<GHIssue>() {
-        @Override
-        public GHIssue answer(InvocationOnMock invocation) throws Throwable {
-            final int findIssue = invocation.getArgument(0);
-
-            for (GHIssue item : TEST_ISSUES) {
-                if (item.getNumber() == findIssue) {
-                    return item;
-                }
-            }
-
-            throw new GHFileNotFoundException("Cannot find Issue: " + findIssue);
-        }
-    };
-
-    @Rule
-    public final TemporaryFolder temporaryFolder = new TemporaryFolder();
-
-    @BeforeClass
-    public static void setUp() throws IOException {
-        // GHRepository
-        final GHRepository mockGhRepository = mock(GHRepository.class);
-        when(mockGhRepository.getIssue(anyInt())).then(ISSUE_ANSWER);
-        // CsGitHub static
-        final MockedStatic<CsGitHub> mockCsGitHubStatic = mockStatic(CsGitHub.class);
-        mockCsGitHubStatic.when(() -> CsGitHub.createRemoteRepo(anyString(), anyString()))
-                .thenReturn(mockGhRepository);
-        // CsGit static
-        final MockedStatic<CsGit> mockCsGitStatic = mockStatic(CsGit.class);
-        mockCsGitStatic.when(
-                () -> CsGit.getCommitsBetweenReferences(anyString(), anyString(), anyString()))
-                .thenReturn(TEST_COMMITS);
-
-        // TwitterPublisher static
-        mockStatic(TwitterPublisher.class);
-    }
-
-    @Before
-    public void reset() {
-        TEST_COMMITS.clear();
-    }
+public class MainTest extends AbstractReleaseNotesTestSupport {
 
     @Test
     public void testValidateVersion() {
@@ -112,13 +36,13 @@ public class MainTest {
     }
 
     @Test
-    public void testNoCommits() throws Exception {
+    public void testNoCommits() {
         runMainAndAssertReturnCode(0,
-                "-localRepoPath", temporaryFolder.newFolder().getAbsolutePath(),
+                "-localRepoPath", getTempFolder().getAbsolutePath(),
                 "-remoteRepoPath", "checkstyle/checkstyle",
                 "-startRef", "12345678",
                 "-releaseNumber", "10.0.1",
-                "-outputLocation", temporaryFolder.newFolder().getAbsolutePath(),
+                "-outputLocation", getTempFolder().getAbsolutePath(),
                 "-githubAuthToken", "TOKEN",
                 "-generateAll",
                 "-publishTwit",
@@ -131,15 +55,15 @@ public class MainTest {
     }
 
     @Test
-    public void testUnknownCommit() throws Exception {
-        TEST_COMMITS.add(RevCommitUtil.create("Hello World"));
+    public void testUnknownCommit() {
+        addCommit("Hello World", "CheckstyleUser");
 
         runMainAndAssertReturnCode(0,
-                "-localRepoPath", temporaryFolder.newFolder().getAbsolutePath(),
+                "-localRepoPath", getTempFolder().getAbsolutePath(),
                 "-remoteRepoPath", "checkstyle/checkstyle",
                 "-startRef", "12345678",
                 "-releaseNumber", "10.0.1",
-                "-outputLocation", temporaryFolder.newFolder().getAbsolutePath(),
+                "-outputLocation", getTempFolder().getAbsolutePath(),
                 "-githubAuthToken", "TOKEN",
                 "-generateAll",
                 "-publishTwit",
@@ -152,15 +76,15 @@ public class MainTest {
     }
 
     @Test
-    public void testIssueCommitWithIssueNotFound() throws IOException {
-        TEST_COMMITS.add(RevCommitUtil.create("Issue #1: Hello World"));
+    public void testIssueCommitWithIssueNotFound() {
+        addCommit("Issue #1: Hello World", "CheckstyleUser");
 
         runMainAndAssertReturnCode(-2,
-                "-localRepoPath", temporaryFolder.newFolder().getAbsolutePath(),
+                "-localRepoPath", getTempFolder().getAbsolutePath(),
                 "-remoteRepoPath", "checkstyle/checkstyle",
                 "-startRef", "12345678",
                 "-releaseNumber", "10.0.1",
-                "-outputLocation", temporaryFolder.newFolder().getAbsolutePath(),
+                "-outputLocation", getTempFolder().getAbsolutePath(),
                 "-githubAuthToken", "TOKEN",
                 "-generateAll",
                 "-publishTwit",
@@ -173,16 +97,16 @@ public class MainTest {
     }
 
     @Test
-    public void testIssueCommit() throws Exception {
-        TEST_COMMITS.add(RevCommitUtil.create("Issue #1: Hello World"));
-        TEST_ISSUES.add(GhIssueUtil.create(1, OPEN, "Hello World", MISC));
+    public void testIssueCommit() {
+        addCommit("Issue #1: Hello World", "CheckstyleUser");
+        addIssue(1, OPEN, "Hello World", MISC);
 
         runMainAndAssertReturnCode(0,
-                "-localRepoPath", temporaryFolder.newFolder().getAbsolutePath(),
+                "-localRepoPath", getTempFolder().getAbsolutePath(),
                 "-remoteRepoPath", "checkstyle/checkstyle",
                 "-startRef", "12345678",
                 "-releaseNumber", "10.0.1",
-                "-outputLocation", temporaryFolder.newFolder().getAbsolutePath(),
+                "-outputLocation", getTempFolder().getAbsolutePath(),
                 "-githubAuthToken", "TOKEN",
                 "-generateAll",
                 "-publishTwit",
@@ -192,35 +116,5 @@ public class MainTest {
                 "-twitterAccessTokenSecret", "SECRET",
                 "-validateVersion"
         );
-    }
-
-    /**
-     * Helper method to run {@link Main#main(String...)} and verify the exit code.
-     * Uses {@link Mockito#mockStatic(Class)} to mock method {@link Runtime#exit(int)}
-     * to avoid VM termination.
-     *
-     * @param expectedExitCode the expected exit code to verify
-     * @param arguments the command line arguments
-     * @noinspection CallToSystemExit, ResultOfMethodCallIgnored
-     * @noinspectionreason CallToSystemExit - test helper method requires workaround to
-     *      verify exit code
-     * @noinspectionreason ResultOfMethodCallIgnored - temporary suppression until #11589
-     */
-    private static void runMainAndAssertReturnCode(int expectedExitCode, String... arguments) {
-        final Runtime mock = mock(Runtime.class);
-        try (MockedStatic<Runtime> runtime = mockStatic(Runtime.class)) {
-            runtime.when(Runtime::getRuntime)
-                    .thenReturn(mock);
-            Main.main(arguments);
-        }
-        catch (Exception exception) {
-            fail(String.format("Unexpected exception: %s", exception));
-        }
-        if (expectedExitCode == 0) {
-            verify(mock, never()).exit(expectedExitCode);
-        }
-        else {
-            verify(mock).exit(expectedExitCode);
-        }
     }
 }
