@@ -20,11 +20,11 @@
 package com.github.checkstyle.templates;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.kohsuke.github.GHIssueState.CLOSED;
 
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -37,11 +37,11 @@ import com.github.checkstyle.CliOptions.Builder;
 import com.github.checkstyle.MainProcess;
 import com.github.checkstyle.globals.Constants;
 import com.github.checkstyle.globals.ReleaseNotesMessage;
-import com.github.checkstyle.internal.AbstractPathTestSupport;
+import com.github.checkstyle.internal.AbstractReleaseNotesTestSupport;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
-public class TemplateProcessorTest extends AbstractPathTestSupport {
+public class TemplateProcessorTest extends AbstractReleaseNotesTestSupport {
 
     private static final String MSG_RELEASE_IS_MINOR =
         "[ERROR] Validation of release number failed. Release number is minor(1.0.0), but "
@@ -53,6 +53,9 @@ public class TemplateProcessorTest extends AbstractPathTestSupport {
             + "release notes contain 'new' or 'breaking compatability' labels. Please correct "
             + "release number by running https://github.com/checkstyle/checkstyle/actions/"
             + "workflows/bump-version-and-update-milestone.yml";
+
+    private static final String MSG_EXECUTION_SUCCEEDED = System.lineSeparator()
+            + "Execution succeeded!" + System.lineSeparator();
 
     @Test
     public void testGenerateOnlyBreakingCompatibility() throws Exception {
@@ -120,16 +123,29 @@ public class TemplateProcessorTest extends AbstractPathTestSupport {
 
     @Test
     public void testGenerateAll() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
-            createNotes(
-                Collections.singletonList(createReleaseNotesMessage("Title 1", "Author 1")),
-                Collections.singletonList(createReleaseNotesMessage(2, "Title 2", "Author 2")),
-                Collections.singletonList(createReleaseNotesMessage("Title 3", "Author 3")),
-                Collections.singletonList(createReleaseNotesMessage(4, "Title 4", "Author 4")),
-                Collections.singletonList(createReleaseNotesMessage("Title 5", "Author 5"))
-            ), createBaseCliOptions("1.0.0").setGenerateAll(true).build(), true);
+        addCommit("Issue #1: Title 1", "Author 1");
+        addCommit("Issue #2: Title 2", "Author 2");
+        addCommit("Issue #3: Title 3", "Author 3");
+        addCommit("Title 4", "Author 4");
+        addCommit("Issue #5: Title 5", "Author 5");
+        addIssue(1, CLOSED, "Title 1", BREAKING);
+        addIssue(2, CLOSED, "Title 2", NEW_FEATURE);
+        addIssue(3, CLOSED, "Title 3", BUG);
+        addIssue(5, CLOSED, "Title 5", NEW_MODULE);
 
-        Assert.assertEquals("no errors", 0, errors.size());
+        runMainAndAssertReturnCode(0,
+                "-localRepoPath", getTempFolder().getAbsolutePath(),
+                "-remoteRepoPath", "checkstyle/checkstyle",
+                "-startRef", "12345678",
+                "-releaseNumber", "1.0.0",
+                "-outputLocation", getTempFolder().getAbsolutePath(),
+                "-githubAuthToken", "TOKEN",
+                "-generateAll",
+                "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
 
         assertFile("xdocAll.txt", MainProcess.XDOC_FILENAME);
         assertFile("twitterAll.txt", MainProcess.TWITTER_FILENAME);
