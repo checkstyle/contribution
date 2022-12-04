@@ -19,26 +19,17 @@
 
 package com.github.checkstyle.templates;
 
-import java.io.BufferedReader;
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.kohsuke.github.GHIssue;
 
 import com.github.checkstyle.CliOptions;
@@ -46,10 +37,11 @@ import com.github.checkstyle.CliOptions.Builder;
 import com.github.checkstyle.MainProcess;
 import com.github.checkstyle.globals.Constants;
 import com.github.checkstyle.globals.ReleaseNotesMessage;
+import com.github.checkstyle.internal.AbstractPathTestSupport;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 
-public class TemplateProcessorTest {
+public class TemplateProcessorTest extends AbstractPathTestSupport {
 
     private static final String MSG_RELEASE_IS_MINOR =
         "[ERROR] Validation of release number failed. Release number is minor(1.0.0), but "
@@ -61,15 +53,6 @@ public class TemplateProcessorTest {
             + "release notes contain 'new' or 'breaking compatability' labels. Please correct "
             + "release number by running https://github.com/checkstyle/checkstyle/actions/"
             + "workflows/bump-version-and-update-milestone.yml";
-
-    @Rule
-    public final TemporaryFolder temporaryFolder = new TemporaryFolder();
-
-    @Before
-    public void setup() throws IOException {
-        temporaryFolder.delete();
-        temporaryFolder.create();
-    }
 
     @Test
     public void testGenerateOnlyBreakingCompatibility() throws Exception {
@@ -205,7 +188,7 @@ public class TemplateProcessorTest {
     @Test
     public void testGenerateCustomTemplate() throws Exception {
         final File file = temporaryFolder.newFile("temp.template");
-        FileUtils.writeStringToFile(file, "hello world");
+        FileUtils.writeStringToFile(file, "hello world", UTF_8);
         final String template = file.getAbsolutePath();
 
         final List<String> errors = MainProcess.runPostGenerationAndPublication(
@@ -403,7 +386,7 @@ public class TemplateProcessorTest {
     private Builder createBaseCliOptions(String releaseNumber) {
         final Builder result = CliOptions.newBuilder();
 
-        result.setOutputLocation(temporaryFolder.getRoot().getAbsolutePath() + File.separator);
+        result.setOutputLocation(getTempFolder().getAbsolutePath() + File.separator);
         result.setRemoteRepoPath("checkstyle/checkstyle");
         result.setReleaseNumber(releaseNumber);
         result.setLocalRepoPath("dummy");
@@ -454,45 +437,6 @@ public class TemplateProcessorTest {
         numberField.set(issue, number);
 
         return new ReleaseNotesMessage(issue, author);
-    }
-
-    private void assertFile(String expectedName, String actualName) throws IOException {
-        final String expectedXdoc =
-                getFileContents(getPath(expectedName).toFile());
-        final String actualXdoc = getFileContents(new File(temporaryFolder.getRoot(), actualName))
-                .replace(LocalDate.now()
-                                .format(DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.US)),
-                        "XX.XX.XXXX");
-
-        Assert.assertEquals("expected xdoc", expectedXdoc, actualXdoc);
-    }
-
-    private void assertFile(String actualName) {
-        Assert.assertFalse("file does not exist",
-            new File(temporaryFolder.getRoot(), actualName).exists());
-    }
-
-    private static String getFileContents(File file) throws IOException {
-        final StringBuilder result = new StringBuilder(256);
-
-        try (BufferedReader br = Files.newBufferedReader(file.toPath())) {
-            do {
-                final String line = br.readLine();
-
-                if (line == null) {
-                    break;
-                }
-
-                result.append(line);
-                result.append('\n');
-            } while (true);
-        }
-
-        return result.toString();
-    }
-
-    private static Path getPath(String fileName) {
-        return Paths.get("src/test/resources/com/github/checkstyle/" + fileName).toAbsolutePath();
     }
 
 }
