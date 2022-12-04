@@ -19,6 +19,7 @@
 
 package com.github.checkstyle;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -590,6 +591,9 @@ public final class CliOptions {
             }
             if (outputLocation == null) {
                 outputLocation = "";
+            }
+            else if (!outputLocation.endsWith(File.separator)) {
+                outputLocation += File.separator;
             }
             Verify.verifyNotNull(localRepoPath,
                 "Path to a local git repository should not be null!");
