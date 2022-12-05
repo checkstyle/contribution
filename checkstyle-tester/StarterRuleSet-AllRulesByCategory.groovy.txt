@@ -120,7 +120,13 @@ ruleset {
     EmptyMethodInAbstractClass
     FinalClassWithProtectedMember
     ImplementationAsType
-    Instanceof
+    // 'Instanceof' rule encourages users to prefer polymorphism
+    // over usage of`instanceof` operator, we generally have no
+    // need for such complex design in our scripts. We will leave
+    // rule active, and disable by class name as needed.
+    Instanceof {
+        ignoreTypeNames = 'Boolean'
+    }
     LocaleSetDefault
     NestedForLoop
     PrivateFieldCouldBeFinal
