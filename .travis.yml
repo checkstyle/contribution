@@ -8,19 +8,15 @@ cache:
   directories:
     - ~/.m2
 
-addons:
-  apt:
-    packages:
-      - xmlstarlet
-      - ruby
-      - groovy
-      - ant-optional
+before_install:
+  - sudo apt update
 
 branches:
   only:
     - master
 
 install:
+  - sudo apt install -y groovy xmlstarlet ant-optional ruby
   - gem install mdl
 
 
