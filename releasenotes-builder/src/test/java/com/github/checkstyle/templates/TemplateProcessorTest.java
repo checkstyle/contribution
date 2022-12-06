@@ -23,47 +23,28 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.kohsuke.github.GHIssueState.CLOSED;
 
 import java.io.File;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
-import org.kohsuke.github.GHIssue;
 
-import com.github.checkstyle.CliOptions;
-import com.github.checkstyle.CliOptions.Builder;
 import com.github.checkstyle.MainProcess;
-import com.github.checkstyle.globals.Constants;
-import com.github.checkstyle.globals.ReleaseNotesMessage;
 import com.github.checkstyle.internal.AbstractReleaseNotesTestSupport;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 
 public class TemplateProcessorTest extends AbstractReleaseNotesTestSupport {
-
-    private static final String MSG_RELEASE_IS_MINOR =
-        "[ERROR] Validation of release number failed. Release number is minor(1.0.0), but "
-            + "release notes do not contain 'new' or 'breaking compatability' labels. Please "
-            + "correct release number by running https://github.com/checkstyle/checkstyle/"
-            + "actions/workflows/bump-version-and-update-milestone.yml";
-    private static final String MSG_RELEASE_IS_PATCH =
-        "[ERROR] Validation of release number failed. Release number is a patch(1.0.1), but "
-            + "release notes contain 'new' or 'breaking compatability' labels. Please correct "
-            + "release number by running https://github.com/checkstyle/checkstyle/actions/"
-            + "workflows/bump-version-and-update-milestone.yml";
-
-    private static final String MSG_EXECUTION_SUCCEEDED = System.lineSeparator()
-            + "Execution succeeded!" + System.lineSeparator();
-
     @Test
     public void testGenerateOnlyBreakingCompatibility() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
-            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0.0")
-                .setGenerateAll(true).build(), true);
+        createAllIssues(BREAKING);
+        createAllCommits();
 
-        Assert.assertEquals("no errors", 0, errors.size());
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "1.0.0",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
 
         assertFile("xdocBreakingCompatibility.txt", MainProcess.XDOC_FILENAME);
         assertFile("twitterBreakingCompatibility.txt", MainProcess.TWITTER_FILENAME);
@@ -72,11 +53,17 @@ public class TemplateProcessorTest extends AbstractReleaseNotesTestSupport {
 
     @Test
     public void testGenerateOnlyNewFeature() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
-            createNotes(null, createAllNotes(), null, null, null), createBaseCliOptions("1.0.0")
-                .setGenerateAll(true).build(), true);
+        createAllIssues(NEW_FEATURE);
+        createAllCommits();
 
-        Assert.assertEquals("no errors", 0, errors.size());
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "1.0.0",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
 
         assertFile("xdocNew.txt", MainProcess.XDOC_FILENAME);
         assertFile("twitterNew.txt", MainProcess.TWITTER_FILENAME);
@@ -85,11 +72,17 @@ public class TemplateProcessorTest extends AbstractReleaseNotesTestSupport {
 
     @Test
     public void testGenerateOnlyBug() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
-            createNotes(null, null, createAllNotes(), null, null), createBaseCliOptions("1.0.1")
-                .setGenerateAll(true).build(), true);
+        createAllIssues(BUG);
+        createAllCommits();
 
-        Assert.assertEquals("no errors", 0, errors.size());
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "1.0.1",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
 
         assertFile("xdocBug.txt", MainProcess.XDOC_FILENAME);
         assertFile("twitterBug.txt", MainProcess.TWITTER_FILENAME);
@@ -98,11 +91,17 @@ public class TemplateProcessorTest extends AbstractReleaseNotesTestSupport {
 
     @Test
     public void testGenerateOnlyMisc() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
-            createNotes(null, null, null, createAllNotes(), null), createBaseCliOptions("1.0.1")
-                .setGenerateAll(true).build(), true);
+        createAllIssues(MISC);
+        createAllCommits();
 
-        Assert.assertEquals("no errors", 0, errors.size());
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "1.0.1",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
 
         assertFile("xdocMisc.txt", MainProcess.XDOC_FILENAME);
         assertFile("twitterMisc.txt", MainProcess.TWITTER_FILENAME);
@@ -110,11 +109,17 @@ public class TemplateProcessorTest extends AbstractReleaseNotesTestSupport {
 
     @Test
     public void testGenerateOnlyNewModule() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
-            createNotes(null, null, null, null, createAllNotes()), createBaseCliOptions("1.0.0")
-                .setGenerateAll(true).build(), true);
+        createAllIssues(NEW_MODULE);
+        createAllCommits();
 
-        Assert.assertEquals("no errors", 0, errors.size());
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "1.0.0",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
 
         assertFile("xdocNew.txt", MainProcess.XDOC_FILENAME);
         assertFile("twitterNew.txt", MainProcess.TWITTER_FILENAME);
@@ -133,15 +138,10 @@ public class TemplateProcessorTest extends AbstractReleaseNotesTestSupport {
         addIssue(3, CLOSED, "Title 3", BUG);
         addIssue(5, CLOSED, "Title 5", NEW_MODULE);
 
-        runMainAndAssertReturnCode(0,
-                "-localRepoPath", getTempFolder().getAbsolutePath(),
-                "-remoteRepoPath", "checkstyle/checkstyle",
-                "-startRef", "12345678",
-                "-releaseNumber", "1.0.0",
-                "-outputLocation", getTempFolder().getAbsolutePath(),
-                "-githubAuthToken", "TOKEN",
-                "-generateAll",
-                "-validateVersion"
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "1.0.0",
+            "-generateAll",
+            "-validateVersion"
         );
 
         Assert.assertEquals("expected error output", "", systemErr.getLog());
@@ -154,11 +154,17 @@ public class TemplateProcessorTest extends AbstractReleaseNotesTestSupport {
 
     @Test
     public void testGenerateOnlyXdoc() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
-            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0.0")
-                .setGenerateXdoc(true).build(), true);
+        createAllIssues(BREAKING);
+        createAllCommits();
 
-        Assert.assertEquals("no errors", 0, errors.size());
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "1.0.0",
+            "-generateXdoc",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
 
         assertFile("xdocBreakingCompatibility.txt", MainProcess.XDOC_FILENAME);
         assertFile(MainProcess.TWITTER_FILENAME);
@@ -167,11 +173,17 @@ public class TemplateProcessorTest extends AbstractReleaseNotesTestSupport {
 
     @Test
     public void testGenerateOnlyTwitter() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
-            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0.0")
-                .setGenerateTw(true).build(), true);
+        createAllIssues(BREAKING);
+        createAllCommits();
 
-        Assert.assertEquals("no errors", 0, errors.size());
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "1.0.0",
+            "-generateTwit",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
 
         assertFile(MainProcess.XDOC_FILENAME);
         assertFile("twitterBreakingCompatibility.txt", MainProcess.TWITTER_FILENAME);
@@ -180,11 +192,17 @@ public class TemplateProcessorTest extends AbstractReleaseNotesTestSupport {
 
     @Test
     public void testGenerateOnlyGitHub() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
-            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0.0")
-                .setGenerateGitHub(true).build(), true);
+        createAllIssues(BREAKING);
+        createAllCommits();
 
-        Assert.assertEquals("no errors", 0, errors.size());
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "1.0.0",
+            "-generateGitHub",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
 
         assertFile(MainProcess.XDOC_FILENAME);
         assertFile(MainProcess.TWITTER_FILENAME);
@@ -193,11 +211,18 @@ public class TemplateProcessorTest extends AbstractReleaseNotesTestSupport {
 
     @Test
     public void testGitHub() throws Exception {
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
-            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0.0")
-                .setGenerateGitHub(true).build(), true);
+        createAllIssues(BREAKING);
+        createAllCommits();
 
-        Assert.assertEquals("no errors", 0, errors.size());
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "1.0.0",
+            "-generateGitHub",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
+
         assertFile("githubPageBreakingCompatibility.txt", MainProcess.GITHUB_FILENAME);
     }
 
@@ -207,252 +232,59 @@ public class TemplateProcessorTest extends AbstractReleaseNotesTestSupport {
         FileUtils.writeStringToFile(file, "hello world", UTF_8);
         final String template = file.getAbsolutePath();
 
-        final List<String> errors = MainProcess.runPostGenerationAndPublication(
-                createNotes(createAllNotes(), createAllNotes(), createAllNotes(), createAllNotes(),
-                        createAllNotes()),
-                createBaseCliOptions().setGenerateAll(true).setXdocTemplate(template)
-                        .setTwitterTemplate(template)
-                        .setGitHubTemplate(template).build(), true);
+        createAllIssues(BREAKING, MISC, NEW_FEATURE, NEW_FEATURE, BUG);
+        createAllCommits();
 
-        Assert.assertEquals("no errors", 0, errors.size());
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "1.0.0",
+            "-xdocTemplate", template,
+            "-twitterTemplate", template,
+            "-gitHubTemplate", template,
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
 
         assertFile("customTemplate.txt", MainProcess.XDOC_FILENAME);
         assertFile("customTemplate.txt", MainProcess.TWITTER_FILENAME);
         assertFile("customTemplate.txt", MainProcess.GITHUB_FILENAME);
     }
 
-    @Test
-    public void testValidateNotesMinorNoNotes() {
-        final List<String> errors = MainProcess.validateNotes(
-            createNotes(null, null, null, null, null), createBaseCliOptions("1.0.0")
-                .setValidateVersion(true).build());
-
-        Assert.assertEquals("one error", 1, errors.size());
-        Assert.assertEquals(errors.get(0), MSG_RELEASE_IS_MINOR);
-    }
-
-    @Test
-    public void testValidateNotesMinorBreaking() throws Exception {
-        final List<String> errors = MainProcess.validateNotes(
-            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0.0")
-                .setValidateVersion(true).build());
-
-        Assert.assertEquals("no errors", 0, errors.size());
-    }
-
-    @Test
-    public void testValidateNotesMinorNewFeature() throws Exception {
-        final List<String> errors = MainProcess.validateNotes(
-            createNotes(null, createAllNotes(), null, null, null), createBaseCliOptions("1.0.0")
-                .setValidateVersion(true).build());
-
-        Assert.assertEquals("no errors", 0, errors.size());
-    }
-
-    @Test
-    public void testValidateNotesMinorBug() throws Exception {
-        final List<String> errors = MainProcess.validateNotes(
-            createNotes(null, null, createAllNotes(), null, null), createBaseCliOptions("1.0.0")
-                .setValidateVersion(true).build());
-
-        Assert.assertEquals("one error", 1, errors.size());
-        Assert.assertEquals(errors.get(0), MSG_RELEASE_IS_MINOR);
-    }
-
-    @Test
-    public void testValidateNotesMinorMiscellaneous() throws Exception {
-        final List<String> errors = MainProcess.validateNotes(
-            createNotes(null, null, null, createAllNotes(), null), createBaseCliOptions("1.0.0")
-                .setValidateVersion(true).build());
-
-        Assert.assertEquals("one error", 1, errors.size());
-        Assert.assertEquals(errors.get(0), MSG_RELEASE_IS_MINOR);
-    }
-
-    @Test
-    public void testValidateNotesMinorNewModule() throws Exception {
-        final List<String> errors = MainProcess.validateNotes(
-            createNotes(null, null, null, null, createAllNotes()), createBaseCliOptions("1.0.0")
-                .setValidateVersion(true).build());
-
-        Assert.assertEquals("no errors", 0, errors.size());
-    }
-
-    @Test
-    public void testValidateNotesMinorBugAndMiscellaneous() throws Exception {
-        final List<String> errors = MainProcess.validateNotes(
-            createNotes(null, null,
-                createAllNotes(), createAllNotes(), null), createBaseCliOptions("1.0.0")
-                .setValidateVersion(true).build());
-
-        Assert.assertEquals("one error", 1, errors.size());
-        Assert.assertEquals(errors.get(0), MSG_RELEASE_IS_MINOR);
-    }
-
-    @Test
-    public void testValidateNotesMinorNewModuleNewFeatureAndBreaking() throws Exception {
-        final List<String> errors = MainProcess.validateNotes(
-            createNotes(createAllNotes(), createAllNotes(),
-                null, null, createAllNotes()), createBaseCliOptions("1.0.0")
-                .setValidateVersion(true).build());
-
-        Assert.assertEquals("no errors", 0, errors.size());
-    }
-
-    @Test
-    public void testValidateNotesPatchNoNotes() {
-        final List<String> errors = MainProcess.validateNotes(
-            createNotes(null, null, null, null, null), createBaseCliOptions("1.0.1")
-                .setValidateVersion(true).build());
-
-        Assert.assertEquals("no errors", 0, errors.size());
-    }
-
-    @Test
-    public void testValidateNotesPatchBreaking() throws Exception {
-        final List<String> errors = MainProcess.validateNotes(
-            createNotes(createAllNotes(), null, null, null, null), createBaseCliOptions("1.0.1")
-                .setValidateVersion(true).build());
-
-        Assert.assertEquals("one error", 1, errors.size());
-        Assert.assertEquals(errors.get(0), MSG_RELEASE_IS_PATCH);
-    }
-
-    @Test
-    public void testValidateNotesPatchNewFeature() throws Exception {
-        final List<String> errors = MainProcess.validateNotes(
-            createNotes(null, createAllNotes(), null, null, null), createBaseCliOptions("1.0.1")
-                .setValidateVersion(true).build());
-
-        Assert.assertEquals("one error", 1, errors.size());
-        Assert.assertEquals(errors.get(0), MSG_RELEASE_IS_PATCH);
-    }
-
-    @Test
-    public void testValidateNotesPatchBug() throws Exception {
-        final List<String> errors = MainProcess.validateNotes(
-            createNotes(null, null, createAllNotes(), null, null), createBaseCliOptions("1.0.1")
-                .setValidateVersion(true).build());
-
-        Assert.assertEquals("no errors", 0, errors.size());
-    }
-
-    @Test
-    public void testValidateNotesPatchMiscellaneous() throws Exception {
-        final List<String> errors = MainProcess.validateNotes(
-            createNotes(null, null, null, createAllNotes(), null), createBaseCliOptions("1.0.1")
-                .setValidateVersion(true).build());
-
-        Assert.assertEquals("no errors", 0, errors.size());
-    }
-
-    @Test
-    public void testValidateNotesPatchNewModule() throws Exception {
-        final List<String> errors = MainProcess.validateNotes(
-            createNotes(null, null, null, null, createAllNotes()), createBaseCliOptions("1.0.1")
-                .setValidateVersion(true).build());
-
-        Assert.assertEquals("one error", 1, errors.size());
-        Assert.assertEquals(errors.get(0), MSG_RELEASE_IS_PATCH);
-    }
-
-    @Test
-    public void testValidateNotesPatchNewFeatureNewModuleAndBreaking() throws Exception {
-        final List<String> errors = MainProcess.validateNotes(
-            createNotes(createAllNotes(), createAllNotes(),
-                null, null, createAllNotes()), createBaseCliOptions("1.0.1")
-                .setValidateVersion(true).build());
-
-        Assert.assertEquals("one error", 1, errors.size());
-        Assert.assertEquals(errors.get(0), MSG_RELEASE_IS_PATCH);
-    }
-
-    @Test
-    public void testValidateNotesPatchBugAndMiscellaneous() throws Exception {
-        final List<String> errors = MainProcess.validateNotes(
-            createNotes(null, null,
-                createAllNotes(), createAllNotes(), null), createBaseCliOptions("1.0.1")
-                .setValidateVersion(true).build());
-
-        Assert.assertEquals("no errors", 0, errors.size());
-    }
-
-    private static List<ReleaseNotesMessage> createAllNotes() throws Exception {
-        return Arrays.asList(
-            createReleaseNotesMessage("Mock issue title 1", "Author 1"),
-            createReleaseNotesMessage("Mock issue title 2", "Author 3, Author 4"),
-            createReleaseNotesMessage(123, "Mock issue title 3", "Author 5"),
-            createReleaseNotesMessage(123, "Mock issue title 4", "Author 6, Author 7"),
-            createReleaseNotesMessage(123, "Mock issue title 5 ==> test", "Author 6, Author 7"),
-            createReleaseNotesMessage("Mock issue title 6 L12345678901234567890123456789012345678"
+    private void createAllIssues(String... labels) {
+        for (String label: labels) {
+            addIssue(1, CLOSED, "Mock issue title 1", label);
+            addIssue(2, CLOSED, "Mock issue title 2", label);
+            addIssue(3, CLOSED, "Mock issue title 3", label);
+            addIssue(4, CLOSED, "Mock issue title 4", label);
+            addIssue(5, CLOSED, "Mock issue title 5 ==> test", label);
+            addIssue(6, CLOSED, "Mock issue title 6 L12345678901234567890123456789012345678"
                 + "90123456789012345678901234567890oooooooooooooooooooooooooooooooooooooooooooooo"
-                + "ooong'\"", "Author 1"),
-            createReleaseNotesMessage("Mock issue title 7 thisIssueTitleIsExactly87Characters"
-                + "LongAndThenYouThe13ChrIndentation", "Author 10"),
-            createReleaseNotesMessage("Mock issue title 8 thisIssueTitleIsExactly100Characters"
-                + "LongAndWeExpectItToGetWrappedDueToBeingTooLng", "Author 11"),
-            createReleaseNotesMessage("Mock issue title 9 escape @ and @@@@@", "Author 12"),
-            createReleaseNotesMessage("Mock issue title 10 escape < > & <&<>&<<", "Author 13"));
-    }
-
-    private Builder createBaseCliOptions() {
-        return createBaseCliOptions("1.0.1");
-    }
-
-    private Builder createBaseCliOptions(String releaseNumber) {
-        final Builder result = CliOptions.newBuilder();
-
-        result.setOutputLocation(getTempFolder().getAbsolutePath() + File.separator);
-        result.setRemoteRepoPath("checkstyle/checkstyle");
-        result.setReleaseNumber(releaseNumber);
-        result.setLocalRepoPath("dummy");
-        result.setStartRef("dummy");
-
-        return result;
-    }
-
-    private static Multimap<String, ReleaseNotesMessage> createNotes(
-            List<ReleaseNotesMessage> breakingMessages,
-            List<ReleaseNotesMessage> newFeatureMessages, List<ReleaseNotesMessage> bugMessages,
-            List<ReleaseNotesMessage> miscMessages, List<ReleaseNotesMessage> newModuleMessages) {
-        final Multimap<String, ReleaseNotesMessage> notes = ArrayListMultimap.create();
-
-        if (breakingMessages != null) {
-            notes.putAll(Constants.BREAKING_COMPATIBILITY_LABEL, breakingMessages);
+                + "ooong'\"", label);
+            addIssue(7, CLOSED, "Mock issue title 7 thisIssueTitleIsExactly87Characters"
+                + "LongAndThenYouThe13ChrIndentation", label);
+            addIssue(8, CLOSED, "Mock issue title 8 thisIssueTitleIsExactly100Characters"
+                + "LongAndWeExpectItToGetWrappedDueToBeingTooLng", label);
+            addIssue(9, CLOSED, "Mock issue title 9 escape @ and @@@@@", label);
+            addIssue(10, CLOSED, "Mock issue title 10 escape < > & <&<>&<<", label);
         }
-        if (newFeatureMessages != null) {
-            notes.putAll(Constants.NEW_FEATURE_LABEL, newFeatureMessages);
-        }
-        if (bugMessages != null) {
-            notes.putAll(Constants.BUG_LABEL, bugMessages);
-        }
-        if (miscMessages != null) {
-            notes.putAll(Constants.MISCELLANEOUS_LABEL, miscMessages);
-        }
-        if (newModuleMessages != null) {
-            notes.putAll(Constants.NEW_MODULE_LABEL, newModuleMessages);
-        }
-
-        return notes;
     }
 
-    private static ReleaseNotesMessage createReleaseNotesMessage(String title, String author) {
-        return new ReleaseNotesMessage(title, author);
+    private void createAllCommits() {
+        addCommit("Issue #1: Mock issue title 1", "Author 1");
+        addCommit("Issue #2: Mock issue title 2", "Author 3, Author 4");
+        addCommit("Issue #3: Mock issue title 3", "Author 5");
+        addCommit("Issue #4: Mock issue title 4", "Author 6, Author 7");
+        addCommit("Issue #5: Mock issue title 5 ==> test", "Author 6, Author 7");
+        addCommit("Issue #6: Mock issue title 6 L12345678901234567890123456789012345678"
+            + "90123456789012345678901234567890oooooooooooooooooooooooooooooooooooooooooooooo"
+            + "ooong'\"", "Author 1");
+        addCommit("Issue #7: Mock issue title 7 thisIssueTitleIsExactly87Characters"
+            + "LongAndThenYouThe13ChrIndentation", "Author 10");
+        addCommit("Issue #8: Mock issue title 8 thisIssueTitleIsExactly100Characters"
+            + "LongAndWeExpectItToGetWrappedDueToBeingTooLng", "Author 11");
+        addCommit("Issue #9: Mock issue title 9 escape @ and @@@@@", "Author 12");
+        addCommit("Issue #10: Mock issue title 10 escape < > & <&<>&<<", "Author 13");
     }
-
-    private static ReleaseNotesMessage createReleaseNotesMessage(int number, String title,
-            String author) throws IllegalAccessException, NoSuchFieldException {
-        final GHIssue issue = new GHIssue();
-
-        final Field titleField = issue.getClass().getDeclaredField("title");
-        titleField.setAccessible(true);
-        titleField.set(issue, title);
-
-        final Field numberField = issue.getClass().getDeclaredField("number");
-        numberField.setAccessible(true);
-        numberField.set(issue, number);
-
-        return new ReleaseNotesMessage(issue, author);
-    }
-
 }
