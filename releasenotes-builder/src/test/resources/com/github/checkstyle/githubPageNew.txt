@@ -3,15 +3,15 @@ Checkstyle 1.0.0 - https://checkstyle.org/releasenotes.html#Release_1.0.0
 
 New:
 
-  #-1 - Mock issue title 1
-  #-1 - Mock issue title 2
-  #123 - Mock issue title 3
-  #123 - Mock issue title 4
-  #123 - Mock issue title 5 ==`>` test
-  #-1 - Mock issue title 6 L1234567890123456789012345678901234567890123456789012345678901234567890ooooooooooooooooooooooooooooooooooooooooooooooooong'"
-  #-1 - Mock issue title 7 thisIssueTitleIsExactly87CharactersLongAndThenYouThe13ChrIndentation
-  #-1 - Mock issue title 8 thisIssueTitleIsExactly100CharactersLongAndWeExpectItToGetWrappedDueToBeingTooLng
-  #-1 - Mock issue title 9 escape `@` and `@``@``@``@``@`
-  #-1 - Mock issue title 10 escape `<` `>` `&` `<``&``<``>``&``<``<`
+  #1 - Mock issue title 1
+  #2 - Mock issue title 2
+  #3 - Mock issue title 3
+  #4 - Mock issue title 4
+  #5 - Mock issue title 5 ==`>` test
+  #6 - Mock issue title 6 L1234567890123456789012345678901234567890123456789012345678901234567890ooooooooooooooooooooooooooooooooooooooooooooooooong'"
+  #7 - Mock issue title 7 thisIssueTitleIsExactly87CharactersLongAndThenYouThe13ChrIndentation
+  #8 - Mock issue title 8 thisIssueTitleIsExactly100CharactersLongAndWeExpectItToGetWrappedDueToBeingTooLng
+  #9 - Mock issue title 9 escape `@` and `@``@``@``@``@`
+  #10 - Mock issue title 10 escape `<` `>` `&` `<``&``<``>``&``<``<`
 
 

@@ -5,48 +5,55 @@
           <li>
             Mock issue title 1.
             Author: Author 1
+            <a href="https://github.com/checkstyle/checkstyle/issues/1">#1</a>
           </li>
           <li>
             Mock issue title 2.
             Author: Author 3, Author 4
+            <a href="https://github.com/checkstyle/checkstyle/issues/2">#2</a>
           </li>
           <li>
             Mock issue title 3.
             Author: Author 5
-            <a href="https://github.com/checkstyle/checkstyle/issues/123">#123</a>
+            <a href="https://github.com/checkstyle/checkstyle/issues/3">#3</a>
           </li>
           <li>
             Mock issue title 4.
             Author: Author 6, Author 7
-            <a href="https://github.com/checkstyle/checkstyle/issues/123">#123</a>
+            <a href="https://github.com/checkstyle/checkstyle/issues/4">#4</a>
           </li>
           <li>
             Mock issue title 5 ==&gt; test.
             Author: Author 6, Author 7
-            <a href="https://github.com/checkstyle/checkstyle/issues/123">#123</a>
+            <a href="https://github.com/checkstyle/checkstyle/issues/5">#5</a>
           </li>
           <li>
             Mock issue title 6
             L1234567890123456789012345678901234567890123456789012345678901234567890oooooooooooooooo-
             ooooooooooooooooooooooooooooooooong&#39;&quot;.
             Author: Author 1
+            <a href="https://github.com/checkstyle/checkstyle/issues/6">#6</a>
           </li>
           <li>
             Mock issue title 7 thisIssueTitleIsExactly87CharactersLongAndThenYouThe13ChrIndentation.
             Author: Author 10
+            <a href="https://github.com/checkstyle/checkstyle/issues/7">#7</a>
           </li>
           <li>
             Mock issue title 8
             thisIssueTitleIsExactly100CharactersLongAndWeExpectItToGetWrappedDueToBeingTooLng.
             Author: Author 11
+            <a href="https://github.com/checkstyle/checkstyle/issues/8">#8</a>
           </li>
           <li>
             Mock issue title 9 escape @ and @@@@@.
             Author: Author 12
+            <a href="https://github.com/checkstyle/checkstyle/issues/9">#9</a>
           </li>
           <li>
             Mock issue title 10 escape &lt; &gt; &amp; &lt;&amp;&lt;&gt;&amp;&lt;&lt;.
             Author: Author 13
+            <a href="https://github.com/checkstyle/checkstyle/issues/10">#10</a>
           </li>
         </ul>
     </section>

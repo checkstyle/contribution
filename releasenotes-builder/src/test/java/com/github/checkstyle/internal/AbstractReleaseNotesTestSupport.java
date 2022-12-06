@@ -29,7 +29,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -185,4 +188,25 @@ public abstract class AbstractReleaseNotesTestSupport extends AbstractPathTestSu
         }
     }
 
+    /**
+     * Helper method to call {@code runMainAndAssertReturnCode}
+     * with some default required arguments.
+     *
+     * @param expectedExitCode the expected exit code to verify
+     * @param arguments the command line arguments
+     */
+    protected void runMainContentGenerationAndAssertReturnCode(int expectedExitCode,
+                                                               String... arguments) {
+        final ArrayList<String> listOfArgs = new ArrayList<>(Arrays.asList(arguments));
+        listOfArgs.addAll(
+            List.of(
+                "-localRepoPath", getTempFolder().getAbsolutePath(),
+                "-remoteRepoPath", "checkstyle/checkstyle",
+                "-startRef", "12345678",
+                "-outputLocation", getTempFolder().getAbsolutePath(),
+                "-githubAuthToken", "TOKEN"
+            )
+        );
+        runMainAndAssertReturnCode(expectedExitCode, listOfArgs.toArray(new String[0]));
+    }
 }

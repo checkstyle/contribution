@@ -19,102 +19,315 @@
 
 package com.github.checkstyle;
 
-import static org.kohsuke.github.GHIssueState.OPEN;
+import static org.kohsuke.github.GHIssueState.CLOSED;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.github.checkstyle.internal.AbstractReleaseNotesTestSupport;
 
 public class MainTest extends AbstractReleaseNotesTestSupport {
-
-    @Test
-    public void testValidateVersion() {
-        runMainAndAssertReturnCode(0,
-                "-releaseNumber", "10.0.1",
-                "-validateVersion"
-        );
-    }
-
     @Test
     public void testNoCommits() {
-        runMainAndAssertReturnCode(0,
-                "-localRepoPath", getTempFolder().getAbsolutePath(),
-                "-remoteRepoPath", "checkstyle/checkstyle",
-                "-startRef", "12345678",
-                "-releaseNumber", "10.0.1",
-                "-outputLocation", getTempFolder().getAbsolutePath(),
-                "-githubAuthToken", "TOKEN",
-                "-generateAll",
-                "-publishTwit",
-                "-twitterConsumerKey", "KEY",
-                "-twitterConsumerSecret", "SECRET",
-                "-twitterAccessToken", "TOKEN",
-                "-twitterAccessTokenSecret", "SECRET",
-                "-validateVersion"
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "10.0.1",
+            "-generateAll",
+            "-validateVersion"
         );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
     }
 
     @Test
     public void testUnknownCommit() {
         addCommit("Hello World", "CheckstyleUser");
 
-        runMainAndAssertReturnCode(0,
-                "-localRepoPath", getTempFolder().getAbsolutePath(),
-                "-remoteRepoPath", "checkstyle/checkstyle",
-                "-startRef", "12345678",
-                "-releaseNumber", "10.0.1",
-                "-outputLocation", getTempFolder().getAbsolutePath(),
-                "-githubAuthToken", "TOKEN",
-                "-generateAll",
-                "-publishTwit",
-                "-twitterConsumerKey", "KEY",
-                "-twitterConsumerSecret", "SECRET",
-                "-twitterAccessToken", "TOKEN",
-                "-twitterAccessTokenSecret", "SECRET",
-                "-validateVersion"
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "10.0.1.",
+            "-generateAll",
+            "-validateVersion"
         );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
     }
 
     @Test
     public void testIssueCommitWithIssueNotFound() {
         addCommit("Issue #1: Hello World", "CheckstyleUser");
 
-        runMainAndAssertReturnCode(-2,
-                "-localRepoPath", getTempFolder().getAbsolutePath(),
-                "-remoteRepoPath", "checkstyle/checkstyle",
-                "-startRef", "12345678",
-                "-releaseNumber", "10.0.1",
-                "-outputLocation", getTempFolder().getAbsolutePath(),
-                "-githubAuthToken", "TOKEN",
-                "-generateAll",
-                "-publishTwit",
-                "-twitterConsumerKey", "KEY",
-                "-twitterConsumerSecret", "SECRET",
-                "-twitterAccessToken", "TOKEN",
-                "-twitterAccessTokenSecret", "SECRET",
-                "-validateVersion"
+        runMainContentGenerationAndAssertReturnCode(-2,
+            "-releaseNumber", "10.0.1",
+            "-generateAll",
+            "-validateVersion"
         );
     }
 
     @Test
     public void testIssueCommit() {
         addCommit("Issue #1: Hello World", "CheckstyleUser");
-        addIssue(1, OPEN, "Hello World", MISC);
+        addIssue(1, CLOSED, "Hello World", MISC);
 
-        runMainAndAssertReturnCode(0,
-                "-localRepoPath", getTempFolder().getAbsolutePath(),
-                "-remoteRepoPath", "checkstyle/checkstyle",
-                "-startRef", "12345678",
-                "-releaseNumber", "10.0.1",
-                "-outputLocation", getTempFolder().getAbsolutePath(),
-                "-githubAuthToken", "TOKEN",
-                "-generateAll",
-                "-publishTwit",
-                "-twitterConsumerKey", "KEY",
-                "-twitterConsumerSecret", "SECRET",
-                "-twitterAccessToken", "TOKEN",
-                "-twitterAccessTokenSecret", "SECRET",
-                "-validateVersion"
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "10.0.1",
+            "-generateAll",
+            "-validateVersion"
         );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
+    }
+
+    @Test
+    public void testValidateVersionMinorNoIssues() {
+        runMainContentGenerationAndAssertReturnCode(-2,
+            "-releaseNumber", "10.0.0",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output",
+            getExecutionFailedMessage(1) + getReleaseIsMinorMessage("10.0.0"), systemOut.getLog());
+    }
+
+    @Test
+    public void testValidateVersionMinorBreaking() {
+        addCommit("Issue #1: Hello World", "CheckstyleUser");
+        addIssue(1, CLOSED, "Hello World", BREAKING);
+
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "10.0.0",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
+    }
+
+    @Test
+    public void testValidateVersionMinorNewFeature() {
+        addCommit("Issue #1: Hello World", "CheckstyleUser");
+        addIssue(1, CLOSED, "Hello World", NEW_FEATURE);
+
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "10.0.0",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
+    }
+
+    @Test
+    public void testValidateVersionMinorBug() {
+        addCommit("Issue #1: Hello World", "CheckstyleUser");
+        addIssue(1, CLOSED, "Hello World", BUG);
+
+        runMainContentGenerationAndAssertReturnCode(-2,
+            "-releaseNumber", "10.0.0",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output",
+            getExecutionFailedMessage(1) + getReleaseIsMinorMessage("10.0.0"), systemOut.getLog());
+    }
+
+    @Test
+    public void testValidateVersionMinorMiscellaneous() {
+        addCommit("Issue #1: Hello World", "CheckstyleUser");
+        addIssue(1, CLOSED, "Hello World", MISC);
+
+        runMainContentGenerationAndAssertReturnCode(-2,
+            "-releaseNumber", "10.0.0",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output",
+            getExecutionFailedMessage(1) + getReleaseIsMinorMessage("10.0.0"), systemOut.getLog());
+    }
+
+    @Test
+    public void testValidateVersionMinorNewModule() {
+        addCommit("Issue #1: Hello World", "CheckstyleUser");
+        addIssue(1, CLOSED, "Hello World", NEW_MODULE);
+
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "10.0.0",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
+    }
+
+    @Test
+    public void testValidateVersionMinorBugAndMiscellaneous() {
+        addCommit("Issue #1: Hello World", "CheckstyleUser");
+        addCommit("Issue #2: Hello World", "CheckstyleUser");
+        addIssue(1, CLOSED, "Hello World", BUG);
+        addIssue(2, CLOSED, "Hello World", MISC);
+
+        runMainContentGenerationAndAssertReturnCode(-2,
+            "-releaseNumber", "10.0.0",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output",
+            getExecutionFailedMessage(1) + getReleaseIsMinorMessage("10.0.0"), systemOut.getLog());
+    }
+
+    @Test
+    public void testValidateVersionMinorNewModuleNewFeatureAndBreaking() {
+        addCommit("Issue #1: Hello World", "CheckstyleUser");
+        addCommit("Issue #2: Hello World", "CheckstyleUser");
+        addCommit("Issue #3: Hello World", "CheckstyleUser");
+        addIssue(1, CLOSED, "Hello World", NEW_MODULE);
+        addIssue(2, CLOSED, "Hello World", NEW_FEATURE);
+        addIssue(3, CLOSED, "Hello World", BREAKING);
+
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "10.0.0",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
+    }
+
+    @Test
+    public void testValidateVersionPatchNoIssues() {
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "10.0.1",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
+    }
+
+    @Test
+    public void testValidateVersionPatchBreaking() {
+        addCommit("Issue #1: Hello World", "CheckstyleUser");
+        addIssue(1, CLOSED, "Hello World", BREAKING);
+
+        runMainContentGenerationAndAssertReturnCode(-2,
+            "-releaseNumber", "10.0.1",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output",
+            getExecutionFailedMessage(1) + getReleaseIsPatchMessage("10.0.1"), systemOut.getLog());
+    }
+
+    @Test
+    public void testValidateVersionPatchNewFeature() {
+        addCommit("Issue #1: Hello World", "CheckstyleUser");
+        addIssue(1, CLOSED, "Hello World", NEW_FEATURE);
+
+        runMainContentGenerationAndAssertReturnCode(-2,
+            "-releaseNumber", "10.0.1",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output",
+            getExecutionFailedMessage(1) + getReleaseIsPatchMessage("10.0.1"), systemOut.getLog());
+    }
+
+    @Test
+    public void testValidateVersionPatchBug() {
+        addCommit("Issue #1: Hello World", "CheckstyleUser");
+        addIssue(1, CLOSED, "Hello World", BUG);
+
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "10.0.1",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
+    }
+
+    @Test
+    public void testValidateVersionPatchMiscellaneous() {
+        addCommit("Issue #1: Hello World", "CheckstyleUser");
+        addIssue(1, CLOSED, "Hello World", MISC);
+
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "10.0.1",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
+    }
+
+    @Test
+    public void testValidateVersionPatchNewModule() {
+        addCommit("Issue #1: Hello World", "CheckstyleUser");
+        addIssue(1, CLOSED, "Hello World", NEW_MODULE);
+
+        runMainContentGenerationAndAssertReturnCode(-2,
+            "-releaseNumber", "10.0.1",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output",
+            getExecutionFailedMessage(1) + getReleaseIsPatchMessage("10.0.1"), systemOut.getLog());
+    }
+
+    @Test
+    public void testValidateVersionPatchNewFeatureNewModuleAndBreaking() {
+        addCommit("Issue #1: Hello World", "CheckstyleUser");
+        addCommit("Issue #2: Hello World", "CheckstyleUser");
+        addIssue(1, CLOSED, "Hello World", NEW_MODULE);
+        addIssue(2, CLOSED, "Hello World", BREAKING);
+
+        runMainContentGenerationAndAssertReturnCode(-2,
+            "-releaseNumber", "10.0.1",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output",
+            getExecutionFailedMessage(1) + getReleaseIsPatchMessage("10.0.1"), systemOut.getLog());
+    }
+
+    @Test
+    public void testValidateVersionPatchBugAndMiscellaneous() {
+        addCommit("Issue #1: Hello World", "CheckstyleUser");
+        addCommit("Issue #2: Hello World", "CheckstyleUser");
+        addIssue(1, CLOSED, "Hello World", BUG);
+        addIssue(2, CLOSED, "Hello World", MISC);
+
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "10.0.1",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
     }
 }

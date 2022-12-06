@@ -42,6 +42,9 @@ public abstract class AbstractPathTestSupport {
     protected static final String MISC = Constants.MISCELLANEOUS_LABEL;
     protected static final String BREAKING = Constants.BREAKING_COMPATIBILITY_LABEL;
 
+    protected static final String MSG_EXECUTION_SUCCEEDED = System.lineSeparator()
+            + "Execution succeeded!" + System.lineSeparator();
+
     @Rule
     public final TemporaryFolder temporaryFolder = new TemporaryFolder();
 
@@ -119,6 +122,32 @@ public abstract class AbstractPathTestSupport {
         }
 
         return result.toString();
+    }
+
+    protected static String getExecutionFailedMessage(int amountOfErrors) {
+        return System.lineSeparator()
+            + "Generation ends with " + amountOfErrors + " errors."
+            + System.lineSeparator();
+    }
+
+    protected static String getReleaseIsMinorMessage(String releaseVersion) {
+        return System.lineSeparator()
+            + "[ERROR] Validation of release number failed. "
+            + "Release number is minor(" + releaseVersion + "), but release notes do not contain "
+            + "'new' or 'breaking compatability' labels. Please correct release number by running "
+            + "https://github.com/checkstyle/checkstyle/actions/workflows/bump-version-and-"
+            + "update-milestone.yml"
+            + System.lineSeparator();
+    }
+
+    protected static String getReleaseIsPatchMessage(String releaseVersion) {
+        return System.lineSeparator()
+            + "[ERROR] Validation of release number failed. "
+            + "Release number is a patch(" + releaseVersion + "), but release notes contain 'new' "
+            + "or 'breaking compatability' labels. Please correct release number by running "
+            + "https://github.com/checkstyle/checkstyle/actions/workflows/bump-version-and-"
+            + "update-milestone.yml"
+            + System.lineSeparator();
     }
 
 }
