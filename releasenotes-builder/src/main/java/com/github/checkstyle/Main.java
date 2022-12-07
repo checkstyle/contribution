@@ -76,6 +76,7 @@ public final class Main {
         }
         if (errors.isEmpty()) {
             System.out.printf("%nExecution succeeded!%n");
+            System.exit(0);
         }
         else {
             System.out.printf("%nGeneration ends with %d errors.%n", errors.size());
