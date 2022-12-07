@@ -24,7 +24,6 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -180,10 +179,7 @@ public abstract class AbstractReleaseNotesTestSupport extends AbstractPathTestSu
         catch (Exception exception) {
             fail(String.format("Unexpected exception: %s", exception));
         }
-        if (expectedExitCode == 0) {
-            verify(mock, never()).exit(expectedExitCode);
-        }
-        else {
+        finally {
             verify(mock).exit(expectedExitCode);
         }
     }
