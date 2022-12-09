@@ -216,7 +216,8 @@ def launchCheckstyleReport(cfg) {
         println "Installing Checkstyle artifact ($cfg.branch) into local Maven repository ..."
         executeCmd("git checkout $cfg.branch", cfg.localGitRepo)
         executeCmd("git log -1 --pretty=MSG:%s%nSHA-1:%H", cfg.localGitRepo)
-        executeCmd("mvn -e --batch-mode -Pno-validations clean install", cfg.localGitRepo)
+        executeCmd("mvn -e --no-transfer-progress --batch-mode -Pno-validations clean install",
+            cfg.localGitRepo)
     }
 
     cfg.checkstyleVersion =
@@ -397,7 +398,7 @@ def generateDiffReport(cfg) {
         .parent
         .resolve("patch-diff-report-tool")
         .toFile()
-    executeCmd("mvn -e --batch-mode clean package -DskipTests", diffToolDir)
+    executeCmd("mvn -e --no-transfer-progress --batch-mode clean package -DskipTests", diffToolDir)
     def diffToolJarPath = getPathToDiffToolJar(diffToolDir)
 
     println 'Starting diff report generation ...'
@@ -625,11 +626,11 @@ def getProjectsStatistic(diffDir) {
 def runMavenExecution(srcDir, excludes, checkstyleConfig,
                       checkstyleVersion, extraMvnRegressionOptions) {
     println "Running 'mvn clean' on $srcDir ..."
-    def mvnClean = "mvn --batch-mode clean"
+    def mvnClean = "mvn -e --no-transfer-progress --batch-mode clean"
     executeCmd(mvnClean)
     println "Running Checkstyle on $srcDir ... with excludes {$excludes}"
-    def mvnSite = "mvn -e --batch-mode site -Dcheckstyle.config.location=$checkstyleConfig " +
-        "-Dcheckstyle.excludes=$excludes"
+    def mvnSite = "mvn -e --no-transfer-progress --batch-mode site " +
+        "-Dcheckstyle.config.location=$checkstyleConfig -Dcheckstyle.excludes=$excludes"
     if (checkstyleVersion) {
         mvnSite = mvnSite + " -Dcheckstyle.version=$checkstyleVersion"
     }
