@@ -19,6 +19,7 @@
 
 package com.github.checkstyle;
 
+import static com.github.checkstyle.MainProcess.RELEASE_NUMBER_PATTERN;
 import static org.kohsuke.github.GHIssueState.CLOSED;
 
 import org.junit.Assert;
@@ -44,13 +45,70 @@ public class MainTest extends AbstractReleaseNotesTestSupport {
         addCommit("Hello World", "CheckstyleUser");
 
         runMainContentGenerationAndAssertReturnCode(0,
-            "-releaseNumber", "10.0.1.",
+            "-releaseNumber", "10.0.1",
             "-generateAll",
             "-validateVersion"
         );
 
         Assert.assertEquals("expected error output", "", systemErr.getLog());
         Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
+    }
+
+    @Test
+    public void testBadVersion3Dots() {
+        addCommit("Hello World", "CheckstyleUser");
+
+        runMainContentGenerationAndAssertReturnCode(-2,
+            "-releaseNumber", "10.0.1.",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output",
+            getExecutionFailedMessage(1)
+                + System.lineSeparator()
+                + "Release number should match pattern " + RELEASE_NUMBER_PATTERN
+                + System.lineSeparator(),
+            systemOut.getLog());
+    }
+
+    @Test
+    public void testBadVersionWithChars() {
+        addCommit("Hello World", "CheckstyleUser");
+
+        runMainContentGenerationAndAssertReturnCode(-2,
+            "-releaseNumber", "10.p.1",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output",
+            getExecutionFailedMessage(1)
+                + System.lineSeparator()
+                + "Release number should match pattern " + RELEASE_NUMBER_PATTERN
+                + System.lineSeparator(),
+            systemOut.getLog());
+    }
+
+    @Test
+    public void testBadVersion2Dots() {
+        addCommit("Hello World", "CheckstyleUser");
+
+        runMainContentGenerationAndAssertReturnCode(-2,
+            "-releaseNumber", "10.0.",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output",
+            getExecutionFailedMessage(1)
+                + System.lineSeparator()
+                + "Release number should match pattern " + RELEASE_NUMBER_PATTERN
+                + System.lineSeparator(),
+            systemOut.getLog());
     }
 
     @Test

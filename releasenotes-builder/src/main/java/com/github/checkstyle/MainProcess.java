@@ -26,6 +26,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import com.github.checkstyle.globals.Constants;
 import com.github.checkstyle.globals.ReleaseNotesMessage;
@@ -53,6 +54,12 @@ public final class MainProcess {
     /** GitHub Post template file name. */
     public static final String GITHUB_TEMPLATE_FILE =
         "com/github/checkstyle/templates/github_post.template";
+
+    /** Checkstyle supports only 3 digit versions for now. */
+    public static final String RELEASE_NUMBER_PATTERN = "^\\d+\\.\\d+\\.\\d+$";
+
+    /** Compiled pattern for release number. */
+    private static final Pattern RELEASE_PATTERN = Pattern.compile(RELEASE_NUMBER_PATTERN);
 
     /** Default constructor. */
     private MainProcess() {
@@ -103,6 +110,9 @@ public final class MainProcess {
         final String errorEnding = "Please correct release number by running https://github.com/"
             + "checkstyle/checkstyle/actions/workflows/bump-version-and-update-milestone.yml";
 
+        if (!RELEASE_PATTERN.matcher(releaseVersion).find()) {
+            errors.add("Release number should match pattern " + RELEASE_NUMBER_PATTERN);
+        }
         if (isPatch(releaseVersion) && containsNewOrBreakingCompatabilityLabel) {
             errors.add(
                 String.format("%s Release number is a patch(%s), but release notes contain 'new' "
