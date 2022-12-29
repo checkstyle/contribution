@@ -574,6 +574,8 @@ public final class CliOptions {
          *
          * @param validate flag to validate release version.
          * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
          */
         public Builder setValidateVersion(boolean validate) {
             validateVersion = validate;
