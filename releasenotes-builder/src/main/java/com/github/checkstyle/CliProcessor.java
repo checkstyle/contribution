@@ -39,6 +39,8 @@ import org.apache.commons.cli.ParseException;
  */
 public class CliProcessor {
 
+    /** Name for the option 'help'. */
+    public static final String OPTION_HELP = "help";
     /** Name for the option 'twitterConsumerKey'. */
     public static final String OPTION_TWITTER_CONSUMER_KEY = "twitterConsumerKey";
     /** Name for the option 'twitterConsumerSecret'. */
@@ -146,39 +148,42 @@ public class CliProcessor {
     private List<String> validateCli() {
         final List<String> result = new ArrayList<>();
 
-        if (cmdLine.hasOption(OPTION_LOCAL_REPO_PATH)) {
-            final String localGitRepositoryPath = cmdLine.getOptionValue(OPTION_LOCAL_REPO_PATH);
-            if (!Files.isDirectory(Paths.get(localGitRepositoryPath))) {
-                result.add(String.format("Could not find local git repository '%s'!",
-                    localGitRepositoryPath));
+        if (!cmdLine.hasOption(OPTION_HELP)) {
+            if (cmdLine.hasOption(OPTION_LOCAL_REPO_PATH)) {
+                final String localGitRepositoryPath = cmdLine
+                        .getOptionValue(OPTION_LOCAL_REPO_PATH);
+                if (!Files.isDirectory(Paths.get(localGitRepositoryPath))) {
+                    result.add(String.format("Could not find local git repository '%s'!",
+                        localGitRepositoryPath));
+                }
             }
-        }
-        if (!cmdLine.hasOption(OPTION_REMOTE_REPO_PATH)) {
-            result.add("Remote repository path has not been specified!");
-        }
-        if (!cmdLine.hasOption(OPTION_START_REF)) {
-            result.add("Start reference has not been specified!");
-        }
-        if (!cmdLine.hasOption(OPTION_RELEASE_NUMBER)) {
-            result.add("Release number has not been specified!");
-        }
+            if (!cmdLine.hasOption(OPTION_REMOTE_REPO_PATH)) {
+                result.add("Remote repository path has not been specified!");
+            }
+            if (!cmdLine.hasOption(OPTION_START_REF)) {
+                result.add("Start reference has not been specified!");
+            }
+            if (!cmdLine.hasOption(OPTION_RELEASE_NUMBER)) {
+                result.add("Release number has not been specified!");
+            }
 
-        if (cmdLine.hasOption(OPTION_XDOC_TEMPLATE)) {
-            final String path = cmdLine.getOptionValue(OPTION_XDOC_TEMPLATE);
-            if (!Files.isRegularFile(Paths.get(path))) {
-                result.add(String.format("Could not find xdoc template '%s'!", path));
+            if (cmdLine.hasOption(OPTION_XDOC_TEMPLATE)) {
+                final String path = cmdLine.getOptionValue(OPTION_XDOC_TEMPLATE);
+                if (!Files.isRegularFile(Paths.get(path))) {
+                    result.add(String.format("Could not find xdoc template '%s'!", path));
+                }
             }
-        }
-        if (cmdLine.hasOption(OPTION_TWITTER_TEMPLATE)) {
-            final String path = cmdLine.getOptionValue(OPTION_TWITTER_TEMPLATE);
-            if (!Files.isRegularFile(Paths.get(path))) {
-                result.add(String.format("Could not find twitter template '%s'!", path));
+            if (cmdLine.hasOption(OPTION_TWITTER_TEMPLATE)) {
+                final String path = cmdLine.getOptionValue(OPTION_TWITTER_TEMPLATE);
+                if (!Files.isRegularFile(Paths.get(path))) {
+                    result.add(String.format("Could not find twitter template '%s'!", path));
+                }
             }
-        }
-        if (cmdLine.hasOption(OPTION_GITHUB_TEMPLATE)) {
-            final String path = cmdLine.getOptionValue(OPTION_GITHUB_TEMPLATE);
-            if (!Files.isRegularFile(Paths.get(path))) {
-                result.add(String.format("Could not find github post template '%s'!", path));
+            if (cmdLine.hasOption(OPTION_GITHUB_TEMPLATE)) {
+                final String path = cmdLine.getOptionValue(OPTION_GITHUB_TEMPLATE);
+                if (!Files.isRegularFile(Paths.get(path))) {
+                    result.add(String.format("Could not find github post template '%s'!", path));
+                }
             }
         }
         return result;
@@ -191,6 +196,7 @@ public class CliProcessor {
      */
     public CliOptions getCliOptions() {
         return CliOptions.newBuilder()
+            .setHelp(cmdLine.hasOption(OPTION_HELP))
             .setLocalRepoPath(cmdLine.getOptionValue(OPTION_LOCAL_REPO_PATH))
             .setRemoteRepoPath(cmdLine.getOptionValue(OPTION_REMOTE_REPO_PATH))
             .setStartRef(cmdLine.getOptionValue(OPTION_START_REF))
@@ -224,6 +230,7 @@ public class CliProcessor {
      */
     private static Options buildOptions() {
         final Options options = new Options();
+        options.addOption(OPTION_HELP, "Whether to display help.");
         options.addOption(OPTION_LOCAL_REPO_PATH, true, "Path to a local git repository.");
         options.addOption(OPTION_REMOTE_REPO_PATH, true, "Path to a remote github repository.");
         options.addOption(OPTION_START_REF, true, "Start reference to grab commits from.");

@@ -56,17 +56,27 @@ public final class Main {
     public static void main(String... args) {
         final List<String> errors = new ArrayList<>();
         try {
-            final CliProcessor cliProcessor = new CliProcessor(args);
-            cliProcessor.process();
-            if (cliProcessor.hasErrors()) {
-                errors.addAll(cliProcessor.getErrorMessages());
+            if (args.length == 0) {
+                CliProcessor.printUsage();
             }
             else {
-                final CliOptions cliOptions = cliProcessor.getCliOptions();
-                final Result notesBuilderResult = runGithubNotesBuilder(cliOptions);
-                errors.addAll(notesBuilderResult.getErrorMessages());
-                errors.addAll(MainProcess.runPostGenerationAndPublication(
-                    notesBuilderResult.getReleaseNotes(), cliOptions, errors.isEmpty()));
+                final CliProcessor cliProcessor = new CliProcessor(args);
+                cliProcessor.process();
+                if (cliProcessor.hasErrors()) {
+                    errors.addAll(cliProcessor.getErrorMessages());
+                }
+                else {
+                    final CliOptions cliOptions = cliProcessor.getCliOptions();
+                    if (cliOptions.isHelp()) {
+                        CliProcessor.printUsage();
+                    }
+                    else {
+                        final Result notesBuilderResult = runGithubNotesBuilder(cliOptions);
+                        errors.addAll(notesBuilderResult.getErrorMessages());
+                        errors.addAll(MainProcess.runPostGenerationAndPublication(
+                            notesBuilderResult.getReleaseNotes(), cliOptions, errors.isEmpty()));
+                    }
+                }
             }
         }
         catch (ParseException | GitAPIException | IOException | TemplateException ex) {

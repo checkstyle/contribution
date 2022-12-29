@@ -29,6 +29,22 @@ import com.github.checkstyle.internal.AbstractReleaseNotesTestSupport;
 
 public class MainTest extends AbstractReleaseNotesTestSupport {
     @Test
+    public void test() {
+        runMainAndAssertReturnCode(0);
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", USAGE + MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
+    }
+
+    @Test
+    public void testHelp() {
+        runMainAndAssertReturnCode(0, "-help");
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", USAGE + MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
+    }
+
+    @Test
     public void testNoCommits() {
         runMainContentGenerationAndAssertReturnCode(0,
             "-releaseNumber", "10.0.1",
