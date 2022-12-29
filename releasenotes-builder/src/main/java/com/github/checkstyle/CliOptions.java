@@ -35,6 +35,8 @@ import com.google.common.base.Verify;
  */
 public final class CliOptions {
 
+    /** Whether to display the help text. */
+    private boolean help;
     /** Path to a local git repository. */
     private String localRepoPath;
     /** Path to remote GitHub repository. */
@@ -96,6 +98,15 @@ public final class CliOptions {
      */
     public String getLocalRepoPath() {
         return localRepoPath;
+    }
+
+    /**
+     * Returns whether to display help.
+     *
+     * @return whether to display help.
+     */
+    public boolean isHelp() {
+        return help;
     }
 
     /**
@@ -294,6 +305,19 @@ public final class CliOptions {
 
         /** Default constructor. */
         private Builder() {
+        }
+
+        /**
+         * Specify flag to display help.
+         *
+         * @param inHelp flag to display help
+         * @return Builder Object
+         * @noinspection ReturnOfInnerClass
+         * @noinspectionreason ReturnOfInnerClass - builder is only used in enclosing class
+         */
+        public Builder setHelp(boolean inHelp) {
+            help = inHelp;
+            return this;
         }
 
         /**
@@ -597,24 +621,30 @@ public final class CliOptions {
             else if (!outputLocation.endsWith(File.separator)) {
                 outputLocation += File.separator;
             }
-            Verify.verifyNotNull(localRepoPath,
-                "Path to a local git repository should not be null!");
-            Verify.verifyNotNull(remoteRepoPath,
-                    "Path to a remote github repository should not be null!");
-            Verify.verifyNotNull(startRef, "Start reference should not be null!");
-            Verify.verifyNotNull(releaseNumber, "Release number should not be null!");
 
-            if (shouldLoadTwitterProperties()) {
-                Verify.verifyNotNull(twitterProperties, "Properties file for Twitter is expected"
-                    + " if some of the following options are not entered: twitterConsumerKey, "
-                    + "twitterConsumerSecret, twitterAccessToken, twitterAccessTokenSecret.");
-                loadTwitterProperties();
-                Verify.verifyNotNull(twitterConsumerKey, "Consumer key for Twitter is expected!");
-                Verify.verifyNotNull(twitterConsumerSecret,
-                    "Consumer secret for Twitter is expected!");
-                Verify.verifyNotNull(twitterAccessToken, "Access token for Twitter is expected!");
-                Verify.verifyNotNull(twitterAccessTokenSecret,
-                    "Access token secret for Twitter is expected!");
+            if (!help) {
+                Verify.verifyNotNull(localRepoPath,
+                    "Path to a local git repository should not be null!");
+                Verify.verifyNotNull(remoteRepoPath,
+                        "Path to a remote github repository should not be null!");
+                Verify.verifyNotNull(startRef, "Start reference should not be null!");
+                Verify.verifyNotNull(releaseNumber, "Release number should not be null!");
+
+                if (shouldLoadTwitterProperties()) {
+                    Verify.verifyNotNull(twitterProperties,
+                        "Properties file for Twitter is expected if some of the following options "
+                            + "are not entered: twitterConsumerKey, twitterConsumerSecret, "
+                            + "twitterAccessToken, twitterAccessTokenSecret.");
+                    loadTwitterProperties();
+                    Verify.verifyNotNull(twitterConsumerKey,
+                            "Consumer key for Twitter is expected!");
+                    Verify.verifyNotNull(twitterConsumerSecret,
+                        "Consumer secret for Twitter is expected!");
+                    Verify.verifyNotNull(twitterAccessToken,
+                            "Access token for Twitter is expected!");
+                    Verify.verifyNotNull(twitterAccessTokenSecret,
+                        "Access token secret for Twitter is expected!");
+                }
             }
 
             return getNewCliOptionsInstance();
@@ -672,6 +702,7 @@ public final class CliOptions {
         // -@cs[ExecutableStatementCount] long list of options being assigned to single instance
         private CliOptions getNewCliOptionsInstance() {
             final CliOptions cliOptions = new CliOptions();
+            cliOptions.help = help;
             cliOptions.localRepoPath = localRepoPath;
             cliOptions.remoteRepoPath = remoteRepoPath;
             cliOptions.startRef = startRef;

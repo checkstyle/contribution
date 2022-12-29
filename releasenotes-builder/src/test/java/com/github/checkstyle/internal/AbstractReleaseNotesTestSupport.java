@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -54,6 +55,39 @@ import com.github.checkstyle.github.CsGitHub;
 import com.github.checkstyle.publishers.TwitterPublisher;
 
 public abstract class AbstractReleaseNotesTestSupport extends AbstractPathTestSupport {
+
+    protected static final String USAGE = String.format(Locale.ROOT,
+        "usage:%n"
+        + "java -jar releasenotes-builder-[version]-all.jar [options]%n"
+        + " -help                             Whether to display help.%n"
+        + " -localRepoPath <arg>              Path to a local git repository.%n"
+        + " -remoteRepoPath <arg>             Path to a remote github repository.%n"
+        + " -startRef <arg>                   Start reference to grab commits from.%n"
+        + " -endRef <arg>                     End reference to stop grabbing the%n"
+        + "                                   commits.%n"
+        + " -releaseNumber <arg>              Release number.%n"
+        + " -githubAuthToken <arg>            GitHub auth access token to establish%n"
+        + "                                   connection.%n"
+        + " -outputLocation <arg>             Location for output files.%n"
+        + " -generateAll                      Whether all posts should be generated.%n"
+        + " -generateXdoc                     Whether a xdoc should be generated.%n"
+        + " -generateTwit                     Whether a twitter post should be%n"
+        + "                                   generated.%n"
+        + " -xdocTemplate <arg>               Path to xdoc template.%n"
+        + " -twitterTemplate <arg>            Path to twitter template.%n"
+        + " -generateGitHub                   Whether a github post should be%n"
+        + "                                   generated.%n"
+        + " -publishAllSocial                 Whether to publish all social posts.%n"
+        + " -publishTwit                      Whether to publish a Twitter post.%n"
+        + " -gitHubTemplate <arg>             Path to github page template.%n"
+        + " -twitterConsumerKey <arg>         Consumer key for Twitter.%n"
+        + " -twitterConsumerSecret <arg>      Consumer secret for Twitter.%n"
+        + " -twitterAccessToken <arg>         Access token for Twitter.%n"
+        + " -twitterAccessTokenSecret <arg>   Access token secret for Twitter.%n"
+        + " -twitterProperties <arg>          Properties for publication on Twitter.%n"
+        + " -validateVersion                  Whether release number should be%n"
+        + "                                   validated to match release notes%n"
+        + "                                   labels.%n");
 
     private static final Set<RevCommit> TEST_COMMITS = new LinkedHashSet<>();
 
