@@ -46,7 +46,6 @@ import org.kohsuke.github.GHIssueState;
 import org.kohsuke.github.GHRepository;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import com.github.checkstyle.Main;
@@ -60,19 +59,15 @@ public abstract class AbstractReleaseNotesTestSupport extends AbstractPathTestSu
 
     private static final Set<GHIssue> TEST_ISSUES = new LinkedHashSet<>();
 
-    private static final Answer<GHIssue> ISSUE_ANSWER = new Answer<>() {
-        @Override
-        public GHIssue answer(InvocationOnMock invocation) throws Throwable {
-            final int findIssue = invocation.getArgument(0);
-
-            for (GHIssue item : TEST_ISSUES) {
-                if (item.getNumber() == findIssue) {
-                    return item;
-                }
+    private static final Answer<GHIssue> ISSUE_ANSWER = invocation -> {
+        final int findIssue = invocation.getArgument(0);
+        for (GHIssue item : TEST_ISSUES) {
+            if (item.getNumber() == findIssue) {
+                return item;
             }
-
-            throw new GHFileNotFoundException("Cannot find Issue: " + findIssue);
         }
+
+        throw new GHFileNotFoundException("Cannot find Issue: " + findIssue);
     };
 
     private static boolean mocked;
@@ -116,10 +111,9 @@ public abstract class AbstractReleaseNotesTestSupport extends AbstractPathTestSu
      *
      * @param commitMessage The commit message to add.
      * @param author The commit author to add.
-     * @return {@code true} if the commit added is new.
      */
-    protected boolean addCommit(String commitMessage, String author) {
-        return TEST_COMMITS.add(RevCommitUtil.create(commitMessage, author));
+    protected void addCommit(String commitMessage, String author) {
+        TEST_COMMITS.add(RevCommitUtil.create(commitMessage, author));
     }
 
     /**
@@ -129,11 +123,10 @@ public abstract class AbstractReleaseNotesTestSupport extends AbstractPathTestSu
      * @param ghState The state of the issue.
      * @param ghTitle The title of the issue.
      * @param labels The labels of the issue.
-     * @return {@code true} if the issue added is new.
      */
-    protected boolean addIssue(int ghNumber, GHIssueState ghState, String ghTitle,
+    protected void addIssue(int ghNumber, GHIssueState ghState, String ghTitle,
             String... labels) {
-        return TEST_ISSUES.add(GhIssueUtil.create(ghNumber, ghState, ghTitle, labels));
+        TEST_ISSUES.add(GhIssueUtil.create(ghNumber, ghState, ghTitle, labels));
     }
 
     /**

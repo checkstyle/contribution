@@ -106,13 +106,15 @@ public final class MainProcess {
                 || releaseNotes.containsKey(Constants.BREAKING_COMPATIBILITY_LABEL);
 
         final List<String> errors = new ArrayList<>();
-        final String errorBeginning = "[ERROR] Validation of release number failed.";
-        final String errorEnding = "Please correct release number by running https://github.com/"
-            + "checkstyle/checkstyle/actions/workflows/bump-version-and-update-milestone.yml";
 
         if (!RELEASE_PATTERN.matcher(releaseVersion).find()) {
             errors.add("Release number should match pattern " + RELEASE_NUMBER_PATTERN);
         }
+
+        final String errorBeginning = "[ERROR] Validation of release number failed.";
+        final String errorEnding = "Please correct release number by running https://github.com/"
+            + "checkstyle/checkstyle/actions/workflows/bump-version-and-update-milestone.yml";
+
         if (isPatch(releaseVersion) && containsNewOrBreakingCompatabilityLabel) {
             errors.add(
                 String.format("%s Release number is a patch(%s), but release notes contain 'new' "

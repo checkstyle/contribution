@@ -19,7 +19,8 @@
 
 package com.github.checkstyle.internal;
 
-import java.util.Date;
+import java.nio.charset.StandardCharsets;
+import java.util.Calendar;
 import java.util.Random;
 
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -33,13 +34,15 @@ public final class RevCommitUtil {
     public static RevCommit create(String commitMessage, String author) {
         final String commitData = String.format("tree %040x\n"
             + "parent %040x\n"
-            + "author " + author + " <test@email.com> %d +0100\n"
-            + "committer " + author + " <test@email.com> %d +0100\n\n"
+            + "author %s <test@email.com> %d +0100\n"
+            + "committer %s <test@email.com> %d +0100\n\n"
             + commitMessage,
                 RANDOM.nextLong(),
                 RANDOM.nextLong(),
-                new Date().getTime(),
-                new Date().getTime());
-        return RevCommit.parse(commitData.getBytes());
+                author,
+                Calendar.getInstance().getTime().getTime(),
+                author,
+                Calendar.getInstance().getTime().getTime());
+        return RevCommit.parse(commitData.getBytes(StandardCharsets.UTF_8));
     }
 }

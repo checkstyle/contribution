@@ -20,6 +20,7 @@
 package com.github.checkstyle.globals;
 
 import java.util.Collections;
+import java.util.regex.Pattern;
 
 import org.kohsuke.github.GHIssue;
 
@@ -42,6 +43,9 @@ public final class ReleaseNotesMessage {
     /** Twelve spaces. */
     private static final String TWELVE_SPACES = String.join(
         "", Collections.nCopies(TITLE_INDENTATION, " "));
+
+    /** Pattern used to find things to escape in github. */
+    private static final Pattern ESCAPE = Pattern.compile("([@<>&])");
 
     /** Issue number. */
     private final int issueNo;
@@ -221,6 +225,6 @@ public final class ReleaseNotesMessage {
      * @return escaped string.
      */
     private static String escapeGithubCharacters(String str) {
-        return str.replaceAll("(@|<|>|&)", "`$1`");
+        return ESCAPE.matcher(str).replaceAll("`$1`");
     }
 }
