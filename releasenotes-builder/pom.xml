@@ -26,7 +26,7 @@
         <checkstyle.version>10.5.0</checkstyle.version>
         <checkstyle.configLocation>https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-${checkstyle.version}/config/checkstyle_checks.xml</checkstyle.configLocation>
         <junit.version>4.13.2</junit.version>
-        <mockito.version>4.10.0</mockito.version>
+        <mockito.version>4.11.0</mockito.version>
     </properties>
 
     <dependencies>
