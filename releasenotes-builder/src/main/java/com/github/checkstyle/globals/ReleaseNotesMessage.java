@@ -22,8 +22,6 @@ package com.github.checkstyle.globals;
 import java.util.Collections;
 import java.util.regex.Pattern;
 
-import org.kohsuke.github.GHIssue;
-
 /**
  * Represents a release notes message.
  *
@@ -61,12 +59,13 @@ public final class ReleaseNotesMessage {
     /**
      * Constructs a release notes message for issue.
      *
-     * @param issue issue.
+     * @param issueNumber issue number.
+     * @param issueTitle issue title.
      * @param author author.
      */
-    public ReleaseNotesMessage(GHIssue issue, String author) {
-        issueNo = issue.getNumber();
-        title = getActualTitle(issue);
+    public ReleaseNotesMessage(int issueNumber, String issueTitle, String author) {
+        issueNo = issueNumber;
+        title = getActualTitle(issueTitle);
         shortWidthTitle = split(title);
         githubEscapedTitle = escapeGithubCharacters(title);
         this.author = author;
@@ -134,12 +133,11 @@ public final class ReleaseNotesMessage {
     /**
      * Returns actual title of issue or pull request which is represented as an issue.
      *
-     * @param issue issue object.
+     * @param issueTitle issue title.
      * @return actual title of issue or pull request which is represented as an issue.
      */
-    private static String getActualTitle(GHIssue issue) {
+    private static String getActualTitle(String issueTitle) {
         final String actualTitle;
-        final String issueTitle = issue.getTitle();
         if (issueTitle.startsWith("Pull")) {
             actualTitle = issueTitle.substring(issueTitle.indexOf(':') + 2);
         }

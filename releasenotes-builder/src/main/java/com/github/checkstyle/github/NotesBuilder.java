@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.kohsuke.github.GHFileNotFoundException;
 import org.kohsuke.github.GHIssue;
 import org.kohsuke.github.GHIssueState;
 import org.kohsuke.github.GHLabel;
@@ -53,6 +54,8 @@ public final class NotesBuilder {
     /** String format pattern for GitHub issue. */
     private static final String GITHUB_ISSUE_TEMPLATE =
             " https://github.com/%s/issues/%d";
+    /** String format pattern for warning if issue is not closed. */
+    private static final String MESSAGE_ISSUE_NOT_FOUND = "[WARN] Issue #%d could not be found!";
     /** String format pattern for warning if issue is not closed. */
     private static final String MESSAGE_NOT_CLOSED = "[WARN] Issue #%d \"%s\" is not closed!"
                             + " Please review issue"
@@ -126,6 +129,7 @@ public final class NotesBuilder {
      * @noinspectionreason MethodWithTooManyParameters - Method requires a lot of parameters to
      *                     build the result with label.
      */
+    // -@cs[ExecutableStatementCount] central method for processing
     private static void buildResultWithLabel(String remoteRepoPath, Result result,
                                              GHRepository remoteRepo,
                                              Set<RevCommit> commitsForRelease,
@@ -135,24 +139,44 @@ public final class NotesBuilder {
             final int issueNo = commitMessage.getIssueNumber();
             if (!processedIssueNumbers.contains(issueNo)) {
                 processedIssueNumbers.add(issueNo);
-                final GHIssue issue = remoteRepo.getIssue(issueNo);
-                if (issue.getState() != GHIssueState.CLOSED) {
-                    result.addWarning(String.format(MESSAGE_NOT_CLOSED, issueNo, issue.getTitle(),
-                                                    remoteRepoPath, issueNo));
+
+                int issueNumber;
+                String issueTitle;
+                String issueLabel = null;
+
+                try {
+                    final GHIssue issue = remoteRepo.getIssue(issueNo);
+
+                    if (issue.getState() != GHIssueState.CLOSED) {
+                        result.addWarning(String.format(MESSAGE_NOT_CLOSED, issueNo,
+                                issue.getTitle(), remoteRepoPath, issueNo));
+                    }
+
+                    issueNumber = issue.getNumber();
+                    issueTitle = issue.getTitle();
+                    issueLabel = getIssueLabelFrom(issue);
+
+                    final List<GHLabel> releaseLabels = getAllIssueLabels(issue);
+
+                    if (releaseLabels.size() > 1) {
+                        final String error = String.format(MESSAGE_MORE_THAN_ONE_RELEASE_LABEL,
+                                                           issueNo,
+                                                           String.join(SEPARATOR,
+                                                               Constants.ISSUE_LABELS),
+                                                           remoteRepoPath, issueNo);
+                        result.addError(error);
+                    }
+                }
+                catch (GHFileNotFoundException ex) {
+                    result.addWarning(String.format(MESSAGE_ISSUE_NOT_FOUND, issueNo));
+
+                    issueNumber = issueNo;
+                    issueTitle = commitMessage.getMessage();
+                    issueLabel = Constants.MISCELLANEOUS_LABEL;
                 }
 
-                final String issueLabel = getIssueLabelFrom(issue);
                 if (issueLabel.isEmpty()) {
                     final String error = String.format(MESSAGE_NO_LABEL,
-                                                       issueNo,
-                                                       String.join(SEPARATOR,
-                                                           Constants.ISSUE_LABELS),
-                                                       remoteRepoPath, issueNo);
-                    result.addError(error);
-                }
-                final List<GHLabel> releaseLabels = getAllIssueLabels(issue);
-                if (releaseLabels.size() > 1) {
-                    final String error = String.format(MESSAGE_MORE_THAN_ONE_RELEASE_LABEL,
                                                        issueNo,
                                                        String.join(SEPARATOR,
                                                            Constants.ISSUE_LABELS),
@@ -162,7 +186,7 @@ public final class NotesBuilder {
                 final Set<RevCommit> issueCommits = getCommitsForIssue(commitsForRelease, issueNo);
                 final String authors = getAuthorsOf(issueCommits);
                 final ReleaseNotesMessage releaseNotesMessage =
-                    new ReleaseNotesMessage(issue, authors);
+                    new ReleaseNotesMessage(issueNumber, issueTitle, authors);
                 result.putReleaseNotesMessage(issueLabel, releaseNotesMessage);
             }
         }

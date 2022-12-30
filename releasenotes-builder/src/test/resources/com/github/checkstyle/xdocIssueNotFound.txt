@@ -1,0 +1,11 @@
+    <section name="Release 10.0.1">
+      <div class="releaseDate">XX.XX.XXXX</div>
+      <p>Notes:</p>
+        <ul>
+          <li>
+            Issue #1: Hello World.
+            Author: CheckstyleUser
+            <a href="https://github.com/checkstyle/checkstyle/issues/1">#1</a>
+          </li>
+        </ul>
+    </section>

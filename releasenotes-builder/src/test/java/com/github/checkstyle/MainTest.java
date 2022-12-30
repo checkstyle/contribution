@@ -128,17 +128,6 @@ public class MainTest extends AbstractReleaseNotesTestSupport {
     }
 
     @Test
-    public void testIssueCommitWithIssueNotFound() {
-        addCommit("Issue #1: Hello World", "CheckstyleUser");
-
-        runMainContentGenerationAndAssertReturnCode(-2,
-            "-releaseNumber", "10.0.1",
-            "-generateAll",
-            "-validateVersion"
-        );
-    }
-
-    @Test
     public void testIssueCommit() {
         addCommit("Issue #1: Hello World", "CheckstyleUser");
         addIssue(1, CLOSED, "Hello World", MISC);
