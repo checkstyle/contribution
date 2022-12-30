@@ -33,6 +33,26 @@ import com.github.checkstyle.internal.AbstractReleaseNotesTestSupport;
 
 public class TemplateProcessorTest extends AbstractReleaseNotesTestSupport {
     @Test
+    public void testIssueCommitWithIssueNotFound() throws Exception {
+        addCommit("Issue #1: Hello World", "CheckstyleUser");
+
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "10.0.1",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", System.lineSeparator()
+                + "[WARN] Issue #1 could not be found!"
+                + System.lineSeparator() + MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
+
+        assertFile("xdocIssueNotFound.txt", MainProcess.XDOC_FILENAME);
+        assertFile("twitterIssueNotFound.txt", MainProcess.TWITTER_FILENAME);
+        assertFile("githubIssueNotFound.txt", MainProcess.GITHUB_FILENAME);
+    }
+
+    @Test
     public void testGenerateOnlyBreakingCompatibility() throws Exception {
         createAllIssues(BREAKING);
         createAllCommits();
