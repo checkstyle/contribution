@@ -252,7 +252,7 @@ public class TemplateProcessorTest extends AbstractReleaseNotesTestSupport {
         assertFile("customTemplate.txt", MainProcess.GITHUB_FILENAME);
     }
 
-    private static void createAllIssues(String... labels) {
+    private void createAllIssues(String... labels) {
         for (String label: labels) {
             addIssue(1, CLOSED, "Mock issue title 1", label);
             addIssue(2, CLOSED, "Mock issue title 2", label);
@@ -271,7 +271,7 @@ public class TemplateProcessorTest extends AbstractReleaseNotesTestSupport {
         }
     }
 
-    private static void createAllCommits() {
+    private void createAllCommits() {
         addCommit("Issue #1: Mock issue title 1", "Author 1");
         addCommit("Issue #2: Mock issue title 2", "Author 3, Author 4");
         addCommit("Issue #3: Mock issue title 3", "Author 5");
