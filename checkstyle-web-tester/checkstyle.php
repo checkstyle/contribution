@@ -39,7 +39,7 @@ if (!isset($checkstyle)) {
 
 if (!isset($action)) {
 	if (!isset($config)) {
-		$config = "<?xml version=\"1.0\"?>\n<!DOCTYPE module PUBLIC\n          \"-//Puppy Crawl//DTD Check Configuration 1.3//EN\"\n          \"https://checkstyle.org/dtds/configuration_1_3.dtd\">\n\n<module name=\"Checker\">\n    <property name=\"charset\" value=\"UTF-8\"/>\n\n    <module name=\"TreeWalker\">\n    </module>\n</module>";
+		$config = "<?xml version=\"1.0\"?>\n<!DOCTYPE module PUBLIC\n          \"-//Checkstyle//DTD Checkstyle Configuration 1.3//EN\"\n          \"https://checkstyle.org/dtds/configuration_1_3.dtd\">\n\n<module name=\"Checker\">\n    <property name=\"charset\" value=\"UTF-8\"/>\n\n    <module name=\"TreeWalker\">\n    </module>\n</module>";
 	}
 	if (!isset($code)) {
 		$code = "public class TestClass {\n    void method() {\n    }\n}";
