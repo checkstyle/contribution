@@ -55,7 +55,6 @@ to patch branch (required if baseConfig is specified);
 
 **config** (c) - path to the checkstyle config file. It will be applied to base
 and patch branches (required if baseConfig and patchConfig are not specified).
-The default config should be changed in order to be appropriate for your use purposes;
 
 **listOfProjects** (l) - path to the file which contains the projects which sources
 will be analyzed by Checkstyle during report generation.
