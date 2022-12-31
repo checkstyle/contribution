@@ -1,0 +1,78 @@
+version: 2.1
+
+jobs:
+  validate-with-maven-script:
+    description: "Runs a maven script using the job name as the argument."
+    parameters: &script_parameters
+      image-name:
+        type: string
+        default: "cimg/openjdk:11.0.16"
+        description: "docker image to use"
+      command:
+        description: "command to run"
+        type: string
+        default: ""
+    docker:
+      - image: << parameters.image-name >>
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore Maven repo cache
+          keys:
+            - mvn-cache-{{ checksum "pom.xml" }}
+      - run:
+          command: << parameters.command >>
+      - save_cache:
+          name: Save Maven repo cache
+          key: mvn-cache-{{ checksum "pom.xml" }}
+          paths:
+            - .m2
+
+  validate-with-script:
+    description: "Runs a non-maven script using the job name as the argument."
+    parameters: *script_parameters
+    docker:
+      - image: << parameters.image-name >>
+    steps:
+      - checkout
+      - run:
+          name: run << parameters.command >>
+          command: |
+            export PULL_REQUEST=$CIRCLE_PR_NUMBER
+            export PR_HEAD_SHA=$CIRCLE_SHA1
+            export PR_NUMBER=$CIRCLE_PR_NUMBER
+            << parameters.command >>
+
+workflows:
+  test:
+    jobs:
+      - validate-with-maven-script:
+          name: "releasenotes-builder"
+          image-name: &custom_img "checkstyle/jdk-11-groovy-git-mvn:11.0.13__3.0.9__2.25.1__3.6.3"
+          command: "./.ci/travis.sh releasenotes-builder"
+      - validate-with-maven-script:
+          name: "patch-diff-report-tool"
+          image-name: *custom_img
+          command: "./.ci/travis.sh patch-diff-report-tool"
+      - validate-with-maven-script:
+          name: "checkstyle-tester (diff.groovy) on linux"
+          image-name: *custom_img
+          command: "./.ci/travis.sh checkstyle-tester-diff-groovy-patch"
+      - validate-with-maven-script:
+          name: "checkstyle-tester (diff.groovy) on linux with base and patch configs"
+          image-name: *custom_img
+          command: "./.ci/travis.sh checkstyle-tester-diff-groovy-base-patch"
+      - validate-with-maven-script:
+          name: "checkstyle-tester (diff.groovy) on linux with enabled patchOnly"
+          image-name: *custom_img
+          command: "./.ci/travis.sh checkstyle-tester-diff-groovy-patch-only"
+      - validate-with-maven-script:
+          name: "codenarc validation for groovy files"
+          image-name: *custom_img
+          command: "./.ci/travis.sh codenarc"
+
+  cli-validation:
+    jobs:
+      - validate-with-script:
+          name: "markdown lint"
+          command: "./.ci/travis.sh markdownlint"
