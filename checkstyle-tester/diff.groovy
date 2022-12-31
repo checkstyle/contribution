@@ -121,7 +121,12 @@ def areValidCliOptions(cliOptions) {
 
 def isValidCheckstyleConfigsCombination(config, baseConfig, patchConfig, toolMode) {
     def valid = true
-    if (config && (patchConfig || baseConfig)) {
+    if (!config && !patchConfig && !baseConfig) {
+        err.println "Error: you should specify either \'config\'," \
+            + " or \'baseConfig\', or \'patchConfig\'!"
+        valid = false
+    }
+    else if (config && (patchConfig || baseConfig)) {
         err.println "Error: you should specify either \'config\'," \
             + " or \'baseConfig\' and \'patchConfig\', or \'patchConfig\' only!"
         valid = false
