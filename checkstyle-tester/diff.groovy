@@ -74,8 +74,8 @@ def getCliOptions(args) {
             + ' as a shorter version to prevent long paths. (optional, default is false)')
         m(longOpt: 'mode', args: 1, required: false, argName: 'mode', 'The mode of the tool:' \
             + ' \'diff\' or \'single\'. (optional, default is \'diff\')')
-        xm(longOpt: 'extraMvnRegressionOptions', args: 1, required: false, 'Extra arguments to pass to Maven' \
-            + 'for Checkstyle Regression run (optional, ex: -Dmaven.prop=true)')
+        xo(longOpt: 'extraOptions', args: 1, required: false, 'Extra arguments to pass ' \
+            + 'for Checkstyle execution (optional, ex: -Dprop=true)')
     }
     return cli.parse(args)
 }
@@ -218,11 +218,11 @@ def launchCheckstyleReport(cfg) {
 
     // If "no exception" testing, these may not be defined in repos other than checkstyle
     if (isRegressionTesting) {
-        println "Installing Checkstyle artifact ($cfg.branch) into local Maven repository ..."
+        println "Building Checkstyle artifact ($cfg.branch) ..."
         executeCmd("git checkout $cfg.branch", cfg.localGitRepo)
         executeCmd("git log -1 --pretty=MSG:%s%nSHA-1:%H", cfg.localGitRepo)
-        executeCmd("mvn -e --no-transfer-progress --batch-mode -Pno-validations clean install",
-            cfg.localGitRepo)
+        executeCmd("mvn -e --no-transfer-progress --batch-mode clean package -Pno-validations,assembly " +
+            "-Dassembly.skipAssembly=true -Dmaven.test.skip=true", cfg.localGitRepo)
     }
 
     cfg.checkstyleVersion =
@@ -247,11 +247,10 @@ def launchCheckstyleReport(cfg) {
 def generateCheckstyleReport(cfg) {
     println 'Testing Checkstyle started'
 
-    def targetDir = 'target'
-    def srcDir = getOsSpecificPath("src", "main", "java")
+    def allJar = getOsSpecificPath(cfg.localGitRepo.path, "target", "checkstyle-" + cfg.checkstyleVersion + "-all.jar")
     def reposDir = 'repositories'
     def reportsDir = 'reports'
-    makeWorkDirsIfNotExist(srcDir, reposDir, reportsDir)
+    makeWorkDirsIfNotExist(reposDir, reportsDir)
 
     final REPO_NAME_PARAM_NO = 0
     final REPO_TYPE_PARAM_NO = 1
@@ -261,11 +260,10 @@ def generateCheckstyleReport(cfg) {
     final FULL_PARAM_LIST_SIZE = 5
 
     def checkstyleConfig = cfg.checkstyleCfg
-    def checkstyleVersion = cfg.checkstyleVersion
     def allowExcludes = cfg.allowExcludes
     def listOfProjectsFile = new File(cfg.listOfProjects)
     def projects = listOfProjectsFile.readLines()
-    def extraMvnRegressionOptions = cfg.extraMvnRegressionOptions
+    def extraOptions = cfg.extraOptions
 
     projects.each {
         project ->
@@ -287,27 +285,26 @@ def generateCheckstyleReport(cfg) {
                     excludes = params[REPO_EXCLUDES_PARAM_NO]
                 }
 
-                deleteDir(srcDir)
+                def srcDir
+                def saveDir = getOsSpecificPath("$reportsDir", "$repoName")
                 if (repoType == 'local') {
-                    copyDir(repoUrl, getOsSpecificPath("$srcDir", "$repoName"))
+                    srcDir = new File("$repoUrl").getCanonicalPath()
                 } else {
                     cloneRepository(repoName, repoType, repoUrl, commitId, reposDir)
-                    copyDir(getOsSpecificPath("$reposDir", "$repoName"), getOsSpecificPath("$srcDir", "$repoName"))
+                    srcDir = getOsSpecificPath("$reposDir", "$repoName")
                 }
-                runMavenExecution(srcDir, excludes, checkstyleConfig,
-                    checkstyleVersion, extraMvnRegressionOptions)
-                def repoPath = repoUrl
-                if (repoType != 'local') {
-                    repoPath = new File(getOsSpecificPath("$reposDir", "$repoName")).absolutePath
-                }
-                postProcessCheckstyleReport(targetDir, repoName, repoPath)
-                deleteDir(getOsSpecificPath("$srcDir", "$repoName"))
-                moveDir(targetDir, getOsSpecificPath("$reportsDir", "$repoName"))
+
+                def mainClassOptions = [
+                    srcDir: srcDir,
+                    excludes: excludes,
+                    checkstyleConfig: checkstyleConfig,
+                    saveDir: saveDir,
+                    extraOptions: extraOptions,
+                ]
+
+                runCliExecution(allJar, mainClassOptions)
             }
     }
-
-    // restore empty_file to make src directory tracked by git
-    new File(getOsSpecificPath("$srcDir", "empty_file")).createNewFile()
 }
 
 def getLastCheckstyleCommitSha(gitRepo, branch) {
@@ -538,11 +535,7 @@ def getFilenameWithoutExtension(filename) {
     return filenameWithoutExtension
 }
 
-def makeWorkDirsIfNotExist(srcDirPath, repoDirPath, reportsDirPath) {
-    def srcDir = new File(srcDirPath)
-    if (!srcDir.exists()) {
-        srcDir.mkdirs()
-    }
+def makeWorkDirsIfNotExist(repoDirPath, reportsDirPath) {
     def repoDir = new File(repoDirPath)
     if (!repoDir.exists()) {
         repoDir.mkdir()
@@ -629,36 +622,39 @@ def getProjectsStatistic(diffDir) {
     return projectsStatistic
 }
 
-def runMavenExecution(srcDir, excludes, checkstyleConfig,
-                      checkstyleVersion, extraMvnRegressionOptions) {
-    println "Running 'mvn clean' on $srcDir ..."
-    def mvnClean = "mvn -e --no-transfer-progress --batch-mode clean"
-    executeCmd(mvnClean)
-    println "Running Checkstyle on $srcDir ... with excludes {$excludes}"
-    def mvnSite = "mvn -e --no-transfer-progress --batch-mode site " +
-        "-Dcheckstyle.config.location=$checkstyleConfig -Dcheckstyle.excludes=$excludes"
-    if (checkstyleVersion) {
-        mvnSite = mvnSite + " -Dcheckstyle.version=$checkstyleVersion"
+def runCliExecution(allJar, mainClassOptions) {
+    def saveLoc = new File(mainClassOptions.saveDir)
+    if (!saveLoc.exists()) {
+        saveLoc.mkdirs()
     }
-    if (extraMvnRegressionOptions) {
-        mvnSite = mvnSite + " "
 
-        if (!extraMvnRegressionOptions.startsWith("-")) {
-            mvnSite = mvnSite + "-"
+    println "Running Checkstyle CLI on ${mainClassOptions.srcDir} ... with excludes {${mainClassOptions.excludes}}"
+    def cliCommand = "java -jar $allJar -c ${mainClassOptions.checkstyleConfig} " +
+        "${mainClassOptions.srcDir} -f xml -o " +
+        getOsSpecificPath("${mainClassOptions.saveDir}", "checkstyle-result.xml") +
+        " -e " + getOsSpecificPath("${mainClassOptions.srcDir}", ".git") +
+        " -e " + getOsSpecificPath("${mainClassOptions.srcDir}", ".hg")
+
+    if (mainClassOptions.excludes.length() > 0) {
+        for (String singleExclude : mainClassOptions.excludes.split(',')) {
+            if (isWindows()) {
+                singleExclude = singleExclude.replace("/", "\\")
+            }
+            cliCommand = cliCommand + " -x " + singleExclude
         }
-        mvnSite = mvnSite + extraMvnRegressionOptions
     }
-    println(mvnSite)
-    executeCmd(mvnSite)
-    println "Running Checkstyle on $srcDir - finished"
-}
 
-def postProcessCheckstyleReport(targetDir, repoName, repoPath) {
-    new AntBuilder().replace(
-        file: getOsSpecificPath("$targetDir", "checkstyle-result.xml"),
-        token: new File(getOsSpecificPath("src", "main", "java", "$repoName")).absolutePath,
-        value: getOsSpecificPath("$repoPath")
-    )
+    if (mainClassOptions.extraOptions) {
+        cliCommand = cliCommand + " "
+
+        if (!mainClassOptions.extraOptions.startsWith("-")) {
+            cliCommand = cliCommand + "-"
+        }
+        cliCommand = cliCommand + mainClassOptions.extraOptions
+    }
+
+    executeCmd(cliCommand)
+    println "Running Checkstyle CLI on ${mainClassOptions.srcDir} - finished"
 }
 
 def copyDir(source, destination) {
@@ -761,7 +757,7 @@ class Config {
     def tmpMasterReportsDir
     def tmpPatchReportsDir
     def diffDir
-    def extraMvnRegressionOptions
+    def extraOptions
 
     def checkstyleVersion
     def sevntuVersion
@@ -774,7 +770,7 @@ class Config {
 
         shortFilePaths = cliOptions.shortFilePaths
         listOfProjects = cliOptions.listOfProjects
-        extraMvnRegressionOptions = cliOptions.extraMvnRegressionOptions
+        extraOptions = cliOptions.extraOptions
 
         checkstyleVersion = cliOptions.checkstyleVersion
         allowExcludes = cliOptions.allowExcludes
@@ -824,7 +820,7 @@ class Config {
             checkstyleCfg: baseConfig,
             listOfProjects: listOfProjects,
             destDir: tmpMasterReportsDir,
-            extraMvnRegressionOptions: extraMvnRegressionOptions,
+            extraOptions: extraOptions,
             allowExcludes:allowExcludes,
         ]
     }
@@ -836,7 +832,7 @@ class Config {
             checkstyleCfg: patchConfig,
             listOfProjects: listOfProjects,
             destDir: tmpPatchReportsDir,
-            extraMvnRegressionOptions: extraMvnRegressionOptions,
+            extraOptions: extraOptions,
             allowExcludes: allowExcludes,
         ]
     }

@@ -40,6 +40,7 @@ checkstyle-tester-diff-groovy-patch)
   cp projects-to-test-on.properties ../.ci-temp/projects-to-test-on.properties
   sed -i'' 's/^guava/#guava/' ../.ci-temp/projects-to-test-on.properties
   sed -i'' 's/#checkstyle/checkstyle/' ../.ci-temp/projects-to-test-on.properties
+  export JDK_JAVA_OPTIONS="-Xmx2048m"
   groovy diff.groovy -l ../.ci-temp/projects-to-test-on.properties \
     -c my_check.xml -b master -p patch-branch -r ../.ci-temp/checkstyle
   ;;
@@ -49,6 +50,7 @@ checkstyle-tester-diff-groovy-base-patch)
   cd .ci-temp/checkstyle
   git checkout -b patch-branch
   cd ../../checkstyle-tester
+  export JDK_JAVA_OPTIONS="-Xmx2048m"
   groovy diff.groovy -l projects-to-test-on.properties \
     -bc my_check.xml -pc my_check.xml -b master -p patch-branch -r ../.ci-temp/checkstyle
   ;;
@@ -58,6 +60,7 @@ checkstyle-tester-diff-groovy-patch-only)
   cd .ci-temp/checkstyle
   git checkout -b patch-branch
   cd ../../checkstyle-tester
+  export JDK_JAVA_OPTIONS="-Xmx2048m"
   groovy diff.groovy -l projects-to-test-on.properties \
     -pc my_check.xml -p patch-branch -r ../.ci-temp/checkstyle -m single
   ;;
@@ -72,10 +75,10 @@ checkstyle-tester-diff-groovy-regression-single)
   cd .ci-temp/contribution/checkstyle-tester
   sed -i'' 's/^guava/#guava/' projects-to-test-on.properties
   sed -i'' 's/#checkstyle|/checkstyle|/' projects-to-test-on.properties
-  export MAVEN_OPTS="-Xmx2048m"
+  export JDK_JAVA_OPTIONS="-Xmx2048m"
   groovy ./diff.groovy --listOfProjects projects-to-test-on.properties \
     -pc ../../../checkstyle-tester/diff-groovy-regression-config.xml \
-    -r ../../checkstyle -xm "-Dcheckstyle.failsOnError=false" \
+    -r ../../checkstyle \
     -m single -p master
 
   # Run report with current branch
@@ -85,7 +88,7 @@ checkstyle-tester-diff-groovy-regression-single)
   rm -rf reports repositories
   groovy ./diff.groovy --listOfProjects projects-to-test-on.properties \
     -pc diff-groovy-regression-config.xml -r ../.ci-temp/checkstyle/ \
-    -m single -p master -xm "-Dcheckstyle.failsOnError=false"
+    -m single -p master
 
   cd ..
   # We need to ignore file paths below, since they will be different between reports
