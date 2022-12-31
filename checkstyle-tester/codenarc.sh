@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 @Grapes(
-@Grab('org.codenarc:CodeNarc:1.4')
+@Grab('org.codenarc:CodeNarc:1.5')
 )
 @GrabExclude('org.codehaus.groovy:groovy-xml')
 import org.codenarc.CodeNarc

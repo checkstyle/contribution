@@ -1,5 +1,4 @@
 #!/bin/bash
-# Attention, there is no "-x" to avoid problems on Travis
 set -e
 
 export RUN_JOB=1
@@ -22,20 +21,6 @@ function checkout_from {
 
 case $1 in
 
-init-m2-repo)
-  if [[ $RUN_JOB == 1 ]]; then
-    MVN_SETTINGS=${TRAVIS_HOME}/.m2/settings.xml
-
-    if [[ -f ${MVN_SETTINGS} ]]; then
-      if [[ $TRAVIS_OS_NAME == 'osx' ]]; then
-        sed -i'' -e "/<mirrors>/,/<\/mirrors>/ d" "$MVN_SETTINGS"
-      else
-        xmlstarlet ed --inplace -d "//mirrors" "$MVN_SETTINGS"
-      fi
-    fi
-  fi
-  ;;
-
 releasenotes-builder)
   cd releasenotes-builder
   mvn clean verify
@@ -52,10 +37,10 @@ checkstyle-tester-diff-groovy-patch)
   cd .ci-temp/checkstyle
   git checkout -b patch-branch
   cd ../../checkstyle-tester
-  cp projects-for-travis.properties ../.ci-temp/projects-for-travis.properties
-  sed -i'' 's/^guava/#guava/' ../.ci-temp/projects-for-travis.properties
-  sed -i'' 's/#checkstyle/checkstyle/' ../.ci-temp/projects-for-travis.properties
-  groovy diff.groovy -l ../.ci-temp/projects-for-travis.properties \
+  cp projects-to-test-on.properties ../.ci-temp/projects-to-test-on.properties
+  sed -i'' 's/^guava/#guava/' ../.ci-temp/projects-to-test-on.properties
+  sed -i'' 's/#checkstyle/checkstyle/' ../.ci-temp/projects-to-test-on.properties
+  groovy diff.groovy -l ../.ci-temp/projects-to-test-on.properties \
     -c my_check.xml -b master -p patch-branch -r ../.ci-temp/checkstyle
   ;;
 
@@ -64,7 +49,7 @@ checkstyle-tester-diff-groovy-base-patch)
   cd .ci-temp/checkstyle
   git checkout -b patch-branch
   cd ../../checkstyle-tester
-  groovy diff.groovy -l projects-for-travis.properties \
+  groovy diff.groovy -l projects-to-test-on.properties \
     -bc my_check.xml -pc my_check.xml -b master -p patch-branch -r ../.ci-temp/checkstyle
   ;;
 
@@ -73,7 +58,7 @@ checkstyle-tester-diff-groovy-patch-only)
   cd .ci-temp/checkstyle
   git checkout -b patch-branch
   cd ../../checkstyle-tester
-  groovy diff.groovy -l projects-for-travis.properties \
+  groovy diff.groovy -l projects-to-test-on.properties \
     -pc my_check.xml -p patch-branch -r ../.ci-temp/checkstyle -m single
   ;;
 
