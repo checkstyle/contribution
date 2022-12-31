@@ -68,7 +68,7 @@
 										<td th:unless="${child.hasPatchModule()}"> </td>
 									</tr>
 									<th:block th:each="grandchild : ${child.children}">
-										<th:block th:include="::module" th:with="child = ${grandchild}"/>
+										<th:block th:insert="~{::module}" th:with="child = ${grandchild}"/>
 									</th:block>
 								</th:block>
 							</th:block>	
