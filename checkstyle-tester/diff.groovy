@@ -74,6 +74,8 @@ def getCliOptions(args) {
             + ' as a shorter version to prevent long paths. (optional, default is false)')
         m(longOpt: 'mode', args: 1, required: false, argName: 'mode', 'The mode of the tool:' \
             + ' \'diff\' or \'single\'. (optional, default is \'diff\')')
+        ce(longOpt: 'continueOnError', required: false, 'Whether to fail or continue the Checkstyle' \
+            + ' run when it reports a non-zero return code. (optional, default is false)')
         xo(longOpt: 'extraOptions', args: 1, required: false, 'Extra arguments to pass ' \
             + 'for Checkstyle execution (optional, ex: -Dprop=true)')
     }
@@ -263,6 +265,7 @@ def generateCheckstyleReport(cfg) {
     def allowExcludes = cfg.allowExcludes
     def listOfProjectsFile = new File(cfg.listOfProjects)
     def projects = listOfProjectsFile.readLines()
+    def continueOnError = cfg.continueOnError
     def extraOptions = cfg.extraOptions
 
     projects.each {
@@ -299,6 +302,7 @@ def generateCheckstyleReport(cfg) {
                     excludes: excludes,
                     checkstyleConfig: checkstyleConfig,
                     saveDir: saveDir,
+                    continueOnError: continueOnError,
                     extraOptions: extraOptions,
                 ]
 
@@ -653,7 +657,7 @@ def runCliExecution(allJar, mainClassOptions) {
         cliCommand = cliCommand + mainClassOptions.extraOptions
     }
 
-    executeCmd(cliCommand)
+    executeCliCmd(cliCommand, mainClassOptions.continueOnError)
     println "Running Checkstyle CLI on ${mainClassOptions.srcDir} - finished"
 }
 
@@ -680,6 +684,17 @@ def executeCmd(cmd, dir = new File("").absoluteFile) {
     proc.consumeProcessOutput(System.out, System.err)
     proc.waitFor()
     if (proc.exitValue() != 0) {
+        throw new GroovyRuntimeException("Error: ${proc.err.text}!")
+    }
+}
+
+def executeCliCmd(cmd, continueOnError) {
+    println "Running command: ${cmd}"
+    def osSpecificCmd = getOsSpecificCmd(cmd)
+    def proc = osSpecificCmd.execute(null, new File("").absoluteFile)
+    proc.consumeProcessOutput(System.out, System.err)
+    proc.waitFor()
+    if (!continueOnError && proc.exitValue() != 0) {
         throw new GroovyRuntimeException("Error: ${proc.err.text}!")
     }
 }
@@ -742,6 +757,7 @@ class Config {
     def shortFilePaths
     def listOfProjects
     def mode
+    def continueOnError
 
     def baseBranch
     def patchBranch
@@ -771,6 +787,7 @@ class Config {
         shortFilePaths = cliOptions.shortFilePaths
         listOfProjects = cliOptions.listOfProjects
         extraOptions = cliOptions.extraOptions
+        continueOnError = cliOptions.continueOnError
 
         checkstyleVersion = cliOptions.checkstyleVersion
         allowExcludes = cliOptions.allowExcludes
@@ -822,6 +839,7 @@ class Config {
             destDir: tmpMasterReportsDir,
             extraOptions: extraOptions,
             allowExcludes:allowExcludes,
+            continueOnError:continueOnError,
         ]
     }
 
@@ -834,6 +852,7 @@ class Config {
             destDir: tmpPatchReportsDir,
             extraOptions: extraOptions,
             allowExcludes: allowExcludes,
+            continueOnError:continueOnError,
         ]
     }
 

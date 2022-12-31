@@ -78,7 +78,7 @@ checkstyle-tester-diff-groovy-regression-single)
   export JDK_JAVA_OPTIONS="-Xmx2048m"
   groovy ./diff.groovy --listOfProjects projects-to-test-on.properties \
     -pc ../../../checkstyle-tester/diff-groovy-regression-config.xml \
-    -r ../../checkstyle \
+    -r ../../checkstyle -ce \
     -m single -p master
 
   # Run report with current branch
@@ -88,7 +88,7 @@ checkstyle-tester-diff-groovy-regression-single)
   rm -rf reports repositories
   groovy ./diff.groovy --listOfProjects projects-to-test-on.properties \
     -pc diff-groovy-regression-config.xml -r ../.ci-temp/checkstyle/ \
-    -m single -p master
+    -m single -p master -ce
 
   cd ..
   # We need to ignore file paths below, since they will be different between reports

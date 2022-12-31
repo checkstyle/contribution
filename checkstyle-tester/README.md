@@ -70,6 +70,10 @@ This option is useful for Windows users where they are restricted to maximum dir
  (optional, default is false). This option is
  used for files that are not compilable or that Checkstyle cannot parse.
 
+**continueOnError** (ce) - whether to fail or continue the Checkstyle run when it reports a
+ non-zero return code.
+(optional, default is false)
+
 ## Outputs
 
 When the script finishes its work the following directory structure will be created
