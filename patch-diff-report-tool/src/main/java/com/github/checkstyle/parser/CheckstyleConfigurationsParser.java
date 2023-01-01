@@ -121,8 +121,13 @@ public final class CheckstyleConfigurationsParser {
     private static ConfigurationModule parseConfiguration(Path xml, String rootName)
             throws FileNotFoundException, XMLStreamException {
         final ConfigurationModule root = new ConfigurationModule(rootName);
-        final XMLEventReader reader = StaxUtils.createReader(xml);
-        parseModule(reader, root);
+        try {
+            final XMLEventReader reader = StaxUtils.createReader(xml);
+            parseModule(reader, root);
+        }
+        catch (XMLStreamException ex) {
+            throw new XMLStreamException("Exception was thrown while processing: " + xml, ex);
+        }
         return root;
     }
 
