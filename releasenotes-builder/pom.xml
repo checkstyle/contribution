@@ -21,8 +21,6 @@
         <maven.plugin.twitter4j.version>4.1.2</maven.plugin.twitter4j.version>
         <maven.plugin.javax.mail.version>1.5.0-b01</maven.plugin.javax.mail.version>
         <java.version>11</java.version>
-        <tools.jar.version>${java.version}.0</tools.jar.version>
-        <tools.jar.path>${java.home}/../lib/tools.jar</tools.jar.path>
         <checkstyle.version>10.6.0</checkstyle.version>
         <checkstyle.configLocation>https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-${checkstyle.version}/config/checkstyle_checks.xml</checkstyle.configLocation>
         <junit.version>4.13.2</junit.version>
