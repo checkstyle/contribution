@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<title>checkstyle xml difference report</title>
-		<style type="text/css" media="all">@import url("./css/maven-base.css");@import url("./css/maven-theme.css"); );</style>
+		<style type="text/css" media="all">@import url("./css/maven-base.css");@import url("./css/maven-theme.css");</style>
 		<link rel="stylesheet" href="./css/site.css">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<http-equiv http-equiv="Content-Language" content="en"></http-equiv>
