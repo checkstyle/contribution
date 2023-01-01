@@ -347,6 +347,14 @@
     <module name="UnnecessarySemicolonInEnumeration"/>
     <module name="UnnecessarySemicolonInTryWithResources"/>
     <module name="VariableDeclarationUsageDistance"/>
+    <module name="VariableDeclarationUsageDistance">
+      <property name="id" value="variableDeclarationUsageDistanceScopes"/>
+      <property name="validateBetweenScopes" value="true"/>
+    </module>
+    <module name="VariableDeclarationUsageDistance">
+      <property name="id" value="variableDeclarationUsageDistanceFinal"/>
+      <property name="ignoreFinal" value="false"/>
+    </module>
 
     <!-- Filters-->
     <module name="SuppressionCommentFilter">
