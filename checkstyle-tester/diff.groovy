@@ -811,47 +811,6 @@ class Config {
     def isDiffMode() {
         return 'diff'.equals(mode)
     }
-
-    def isSingleMode() {
-        return 'single'.equals(mode)
-    }
-
-    def getCheckstyleToolBaseConfig() {
-        return [
-            localGitRepo: localGitRepo,
-            branch: baseBranch,
-            checkstyleCfg: baseConfig,
-            listOfProjects: listOfProjects,
-            destDir: tmpMasterReportsDir,
-            extraMvnRegressionOptions: extraMvnRegressionOptions,
-            allowExcludes:allowExcludes,
-        ]
-    }
-
-    def getCheckstyleToolPatchConfig() {
-        return [
-            localGitRepo: localGitRepo,
-            branch: patchBranch,
-            checkstyleCfg: patchConfig,
-            listOfProjects: listOfProjects,
-            destDir: tmpPatchReportsDir,
-            extraMvnRegressionOptions: extraMvnRegressionOptions,
-            allowExcludes: allowExcludes,
-        ]
-    }
-
-    def getDiffToolConfig() {
-        return [
-            reportsDir: reportsDir,
-            masterReportsDir: masterReportsDir,
-            patchReportsDir: patchReportsDir,
-            baseConfig: baseConfig,
-            patchConfig: patchConfig,
-            shortFilePaths: shortFilePaths,
-            mode: mode,
-            allowExcludes: allowExcludes,
-        ]
-    }
 }
 
 class CheckstyleReportInfo {
