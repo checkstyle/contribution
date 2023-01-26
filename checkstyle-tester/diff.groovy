@@ -493,7 +493,8 @@ def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo,
                         "-${diffCount[2]}</span> )")
                 }
                 else if (diffCount[2] == 0) {
-                    summaryIndexHtml << (" ( &#177;${diffCount[0]}, <span style=\"color: green;\">+${diffCount[1]} )")
+                    summaryIndexHtml << (" ( &#177;${diffCount[0]}, <span style=\"color: green;\">" +
+                        "+${diffCount[1]}</span> )")
                 }
                 else {
                     summaryIndexHtml << (" ( &#177;${diffCount[0]}, <span style=\"color: red;\">" +
