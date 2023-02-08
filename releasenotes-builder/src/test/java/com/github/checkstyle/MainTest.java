@@ -393,4 +393,20 @@ public class MainTest extends AbstractReleaseNotesTestSupport {
         Assert.assertEquals("expected error output", "", systemErr.getLog());
         Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
     }
+
+    @Test
+    public void testMistypedCommitMessage() {
+        addCommit("Issue 1: Hello World", "CheckstyleUser");
+        addCommit("Pull 2: Hello World", "CheckstyleUser");
+        addCommit("Issue #asd: asd", "CheckstyleUser");
+
+        runMainContentGenerationAndAssertReturnCode(0,
+            "-releaseNumber", "10.0.1",
+            "-generateAll",
+            "-validateVersion"
+        );
+
+        Assert.assertEquals("expected error output", "", systemErr.getLog());
+        Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
+    }
 }

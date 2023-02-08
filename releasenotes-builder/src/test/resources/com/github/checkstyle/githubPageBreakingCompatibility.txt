@@ -12,6 +12,16 @@ Breaking backward compatibility:
   #8 - Mock issue title 8 thisIssueTitleIsExactly100CharactersLongAndWeExpectItToGetWrappedDueToBeingTooLng
   #9 - Mock issue title 9 escape `@` and `@``@``@``@``@`
   #10 - Mock issue title 10 escape `<` `>` `&` `<``&``<``>``&``<``<`
+  #13 - Mock pull title 13
 
 
 
+<details>
+<summary>Other Changes:</summary>
+<br/>
+  Issue 11: Mock issue title 11 missing # <br/>
+  Pull 12: Mock pull title 12 missing # <br/>
+  miscasmdifs324y23123sda!`@`.asd12 <br/>
+  Issue #asd: asd <br/>
+  .Issue #14: Mock issue title 14 <br/>
+</details>
