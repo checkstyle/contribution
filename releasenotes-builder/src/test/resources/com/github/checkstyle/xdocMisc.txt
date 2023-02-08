@@ -55,5 +55,30 @@
             Author: Author 13
             <a href="https://github.com/checkstyle/checkstyle/issues/10">#10</a>
           </li>
+          <li>
+            Issue 11: Mock issue title 11 missing #.
+            Author: Author 14
+          </li>
+          <li>
+            Pull 12: Mock pull title 12 missing #.
+            Author: Author 15
+          </li>
+          <li>
+            miscasmdifs324y23123sda!@.asd12.
+            Author: Author 16
+          </li>
+          <li>
+            Issue #asd: asd.
+            Author: Author 17
+          </li>
+          <li>
+            Mock pull title 13.
+            Author: Author 18
+            <a href="https://github.com/checkstyle/checkstyle/issues/13">#13</a>
+          </li>
+          <li>
+            .Issue #14: Mock issue title 14.
+            Author: Author 19
+          </li>
         </ul>
     </section>

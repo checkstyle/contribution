@@ -61,13 +61,13 @@ import java.util.regex.Pattern;
 
     /**
      * Checks whether commits message is associated with a pull request or an issue.
-     * Commit message which is associated with a pull request or an issue starts with 'Pull'
-     * or 'Issue' prefix.
+     * Commit message which is associated with a pull request or an issue follows one
+     * of the following formats: 'Pull #[number]: [title]' or 'Issue #[number]: [title]'.
      *
      * @return true if commits message is associated with a pull request or an issue.
      */
     public boolean isIssueOrPull() {
-        return message.startsWith("Issue") || message.startsWith("Pull");
+        return message.matches("^(Pull|Issue) #\\d+: .*$");
     }
 
     /**

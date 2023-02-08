@@ -288,6 +288,7 @@ public class TemplateProcessorTest extends AbstractReleaseNotesTestSupport {
                 + "LongAndWeExpectItToGetWrappedDueToBeingTooLng", label);
             addIssue(9, CLOSED, "Mock issue title 9 escape @ and @@@@@", label);
             addIssue(10, CLOSED, "Mock issue title 10 escape < > & <&<>&<<", label);
+            addIssue(13, CLOSED, "Mock pull title 13", label);
         }
     }
 
@@ -306,5 +307,11 @@ public class TemplateProcessorTest extends AbstractReleaseNotesTestSupport {
             + "LongAndWeExpectItToGetWrappedDueToBeingTooLng", "Author 11");
         addCommit("Issue #9: Mock issue title 9 escape @ and @@@@@", "Author 12");
         addCommit("Issue #10: Mock issue title 10 escape < > & <&<>&<<", "Author 13");
+        addCommit("Issue 11: Mock issue title 11 missing #", "Author 14");
+        addCommit("Pull 12: Mock pull title 12 missing #", "Author 15");
+        addCommit("miscasmdifs324y23123sda!@.asd12", "Author 16");
+        addCommit("Issue #asd: asd", "Author 17");
+        addCommit("Pull #13: Mock pull title 13", "Author 18");
+        addCommit(".Issue #14: Mock issue title 14", "Author 19");
     }
 }
