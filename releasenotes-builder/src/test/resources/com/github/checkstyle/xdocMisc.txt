@@ -80,5 +80,20 @@
             .Issue #14: Mock issue title 14.
             Author: Author 19
           </li>
+          <li>
+            Mock issue title 14.
+            Author: Author 20
+            <a href="https://github.com/checkstyle/checkstyle/issues/14">#14</a>
+          </li>
+          <li>
+            Mock issue title 15.
+            Author: Author 21
+            <a href="https://github.com/checkstyle/checkstyle/issues/15">#15</a>
+          </li>
+          <li>
+            Mock issue title 16.
+            Author: Author 22
+            <a href="https://github.com/checkstyle/checkstyle/issues/16">#16</a>
+          </li>
         </ul>
     </section>

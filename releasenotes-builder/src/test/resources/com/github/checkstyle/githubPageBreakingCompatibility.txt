@@ -13,6 +13,9 @@ Breaking backward compatibility:
   #9 - Mock issue title 9 escape `@` and `@``@``@``@``@`
   #10 - Mock issue title 10 escape `<` `>` `&` `<``&``<``>``&``<``<`
   #13 - Mock pull title 13
+  #14 - Mock issue title 14
+  #15 - Mock issue title 15
+  #16 - Mock issue title 16
 
 
 
