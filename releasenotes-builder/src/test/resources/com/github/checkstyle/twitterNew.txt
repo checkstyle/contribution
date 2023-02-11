@@ -1,3 +1,3 @@
 Checkstyle 1.0.0 - https://checkstyle.org/releasenotes.html#Release_1.0.0
 
-New functionality: 11
+New functionality: 14

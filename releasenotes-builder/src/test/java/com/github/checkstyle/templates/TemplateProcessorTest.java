@@ -289,6 +289,9 @@ public class TemplateProcessorTest extends AbstractReleaseNotesTestSupport {
             addIssue(9, CLOSED, "Mock issue title 9 escape @ and @@@@@", label);
             addIssue(10, CLOSED, "Mock issue title 10 escape < > & <&<>&<<", label);
             addIssue(13, CLOSED, "Mock pull title 13", label);
+            addIssue(14, CLOSED, "Mock issue title 14", label);
+            addIssue(15, CLOSED, "Mock issue title 15", label);
+            addIssue(16, CLOSED, "Mock issue title 16", label);
         }
     }
 
@@ -313,5 +316,8 @@ public class TemplateProcessorTest extends AbstractReleaseNotesTestSupport {
         addCommit("Issue #asd: asd", "Author 17");
         addCommit("Pull #13: Mock pull title 13", "Author 18");
         addCommit(".Issue #14: Mock issue title 14", "Author 19");
+        addCommit("Issue #14: Mock issue title 14\r\n", "Author 20");
+        addCommit("Issue #15: Mock issue title 15\r", "Author 21");
+        addCommit("Issue #16: Mock issue title 16\n", "Author 22");
     }
 }

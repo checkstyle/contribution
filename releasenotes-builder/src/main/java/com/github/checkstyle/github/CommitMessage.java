@@ -63,11 +63,15 @@ import java.util.regex.Pattern;
      * Checks whether commits message is associated with a pull request or an issue.
      * Commit message which is associated with a pull request or an issue follows one
      * of the following formats: 'Pull #[number]: [title]' or 'Issue #[number]: [title]'.
+     * This method trims '\r' and '\n'.
      *
      * @return true if commits message is associated with a pull request or an issue.
      */
     public boolean isIssueOrPull() {
-        return message.matches("^(Pull|Issue) #\\d+: .*$");
+        return message
+            .replace("\r", "")
+            .replace("\n", "")
+            .matches("^(Pull|Issue) #\\d+: .*$");
     }
 
     /**
