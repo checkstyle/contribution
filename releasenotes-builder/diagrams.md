@@ -5,47 +5,34 @@
 ```mermaid
 sequenceDiagram
     actor Maintainer
-    participant Github
-    participant CI
+    participant GithubActions
 
-    Note left of Maintainer: version 10.4-SNAPSHOT
-    Maintainer->>Github: run Github action "set version '10.3.1-SNAPSHOT'"
-    par Github action
-        Github->>Github: mvn version:set '10.3.1-SNAPSHOT'
-        Github->>Github: push changes for version bump
-        Github->>Github: update milestone name from 10.4 to 10.3.1
-    end
+    Note left of Maintainer: verify that all CIs are green, and releasenotes job also
+    
+    Note left of Maintainer: version 10.3.0-SNAPSHOT
+    Maintainer->>GithubActions: publish releasenotes inside (xdoc files)
 
-    Note left of Maintainer: version 10.3.1-SNAPSHOT
-    Maintainer->>Github: create tag 'prepare-10.3.1'
+    GithubActions->>GithubActions: run releasenotes-builder
+    GithubActions->>GithubActions: update xdoc/releasenotes.xml
+    GithubActions->>GithubActions: commit and push changes to git
+    
+    Maintainer->>GithubActions: mvn release prepare
+    GithubActions->>GithubActions: mvn release:prepare
+    GithubActions->>GithubActions: commit and push changes to git
 
-    Github->>CI: trigger by tag 'prepare-10.3.1'
-    CI->>CI: run releasenotes-builder
-    CI->>CI: update xdoc/releasenotes.xml
-    CI->>CI: mvn release:prepare
-    CI->>Github: push code update and tag '10.3.1'
+    Maintainer->>GithubActions: mvn release perform
+    GithubActions->>GithubActions: mvn release:perform
 
-    Note left of CI: further jobs triggers in parallel
+    Maintainer->>GithubActions: publish releasenotes outside (Github pages)
+    GithubActions->>GithubActions: create/update Githubs milestone
+    GithubActions->>GithubActions: create github release page and deploy '-all.jar'
+    GithubActions->>GithubActions: create new milestone and issues satelite repos
 
-    Github->>CI: trigger by tag '10.3.1'
-    CI->>CI: mvn release:perform
-    CI->>CI: create/update Githubs milestone
-    CI->>CI: create github release page and deploy '-all.jar'
+    Maintainer->>GithubActions: copy site to sourceforge
 
-    Github->>CI: trigger by tag '10.3.1'
-    CI->>CI: copy site to sourceforge
-
-    Github->>CI: trigger by tag '10.3.1'
-    CI->>CI: run releasenotes-builder
-    CI->>CI: tweet to public
-    CI->>CI: update github release page with release notes
-
-    Note left of Maintainer: version 10.3.2-SNAPSHOT
-    Maintainer->>Github: run Github action "set version '10.4-SNAPSHOT'"
-    par Github action
-        Github->>Github: mvn version:set '10.4-SNAPSHOT' from 10.3.2-SNAPSHOT
-        Github->>Github: push changes for version bump
-        Github->>Github: update milestone name from 10.3.2 to 10.4
-    end
-    Note left of Maintainer: version 10.4-SNAPSHOT
+    Maintainer->>GithubActions: tweet to public
+    GithubActions->>GithubActions: run releasenotes-builder
+    GithubActions->>GithubActions: tweet to public
+    
+    Note left of Maintainer: version 10.4.0-SNAPSHOT
 ```
