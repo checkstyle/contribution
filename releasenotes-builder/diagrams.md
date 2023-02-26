@@ -34,5 +34,5 @@ sequenceDiagram
     GithubActions->>GithubActions: run releasenotes-builder
     GithubActions->>GithubActions: tweet to public
     
-    Note left of Maintainer: version 10.4.0-SNAPSHOT
+    Note left of Maintainer: version 10.3.1-SNAPSHOT
 ```
