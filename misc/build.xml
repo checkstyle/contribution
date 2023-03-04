@@ -23,7 +23,7 @@
     <delete file="${target.dir}/cachefile" />
 
     <property name="checkstyle.pattern.todo" value="NOTHingWillMatCH_-"/>
-    <property name="check.config" location="checkstyle_checks.xml"/>
+    <property name="check.config" location="checkstyle-checks.xml"/>
     <checkstyle failonviolation="false" config="${check.config}">
       <fileset dir="src/checkstyle"
                includes="**/*.java,**/*.properties"
@@ -78,7 +78,7 @@
           classpathref="run.classpath">
       <sysproperty key="checkstyle.allow.tabs" value="yes"/>
       <arg value="-c"/>
-      <arg file="checkstyle_checks.xml"/>
+      <arg file="checkstyle-checks.xml"/>
       <arg value="src/testinputs/com/puppycrawl/tools/checkstyle/InputSimple.java"/>
     </java>
     <java classname="com.puppycrawl.tools.checkstyle.Main"
@@ -86,7 +86,7 @@
           dir="."
           classpathref="run.classpath">
       <arg value="-c"/>
-      <arg file="checkstyle_checks.xml"/>
+      <arg file="checkstyle-checks.xml"/>
       <arg value="-r"/>
       <arg file="src/checkstyle/com/puppycrawl/tools/checkstyle/api"/>
     </java>
@@ -101,7 +101,7 @@
     <delete file="${target.dir}/cachefile" />
 
     <property name="checkstyle.pattern.todo" value="NOTHingWillMatCH_-"/>
-    <property name="check.config" location="checkstyle_checks.xml"/>
+    <property name="check.config" location="checkstyle-checks.xml"/>
     <checkstyle config="${custom.config}" file="${file.to.check}">
       <formatter type="plain"/>
       <formatter type="xml" toFile="${target.dir}/cs_errors.xml"/>

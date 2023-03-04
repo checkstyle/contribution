@@ -256,7 +256,7 @@ and comparing the abstract syntax trees of both branches.
 ### Check Regression Report
 
 To generate the check difference report, you must separate the modules and settings in the
-[`checkstyle_checks.xml`](https://github.com/checkstyle/checkstyle/blob/master/config/checkstyle_checks.xml)
+[`checkstyle-checks.xml`](https://github.com/checkstyle/checkstyle/blob/master/config/checkstyle-checks.xml)
 configuration file, found in the checkstyle repository, into separate configuration files
 (this helps avoid 'out of memory' errors).
 The best way to separate the checks is to determine which typically produce the most violations,
@@ -266,7 +266,7 @@ then separating the rest into files with roughly ten checks each.
 You may modify all the checks that depend on external files to use default settings.  **For each
 of the configuration files, you should use the [`my_check.xml`]
 (https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/my_check.xml)
-file as a base**, and add the checks from `checkstyle_checks.xml` to it. Then `diff.groovy`
+file as a base**, and add the checks from `checkstyle-checks.xml` to it. Then `diff.groovy`
 should be run on all projects in `projects-to-test-on.properties`, using the `diff.groovy`
 script once for each configuration file.
 [See instructions above]

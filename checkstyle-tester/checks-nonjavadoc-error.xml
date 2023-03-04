@@ -6,7 +6,7 @@
 <module name="Checker">
   <!--
       this config is a copy of
-      https://github.com/checkstyle/checkstyle/blob/master/config/checkstyle_checks.xml
+      https://github.com/checkstyle/checkstyle/blob/master/config/checkstyle-checks.xml
       with update to global severity=ignore to catch only exceptions.
 
       Some other checks are commented out to speed up execution time.
