@@ -99,8 +99,9 @@ codenarc)
   ;;
 
 markdownlint)
-  # The folder "comment-action" is excluded since it contains many 3rd party files that do not pass the validation
-  files=$(git ls-files -- '*.md' ':!:comment-action')
+  # The folder "comment-action" is excluded as contains many 3rd party files
+  # Files named with 'diag' are excluded to let update diagrams in web without affect of CI status
+  files=$(git ls-files -- '*.md' ':!:comment-action' ':!:*/diag*.md')
   mdl ${files}
   ;;
 
