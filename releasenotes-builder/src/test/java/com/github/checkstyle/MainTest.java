@@ -294,7 +294,8 @@ public class MainTest extends AbstractReleaseNotesTestSupport {
 
         Assert.assertEquals("expected error output", "", systemErr.getLog());
         Assert.assertEquals("expected output",
-            getExecutionFailedMessage(1) + getReleaseIsPatchMessage("10.0.1"), systemOut.getLog());
+            getExecutionFailedMessage(1) + getReleaseIsPatchMessage("10.0.1", 1),
+            systemOut.getLog());
     }
 
     @Test
@@ -310,7 +311,8 @@ public class MainTest extends AbstractReleaseNotesTestSupport {
 
         Assert.assertEquals("expected error output", "", systemErr.getLog());
         Assert.assertEquals("expected output",
-            getExecutionFailedMessage(1) + getReleaseIsPatchMessage("10.0.1"), systemOut.getLog());
+            getExecutionFailedMessage(1) + getReleaseIsPatchMessage("10.0.1", 1),
+            systemOut.getLog());
     }
 
     @Test
@@ -356,7 +358,8 @@ public class MainTest extends AbstractReleaseNotesTestSupport {
 
         Assert.assertEquals("expected error output", "", systemErr.getLog());
         Assert.assertEquals("expected output",
-            getExecutionFailedMessage(1) + getReleaseIsPatchMessage("10.0.1"), systemOut.getLog());
+            getExecutionFailedMessage(1) + getReleaseIsPatchMessage("10.0.1", 1),
+            systemOut.getLog());
     }
 
     @Test
@@ -374,7 +377,8 @@ public class MainTest extends AbstractReleaseNotesTestSupport {
 
         Assert.assertEquals("expected error output", "", systemErr.getLog());
         Assert.assertEquals("expected output",
-            getExecutionFailedMessage(1) + getReleaseIsPatchMessage("10.0.1"), systemOut.getLog());
+            getExecutionFailedMessage(1) + getReleaseIsPatchMessage("10.0.1", 1, 2),
+            systemOut.getLog());
     }
 
     @Test

@@ -259,14 +259,26 @@ public abstract class AbstractReleaseNotesTestSupport extends AbstractPathTestSu
             + System.lineSeparator();
     }
 
-    protected static String getReleaseIsPatchMessage(String releaseVersion) {
+    protected static String getReleaseIsPatchMessage(String releaseVersion,
+                                                     int... offendingIssues) {
         return System.lineSeparator()
             + "[ERROR] Validation of release number failed. "
             + "Release number is a patch(" + releaseVersion + "), but release notes contain 'new' "
             + "or 'breaking compatability' labels. Please correct release number by running "
             + "https://github.com/checkstyle/checkstyle/actions/workflows/bump-version-and-"
-            + "update-milestone.yml"
+            + "update-milestone.yml. " + constructOffendingIssuesMessage(offendingIssues)
             + System.lineSeparator();
     }
 
+    protected static String constructOffendingIssuesMessage(int... offendingIssues) {
+        final StringBuilder builder = new StringBuilder("The offending issue(s): ");
+        for (int issue : offendingIssues) {
+            builder.append(constructGithubIssueLink(issue)).append(" ");
+        }
+        return builder.toString().trim();
+    }
+
+    protected static String constructGithubIssueLink(int issueNumber) {
+        return String.format("https://github.com/checkstyle/checkstyle/issues/%d", issueNumber);
+    }
 }
