@@ -24,8 +24,10 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import com.github.checkstyle.globals.Constants;
@@ -116,10 +118,11 @@ public final class MainProcess {
             + "checkstyle/checkstyle/actions/workflows/bump-version-and-update-milestone.yml";
 
         if (isPatch(releaseVersion) && containsNewOrBreakingCompatabilityLabel) {
+            final String offendingIssues = getOffendingIssues(releaseNotes);
             errors.add(
                 String.format("%s Release number is a patch(%s), but release notes contain 'new' "
-                        + "or 'breaking compatability' labels. %s",
-                    errorBeginning, releaseVersion, errorEnding)
+                        + "or 'breaking compatability' labels. %s. The offending issue(s): %s",
+                    errorBeginning, releaseVersion, errorEnding, offendingIssues)
             );
         }
         else if (isMinor(releaseVersion) && !containsNewOrBreakingCompatabilityLabel) {
@@ -131,6 +134,32 @@ public final class MainProcess {
         }
 
         return errors;
+    }
+
+    /**
+     * Construct a string of links to offending issues separated by a space. An offending issue is
+     * one which is labeled as 'new' or 'breaking compatability' when the release is supposed to
+     * be a patch.
+     *
+     * @param releaseNotes map of release notes messages.
+     * @return a string with offending issues.
+     */
+    private static String getOffendingIssues(
+        Multimap<String, ReleaseNotesMessage> releaseNotes) {
+        final Set<String> offendingIssues = new HashSet<>();
+        for (Map.Entry<String, ReleaseNotesMessage> entry : releaseNotes.entries()) {
+            final String issueLabel = entry.getKey();
+            final boolean isOffendingIssue = issueLabel.equals(Constants.NEW_FEATURE_LABEL)
+                || issueLabel.equals(Constants.NEW_MODULE_LABEL)
+                || issueLabel.equals(Constants.BREAKING_COMPATIBILITY_LABEL);
+            if (isOffendingIssue) {
+                offendingIssues.add(String.format(
+                    "https://github.com/checkstyle/checkstyle/issues/%d",
+                    entry.getValue().getIssueNo()
+                ));
+            }
+        }
+        return String.join(" ", offendingIssues);
     }
 
     /**
