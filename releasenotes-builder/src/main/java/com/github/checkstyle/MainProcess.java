@@ -121,7 +121,7 @@ public final class MainProcess {
             final String offendingIssues = getOffendingIssues(releaseNotes);
             errors.add(
                 String.format("%s Release number is a patch(%s), but release notes contain 'new' "
-                        + "or 'breaking compatability' labels. %s. The offending issue(s): %s",
+                        + "or 'breaking compatability' labels. %s . The offending issue(s): %s",
                     errorBeginning, releaseVersion, errorEnding, offendingIssues)
             );
         }
