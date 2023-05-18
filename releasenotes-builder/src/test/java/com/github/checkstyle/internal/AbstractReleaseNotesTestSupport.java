@@ -266,7 +266,7 @@ public abstract class AbstractReleaseNotesTestSupport extends AbstractPathTestSu
             + "Release number is a patch(" + releaseVersion + "), but release notes contain 'new' "
             + "or 'breaking compatability' labels. Please correct release number by running "
             + "https://github.com/checkstyle/checkstyle/actions/workflows/bump-version-and-"
-            + "update-milestone.yml. " + constructOffendingIssuesMessage(offendingIssues)
+            + "update-milestone.yml . " + constructOffendingIssuesMessage(offendingIssues)
             + System.lineSeparator();
     }
 
