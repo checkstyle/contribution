@@ -824,8 +824,9 @@ class Config {
             checkstyleCfg: baseConfig,
             listOfProjects: listOfProjects,
             destDir: tmpMasterReportsDir,
-            extraMvnRegressionOptions: extraMvnRegressionOptions,
+            extraOptions: extraOptions,
             allowExcludes:allowExcludes,
+            continueOnError:continueOnError,
         ]
     }
 
