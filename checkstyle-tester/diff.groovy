@@ -251,7 +251,7 @@ def generateCheckstyleReport(cfg) {
     def srcDir = getOsSpecificPath("src", "main", "java")
     def reposDir = 'repositories'
     def reportsDir = 'reports'
-    makeWorkDirsIfNotExist(srcDir, reposDir, reportsDir)
+    makeWorkDirsIfNotExist(reposDir, reportsDir)
 
     final REPO_NAME_PARAM_NO = 0
     final REPO_TYPE_PARAM_NO = 1
