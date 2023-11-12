@@ -11,7 +11,7 @@ external files and branches first.
 Anything that starts with `#` is considered a comment and is ignored.
 `projects-to-test-on.properties` is expected to be in the following format:
 
-> REPO_NAME|[local|git|hg]|URL|[COMMIT_ID]|[EXCLUDE FOLDERS]
+`REPO_NAME|[local|git|hg]|URL|[COMMIT_ID]|[EXCLUDE FOLDERS]|`
 
 You should modify `projects-to-test-on.properties` and test as many projects as possible.
 Each project has its own unique style and it is common to find new and different violations
