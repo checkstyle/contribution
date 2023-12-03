@@ -190,11 +190,12 @@ def copyConfigFilesAndUpdatePaths(configFilesList) {
 
 def hasUnstagedChanges(gitRepo) {
     def hasUnstagedChanges = true
-    def gitStatusCmd = "git status".execute(null, gitRepo)
+    def gitStatusCmd = "git diff --exit-code".execute(null, gitRepo)
     gitStatusCmd.waitFor()
-    def gitStatusOutput = gitStatusCmd.text
-    if (gitStatusOutput.contains("nothing to commit")) {
+    if (gitStatusCmd.exitValue() == 0) {
         hasUnstagedChanges = false
+    } else {
+        println gitStatusCmd.text
     }
     return hasUnstagedChanges
 }
