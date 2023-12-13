@@ -51,20 +51,8 @@ while read line ; do
 			cd -
 			fi
     else
-        # esle is only hg (mercurial)
-		if [ ! -d "$REPO_SOURCES_DIR" ]; then
-			echo "Cloning $REPO_TYPE repository '${REPO_NAME}' to $REPO_SOURCES_DIR folder ..."
-			hg clone $REPO_URL $REPO_SOURCES_DIR
-			echo -e "Cloning $REPO_TYPE repository '$REPO_NAME' - completed\n"
-			fi
-
-		if [ "$COMMIT_ID" != "" ]; then
-			echo "Reseting $REPO_TYPE sources to commit '$COMMIT_ID'"
-			cd $REPO_SOURCES_DIR
-			hg up $COMMIT_ID
-			cd -
-			fi
-
+        echo "Unknown RepoType: $REPO_TYPE"
+        exit 1
     fi
 
     echo -e "$REPO_NAME is synchronized\n"

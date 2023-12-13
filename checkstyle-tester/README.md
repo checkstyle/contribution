@@ -23,7 +23,7 @@ you can download it from
 The tool runs Checkstyle through maven and makes use of your checkstyle branches,
 so maven and git is required to be installed as well.
 Depending on the type of external projects you wish to generate reports for,
-you may require other tools like Git or Mericural, for Git and HG repositories respectively.
+you may require other tools like Git or Mericural, for Git repositories respectively.
 
 ## Command Line Arguments
 
