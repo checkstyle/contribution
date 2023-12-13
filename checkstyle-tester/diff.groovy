@@ -332,9 +332,6 @@ def getCommitSha(commitId, repoType, srcDestinationDir) {
         case 'git':
             cmd = "git rev-parse $commitId"
             break
-        case 'hg':
-            cmd = "hg identify --id $commitId"
-            break
         default:
             throw new IllegalArgumentException("Error! Unknown $repoType repository.")
     }
@@ -348,9 +345,6 @@ def getCloneCmd(repoType, repoUrl, srcDestinationDir) {
     switch (repoType) {
         case 'git':
             cloneCmd = "git clone $repoUrl $srcDestinationDir"
-            break
-        case 'hg':
-            cloneCmd = "hg clone $repoUrl $srcDestinationDir"
             break
         default:
             throw new IllegalArgumentException("Error! Unknown $repoType repository.")
@@ -716,9 +710,6 @@ def getResetCmd(repoType, commitId) {
         case 'git':
             resetCmd = "git reset --hard $commitId"
             break
-        case 'hg':
-            resetCmd = "hg up $commitId"
-            break
         default:
             throw new IllegalArgumentException("Error! Unknown $repoType repository.")
     }
@@ -730,9 +721,6 @@ def getLastProjectCommitSha(repoType, srcDestinationDir) {
     switch (repoType) {
         case 'git':
             cmd = "git rev-parse HEAD"
-            break
-        case 'hg':
-            cmd = "hg id -i"
             break
         default:
             throw new IllegalArgumentException("Error! Unknown $repoType repository.")

@@ -118,22 +118,6 @@ function launch {
 				fi
 
 				REPO_SOURCES_DIR=$GITPATH
-			elif [ "$REPO_TYPE" == "hg" ]; then
-				HGPATH=$REPOSITORIES_DIR/$REPO_NAME
-
-				if [ ! -d "$HGPATH" ]; then
-					echo "Cloning $REPO_TYPE repository '${REPO_NAME}' ..."
-					hg clone $REPO_URL $HGPATH
-					echo -e "Cloning $REPO_TYPE repository '$REPO_NAME' - completed"
-				fi
-				if [ "$COMMIT_ID" != "" ] && [ "$COMMIT_ID" != "master" ]; then
-					echo "Reseting HG $REPO_TYPE sources to commit '$COMMIT_ID'"
-					cd $HGPATH
-					hg up $COMMIT_ID
-					cd -
-				fi
-
-				REPO_SOURCES_DIR=$HGPATH
 			else
 				echo "Unknown RepoType: $REPO_TYPE"
 				exit 1
