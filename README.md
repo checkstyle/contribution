@@ -1,4 +1,4 @@
-# Checkstyle contribution
+Checkstyle contribution
 
 [![][appveyor img]][appveyor]
 [![][teamcity img]][teamcity]
