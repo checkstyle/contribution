@@ -567,7 +567,7 @@
       <property name="tokens" value="INDEX_OP"/>
       <property name="tokens" value="METHOD_REF"/>
     </module>
-    <module name="NoWhitespaceBeforeCaseDefaultColon"/>  
+    <module name="NoWhitespaceBeforeCaseDefaultColon"/>
     <module name="NoWhitespaceBefore"/>
     <module name="NoWhitespaceBefore">
       <property name="tokens" value="DOT"/>
@@ -638,6 +638,10 @@
     <module name="WhitespaceAfter"/>
     <module name="WhitespaceAround"/>
     <module name="UnusedLocalVariable"/>
+    <module name="ChainedMethodCallWrap">
+      <property name="identifierPattern" value="^assert.*"/>
+      <property name="maxCallsInSingleLine" value="2" />
+    </module>
 
   </module>
 
