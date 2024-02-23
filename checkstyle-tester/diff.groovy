@@ -254,12 +254,12 @@ def generateCheckstyleReport(cfg) {
     def reportsDir = 'reports'
     makeWorkDirsIfNotExist(srcDir, reposDir, reportsDir)
 
-    final REPO_NAME_PARAM_NO = 0
-    final REPO_TYPE_PARAM_NO = 1
-    final REPO_URL_PARAM_NO = 2
-    final REPO_COMMIT_ID_PARAM_NO = 3
-    final REPO_EXCLUDES_PARAM_NO = 4
-    final FULL_PARAM_LIST_SIZE = 5
+    final repoNameParamNo = 0
+    final repoTypeParamNo = 1
+    final repoURLParamNo = 2
+    final repoCommitIDParamNo = 3
+    final repoExcludesParamNo = 4
+    final fullParamListSize = 5
 
     def checkstyleConfig = cfg.checkstyleCfg
     def checkstyleVersion = cfg.checkstyleVersion
@@ -272,20 +272,20 @@ def generateCheckstyleReport(cfg) {
         project ->
             if (!project.startsWith('#') && !project.isEmpty()) {
                 def params = project.split('\\|', -1)
-                if (params.length < FULL_PARAM_LIST_SIZE) {
+                if (params.length < fullParamListSize) {
                     throw new InvalidPropertiesFormatException("Error: line '$project' " +
-                        "in file '$listOfProjectsFile.name' should have $FULL_PARAM_LIST_SIZE " +
+                        "in file '$listOfProjectsFile.name' should have $fullParamListSize " +
                         "pipe-delimited sections!")
                 }
 
-                def repoName = params[REPO_NAME_PARAM_NO]
-                def repoType = params[REPO_TYPE_PARAM_NO]
-                def repoUrl = params[REPO_URL_PARAM_NO]
-                def commitId = params[REPO_COMMIT_ID_PARAM_NO]
+                def repoName = params[repoNameParamNo]
+                def repoType = params[repoTypeParamNo]
+                def repoUrl = params[repoURLParamNo]
+                def commitId = params[repoCommitIDParamNo]
 
                 def excludes = ""
                 if (allowExcludes) {
-                    excludes = params[REPO_EXCLUDES_PARAM_NO]
+                    excludes = params[repoExcludesParamNo]
                 }
 
                 deleteDir(srcDir)
