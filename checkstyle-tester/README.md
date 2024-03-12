@@ -72,6 +72,16 @@ would add `--extraMvnRegressionOptions "-Dmaven.site.skip=true"` to `diff.groovy
  (optional, default is false). This option is
  used for files that are not compilable or that Checkstyle cannot parse.
 
+**useShallowClone** (h) - this option tells `diff.groovy` to use shallow clone for repositories
+defined in the file
+specified for the `--listOfProjects (-l)` argument. This option is a toggle (does not require an argument)
+and convenient for cases when internet is not stable and it is better to clone minimal required sources.
+Shallow cloning cannot be used for projects that reference SHA commit and, by default,
+fallback to using normal cloning. ATTENTION: if you change tag/branch in config for project
+that previously cloned shallowly there will be error to checkout to new tag/branch
+(Example: `fatal: Could not parse object 'c2ac5b90a467aedb04b52ae50a99e83207d847b3'.`), to resovle
+problem you need to remove impacted project folder(s) from repositories directory.
+
 ## Outputs
 
 When the script finishes its work the following directory structure will be created

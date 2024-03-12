@@ -82,7 +82,7 @@ environment:
       CMD3: " && cd checkstyle && git checkout -b patch-branch"
       CMD4: " "
       CMD5: " && cd ..\\checkstyle-tester "
-      CMD6: " && groovy diff.groovy -l projects-to-test-on.properties -bc my_check.xml -pc my_check.xml -b master -p patch-branch -r C:\\projects\\contribution\\checkstyle -s"
+      CMD6: " && groovy diff.groovy -l projects-to-test-on.properties -bc my_check.xml -pc my_check.xml -b master -p patch-branch -r C:\\projects\\contribution\\checkstyle -s -h"
 
 build_script:
   - ps: >
