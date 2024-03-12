@@ -41,7 +41,7 @@ checkstyle-tester-diff-groovy-patch)
   sed -i'' 's/^guava/#guava/' ../.ci-temp/projects-to-test-on.properties
   sed -i'' 's/#checkstyle/checkstyle/' ../.ci-temp/projects-to-test-on.properties
   groovy diff.groovy -l ../.ci-temp/projects-to-test-on.properties \
-    -c my_check.xml -b master -p patch-branch -r ../.ci-temp/checkstyle
+    -c my_check.xml -b master -p patch-branch -r ../.ci-temp/checkstyle -h
   ;;
 
 checkstyle-tester-diff-groovy-base-patch)
@@ -50,7 +50,7 @@ checkstyle-tester-diff-groovy-base-patch)
   git checkout -b patch-branch
   cd ../../checkstyle-tester
   groovy diff.groovy -l projects-to-test-on.properties \
-    -bc my_check.xml -pc my_check.xml -b master -p patch-branch -r ../.ci-temp/checkstyle
+    -bc my_check.xml -pc my_check.xml -b master -p patch-branch -r ../.ci-temp/checkstyle -h
   ;;
 
 checkstyle-tester-diff-groovy-patch-only)
@@ -59,7 +59,7 @@ checkstyle-tester-diff-groovy-patch-only)
   git checkout -b patch-branch
   cd ../../checkstyle-tester
   groovy diff.groovy -l projects-to-test-on.properties \
-    -pc my_check.xml -p patch-branch -r ../.ci-temp/checkstyle -m single
+    -pc my_check.xml -p patch-branch -r ../.ci-temp/checkstyle -m single --useShallowClone
   ;;
 
 checkstyle-tester-diff-groovy-regression-single)
@@ -76,7 +76,7 @@ checkstyle-tester-diff-groovy-regression-single)
   groovy ./diff.groovy --listOfProjects projects-to-test-on.properties \
     -pc ../../../checkstyle-tester/diff-groovy-regression-config.xml \
     -r ../../checkstyle -xm "-Dcheckstyle.failsOnError=false" \
-    -m single -p master
+    -m single -p master -h
 
   # Run report with current branch
   cd ../../../checkstyle-tester/
@@ -85,7 +85,7 @@ checkstyle-tester-diff-groovy-regression-single)
   rm -rf reports repositories
   groovy ./diff.groovy --listOfProjects projects-to-test-on.properties \
     -pc diff-groovy-regression-config.xml -r ../.ci-temp/checkstyle/ \
-    -m single -p master -xm "-Dcheckstyle.failsOnError=false"
+    -m single -p master -xm "-Dcheckstyle.failsOnError=false" -h
 
   cd ..
   # We need to ignore file paths below, since they will be different between reports
