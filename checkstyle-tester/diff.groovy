@@ -252,7 +252,7 @@ def generateCheckstyleReport(cfg) {
     def srcDir = getOsSpecificPath("src", "main", "java")
     def reposDir = 'repositories'
     def reportsDir = 'reports'
-    makeWorkDirsIfNotExist(srcDir, reposDir, reportsDir)
+    makeWorkDirsIfNotExist(reposDir, reportsDir)
 
     final repoNameParamNo = 0
     final repoTypeParamNo = 1
