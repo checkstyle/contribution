@@ -68,6 +68,8 @@ def getCliOptions(args) {
             + 'config file (required if baseConfig and patchConfig are not secified)')
         g(longOpt: 'allowExcludes', required: false, 'Whether to allow excludes specified in the list of ' \
             + 'projects (optional, default is false)')
+        h(longOpt: 'useShallowClone', required: false, 'Whether to use shallow clones for repositories ' \
+            + '(optional, default is false)')
         l(longOpt: 'listOfProjects', args: 1, required: true, argName: 'path',
             'Path to file which contains projects to test on (required)')
         s(longOpt: 'shortFilePaths', required: false, 'Whether to save report file paths' \
@@ -264,6 +266,7 @@ def generateCheckstyleReport(cfg) {
     def checkstyleConfig = cfg.checkstyleCfg
     def checkstyleVersion = cfg.checkstyleVersion
     def allowExcludes = cfg.allowExcludes
+    def useShallowClone = cfg.useShallowClone
     def listOfProjectsFile = new File(cfg.listOfProjects)
     def projects = listOfProjectsFile.readLines()
     def extraMvnRegressionOptions = cfg.extraMvnRegressionOptions
@@ -340,23 +343,20 @@ def getCommitSha(commitId, repoType, srcDestinationDir) {
     return sha.replace('\n', '')
 }
 
-def getCloneCmd(repoType, repoUrl, srcDestinationDir) {
-    def cloneCmd = ''
-    switch (repoType) {
-        case 'git':
-            cloneCmd = "git clone $repoUrl $srcDestinationDir"
-            break
-        default:
-            throw new IllegalArgumentException("Error! Unknown $repoType repository.")
-    }
-    return cloneCmd
-}
-
 def cloneRepository(repoName, repoType, repoUrl, commitId, srcDir) {
+    println "In clone repository"
     def srcDestinationDir = getOsSpecificPath("$srcDir", "$repoName")
     if (!Files.exists(Paths.get(srcDestinationDir))) {
-        def cloneCmd = getCloneCmd(repoType, repoUrl, srcDestinationDir)
+        def cloneCmd
+        if (isGitSha(commitId)) {
+            cloneCmd = getCloneCmd(repoType, repoUrl, srcDestinationDir)
+            println "Clone command: $cloneCmd"
+        } else {
+            cloneCmd = getCloneShallowCmd(repoType, repoUrl, srcDestinationDir, commitId)
+            println "Clone command: $cloneCmd"
+        }
         println "Cloning $repoType repository '$repoName' to $srcDestinationDir folder ..."
+        println "Cloning command: $cloneCmd"
         executeCmdWithRetry(cloneCmd)
         println "Cloning $repoType repository '$repoName' - completed\n"
     }
@@ -365,12 +365,70 @@ def cloneRepository(repoName, repoType, repoUrl, commitId, srcDir) {
         def lastCommitSha = getLastProjectCommitSha(repoType, srcDestinationDir)
         def commitIdSha = getCommitSha(commitId, repoType, srcDestinationDir)
         if (lastCommitSha != commitIdSha) {
-            def resetCmd = getResetCmd(repoType, commitId)
-            println "Resetting $repoType sources to commit '$commitId'"
-            executeCmd(resetCmd, new File("$srcDestinationDir"))
+            if (isGitSha(commitId)) {
+                // If commitId is a SHA, reset directly
+                def resetCmd = getResetCmd(repoType, commitId)
+                println "Resetting $repoType sources to commit '$commitId'"
+                executeCmd(resetCmd, new File("$srcDestinationDir"))
+            } else {
+                // If commitId is a branch or tag, fetch more data and then reset
+                fetchAdditionalData(repoType, srcDestinationDir, commitId)
+                def resetCmd = getResetCmd(repoType, commitId)
+                println "Resetting $repoType sources to commit '$commitId'"
+                executeCmd(resetCmd, new File("$srcDestinationDir"))
+            }
         }
     }
+
     println "$repoName is synchronized"
+}
+
+def getCloneCmd(repoType, repoUrl, srcDestinationDir) {
+    def cloneCmd = ''
+    switch (repoType) {
+        case 'git':
+            cloneCmd = "git clone $repoUrl $srcDestinationDir"
+            break
+        case 'hg':
+            cloneCmd = "hg clone $repoUrl $srcDestinationDir"
+            break
+        default:
+            throw new IllegalArgumentException("Error! Unknown $repoType repository.")
+    }
+    return cloneCmd
+}
+
+def getCloneShallowCmd(repoType, repoUrl, srcDestinationDir, commitId) {
+    def cloneCmd = ''
+    switch (repoType) {
+        case 'git':
+            cloneCmd = "git clone --depth 1 --branch $commitId $repoUrl $srcDestinationDir"
+            break
+        default:
+            throw new IllegalArgumentException("Error! Unknown $repoType repository.")
+    }
+    return cloneCmd
+}
+
+def fetchAdditionalData(repoType, srcDestinationDir, commitId) {
+    def fetchCmd = ''
+    switch (repoType) {
+        case 'git':
+            if (isGitSha(commitId)) {
+                fetchCmd = "git fetch"
+            } else {
+                fetchCmd = "git fetch origin $commitId:$commitId"
+            }
+            break
+        default:
+            throw new IllegalArgumentException("Error! Unknown $repoType repository.")
+    }
+    executeCmd(fetchCmd, new File(srcDestinationDir))
+}
+
+// it is not very accurate match, but in case of mismatch we will do full clone
+def isGitSha(value) {
+    return value ==~ /[0-9a-f]{5,40}/
 }
 
 def executeCmdWithRetry(cmd, dir = new File("").getAbsoluteFile(), retry = 5) {
@@ -708,7 +766,11 @@ def getResetCmd(repoType, commitId) {
     def resetCmd = ''
     switch (repoType) {
         case 'git':
-            resetCmd = "git reset --hard $commitId"
+            if (isGitSha(commitId)) {
+                resetCmd = "git reset --hard $commitId"
+            } else {
+                resetCmd = "git reset --hard refs/tags/$commitId"
+            }
             break
         default:
             throw new IllegalArgumentException("Error! Unknown $repoType repository.")
@@ -755,6 +817,7 @@ class Config {
     def checkstyleVersion
     def sevntuVersion
     def allowExcludes
+    def useShallowClone
 
     Config(cliOptions) {
         if (cliOptions.localGitRepo) {
@@ -767,6 +830,7 @@ class Config {
 
         checkstyleVersion = cliOptions.checkstyleVersion
         allowExcludes = cliOptions.allowExcludes
+        useShallowClone = cliOptions.useShallowClone
 
         mode = cliOptions.mode
         if (!mode) {
@@ -815,6 +879,7 @@ class Config {
             destDir: tmpMasterReportsDir,
             extraMvnRegressionOptions: extraMvnRegressionOptions,
             allowExcludes:allowExcludes,
+            useShallowClone: useShallowClone,
         ]
     }
 
@@ -827,6 +892,7 @@ class Config {
             destDir: tmpPatchReportsDir,
             extraMvnRegressionOptions: extraMvnRegressionOptions,
             allowExcludes: allowExcludes,
+            useShallowClone: useShallowClone,
         ]
     }
 
@@ -840,6 +906,7 @@ class Config {
             shortFilePaths: shortFilePaths,
             mode: mode,
             allowExcludes: allowExcludes,
+            useShallowClone: useShallowClone,
         ]
     }
 }
