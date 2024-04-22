@@ -299,6 +299,9 @@
     <module name="IllegalType"/>
     <module name="InnerAssignment"/>
     <module name="MagicNumber"/>
+    <module name="MagicNumber">
+        <property name="ignoreFieldDeclaration" value="true"/>
+    </module>
     <module name="MatchXpath">
       <property name="query"
                 value="//LITERAL_CATCH//METHOD_CALL[.//IDENT[@text = 'printStackTrace']]/.."/>
@@ -567,7 +570,7 @@
       <property name="tokens" value="INDEX_OP"/>
       <property name="tokens" value="METHOD_REF"/>
     </module>
-    <module name="NoWhitespaceBeforeCaseDefaultColon"/>  
+    <module name="NoWhitespaceBeforeCaseDefaultColon"/>
     <module name="NoWhitespaceBefore"/>
     <module name="NoWhitespaceBefore">
       <property name="tokens" value="DOT"/>
