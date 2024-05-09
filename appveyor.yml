@@ -11,9 +11,9 @@ branches:
 install:
   - ps: |
       Add-Type -AssemblyName System.IO.Compression.FileSystem
-      if (!(Test-Path -Path "C:\maven\apache-maven-3.8.7" )) {
+      if (!(Test-Path -Path "C:\maven\apache-maven-3.8.8" )) {
         (new-object System.Net.WebClient).DownloadFile(
-          'https://downloads.apache.org/maven/maven-3/3.8.7/binaries/apache-maven-3.8.7-bin.zip',
+          'https://downloads.apache.org/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.zip',
           'C:\maven-bin.zip'
         )
         [System.IO.Compression.ZipFile]::ExtractToDirectory("C:\maven-bin.zip", "C:\maven")
@@ -27,7 +27,7 @@ install:
         )
         [System.IO.Compression.ZipFile]::ExtractToDirectory("C:\groovy-bin.zip", "C:\groovy")
       }
-  - cmd: SET M2_HOME=C:\maven\apache-maven-3.8.7
+  - cmd: SET M2_HOME=C:\maven\apache-maven-3.8.8
   - cmd: SET GROOVY_HOME=C:\groovy\groovy-2.4.8
   - cmd: SET PATH=%GROOVY_HOME%\bin;%JAVA_HOME%\bin;%M2_HOME%\bin;%PATH%
   - cmd: git config --global core.autocrlf
@@ -36,7 +36,7 @@ install:
   - cmd: groovy -version
 
 cache:
-  - C:\maven\apache-maven-3.8.7
+  - C:\maven\apache-maven-3.8.8
   - C:\groovy\groovy-2.4.8
   - C:\Users\appveyor\.m2
 
@@ -101,7 +101,7 @@ build_script:
   # We need to use cmd there as ps1 is failing each time error output appear from any command line
   - appveyor.cmd
   - ps: echo "Size of caches (bytes):"
-  - ps: Get-ChildItem -Recurse 'C:\maven\apache-maven-3.8.7' | Measure-Object -Property Length -Sum
+  - ps: Get-ChildItem -Recurse 'C:\maven\apache-maven-3.8.8' | Measure-Object -Property Length -Sum
   - ps: Get-ChildItem -Recurse 'C:\groovy\groovy-2.4.8' | Measure-Object -Property Length -Sum
   - ps: Get-ChildItem -Recurse 'C:\Users\appveyor\.m2' | Measure-Object -Property Length -Sum
 
