@@ -74,7 +74,7 @@ environment:
       CMD3: " && cd checkstyle && git checkout -b patch-branch"
       CMD4: " "
       CMD5: " && cd ..\\checkstyle-tester "
-      CMD6: " && groovy diff.groovy -l projects-to-test-on.properties -c my_check.xml -b master -p patch-branch -r C:\\projects\\contribution\\checkstyle -s"
+      CMD6: " && groovy diff.groovy -l projects-to-test-on.yml -c my_check.xml -b master -p patch-branch -r C:\\projects\\contribution\\checkstyle -s"
     - JAVA_HOME: C:\Program Files\Java\jdk11
       DESC: "checkstyle-tester (diff.groovy with base and patch configs) on guava"
       CMD1: " git clone -q --depth=10 --branch=master "
@@ -82,7 +82,7 @@ environment:
       CMD3: " && cd checkstyle && git checkout -b patch-branch"
       CMD4: " "
       CMD5: " && cd ..\\checkstyle-tester "
-      CMD6: " && groovy diff.groovy -l projects-to-test-on.properties -bc my_check.xml -pc my_check.xml -b master -p patch-branch -r C:\\projects\\contribution\\checkstyle -s"
+      CMD6: " && groovy diff.groovy -l projects-to-test-on.yml -bc my_check.xml -pc my_check.xml -b master -p patch-branch -r C:\\projects\\contribution\\checkstyle -s"
 
 build_script:
   - ps: >

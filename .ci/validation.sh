@@ -37,10 +37,10 @@ checkstyle-tester-diff-groovy-patch)
   cd .ci-temp/checkstyle
   git checkout -b patch-branch
   cd ../../checkstyle-tester
-  cp projects-to-test-on.properties ../.ci-temp/projects-to-test-on.properties
-  sed -i'' 's/^guava/#guava/' ../.ci-temp/projects-to-test-on.properties
-  sed -i'' 's/#checkstyle/checkstyle/' ../.ci-temp/projects-to-test-on.properties
-  groovy diff.groovy -l ../.ci-temp/projects-to-test-on.properties \
+  cp projects-to-test-on.yml ../.ci-temp/projects-to-test-on.yml
+  sed -i'' 's/^guava/#guava/' ../.ci-temp/projects-to-test-on.yml
+  sed -i'' 's/#checkstyle/checkstyle/' ../.ci-temp/projects-to-test-on.yml
+  groovy diff.groovy -l ../.ci-temp/projects-to-test-on.yml \
     -c my_check.xml -b master -p patch-branch -r ../.ci-temp/checkstyle
   ;;
 
@@ -49,7 +49,7 @@ checkstyle-tester-diff-groovy-base-patch)
   cd .ci-temp/checkstyle
   git checkout -b patch-branch
   cd ../../checkstyle-tester
-  groovy diff.groovy -l projects-to-test-on.properties \
+  groovy diff.groovy -l projects-to-test-on.yml \
     -bc my_check.xml -pc my_check.xml -b master -p patch-branch -r ../.ci-temp/checkstyle
   ;;
 
@@ -58,7 +58,7 @@ checkstyle-tester-diff-groovy-patch-only)
   cd .ci-temp/checkstyle
   git checkout -b patch-branch
   cd ../../checkstyle-tester
-  groovy diff.groovy -l projects-to-test-on.properties \
+  groovy diff.groovy -l projects-to-test-on.yml \
     -pc my_check.xml -p patch-branch -r ../.ci-temp/checkstyle -m single
   ;;
 
@@ -70,20 +70,20 @@ checkstyle-tester-diff-groovy-regression-single)
   # Run report from master branch of contribution
   checkout_from https://github.com/checkstyle/contribution
   cd .ci-temp/contribution/checkstyle-tester
-  sed -i'' 's/^guava/#guava/' projects-to-test-on.properties
-  sed -i'' 's/#checkstyle|/checkstyle|/' projects-to-test-on.properties
+  sed -i'' 's/^guava/#guava/' projects-to-test-on.yml
+  sed -i'' 's/#checkstyle|/checkstyle|/' projects-to-test-on.yml
   export MAVEN_OPTS="-Xmx2048m"
-  groovy ./diff.groovy --listOfProjects projects-to-test-on.properties \
+  groovy ./diff.groovy --listOfProjects projects-to-test-on.yml \
     -pc ../../../checkstyle-tester/diff-groovy-regression-config.xml \
     -r ../../checkstyle -xm "-Dcheckstyle.failsOnError=false" \
     -m single -p master
 
   # Run report with current branch
   cd ../../../checkstyle-tester/
-  sed -i'' 's/^guava/#guava/' projects-to-test-on.properties
-  sed -i'' 's/#checkstyle|/checkstyle|/' projects-to-test-on.properties
+  sed -i'' 's/^guava/#guava/' projects-to-test-on.yml
+  sed -i'' 's/#checkstyle|/checkstyle|/' projects-to-test-on.yml
   rm -rf reports repositories
-  groovy ./diff.groovy --listOfProjects projects-to-test-on.properties \
+  groovy ./diff.groovy --listOfProjects projects-to-test-on.yml \
     -pc diff-groovy-regression-config.xml -r ../.ci-temp/checkstyle/ \
     -m single -p master -xm "-Dcheckstyle.failsOnError=false"
 

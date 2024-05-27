@@ -36,11 +36,11 @@ static void main(String[] args) {
         def configFilesDir = cliOptions.configDir
         def outputDirectory = cliOptions.outputDir
         def patchBranch = cliOptions.patchBranch
-        def projectsToTestOn = new File("projects-to-test-on.properties")
+        def projectsToTestOn = new File("projects-to-test-on.yml")
 
         println "Running check regression reports for patch branch: ${patchBranch}."
         println "Make sure that you have selected (uncommented)" +
-            " correct projects from projects-to-test-on.properties!"
+            " correct projects from projects-to-test-on.yml!"
 
         def reportDirectoryName =
             java.time.LocalDate.now().toString() + "_" + patchBranch + "_reports";

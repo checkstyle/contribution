@@ -272,11 +272,6 @@ def generateCheckstyleReport(cfg) {
         project ->
             if (!project.startsWith('#') && !project.isEmpty()) {
                 def params = project.split('\\|', -1)
-                if (params.length < fullParamListSize) {
-                    throw new InvalidPropertiesFormatException("Error: line '$project' " +
-                        "in file '$listOfProjectsFile.name' should have $fullParamListSize " +
-                        "pipe-delimited sections!")
-                }
 
                 def repoName = params[repoNameParamNo]
                 def repoType = params[repoTypeParamNo]

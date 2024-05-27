@@ -1,7 +1,7 @@
 # CHECKSTYLE-TESTER
 
 checkstyle-tester is a tool for Checkstyle report generation over very
-[basic set of external projects](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.properties).
+[basic set of external projects](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.yml).
 checkstyle-tester generates reports from violations printed from a supplied user
 config over the aforementioned projects. The generated reports are in HTML format.
 They can be viewed in any browser and can be posted online for others to view.
@@ -78,7 +78,7 @@ When the script finishes its work the following directory structure will be crea
 in the root of checkstyle-tester directory:
 
 */repositories* - directory with downloaded projects sources which are specified
-in projects-to-test-on.properties;
+in projects-to-test-on.yml;
 
 */reports/diff* - directory with diff reports;
 
@@ -120,7 +120,7 @@ Should be used with `Diff Regression config:`
 3) **Conditional** `New module config: {{URI to new_module_config.xml}}`
 Report configuration [template][template_my_check] for new modules, e.g. for new check.
 
-4) **Optional** `Diff Regression projects: {{URI to projects-to-test-on.properties}}`
+4) **Optional** `Diff Regression projects: {{URI to projects-to-test-on.yml}}`
 Link to custom list of projects ([template][projects-to-test-on_prp]).
 If no list is provided, [default][for-github-action_prp] list is taken.
 
@@ -145,7 +145,7 @@ To check the job, you can open "Actions" tab and find your job there.
 
 #### Examples of URIs
 
-- https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/projects-to-test-on.properties
+- https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/projects-to-test-on.yml
 
 - https://gist.githubusercontent.com/strkkk/121653f4a334be38b9e77e4245e144e2/raw/691fe6e90ff40473707ce77518b7a0b058bd0955/config.xml
 
@@ -209,7 +209,7 @@ the custom configuration created with all the permutations.
 ```bash
 groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle \
   --baseBranch i111-my-fix --patchBranch i111-my-fix-mutation \
-  --config config.xml --listOfProjects projects-to-test-on.properties
+  --config config.xml --listOfProjects projects-to-test-on.yml
 ```
 
 ATTENTION:
@@ -267,7 +267,7 @@ You may modify all the checks that depend on external files to use default setti
 of the configuration files, you should use the [`my_check.xml`]
 (https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/my_check.xml)
 file as a base**, and add the checks from `checkstyle-checks.xml` to it. Then `diff.groovy`
-should be run on all projects in `projects-to-test-on.properties`, using the `diff.groovy`
+should be run on all projects in `projects-to-test-on.yml`, using the `diff.groovy`
 script once for each configuration file.
 [See instructions above]
 (https://github.com/checkstyle/contribution/tree/master/checkstyle-tester#basic-difference-report)
@@ -281,13 +281,13 @@ This report is generated using the [`launch_diff_antlr.sh`]
 (https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/launch_diff_antlr.sh)
 script. This script generates a report based on the differences in the ASTs generated
 from your PR branch and Checkstyle's 'main' branch using projects that are selected
-(uncommented) in the [`projects-to-test-on.properties`]
-(https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.properties)
+(uncommented) in the [`projects-to-test-on.yml`]
+(https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.yml)
 file. For the ANTLR regression report, we usually only want to see that changes
 to the Checkstyle project. To ensure that you test against any new inputs that
 you have created (unit test inputs, etc.), please make sure that you comment out
-all other projects, and add the following line to [`projects-to-test-on.properties`]
-(https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.properties):
+all other projects, and add the following line to [`projects-to-test-on.yml`]
+(https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.yml):
 
 ```bash
 my-checkstyle|git|https://github.com/<username>/checkstyle.git|<pr-branch>||
@@ -326,4 +326,4 @@ Windows users should use the `SET` command instead of the `export` command.
 
 [template_my_check]:https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/my_check.xml
 [for-github-action_prp]:https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/projects-to-test-on-for-github-action.properties
-[projects-to-test-on_prp]:https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/projects-to-test-on.properties
+[projects-to-test-on_prp]:https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/projects-to-test-on.yml

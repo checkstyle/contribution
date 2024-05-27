@@ -75,23 +75,23 @@ function launch {
 		while read line ; do
 			[[ "$line" == \#* ]] && continue # Skip lines with comments
 			[[ -z "$line" ]] && continue     # Skip empty lines
-			
+
 			REPO_NAME=`echo $line | cut -d '|' -f 1`
 			REPO_TYPE=`echo $line | cut -d '|' -f 2`
 			REPO_URL=` echo $line | cut -d '|' -f 3`
 			COMMIT_ID=`echo $line | cut -d '|' -f 4`
 			EXCLUDES=` echo $line | cut -d '|' -f 5`
-			
+
 			echo "Running Launches on $REPO_NAME ..."
 
 			if [ ! -d "$REPOSITORIES_DIR" ]; then
 				mkdir $REPOSITORIES_DIR
 			fi
 			REPO_SOURCES_DIR=
-			
+
 			if [ "$REPO_TYPE" == "git" ]; then
 				GITPATH=$REPOSITORIES_DIR/$REPO_NAME
-				
+
 				if [ ! -d "$GITPATH" ]; then
 					echo "Cloning $REPO_TYPE repository '${REPO_NAME}' ..."
 					git clone $REPO_URL $GITPATH
@@ -167,7 +167,7 @@ echo "$f"
 			fi
 
 			echo "Running Launch on $REPO_NAME - completed"
-		done < $TESTER_DIR/projects-to-test-on.properties
+		done < $TESTER_DIR/projects-to-test-on.yml
 }
 
 function containsElement {

@@ -1,7 +1,7 @@
 # CHECKSTYLE-TESTER
 
 Launch command for testing against google_checks.xml and very [basic set of java projects]
-(https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.properties):
+(https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.yml):
 
 ```bash
 ./launch.sh
@@ -69,7 +69,7 @@ to generate compact diff report before and after your change please use tool
 
 ATTENTION:
 
-you can specify at projects-to-test-on.properties path to local file system if you have some
+you can specify at projects-to-test-on.yml path to local file system if you have some
 repositories on your local, example:
 "checkstyle=/home/username/java/git-repos/checkstyle/checkstyle".
 

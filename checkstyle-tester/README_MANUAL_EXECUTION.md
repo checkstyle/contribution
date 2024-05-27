@@ -5,20 +5,20 @@
 Before you are ready to execute `diff.groovy`, you will have to prepare some
 external files and branches first.
 
-### projects-to-test-on.properties
+### projects-to-test-on.yml
 
-`projects-to-test-on.properties` lists all the projects that `diff.groovy` will execute.
+`projects-to-test-on.yml` lists all the projects that `diff.groovy` will execute.
 Anything that starts with `#` is considered a comment and is ignored.
-`projects-to-test-on.properties` is expected to be in the following format:
+`projects-to-test-on.yml` is expected to be in the following format:
 
 `REPO_NAME|[local|git|hg]|URL|[COMMIT_ID]|[EXCLUDE FOLDERS]|`
 
-You should modify `projects-to-test-on.properties` and test as many projects as possible.
+You should modify `projects-to-test-on.yml` and test as many projects as possible.
 Each project has its own unique style and it is common to find new and different violations
 in 1 and not the others.
 
 You can also specify projects that are already available on your local file system
-in `projects-to-test-on.properties`.
+in `projects-to-test-on.yml`.
 For this you can either use `git` or `hg` type which will clone the local repository
 into the workspace and use the specified branch.
 Alternatively you can use `local` type, where the specified branch is ignored and
@@ -114,14 +114,14 @@ that specify the report you want generated.
 ```bash
 groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle \
   --baseBranch master --patchBranch i111-my-fix --config my_check.xml \
-  --listOfProjects projects-to-test-on.properties
+  --listOfProjects projects-to-test-on.yml
 ```
 
 or with short command line arguments names:
 
 ```bash
 groovy diff.groovy -r /home/johndoe/projects/checkstyle \
-  -b master -p i111-my-fix -c my_check.xml -l projects-to-test-on.properties
+  -b master -p i111-my-fix -c my_check.xml -l projects-to-test-on.yml
 ```
 
 #### Difference Report with Different Base and Patch Config
@@ -132,14 +132,14 @@ patch branch use the following command:
 ```bash
 groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle \
   --baseBranch master --patchBranch i111-my-fix --baseConfig base_config.xml \
-  --patchConfig patch_config.xml --listOfProjects projects-to-test-on.properties
+  --patchConfig patch_config.xml --listOfProjects projects-to-test-on.yml
 ```
 
 or with short command line arguments names:
 
 ```bash
 groovy diff.groovy -r /home/johndoe/projects/checkstyle -b master -p i111-my-fix \
-  -bc base_config.xml -pc patch_config.xml -l projects-to-test-on.properties
+  -bc base_config.xml -pc patch_config.xml -l projects-to-test-on.yml
 ```
 
 #### Basic Single Report
@@ -150,14 +150,14 @@ use the following command:
 ```bash
 groovy diff.groovy --localGitRepo /home/johndoe/projects/checkstyle --patchBranch \
   i111-my-fix --patchConfig patch_config.xml \
-  --listOfProjects projects-to-test-on.properties --mode single`
+  --listOfProjects projects-to-test-on.yml --mode single`
 ```
 
 or with short command line arguments names:
 
 ```bash
 groovy diff.groovy -r /home/johndoe/projects/checkstyle -p i111-my-fix \
-  -pc patch_config.xml -l projects-to-test-on.properties -m single
+  -pc patch_config.xml -l projects-to-test-on.yml -m single
 ```
 
 ## Deploying Report

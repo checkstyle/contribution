@@ -57,7 +57,7 @@ while read line ; do
 
     echo -e "$REPO_NAME is synchronized\n"
 
-done < projects-to-test-on.properties
+done < projects-to-test-on.yml
 
 echo "Running 'mvn clean' on $SOURCES_DIR ..."
 mvn --batch-mode clean
