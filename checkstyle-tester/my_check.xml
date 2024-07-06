@@ -18,6 +18,10 @@
     </module>
 
     <module name="TreeWalker">
+         <!-- as we run on regression even on non-compiled files we need to skip exceptions on them -->
+         <property name="skipFileOnJavaParseException" value="true"/>
+         <property name="javaParseExceptionSeverity" value="ignore"/>
+
          <!-- Example of checkstyle Check usage -->
          <!-- PLEASE CHANGE IT TO CHECK YOU ARE TESTING !!!! -->
          <module name="ThrowsCount">
@@ -27,7 +31,7 @@
          <!-- Example of sevntu.checkstyle Check usage -->
          <!-- <module name="NestedSwitchCheck"/> -->
 
-         <!-- usuppress javadoc parsing errors, as we test Check not a parser -->
+         <!-- suppress javadoc parsing errors, as we test Check not a parser -->
          <module name="SuppressionXpathSingleFilter">
             <property name="message" value="Javadoc comment at column \d+ has parse error"/>
          </module>
@@ -40,9 +44,4 @@
     </module>
     -->
 
-    <!-- as we run on regression even on non-compiled files we need to skip exceptions on them -->
-    <module name="SuppressionSingleFilter">
-      <property name="message" value="Exception occurred while parsing"/>
-      <property name="checks" value="Checker"/>
-    </module>
 </module>
