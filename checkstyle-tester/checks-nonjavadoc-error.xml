@@ -309,6 +309,7 @@
       <message key="matchxpath.match" value="Avoid using 'printStackTrace'."/>
     </module>
     <module name="MissingCtor"/>
+    <module name="MissingNullCaseInSwitch"/>
     <module name="MissingSwitchDefault"/>
     <module name="ModifiedControlVariable"/>
     <module name="MultipleStringLiterals"/>
