@@ -310,6 +310,7 @@
     </module>
     <module name="MissingCtor"/>
     <module name="MissingNullCaseInSwitch"/>
+    <module name="WhenShouldBeUsed"/>
     <module name="MissingSwitchDefault"/>
     <module name="ModifiedControlVariable"/>
     <module name="MultipleStringLiterals"/>
