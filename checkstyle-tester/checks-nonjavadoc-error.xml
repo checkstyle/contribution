@@ -350,6 +350,7 @@
     <module name="UnnecessarySemicolonAfterTypeMemberDeclaration"/>
     <module name="UnnecessarySemicolonInEnumeration"/>
     <module name="UnnecessarySemicolonInTryWithResources"/>
+    <module name="UnusedCatchParameterShouldBeUnnamed"/>
     <module name="VariableDeclarationUsageDistance"/>
     <module name="VariableDeclarationUsageDistance">
       <property name="id" value="variableDeclarationUsageDistanceScopes"/>
