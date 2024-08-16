@@ -16,7 +16,7 @@
         <maven.plugin.jgit.version>6.10.0.202406032230-r</maven.plugin.jgit.version>
         <maven.plugin.slf4j.version>2.0.16</maven.plugin.slf4j.version>
         <maven.plugin.freemarker.version>2.3.33</maven.plugin.freemarker.version>
-        <maven.plugin.apache.commons.cli.version>1.8.0</maven.plugin.apache.commons.cli.version>
+        <maven.plugin.apache.commons.cli.version>1.9.0</maven.plugin.apache.commons.cli.version>
         <maven.plugin.apache.commons.lang.version>2.6</maven.plugin.apache.commons.lang.version>
         <maven.plugin.twitter4j.version>4.1.2</maven.plugin.twitter4j.version>
         <maven.plugin.javax.mail.version>1.5.0-b01</maven.plugin.javax.mail.version>
