@@ -110,6 +110,8 @@ You can generate report in different ways:
 1) generate report yourself: [manual generation](./README_MANUAL_EXECUTION.md#executing-diffgroovy)
 2) generate report using github action.
 
+#### Executing generation using github action
+
 To generate report using github action, you need to add specific line(s) to your PR description.
 Please note:
 
