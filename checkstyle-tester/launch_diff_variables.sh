@@ -5,13 +5,13 @@
 # Note: Use full paths
 # ============================================================
 
-CONTACTSERVER=true
+CONTACTSERVER=false
 
 PULL_REMOTE=pull
 
-CHECKSTYLE_DIR=~/checkstyle
-SEVNTU_DIR=~/sevntu.checkstyle
-CONTRIBUTION_DIR=~/contribution
+CHECKSTYLE_DIR=~/java/github/romani/checkstyle
+SEVNTU_DIR=~/java/github/sevntu-checkstyle/sevntu.checkstyle
+CONTRIBUTION_DIR=~/java/github/checkstyle/contribution
 TEMP_DIR=/tmp/launch_diff
 
 TESTER_DIR=$CONTRIBUTION_DIR/checkstyle-tester
