@@ -348,6 +348,7 @@
     <module name="StringLiteralEquality"/>
     <module name="SuperClone"/>
     <module name="SuperFinalize"/>
+    <module name="UnnecessaryNullCheckWithInstanceOf"/>
     <module name="UnnecessaryParentheses"/>
     <module name="UnnecessarySemicolonAfterOuterTypeDeclaration"/>
     <module name="UnnecessarySemicolonAfterTypeMemberDeclaration"/>
