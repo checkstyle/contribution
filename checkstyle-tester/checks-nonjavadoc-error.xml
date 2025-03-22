@@ -50,6 +50,12 @@
     <property name="fileExtensions" value="java"/>
     -->
   </module>
+  <module name="MultiFileRegexpHeader">
+    <!-- require separate config file, so we use default
+    <property name="headerFiles" value="${checkstyle.regexp.header.file}.01, ${checkstyle.regexp.header.file}.02" />
+    <property name="fileExtensions" value="java" />
+    -->
+  </module>
 
   <!-- Javadoc Comments -->
   <module name="JavadocPackage">
