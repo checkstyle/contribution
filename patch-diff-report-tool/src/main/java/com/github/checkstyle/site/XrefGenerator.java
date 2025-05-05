@@ -144,7 +144,7 @@ class XrefGenerator {
                     ENCODING, ENCODING, null, "", "");
             }
             // -@cs[IllegalCatch] We need to catch all exceptions from JXR
-            catch (Exception ex) {
+            catch (Exception exc) {
                 try {
                     textTransform.transform(sourceFile.getAbsolutePath(),
                         dest.toString(), Locale.ENGLISH,

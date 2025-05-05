@@ -125,8 +125,8 @@ public final class CheckstyleConfigurationsParser {
             final XMLEventReader reader = StaxUtils.createReader(xml);
             parseModule(reader, root);
         }
-        catch (XMLStreamException ex) {
-            throw new XMLStreamException("Exception was thrown while processing: " + xml, ex);
+        catch (XMLStreamException exc) {
+            throw new XMLStreamException("Exception was thrown while processing: " + xml, exc);
         }
         return root;
     }

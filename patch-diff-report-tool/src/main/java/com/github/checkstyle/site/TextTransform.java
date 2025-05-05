@@ -130,16 +130,16 @@ public final class TextTransform {
                 try {
                     reader.close();
                 }
-                catch (IOException ex) {
-                    ex.printStackTrace();
+                catch (IOException exc) {
+                    exc.printStackTrace();
                 }
             }
             if (writer != null) {
                 try {
                     writer.close();
                 }
-                catch (IOException ex) {
-                    ex.printStackTrace();
+                catch (IOException exc) {
+                    exc.printStackTrace();
                 }
             }
         }
