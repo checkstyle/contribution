@@ -167,7 +167,7 @@ public final class NotesBuilder {
                         result.addError(error);
                     }
                 }
-                catch (GHFileNotFoundException ex) {
+                catch (GHFileNotFoundException exc) {
                     result.addWarning(String.format(MESSAGE_ISSUE_NOT_FOUND, issueNo));
 
                     issueNumber = issueNo;
