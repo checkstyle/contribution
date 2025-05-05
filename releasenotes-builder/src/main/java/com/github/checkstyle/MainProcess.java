@@ -261,8 +261,8 @@ public final class MainProcess {
                     cliOptions.getTwitterAccessTokenSecret(), post);
         }
         // -@cs[IllegalCatch] We should execute all publishers, so cannot fail-fast
-        catch (Exception ex) {
-            errors.add(ex.toString());
+        catch (Exception exc) {
+            errors.add(exc.toString());
         }
     }
 

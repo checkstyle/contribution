@@ -688,9 +688,9 @@ public final class CliOptions {
                         props.getProperty(CliProcessor.OPTION_TWITTER_ACCESS_TOKEN_SECRET);
                 }
             }
-            catch (IOException ex) {
+            catch (IOException exc) {
                 throw new IllegalStateException("Twitter properties file has access problems"
-                    + " (twitterProperties=" + twitterProperties + ')', ex);
+                    + " (twitterProperties=" + twitterProperties + ')', exc);
             }
         }
 

@@ -79,8 +79,8 @@ public final class Main {
                 }
             }
         }
-        catch (ParseException | GitAPIException | IOException | TemplateException ex) {
-            ex.printStackTrace();
+        catch (ParseException | GitAPIException | IOException | TemplateException exc) {
+            exc.printStackTrace();
             errors.add("[ERROR] An exception was thrown. See above for more details.");
             CliProcessor.printUsage();
         }
