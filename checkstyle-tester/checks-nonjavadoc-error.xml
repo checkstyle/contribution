@@ -362,6 +362,7 @@
     <module name="UnnecessarySemicolonInTryWithResources"/>
     <module name="UnusedCatchParameterShouldBeUnnamed"/>
     <module name="UnusedLambdaParameterShouldBeUnnamed"/>
+    <module name="UnusedTryResourceShouldBeUnnamed"/>
     <module name="VariableDeclarationUsageDistance"/>
     <module name="VariableDeclarationUsageDistance">
       <property name="id" value="variableDeclarationUsageDistanceScopes"/>
