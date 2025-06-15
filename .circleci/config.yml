@@ -78,4 +78,5 @@ workflows:
     jobs:
       - validate-with-script:
           name: "markdown lint"
+          image-name: "cimg/ruby:3.2"
           command: "./.ci/validation.sh markdownlint"
