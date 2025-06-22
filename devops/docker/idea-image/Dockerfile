@@ -1,4 +1,4 @@
-FROM cimg/openjdk:11.0.16
+FROM cimg/openjdk:17.0.7
 
 RUN sudo apt update && sudo apt install -y wget
 
