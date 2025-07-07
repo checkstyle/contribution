@@ -19,7 +19,7 @@ Where `version` is &lt;jdk-version&gt;-&lt;package-version&gt;.
 Example:
 
 ```bash
-docker build -t checkstyle/idea-docker:jdk11-idea2022.2.2 .
+docker build -t checkstyle/idea-docker:jdk17-idea2022.2.2 .
 ```
 
 To push a new tag:
@@ -31,7 +31,7 @@ docker push <org>/<image-name>:<version>
 Example:
 
 ```bash
-docker push checkstyle/idea-docker:jdk11-idea2022.2.2
+docker push checkstyle/idea-docker:jdk17-idea2022.2.2
 ```
 
 ## Running Container on Local

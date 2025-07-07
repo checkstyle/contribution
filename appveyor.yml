@@ -13,7 +13,7 @@ install:
       Add-Type -AssemblyName System.IO.Compression.FileSystem
       if (!(Test-Path -Path "C:\maven\apache-maven-3.8.8" )) {
         (new-object System.Net.WebClient).DownloadFile(
-          'https://downloads.apache.org/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.zip',
+          'https://archive.apache.org/dist/maven/maven-3/3.8.8/binaries/apache-maven-3.8.8-bin.zip',
           'C:\maven-bin.zip'
         )
         [System.IO.Compression.ZipFile]::ExtractToDirectory("C:\maven-bin.zip", "C:\maven")
@@ -22,7 +22,7 @@ install:
       Add-Type -AssemblyName System.IO.Compression.FileSystem
       if (!(Test-Path -Path "C:\groovy\groovy-2.4.8" )) {
         (new-object System.Net.WebClient).DownloadFile(
-          'https://groovy.jfrog.io/ui/api/v1/download?repoKey=dist-release-local&path=groovy-zips%252Fapache-groovy-binary-2.4.8.zip',
+          'https://archive.apache.org/dist/groovy/2.4.8/distribution/apache-groovy-binary-2.4.8.zip',
           'C:\groovy-bin.zip'
         )
         [System.IO.Compression.ZipFile]::ExtractToDirectory("C:\groovy-bin.zip", "C:\groovy")
@@ -59,15 +59,15 @@ environment:
   #    if he loose maven cache (happens from time to time)
   matrix:
     # checkstyle and sevntu.checkstyle
-    - JAVA_HOME: C:\Program Files\Java\jdk11
+    - JAVA_HOME: C:\Program Files\Java\jdk17
       DESC: "releasenotes-builder"
       CMD1: "cd releasenotes-builder && mvn clean verify && mvn clean compile package"
     # verify without checkstyle
-    - JAVA_HOME: C:\Program Files\Java\jdk11
+    - JAVA_HOME: C:\Program Files\Java\jdk17
       DESC: "patch-diff-report-tool"
       CMD1: "cd patch-diff-report-tool && mvn clean install"
     # checkstyle-tester
-    - JAVA_HOME: C:\Program Files\Java\jdk11
+    - JAVA_HOME: C:\Program Files\Java\jdk17
       DESC: "checkstyle-tester (diff.groovy) on guava"
       CMD1: " git clone -q --depth=10 --branch=master "
       CMD2: "      https://github.com/checkstyle/checkstyle C:\\projects\\contribution\\checkstyle "
@@ -75,7 +75,7 @@ environment:
       CMD4: " "
       CMD5: " && cd ..\\checkstyle-tester "
       CMD6: " && groovy diff.groovy -l projects-to-test-on.properties -c my_check.xml -b master -p patch-branch -r C:\\projects\\contribution\\checkstyle -s"
-    - JAVA_HOME: C:\Program Files\Java\jdk11
+    - JAVA_HOME: C:\Program Files\Java\jdk17
       DESC: "checkstyle-tester (diff.groovy with base and patch configs) on guava"
       CMD1: " git clone -q --depth=10 --branch=master "
       CMD2: "      https://github.com/checkstyle/checkstyle C:\\projects\\contribution\\checkstyle "
