@@ -1,26 +1,29 @@
 FROM --platform=linux/amd64 cimg/base:2023.10
 
-# Install dependencies for JDK 17 and Ant
+# Install dependencies
 RUN sudo apt update && \
-    sudo apt install ca-certificates-java -y && \
-    sudo apt install openjdk-17-jdk groovy jq ant -y
+    sudo apt install -y jq ant curl unzip zip gzip tar bash git && \
+    sudo rm -rf /var/lib/apt/lists/*
 
-# Set environment variables
-ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-ENV GROOVY_HOME=/usr/share/groovy
-ENV PATH=$GROOVY_HOME/bin:$PATH
+# Install SDKMAN
+ENV SDKMAN_DIR=/home/circleci/.sdkman
+RUN curl -s "https://get.sdkman.io" | bash
 
-# Maven configuration
-ENV MAVEN_VERSION=3.9.10
-ENV PATH=/opt/apache-maven/bin:$PATH
+# Install Java, Groovy, Maven via SDKMAN
+RUN bash -c "source $SDKMAN_DIR/bin/sdkman-init.sh && \
+    sdk install java 17.0.12-tem && \
+    sdk install groovy 3.0.21 && \
+    sdk install maven 3.9.11"
 
-# Install Maven
-RUN MAVEN_3_URL=https://dlcdn.apache.org/maven/maven-3 && \
-    MAVEN_VERSION_URL=$MAVEN_VERSION/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz && \
-    URL=${MAVEN_3_URL}/${MAVEN_VERSION_URL} && \
-    curl -sSL --fail --retry 3 "$URL" -o apache-maven.tar.gz && \
-    sudo tar -xzf apache-maven.tar.gz -C /opt/ && \
-    rm apache-maven.tar.gz && \
-    sudo ln -s /opt/apache-maven-${MAVEN_VERSION} /opt/apache-maven && \
-    echo "JAVA_HOME=$JAVA_HOME" && \
-    mvn --version
+# Update PATH and setup environment
+ENV JAVA_HOME=$SDKMAN_DIR/candidates/java/current
+ENV GROOVY_HOME=$SDKMAN_DIR/candidates/groovy/current
+ENV PATH=$GROOVY_HOME/bin:$SDKMAN_DIR/candidates/maven/current/bin:$JAVA_HOME/bin:$PATH
+
+# Verify installation
+RUN bash -c "source $SDKMAN_DIR/bin/sdkman-init.sh && \
+    java -version && \
+    groovy --version && \
+    mvn -version && \
+    groovy -e 'new CliBuilder(); println \"CliBuilder OK\"' && \
+    groovy -e 'new AntBuilder(); println \"AntBuilder OK\"'"
