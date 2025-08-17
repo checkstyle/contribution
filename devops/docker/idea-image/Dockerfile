@@ -1,4 +1,4 @@
-FROM cimg/openjdk:17.0.7
+FROM --platform=linux/amd64 cimg/openjdk:21.0.4
 
 RUN sudo apt update && sudo apt install -y wget
 
