@@ -3,7 +3,7 @@ FROM --platform=linux/amd64 cimg/openjdk:21.0.4
 RUN sudo apt update && sudo apt install -y wget
 
 # ENV is transferred to container
-ENV IDEA_VERSION="ideaIC-2022.3.3"
+ENV IDEA_VERSION="ideaIC-2025.2"
 ENV IDEA_PATH="/home/circleci/idea"
 ENV PATH="${PATH}:${IDEA_PATH}/bin"
 
