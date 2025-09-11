@@ -51,7 +51,7 @@ workflows:
     jobs:
       - validate-with-maven-script:
           name: "releasenotes-builder"
-          image-name: &custom_img "amitkumardeoghoria/jdk-17-groovy-git-mvn:v1.0"
+          image-name: &custom_img "amitkumardeoghoria/jdk-21-groovy5-git-mvn-ant-jq:latest"
           command: "./.ci/validation.sh releasenotes-builder"
       - validate-with-maven-script:
           name: "patch-diff-report-tool"

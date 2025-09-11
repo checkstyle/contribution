@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.checkstyle</groupId>
     <artifactId>patch-diff-report-tool</artifactId>
@@ -10,7 +10,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <checkstyle.version>11.0.1</checkstyle.version>
-        <checkstyle.configLocation>https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-${checkstyle.version}/config/checkstyle-checks.xml</checkstyle.configLocation>
+        <checkstyle.configLocation>
+            https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-${checkstyle.version}/config/checkstyle-checks.xml
+        </checkstyle.configLocation>
         <maven.plugin.antrun.version>3.1.0</maven.plugin.antrun.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -23,6 +25,21 @@
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy-ant</artifactId>
+            <version>4.0.23</version> <!-- match your Groovy version -->
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-cli-picocli</artifactId>
+            <version>3.0.9</version>
+        </dependency>
+        <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli</artifactId>
+            <version>4.6.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
@@ -81,33 +98,33 @@
                 </configuration>
             </plugin>
             <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-antrun-plugin</artifactId>
-              <version>${maven.plugin.antrun.version}</version>
-              <executions>
-                <execution>
-                  <id>ant-phase-verify</id>
-                  <phase>verify</phase>
-                  <goals>
-                    <goal>run</goal>
-                  </goals>
-                  <configuration>
-                    <target>
-                      <property name="mvn.project.build.directory" value="${project.build.directory}" />
-                      <property name="checkstyle.configLocation" value="${checkstyle.configLocation}" />
-                      <property name="mvn.java.version" value="${maven.compiler.source}"/>
-                      <ant antfile="config/ant-phase-verify.xml" />
-                    </target>
-                  </configuration>
-                </execution>
-              </executions>
-              <dependencies>
-                <dependency>
-                  <groupId>com.puppycrawl.tools</groupId>
-                  <artifactId>checkstyle</artifactId>
-                  <version>${checkstyle.version}</version>
-                </dependency>
-              </dependencies>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>${maven.plugin.antrun.version}</version>
+                <executions>
+                    <execution>
+                        <id>ant-phase-verify</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <property name="mvn.project.build.directory" value="${project.build.directory}"/>
+                                <property name="checkstyle.configLocation" value="${checkstyle.configLocation}"/>
+                                <property name="mvn.java.version" value="${maven.compiler.source}"/>
+                                <ant antfile="config/ant-phase-verify.xml"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>${checkstyle.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

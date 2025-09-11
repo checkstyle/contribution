@@ -1,3 +1,5 @@
+@Grab('info.picocli:picocli:4.7.5')
+import groovy.cli.picocli.CliBuilder
 import static java.lang.System.err
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING
 
@@ -5,7 +7,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.regex.Pattern
 
-static void main(String[] args) {
+ void main(String[] args) {
     def cliOptions = getCliOptions(args)
     if (cliOptions != null) {
         if (areValidCliOptions(cliOptions)) {
@@ -50,32 +52,36 @@ static void main(String[] args) {
 
 def getCliOptions(args) {
     def cliOptionsDescLineLength = 120
-    def cli = new CliBuilder(usage:'groovy diff.groovy [options]', header: 'options:', width: cliOptionsDescLineLength)
+    def cli = new CliBuilder(
+        usageMessage: 'groovy diff.groovy [options]',
+        headerHeading: 'Options:\n',
+        width: cliOptionsDescLineLength
+    )
     cli.with {
-        r(longOpt: 'localGitRepo', args: 1, required: true, argName: 'path',
+        r(longOpt: 'localGitRepo', arity: "1", required: true, argName: 'path',
             'Path to local git repository (required)')
-        b(longOpt: 'baseBranch', args: 1, required: false, argName: 'branch_name',
+        b(longOpt: 'baseBranch', arity: "1", required: false, argName: 'branch_name',
             'Base branch name. Default is master (optional, default is master)')
-        p(longOpt: 'patchBranch', args: 1, required: true, argName: 'branch_name',
+        p(longOpt: 'patchBranch', arity: "1", required: true, argName: 'branch_name',
             'Name of the patch branch in local git repository (required)')
-        bc(longOpt: 'baseConfig', args: 1, required: false, argName: 'path', 'Path to the base ' \
+        bc(longOpt: 'baseConfig', arity: "1", required: false, argName: 'path', 'Path to the base ' \
             + 'checkstyle config file (optional, if absent then the tool will use only ' \
             + 'patchBranch in case the tool mode is \'single\', otherwise baseBranch ' \
             + 'will be set to \'master\')')
-        pc(longOpt: 'patchConfig', args: 1, required: false, argName: 'path',
+        pc(longOpt: 'patchConfig', arity: "1", required: false, argName: 'path',
             'Path to the patch checkstyle config file (required if baseConfig is specified)')
-        c(longOpt: 'config', args: 1, required: false, argName: 'path', 'Path to the checkstyle ' \
+        c(longOpt: 'config', arity: "1", required: false, argName: 'path', 'Path to the checkstyle ' \
             + 'config file (required if baseConfig and patchConfig are not secified)')
         g(longOpt: 'allowExcludes', required: false, 'Whether to allow excludes specified in the list of ' \
             + 'projects (optional, default is false)')
         h(longOpt: 'useShallowClone', 'Enable shallow cloning')
-        l(longOpt: 'listOfProjects', args: 1, required: true, argName: 'path',
+        l(longOpt: 'listOfProjects', arity: "1", required: true, argName: 'path',
             'Path to file which contains projects to test on (required)')
         s(longOpt: 'shortFilePaths', required: false, 'Whether to save report file paths' \
             + ' as a shorter version to prevent long paths. (optional, default is false)')
-        m(longOpt: 'mode', args: 1, required: false, argName: 'mode', 'The mode of the tool:' \
+        m(longOpt: 'mode', arity: "1", required: false, argName: 'mode', 'The mode of the tool:' \
             + ' \'diff\' or \'single\'. (optional, default is \'diff\')')
-        xm(longOpt: 'extraMvnRegressionOptions', args: 1, required: false, 'Extra arguments to pass to Maven' \
+        xm(longOpt: 'extraMvnRegressionOptions', arity: "1", required: false, 'Extra arguments to pass to Maven' \
             + 'for Checkstyle Regression run (optional, ex: -Dmaven.prop=true)')
     }
     return cli.parse(args)
@@ -703,27 +709,38 @@ def runMavenExecution(srcDir, excludes, checkstyleConfig,
 }
 
 def postProcessCheckstyleReport(targetDir, repoName, repoPath) {
-    new AntBuilder().replace(
-        file: getOsSpecificPath("$targetDir", "checkstyle-result.xml"),
-        token: new File(getOsSpecificPath("src", "main", "java", "$repoName")).absolutePath,
-        value: getOsSpecificPath("$repoPath")
-    )
+    def reportFile = Paths.get("$targetDir", "checkstyle-result.xml").toFile()
+    def oldPath = new File(getOsSpecificPath("src", "main", "java", "$repoName")).absolutePath
+    def newContent = reportFile.text.replace(oldPath, getOsSpecificPath("$repoPath"))
+    reportFile.text = newContent
 }
 
 def copyDir(source, destination) {
-    new AntBuilder().copy(todir: destination) {
-        fileset(dir: source)
+    def sourcePath = Paths.get(source)
+    def destPath = Paths.get(destination)
+    Files.walk(sourcePath).forEach { src ->
+        def target = destPath.resolve(sourcePath.relativize(src))
+        if (Files.isDirectory(src)) {
+            Files.createDirectories(target)
+        } else {
+            Files.copy(src, target, REPLACE_EXISTING)
+        }
     }
 }
 
 def moveDir(source, destination) {
-    new AntBuilder().move(todir: destination) {
-        fileset(dir: source)
-    }
+    def sourcePath = Paths.get(source)
+    def destPath = Paths.get(destination)
+    Files.move(sourcePath, destPath, REPLACE_EXISTING)
 }
 
 def deleteDir(dir) {
-    new AntBuilder().delete(dir: dir, failonerror: false)
+    def path = Paths.get(dir)
+    if (Files.exists(path)) {
+        Files.walk(path)
+            .sorted(Comparator.reverseOrder())
+            .forEach { Files.delete(it) }
+    }
 }
 
 def executeCmd(cmd, dir = new File("").absoluteFile) {
