@@ -8,53 +8,54 @@ import java.nio.file.Paths
 import java.nio.file.SimpleFileVisitor
 import java.nio.file.attribute.BasicFileAttributes
 import java.util.regex.Pattern
+@GrabConfig(systemClassLoader = true)
+@Grab('info.picocli:picocli:4.2.0')
+import groovy.cli.picocli.CliBuilder
 
-static void main(String[] args) {
-    def cliOptions = getCliOptions(args)
-    if (cliOptions != null) {
-        if (areValidCliOptions(cliOptions)) {
-            def cfg = new Config(cliOptions)
-            def configFilesList = [cfg.config, cfg.baseConfig, cfg.patchConfig, cfg.listOfProjects]
-            copyConfigFilesAndUpdatePaths(configFilesList)
+def cliOptions = getCliOptions(args)
+if (cliOptions != null) {
+    if (areValidCliOptions(cliOptions)) {
+        def cfg = new ToolConfig(cliOptions)
+        def configFilesList = [cfg.config, cfg.baseConfig, cfg.patchConfig, cfg.listOfProjects]
+        copyConfigFilesAndUpdatePaths(configFilesList)
 
-            if (cfg.localGitRepo && hasUnstagedChanges(cfg.localGitRepo)) {
-                def exMsg = "Error: git repository ${cfg.localGitRepo.path} has unstaged changes!"
-                throw new IllegalStateException(exMsg)
-            }
-
-            // Delete work directories to avoid conflicts with previous reports generation
-            if (new File(cfg.reportsDir).exists()) {
-                deleteDir(cfg.reportsDir)
-            }
-            if (new File(cfg.tmpReportsDir).exists()) {
-                deleteDir(cfg.tmpReportsDir)
-            }
-
-            def checkstyleBaseReportInfo = null
-            if (cfg.isDiffMode()) {
-                checkstyleBaseReportInfo = launchCheckstyleReport(cfg.checkstyleToolBaseConfig)
-            }
-
-            def checkstylePatchReportInfo = launchCheckstyleReport(cfg.checkstyleToolPatchConfig)
-
-            if (checkstylePatchReportInfo) {
-                deleteDir(cfg.reportsDir)
-                moveDir(cfg.tmpReportsDir, cfg.reportsDir)
-
-                generateDiffReport(cfg.diffToolConfig)
-                generateSummaryIndexHtml(cfg.diffDir, checkstyleBaseReportInfo,
-                    checkstylePatchReportInfo, configFilesList, cfg.allowExcludes)
-            }
+        if (cfg.localGitRepo && hasUnstagedChanges(cfg.localGitRepo)) {
+            def exMsg = "Error: git repository ${cfg.localGitRepo.path} has unstaged changes!"
+            throw new IllegalStateException(exMsg)
         }
-        else {
-            throw new IllegalArgumentException('Error: invalid command line arguments!')
+
+        // Delete work directories to avoid conflicts with previous reports generation
+        if (new File(cfg.reportsDir).exists()) {
+            deleteDir(cfg.reportsDir)
         }
+        if (new File(cfg.tmpReportsDir).exists()) {
+            deleteDir(cfg.tmpReportsDir)
+        }
+
+        def checkstyleBaseReportInfo = null
+        if (cfg.isDiffMode()) {
+            checkstyleBaseReportInfo = launchCheckstyleReport(cfg.checkstyleToolBaseConfig)
+        }
+
+        def checkstylePatchReportInfo = launchCheckstyleReport(cfg.checkstyleToolPatchConfig)
+
+        if (checkstylePatchReportInfo) {
+            deleteDir(cfg.reportsDir)
+            moveDir(cfg.tmpReportsDir, cfg.reportsDir)
+
+            generateDiffReport(cfg.diffToolConfig)
+            generateSummaryIndexHtml(cfg.diffDir, checkstyleBaseReportInfo,
+                checkstylePatchReportInfo, configFilesList, cfg.allowExcludes)
+        }
+    }
+    else {
+        throw new IllegalArgumentException('Error: invalid command line arguments!')
     }
 }
 
 def getCliOptions(args) {
     def cliOptionsDescLineLength = 120
-    def cli = new CliBuilder(usage:'groovy diff.groovy [options]', header: 'options:', width: cliOptionsDescLineLength)
+    def cli = new CliBuilder(usage: 'groovy diff.groovy [options]', header: 'options:', width: cliOptionsDescLineLength)
     cli.with {
         r(longOpt: 'localGitRepo', args: 1, required: true, argName: 'path',
             'Path to local git repository (required)')
@@ -823,7 +824,21 @@ def getLastProjectCommitSha(repoType, srcDestinationDir) {
     return sha.replace('\n', '')
 }
 
-class Config {
+class CheckstyleReportInfo {
+    def branch
+    def commitSha
+    def commitMsg
+    def commitTime
+
+    CheckstyleReportInfo(branch, commitSha, commitMsg, commitTime) {
+        this.branch = branch
+        this.commitSha = commitSha
+        this.commitMsg = commitMsg
+        this.commitTime = commitTime
+    }
+}
+
+class ToolConfig {
     def localGitRepo
     def shortFilePaths
     def listOfProjects
@@ -850,7 +865,7 @@ class Config {
     def allowExcludes
     def useShallowClone
 
-    Config(cliOptions) {
+    ToolConfig(cliOptions) {
         if (cliOptions.localGitRepo) {
             localGitRepo = new File(cliOptions.localGitRepo)
         }
@@ -939,19 +954,5 @@ class Config {
             allowExcludes: allowExcludes,
             useShallowClone: useShallowClone,
         ]
-    }
-}
-
-class CheckstyleReportInfo {
-    def branch
-    def commitSha
-    def commitMsg
-    def commitTime
-
-    CheckstyleReportInfo(branch, commitSha, commitMsg, commitTime) {
-        this.branch = branch
-        this.commitSha = commitSha
-        this.commitMsg = commitMsg
-        this.commitTime = commitTime
     }
 }
