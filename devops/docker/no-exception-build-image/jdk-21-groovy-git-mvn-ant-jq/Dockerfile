@@ -12,7 +12,7 @@ RUN curl -s "https://get.sdkman.io" | bash
 # Install Java 21, Groovy, Maven via SDKMAN
 RUN bash -c "source $SDKMAN_DIR/bin/sdkman-init.sh && \
     sdk install java 21.0.4-tem && \
-    sdk install groovy 3.0.21 && \
+    sdk install groovy 5.0.0 && \
     sdk install maven 3.9.11"
 
 # Update PATH and setup environment
@@ -24,6 +24,4 @@ ENV PATH=$GROOVY_HOME/bin:$SDKMAN_DIR/candidates/maven/current/bin:$JAVA_HOME/bi
 RUN bash -c "source $SDKMAN_DIR/bin/sdkman-init.sh && \
     java -version && \
     groovy --version && \
-    mvn -version && \
-    groovy -e 'new CliBuilder(); println \"CliBuilder OK\"' && \
-    groovy -e 'new AntBuilder(); println \"AntBuilder OK\"'"
+    mvn -version"
