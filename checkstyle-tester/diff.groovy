@@ -703,11 +703,13 @@ def runMavenExecution(srcDir, excludes, checkstyleConfig,
 }
 
 def postProcessCheckstyleReport(targetDir, repoName, repoPath) {
-    new AntBuilder().replace(
-        file: getOsSpecificPath("$targetDir", "checkstyle-result.xml"),
-        token: new File(getOsSpecificPath("src", "main", "java", "$repoName")).absolutePath,
-        value: getOsSpecificPath("$repoPath")
-    )
+    def checkstyleResultFile = new File(getOsSpecificPath("$targetDir", "checkstyle-result.xml"))
+    def oldPath = new File(getOsSpecificPath("src", "main", "java", "$repoName")).absolutePath
+    def newPath = getOsSpecificPath("$repoPath")
+
+    def content = checkstyleResultFile.text
+    content = content.replace(oldPath, newPath)
+    checkstyleResultFile.text = content
 }
 
 def copyDir(source, destination) {
