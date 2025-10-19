@@ -719,9 +719,8 @@ def copyDir(source, destination) {
 }
 
 def moveDir(source, destination) {
-    new AntBuilder().move(todir: destination) {
-        fileset(dir: source)
-    }
+    copyDir(source, destination)
+    deleteDir(source)
 }
 
 def deleteDir(dir) {
