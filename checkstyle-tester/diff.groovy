@@ -723,7 +723,10 @@ def moveDir(source, destination) {
 }
 
 def deleteDir(dir) {
-    new AntBuilder().delete(dir: dir, failonerror: false)
+    def dirFile = new File(dir)
+    if (dirFile.exists()) {
+        dirFile.deleteDir()
+    }
 }
 
 def executeCmd(cmd, dir = new File("").absoluteFile) {
