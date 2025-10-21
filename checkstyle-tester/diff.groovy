@@ -4,6 +4,9 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.regex.Pattern
+@GrabConfig(systemClassLoader=true)
+@Grab('info.picocli:picocli:4.2.0')
+import groovy.cli.picocli.CliBuilder
 
 static void main(String[] args) {
     def cliOptions = getCliOptions(args)
@@ -48,7 +51,7 @@ static void main(String[] args) {
     }
 }
 
-def getCliOptions(args) {
+static def getCliOptions(args) {
     def cliOptionsDescLineLength = 120
     def cli = new CliBuilder(usage:'groovy diff.groovy [options]', header: 'options:', width: cliOptionsDescLineLength)
     cli.with {
@@ -81,7 +84,7 @@ def getCliOptions(args) {
     return cli.parse(args)
 }
 
-def areValidCliOptions(cliOptions) {
+static def areValidCliOptions(cliOptions) {
     def valid = true
     def baseConfig = cliOptions.baseConfig
     def patchConfig = cliOptions.patchConfig
@@ -120,7 +123,7 @@ def areValidCliOptions(cliOptions) {
     return valid
 }
 
-def isValidCheckstyleConfigsCombination(config, baseConfig, patchConfig, toolMode) {
+static def isValidCheckstyleConfigsCombination(config, baseConfig, patchConfig, toolMode) {
     def valid = true
     if (!config && !patchConfig && !baseConfig) {
         err.println "Error: you should specify either \'config\'," \
@@ -147,7 +150,7 @@ def isValidCheckstyleConfigsCombination(config, baseConfig, patchConfig, toolMod
     return valid
 }
 
-def isValidGitRepo(gitRepoDir) {
+static def isValidGitRepo(gitRepoDir) {
     def valid = true
     if (gitRepoDir.exists() && gitRepoDir.isDirectory()) {
         def gitStatusCmd = "git status".execute(null, gitRepoDir)
@@ -164,7 +167,7 @@ def isValidGitRepo(gitRepoDir) {
     return valid
 }
 
-def isExistingGitBranch(gitRepo, branchName) {
+static def isExistingGitBranch(gitRepo, branchName) {
     def exist = true
     def gitRevParseCmd = "git rev-parse --verify $branchName".execute(null, gitRepo)
     gitRevParseCmd.waitFor()
@@ -175,7 +178,7 @@ def isExistingGitBranch(gitRepo, branchName) {
     return exist
 }
 
-def copyConfigFilesAndUpdatePaths(configFilesList) {
+static def copyConfigFilesAndUpdatePaths(configFilesList) {
     // Remove boolean value for single config in case of different base and patch config
     configFilesList.removeIf { it instanceof Boolean }
 
@@ -189,7 +192,7 @@ def copyConfigFilesAndUpdatePaths(configFilesList) {
     }
 }
 
-def hasUnstagedChanges(gitRepo) {
+static def hasUnstagedChanges(gitRepo) {
     def hasUnstagedChanges = true
     def gitStatusCmd = "git diff --exit-code".execute(null, gitRepo)
     gitStatusCmd.waitFor()
@@ -201,7 +204,7 @@ def hasUnstagedChanges(gitRepo) {
     return hasUnstagedChanges
 }
 
-def getCheckstyleVersionFromPomXml(pathToPomXml, xmlTagName) {
+static def getCheckstyleVersionFromPomXml(pathToPomXml, xmlTagName) {
     def pomXmlFile = new File(pathToPomXml)
     def checkstyleVersion
     pomXmlFile.eachLine {
@@ -214,7 +217,7 @@ def getCheckstyleVersionFromPomXml(pathToPomXml, xmlTagName) {
     return checkstyleVersion
 }
 
-def launchCheckstyleReport(cfg) {
+static def launchCheckstyleReport(cfg) {
     CheckstyleReportInfo reportInfo
     def isRegressionTesting = cfg.branch && cfg.localGitRepo
 
@@ -246,7 +249,7 @@ def launchCheckstyleReport(cfg) {
     return reportInfo
 }
 
-def generateCheckstyleReport(cfg) {
+static def generateCheckstyleReport(cfg) {
     println 'Testing Checkstyle started'
 
     def targetDir = 'target'
@@ -317,22 +320,22 @@ def generateCheckstyleReport(cfg) {
     new File(getOsSpecificPath("$srcDir", "empty_file")).createNewFile()
 }
 
-def getLastCheckstyleCommitSha(gitRepo, branch) {
+static def getLastCheckstyleCommitSha(gitRepo, branch) {
     executeCmd("git checkout $branch", gitRepo)
     return 'git rev-parse HEAD'.execute(null, gitRepo).text.trim()
 }
 
-def getLastCommitMsg(gitRepo, branch) {
+static def getLastCommitMsg(gitRepo, branch) {
     executeCmd("git checkout $branch", gitRepo)
     return 'git log -1 --pretty=%B'.execute(null, gitRepo).text.trim()
 }
 
-def getLastCommitTime(gitRepo, branch) {
+static def getLastCommitTime(gitRepo, branch) {
     executeCmd("git checkout $branch", gitRepo)
     return 'git log -1 --format=%cd'.execute(null, gitRepo).text.trim()
 }
 
-def getCommitSha(commitId, repoType, srcDestinationDir) {
+static def getCommitSha(commitId, repoType, srcDestinationDir) {
     def cmd = ''
     switch (repoType) {
         case 'git':
@@ -346,7 +349,7 @@ def getCommitSha(commitId, repoType, srcDestinationDir) {
     return sha.replace('\n', '')
 }
 
-def shallowCloneRepository(repoName, repoType, repoUrl, commitId, srcDir) {
+static def shallowCloneRepository(repoName, repoType, repoUrl, commitId, srcDir) {
     def srcDestinationDir = getOsSpecificPath("$srcDir", "$repoName")
     if (!Files.exists(Paths.get(srcDestinationDir))) {
         def cloneCmd = getCloneShallowCmd(repoType, repoUrl, srcDestinationDir, commitId)
@@ -357,7 +360,7 @@ def shallowCloneRepository(repoName, repoType, repoUrl, commitId, srcDir) {
     println "$repoName is synchronized"
 }
 
-def cloneRepository(repoName, repoType, repoUrl, commitId, srcDir) {
+static def cloneRepository(repoName, repoType, repoUrl, commitId, srcDir) {
     def srcDestinationDir = getOsSpecificPath("$srcDir", "$repoName")
     if (!Files.exists(Paths.get(srcDestinationDir))) {
         def cloneCmd = getCloneCmd(repoType, repoUrl, srcDestinationDir)
@@ -382,21 +385,21 @@ def cloneRepository(repoName, repoType, repoUrl, commitId, srcDir) {
     println "$repoName is synchronized"
 }
 
-def getCloneCmd(repoType, repoUrl, srcDestinationDir) {
+static def getCloneCmd(repoType, repoUrl, srcDestinationDir) {
     if ('git'.equals(repoType)) {
         return "git clone $repoUrl $srcDestinationDir"
     }
     throw new IllegalArgumentException("Error! Unknown $repoType repository.")
 }
 
-def getCloneShallowCmd(repoType, repoUrl, srcDestinationDir, commitId) {
+static def getCloneShallowCmd(repoType, repoUrl, srcDestinationDir, commitId) {
     if ('git'.equals(repoType)) {
         return "git clone --depth 1 --branch $commitId $repoUrl $srcDestinationDir"
     }
     throw new IllegalArgumentException("Error! Unknown repository type: $repoType")
 }
 
-def fetchAdditionalData(repoType, srcDestinationDir, commitId) {
+static def fetchAdditionalData(repoType, srcDestinationDir, commitId) {
     String fetchCmd = ''
     if ('git'.equals(repoType)) {
         if (isGitSha(commitId)) {
@@ -416,18 +419,18 @@ def fetchAdditionalData(repoType, srcDestinationDir, commitId) {
     executeCmd(fetchCmd, new File(srcDestinationDir))
 }
 
-def isTag(commitId, gitRepo) {
+static def isTag(commitId, gitRepo) {
     def tagCheckCmd = "git tag -l $commitId".execute(null, gitRepo)
     tagCheckCmd.waitFor()
     return tagCheckCmd.text.trim().equals(commitId)
 }
 
 // it is not very accurate match, but in case of mismatch we will do full clone
-def isGitSha(value) {
+static def isGitSha(value) {
     return value ==~ /[0-9a-f]{5,40}/
 }
 
-def executeCmdWithRetry(cmd, dir = new File("").getAbsoluteFile(), retry = 5) {
+static def executeCmdWithRetry(cmd, dir = new File("").getAbsoluteFile(), retry = 5) {
     def osSpecificCmd = getOsSpecificCmd(cmd)
     def left = retry
     while (true) {
@@ -447,7 +450,7 @@ def executeCmdWithRetry(cmd, dir = new File("").getAbsoluteFile(), retry = 5) {
     }
 }
 
-def generateDiffReport(cfg) {
+static def generateDiffReport(cfg) {
     def diffToolDir = Paths.get("").toAbsolutePath()
         .parent
         .resolve("patch-diff-report-tool")
@@ -483,7 +486,7 @@ def generateDiffReport(cfg) {
     println 'Diff report generation finished ...'
 }
 
-def getPathToDiffToolJar(diffToolDir) {
+static def getPathToDiffToolJar(diffToolDir) {
     def targetDir = diffToolDir.absolutePath + '/target/'
     def pathToDiffToolJar
     Paths.get(targetDir).toFile().eachFile {
@@ -501,19 +504,23 @@ def getPathToDiffToolJar(diffToolDir) {
     return pathToDiffToolJar
 }
 
-def getTextTransform() {
+static def getTextTransform() {
     def diffToolDir = Paths.get("").toAbsolutePath()
         .parent
         .resolve("patch-diff-report-tool")
         .toFile()
     def diffToolJarPath = getPathToDiffToolJar(diffToolDir)
-    this.class.classLoader.rootLoader.addURL(new URL("file:$diffToolJarPath"))
-    def textTransform = this.class.getClassLoader().loadClass("com.github.checkstyle.site.TextTransform").newInstance()
 
+    // Create a new URLClassLoader with the JAR file
+    def url = new URL("file:$diffToolJarPath")
+    def classLoader = new URLClassLoader([url] as URL[])
+
+    // Use the new class loader to load the class
+    def textTransform = classLoader.loadClass("com.github.checkstyle.site.TextTransform").newInstance()
     return textTransform
 }
 
-def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo,
+static def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo,
                              checkstylePatchReportInfo, configFilesList, allowExcludes) {
     println 'Starting creating report summary page ...'
     def projectsStatistic = getProjectsStatistic(diffDir)
@@ -558,7 +565,7 @@ def generateSummaryIndexHtml(diffDir, checkstyleBaseReportInfo,
     println 'Creating report summary page finished...'
 }
 
-def printConfigSection(diffDir, configFilesList, summaryIndexHtml) {
+static def printConfigSection(diffDir, configFilesList, summaryIndexHtml) {
     def textTransform = getTextTransform()
     for (filename in configFilesList) {
         def configFile = new File(filename)
@@ -567,7 +574,7 @@ def printConfigSection(diffDir, configFilesList, summaryIndexHtml) {
     }
 }
 
-def generateAndPrintConfigHtmlFile(diffDir, configFile, textTransform, summaryIndexHtml) {
+static def generateAndPrintConfigHtmlFile(diffDir, configFile, textTransform, summaryIndexHtml) {
     def configfilenameWithoutExtension = getFilenameWithoutExtension(configFile.name)
     def configFileHtml = new File("$diffDir/${configfilenameWithoutExtension}.html")
     textTransform.transform(configFile.name, configFileHtml.toPath().toString(), Locale.ENGLISH,
@@ -578,7 +585,7 @@ def generateAndPrintConfigHtmlFile(diffDir, configFile, textTransform, summaryIn
     summaryIndexHtml << ('</h6>')
 }
 
-def getFilenameWithoutExtension(filename) {
+static def getFilenameWithoutExtension(filename) {
     def filenameWithoutExtension
     int pos = filename.lastIndexOf(".")
     if (pos > 0) {
@@ -587,7 +594,7 @@ def getFilenameWithoutExtension(filename) {
     return filenameWithoutExtension
 }
 
-def makeWorkDirsIfNotExist(srcDirPath, repoDirPath, reportsDirPath) {
+static def makeWorkDirsIfNotExist(srcDirPath, repoDirPath, reportsDirPath) {
     def srcDir = new File(srcDirPath)
     if (!srcDir.exists()) {
         srcDir.mkdirs()
@@ -602,7 +609,7 @@ def makeWorkDirsIfNotExist(srcDirPath, repoDirPath, reportsDirPath) {
     }
 }
 
-def printReportInfoSection(summaryIndexHtml, checkstyleBaseReportInfo, checkstylePatchReportInfo, projectsStatistic) {
+static def printReportInfoSection(summaryIndexHtml, checkstyleBaseReportInfo, checkstylePatchReportInfo, projectsStatistic) {
     def date = new Date()
     summaryIndexHtml << ('<h6>')
     if (checkstyleBaseReportInfo) {
@@ -633,7 +640,7 @@ def printReportInfoSection(summaryIndexHtml, checkstyleBaseReportInfo, checkstyl
     summaryIndexHtml << ('</h6>')
 }
 
-def getProjectsStatistic(diffDir) {
+static def getProjectsStatistic(diffDir) {
     def projectsStatistic = new HashMap<>()
     def totalDiff = 0
     def addedDiff = 0
@@ -678,7 +685,7 @@ def getProjectsStatistic(diffDir) {
     return projectsStatistic
 }
 
-def runMavenExecution(srcDir, excludes, checkstyleConfig,
+static def runMavenExecution(srcDir, excludes, checkstyleConfig,
                       checkstyleVersion, extraMvnRegressionOptions) {
     println "Running 'mvn clean' on $srcDir ..."
     def mvnClean = "mvn -e --no-transfer-progress --batch-mode clean"
@@ -702,31 +709,55 @@ def runMavenExecution(srcDir, excludes, checkstyleConfig,
     println "Running Checkstyle on $srcDir - finished"
 }
 
-def postProcessCheckstyleReport(targetDir, repoName, repoPath) {
-    new AntBuilder().replace(
-        file: getOsSpecificPath("$targetDir", "checkstyle-result.xml"),
-        token: new File(getOsSpecificPath("src", "main", "java", "$repoName")).absolutePath,
-        value: getOsSpecificPath("$repoPath")
-    )
-}
-
-def copyDir(source, destination) {
-    new AntBuilder().copy(todir: destination) {
-        fileset(dir: source)
+static def postProcessCheckstyleReport(targetDir, repoName, repoPath) {
+    def checkstyleResultFile = new File(getOsSpecificPath("$targetDir", "checkstyle-result.xml"))
+    if (checkstyleResultFile.exists()) {
+        def content = checkstyleResultFile.text
+        def oldPath = new File(getOsSpecificPath("src", "main", "java", "$repoName")).absolutePath
+        def newContent = content.replace(oldPath, getOsSpecificPath("$repoPath"))
+        checkstyleResultFile.text = newContent
     }
 }
 
-def moveDir(source, destination) {
-    new AntBuilder().move(todir: destination) {
-        fileset(dir: source)
+static def copyDir(source, destination) {
+    def sourceDir = new File(source)
+    def destDir = new File(destination)
+
+    if (!destDir.exists()) {
+        destDir.mkdirs()
+    }
+
+    sourceDir.eachFileRecurse { file ->
+        def relativePath = sourceDir.toPath().relativize(file.toPath())
+        def destFile = new File(destDir, relativePath.toString())
+
+        if (file.isDirectory()) {
+            destFile.mkdirs()
+        } else {
+            Files.copy(file.toPath(), destFile.toPath(), REPLACE_EXISTING)
+        }
     }
 }
 
-def deleteDir(dir) {
-    new AntBuilder().delete(dir: dir, failonerror: false)
+static def moveDir(source, destination) {
+    def sourceDir = new File(source)
+    def destDir = new File(destination)
+
+    if (sourceDir.exists()) {
+        // First copy, then delete
+        copyDir(source, destination)
+        deleteDir(source)
+    }
 }
 
-def executeCmd(cmd, dir = new File("").absoluteFile) {
+static def deleteDir(dir) {
+    def dirFile = new File(dir)
+    if (dirFile.exists() && dirFile.isDirectory()) {
+        dirFile.deleteDir()
+    }
+}
+
+static def executeCmd(cmd, dir = new File("").absoluteFile) {
     println "Running command: ${cmd}"
     def osSpecificCmd = getOsSpecificCmd(cmd)
     def proc = osSpecificCmd.execute(null, dir)
@@ -737,7 +768,7 @@ def executeCmd(cmd, dir = new File("").absoluteFile) {
     }
 }
 
-def getOsSpecificCmd(cmd) {
+static def getOsSpecificCmd(cmd) {
     def osSpecificCmd
     if (System.properties['os.name'].toLowerCase().contains('windows')) {
         osSpecificCmd = "cmd /c $cmd"
@@ -748,17 +779,17 @@ def getOsSpecificCmd(cmd) {
     return osSpecificCmd
 }
 
-def getOsSpecificPath(String... name) {
+static def getOsSpecificPath(String... name) {
     def slash = isWindows() ? "\\" : "/"
     def path = name.join(slash)
     return path
 }
 
-def isWindows() {
+static def isWindows() {
     return System.properties['os.name'].toLowerCase().contains('windows')
 }
 
-def getResetCmd(repoType, commitId) {
+static def getResetCmd(repoType, commitId) {
     def resetCmd = ''
     switch (repoType) {
         case 'git':
@@ -774,7 +805,7 @@ def getResetCmd(repoType, commitId) {
     return resetCmd
 }
 
-def getLastProjectCommitSha(repoType, srcDestinationDir) {
+static def getLastProjectCommitSha(repoType, srcDestinationDir) {
     def cmd = ''
     switch (repoType) {
         case 'git':
