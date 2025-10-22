@@ -1,12 +1,12 @@
 FROM anapsix/alpine-java:8u162b12_jdk
 
 ############################# Install tools and deps #########################################
-RUN apk update && apk add --no-cache curl tar bash procps git openssh htop xmlstarlet libxslt 
+RUN apk update && apk add --no-cache curl tar bash procps git openssh htop xmlstarlet libxslt
 ############################# End Install tools and deps #####################################
 
 ############################# Install Groovy ################################
 ENV GROOVY_HOME /opt/groovy
-ARG GROOVY_VERSION=2.4.15
+ARG GROOVY_VERSION=5.0.0
 
 RUN set -o errexit -o nounset && echo "Installing build dependencies" && \
     apk add --no-cache --virtual .build-deps ca-certificates gnupg openssl unzip && \
