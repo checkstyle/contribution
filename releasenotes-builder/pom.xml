@@ -11,7 +11,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.plugin.guava.version>33.5.0-jre</maven.plugin.guava.version>
-        <maven.plugin.antrun.version>3.1.0</maven.plugin.antrun.version>
+        <maven.plugin.antrun.version>3.2.0</maven.plugin.antrun.version>
         <maven.plugin.github-api.version>1.330</maven.plugin.github-api.version>
         <maven.plugin.jgit.version>7.4.0.202509020913-r</maven.plugin.jgit.version>
         <maven.plugin.slf4j.version>2.0.17</maven.plugin.slf4j.version>
