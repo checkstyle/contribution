@@ -713,8 +713,19 @@ def postProcessCheckstyleReport(targetDir, repoName, repoPath) {
 }
 
 def copyDir(source, destination) {
-    new AntBuilder().copy(todir: destination) {
-        fileset(dir: source)
+    def sourceFile = new File(source)
+    def destFile = new File(destination)
+
+    if (sourceFile.isDirectory()) {
+        if (!destFile.exists()) {
+            destFile.mkdirs()
+        }
+        sourceFile.eachFile { file ->
+            copyDir(file.absolutePath, new File(destFile, file.name).absolutePath)
+        }
+    } else {
+        destFile.parentFile.mkdirs()
+        destFile.bytes = sourceFile.bytes
     }
 }
 
