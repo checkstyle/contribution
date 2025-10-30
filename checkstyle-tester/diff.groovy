@@ -4,6 +4,9 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.regex.Pattern
+@GrabConfig(systemClassLoader=true)
+@Grab('info.picocli:picocli:4.2.0')
+import groovy.cli.picocli.CliBuilder
 
 static void main(String[] args) {
     def cliOptions = getCliOptions(args)
