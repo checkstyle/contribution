@@ -713,33 +713,8 @@ def postProcessCheckstyleReport(targetDir, repoName, repoPath) {
 }
 
 def copyDir(source, destination) {
-    def sourceDir = new File(source)
-    def destDir = new File(destination)
-
-    if (!sourceDir.exists() || !sourceDir.isDirectory()) {
-        throw new IllegalArgumentException("Source directory does not exist or is not a directory: $source")
-    }
-
-    if (!destDir.exists()) {
-        if (!destDir.mkdirs()) {
-            throw new IOException("Failed to create destination directory: $destination")
-        }
-    }
-
-    sourceDir.eachFileRecurse { file ->
-        def relativePath = sourceDir.toPath().relativize(file.toPath()).toString()
-        def destFile = new File(destDir, relativePath)
-
-        if (file.isDirectory()) {
-            if (!destFile.exists()) {
-                if (!destFile.mkdirs()) {
-                    throw new IOException("Failed to create directory: ${destFile.path}")
-                }
-            }
-        } else {
-            destFile.parentFile.mkdirs()
-            Files.copy(file.toPath(), destFile.toPath(), REPLACE_EXISTING)
-        }
+    new AntBuilder().copy(todir: destination) {
+        fileset(dir: source)
     }
 }
 
