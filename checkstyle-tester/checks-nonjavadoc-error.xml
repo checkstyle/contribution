@@ -467,6 +467,8 @@
     <module name="JavaNCSS"/>
     <module name="NPathComplexity"/>
 
+    <module name="SomeNewModuleInCheckstyle"/>
+
     <!-- Misc -->
     <module name="ArrayTypeStyle"/>
     <module name="AvoidEscapedUnicodeCharacters">
