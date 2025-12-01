@@ -31,6 +31,8 @@
     <module name="SingleLineJavadoc"/>
     <module name="SummaryJavadoc"/>
 
+    <module name="SomeNewModuleInCheckstyle"/>
+
   </module>
 
 </module>
