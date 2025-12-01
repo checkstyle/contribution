@@ -467,7 +467,7 @@
     <module name="JavaNCSS"/>
     <module name="NPathComplexity"/>
 
-    <module name="SomeNewModuleInCheckstyleeeTypo"/>
+    <module name="SomeNewModuleInCheckstyle"/>
 
     <!-- Misc -->
     <module name="ArrayTypeStyle"/>
