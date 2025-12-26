@@ -1,12 +1,8 @@
 import static java.lang.System.err
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING
 
-import java.nio.file.FileVisitResult
 import java.nio.file.Files
-import java.nio.file.Path
 import java.nio.file.Paths
-import java.nio.file.SimpleFileVisitor
-import java.nio.file.attribute.BasicFileAttributes
 import java.util.regex.Pattern
 
 static void main(String[] args) {
@@ -717,35 +713,9 @@ def postProcessCheckstyleReport(targetDir, repoName, repoPath) {
 }
 
 def copyDir(source, destination) {
-    Path sourceDir = new File(source).toPath().toAbsolutePath().normalize()
-    Path destinationDir = new File(destination).toPath().toAbsolutePath().normalize()
-
-    Files.walkFileTree(sourceDir, new SimpleFileVisitor<Path>() {
-        @Override
-        FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-            if (dir.startsWith(destinationDir)) {
-                return FileVisitResult.SKIP_SUBTREE
-            }
-            Path targetDir = destinationDir.resolve(sourceDir.relativize(dir))
-            if (targetDir.startsWith(sourceDir)) {
-                return FileVisitResult.SKIP_SUBTREE
-            }
-            if (!Files.exists(targetDir)) {
-                Files.createDirectories(targetDir)
-            }
-            return FileVisitResult.CONTINUE
-        }
-
-        @Override
-        FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
-            Path targetFile = destinationDir.resolve(sourceDir.relativize(file))
-            if (targetFile.startsWith(sourceDir)) {
-                return FileVisitResult.CONTINUE
-            }
-            Files.copy(file, targetFile, REPLACE_EXISTING)
-            return FileVisitResult.CONTINUE
-        }
-    })
+    new AntBuilder().copy(todir: destination) {
+        fileset(dir: source)
+    }
 }
 
 def moveDir(source, destination) {
