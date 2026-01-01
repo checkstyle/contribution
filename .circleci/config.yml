@@ -6,7 +6,7 @@ jobs:
     parameters: &script_parameters
       image-name:
         type: string
-        default: "cimg/openjdk:17.0.7"
+        default: "cimg/openjdk:21.0.6"
         description: "docker image to use"
       command:
         description: "command to run"
@@ -51,7 +51,7 @@ workflows:
     jobs:
       - validate-with-maven-script:
           name: "releasenotes-builder"
-          image-name: &custom_img "amitkumardeoghoria/jdk-17-groovy-git-mvn:v1.0"
+          image-name: &custom_img "amitkumardeoghoria/jdk-21-groovy-git-mvn-ant-jq:v1"
           command: "./.ci/validation.sh releasenotes-builder"
       - validate-with-maven-script:
           name: "patch-diff-report-tool"
