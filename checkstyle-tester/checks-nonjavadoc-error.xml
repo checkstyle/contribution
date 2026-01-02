@@ -194,6 +194,7 @@
     <module name="MissingOverride">
       <property name="javaFiveCompatibility" value="true"/>
     </module>
+    <module name="MissingOverrideOnRecordAccessor"/>
     <module name="PackageAnnotation"/>
     <module name="SuppressWarnings">
         <property name="format" value="^((?!unchecked|deprecation|rawtypes).)*$"/>
