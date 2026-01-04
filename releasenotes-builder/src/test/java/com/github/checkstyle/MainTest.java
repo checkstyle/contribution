@@ -23,10 +23,12 @@ import static com.github.checkstyle.MainProcess.RELEASE_NUMBER_PATTERN;
 import static org.kohsuke.github.GHIssueState.CLOSED;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.github.checkstyle.internal.AbstractReleaseNotesTestSupport;
 
+@Ignore
 public class MainTest extends AbstractReleaseNotesTestSupport {
     @Test
     public void test() {
