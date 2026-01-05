@@ -222,25 +222,20 @@ public final class CheckstyleReportsParser {
             final Attribute attribute = attributes.next();
             final String attrName = attribute.getName().toString();
             switch (attrName) {
-                case LINE_ATTR:
-                    line = Integer.parseInt(attribute.getValue());
-                    break;
-                case COLUMN_ATTR:
-                    column = Integer.parseInt(attribute.getValue());
-                    break;
-                case SEVERITY_ATTR:
+                case LINE_ATTR -> line = Integer.parseInt(attribute.getValue());
+                case COLUMN_ATTR -> column = Integer.parseInt(attribute.getValue());
+                case SEVERITY_ATTR -> {
                     severity = attribute.getValue();
                     statistics.addSeverityRecord(severity, index);
-                    break;
-                case MESSAGE_ATTR:
-                    message = attribute.getValue();
-                    break;
-                case SOURCE_ATTR:
+                }
+                case MESSAGE_ATTR -> message = attribute.getValue();
+                case SOURCE_ATTR -> {
                     source = attribute.getValue();
                     statistics.addModuleRecord(source, index);
-                    break;
-                default:
-                    break;
+                }
+                default -> {
+                    // Ignore other attributes
+                }
             }
         }
         return new CheckstyleRecord(index,
