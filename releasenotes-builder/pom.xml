@@ -20,7 +20,7 @@
         <maven.plugin.apache.commons.lang.version>2.6</maven.plugin.apache.commons.lang.version>
         <maven.plugin.twitter4j.version>4.1.2</maven.plugin.twitter4j.version>
         <maven.plugin.javax.mail.version>1.5.0-b01</maven.plugin.javax.mail.version>
-        <java.version>17</java.version>
+        <java.version>21</java.version>
         <checkstyle.version>13.0.0</checkstyle.version>
         <checkstyle.configLocation>https://raw.githubusercontent.com/checkstyle/checkstyle/checkstyle-${checkstyle.version}/config/checkstyle-checks.xml</checkstyle.configLocation>
         <junit.version>4.13.2</junit.version>
