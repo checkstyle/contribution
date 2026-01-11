@@ -64,6 +64,7 @@
 
   <!-- Miscellaneous -->
   <module name="NewlineAtEndOfFile"/>
+  <module name="LineEnding"/>
   <module name="Translation">
     <property name="requiredTranslations" value="de, fr, fi, es, pt, ja, tr, zh"/>
   </module>
