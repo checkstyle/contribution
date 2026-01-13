@@ -297,6 +297,7 @@
         <property name="classes" value="org.xml.sax.SAXException, org.xml.sax.SAXParseException, org.apache.commons.beanutils.ConversionException,
             org.antlr.v4.runtime.misc.ParseCancellationException, antlr.RecognitionException, antlr.TokenStreamException, antlr.TokenStreamRecognitionException, antlr.ANTLRException"/>
     </module>
+    <module name="IllegalSymbol"/>
     <module name="IllegalThrows"/>
     <module name="IllegalToken">
         <property name="tokens" value="LABELED_STAT"/>
