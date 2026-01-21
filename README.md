@@ -1,8 +1,6 @@
 # Checkstyle contribution
-
 [![][appveyor img]][appveyor]
 [![][teamcity img]][teamcity]
-
 This repository is a support repository some tools that are used in checkstyle
 development and other contributions that are valuable but should not be in
 [main checkstyle repo](https://github.com/checkstyle/checkstyle)
