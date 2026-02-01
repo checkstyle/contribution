@@ -439,6 +439,7 @@
       <property name="allowUnknownTags" value="true"/>
     </module>
     <module name="JavadocVariable"/>
+    <module name="JavadocUtilizingTrailingSpace"/>
     <!-- JavadocAST Checks - disabled due to performance problem
     <module name="NonEmptyAtclauseDescription"/>
     <module name="SingleLineJavadoc"/>
