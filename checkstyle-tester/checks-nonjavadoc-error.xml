@@ -670,6 +670,7 @@
     <module name="WhitespaceAround"/>
     <module name="WhitespaceBeforeEmptyBody"/>
     <module name="UnusedLocalVariable"/>
+    <module name="UnusedPrivateField"/>
 
   </module>
 
