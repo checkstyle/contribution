@@ -449,6 +449,7 @@
     <module name="MissingJavadocPackage"/>
     <module name="MissingJavadocType"/>
     <module name="WriteTag"/>
+    <module name="PreferJavadocInlineTags"/>
 
     <!-- Metrics -->
     <module name="BooleanExpressionComplexity">
