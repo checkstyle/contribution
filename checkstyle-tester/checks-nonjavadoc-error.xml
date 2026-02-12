@@ -360,6 +360,7 @@
     <module name="TextBlockGoogleStyleFormatting"/>
     <module name="UnnecessaryNullCheckWithInstanceOf"/>
     <module name="UnnecessaryParentheses"/>
+    <module name="UnnecessaryPermitsClause"/>
     <module name="UnnecessarySemicolonAfterOuterTypeDeclaration"/>
     <module name="UnnecessarySemicolonAfterTypeMemberDeclaration"/>
     <module name="UnnecessarySemicolonInEnumeration"/>
