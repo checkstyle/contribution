@@ -8,6 +8,9 @@ import java.nio.file.Paths
 import java.nio.file.SimpleFileVisitor
 import java.nio.file.attribute.BasicFileAttributes
 import java.util.regex.Pattern
+@GrabConfig(systemClassLoader=true)
+@Grab('info.picocli:picocli:4.2.0')
+import groovy.cli.picocli.CliBuilder
 
 static void main(String[] args) {
     def cliOptions = getCliOptions(args)

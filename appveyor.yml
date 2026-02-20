@@ -20,15 +20,15 @@ install:
       }
   - ps: |
       Add-Type -AssemblyName System.IO.Compression.FileSystem
-      if (!(Test-Path -Path "C:\groovy\groovy-2.4.8" )) {
+      if (!(Test-Path -Path "C:\groovy\groovy-5.0.0" )) {
         (new-object System.Net.WebClient).DownloadFile(
-          'https://archive.apache.org/dist/groovy/2.4.8/distribution/apache-groovy-binary-2.4.8.zip',
+          'https://archive.apache.org/dist/groovy/5.0.0/distribution/apache-groovy-binary-5.0.0.zip',
           'C:\groovy-bin.zip'
         )
         [System.IO.Compression.ZipFile]::ExtractToDirectory("C:\groovy-bin.zip", "C:\groovy")
       }
   - cmd: SET M2_HOME=C:\maven\apache-maven-3.8.8
-  - cmd: SET GROOVY_HOME=C:\groovy\groovy-2.4.8
+  - cmd: SET GROOVY_HOME=C:\groovy\groovy-5.0.0
   - cmd: SET PATH=%GROOVY_HOME%\bin;%JAVA_HOME%\bin;%M2_HOME%\bin;%PATH%
   - cmd: git config --global core.autocrlf
   - cmd: mvn --version
@@ -37,7 +37,7 @@ install:
 
 cache:
   - C:\maven\apache-maven-3.8.8
-  - C:\groovy\groovy-2.4.8
+  - C:\groovy\groovy-5.0.0
   - C:\Users\appveyor\.m2
 
 matrix:
@@ -102,6 +102,6 @@ build_script:
   - appveyor.cmd
   - ps: echo "Size of caches (bytes):"
   - ps: Get-ChildItem -Recurse 'C:\maven\apache-maven-3.8.8' | Measure-Object -Property Length -Sum
-  - ps: Get-ChildItem -Recurse 'C:\groovy\groovy-2.4.8' | Measure-Object -Property Length -Sum
+  - ps: Get-ChildItem -Recurse 'C:\groovy\groovy-5.0.0' | Measure-Object -Property Length -Sum
   - ps: Get-ChildItem -Recurse 'C:\Users\appveyor\.m2' | Measure-Object -Property Length -Sum
 
