@@ -512,6 +512,7 @@
     <module name="ClassTypeParameterName"/>
     <module name="RecordTypeParameterName"/>
     <module name="ConstantName"/>
+    <module name="GoogleMethodName"/>
     <module name="InterfaceTypeParameterName"/>
     <module name="LocalFinalVariableName"/>
     <module name="LocalVariableName">
