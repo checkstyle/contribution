@@ -419,6 +419,7 @@
     <module name="UnusedImports"/>
 
     <!-- Javadoc Comments -->
+    <module name="BlockCommentEndPosition"/>
     <!-- JavadocAST Checks - disabled due to performance problem
     <module name="AtclauseOrder"/>
     -->
