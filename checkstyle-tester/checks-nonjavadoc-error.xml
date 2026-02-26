@@ -573,6 +573,7 @@
     </module>
     <module name="GenericWhitespace"/>
     <module name="MethodParamPad"/>
+    <module name="MultilineCommentLeadingAsteriskPresence"/>
     <module name="NoLineWrap"/>
     <module name="NoWhitespaceAfter">
       <property name="tokens" value="ARRAY_INIT"/>
