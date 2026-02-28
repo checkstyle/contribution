@@ -448,6 +448,7 @@
     <module name="MissingJavadocMethod"/>
     <module name="MissingJavadocPackage"/>
     <module name="MissingJavadocType"/>
+    <module name="SetterSinceTag"/>
     <module name="WriteTag"/>
 
     <!-- Metrics -->
@@ -556,12 +557,6 @@
     <module name="AnonInnerLength"/>
     <module name="ExecutableStatementCount">
         <property name="max" value="30"/>
-    </module>
-    <module name="JavaLineLength">
-        <property name="max" value="100"/>
-        <property name="tokens" value="TEXT_BLOCK_LITERAL_BEGIN"/>
-        <property name="tokens" value="PACKAGE_DEF"/>
-        <property name="tokens" value="IMPORT"/>
     </module>
     <module name="LambdaBodyLength"/>
     <module name="MethodCount">
