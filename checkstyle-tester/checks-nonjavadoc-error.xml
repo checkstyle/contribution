@@ -449,6 +449,7 @@
     <module name="MissingJavadocMethod"/>
     <module name="MissingJavadocPackage"/>
     <module name="MissingJavadocType"/>
+    <module name="SetterSinceTag"/>
     <module name="WriteTag"/>
 
     <!-- Metrics -->
