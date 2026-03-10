@@ -502,6 +502,7 @@
     <module name="ModifierOrder"/>
     <module name="RedundantModifier"/>
     <module name="InterfaceMemberImpliedModifier"/>
+    <module name="AnnotatedMethodVisibilityModifier"/>
 
     <!-- Naming Conventions -->
     <module name="AbbreviationAsWordInName">
