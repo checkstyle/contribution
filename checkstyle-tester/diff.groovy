@@ -710,10 +710,15 @@ def postProcessCheckstyleReport(targetDir, repoName, repoPath) {
     def checkstyleResultFile = new File(getOsSpecificPath("$targetDir", "checkstyle-result.xml"))
     def oldPath = new File(getOsSpecificPath("src", "main", "java", "$repoName")).absolutePath
     def newPath = getOsSpecificPath("$repoPath")
+    def tempFile = Files.createTempFile("temp", ".xml").toFile()
 
-    def content = checkstyleResultFile.text
-    content = content.replace(oldPath, newPath)
-    checkstyleResultFile.text = content
+    tempFile.withWriter { writer ->
+        checkstyleResultFile.eachLine { line ->
+            writer.writeLine(line.replace(oldPath, newPath))
+        }
+    }
+    Files.copy(tempFile.toPath(), checkstyleResultFile.toPath(), REPLACE_EXISTING)
+    tempFile.delete()
 }
 
 def copyDir(source, destination) {
