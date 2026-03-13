@@ -11,7 +11,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<checkstyle-plugin.version>3.1.1</checkstyle-plugin.version>
+		<checkstyle-plugin.version>3.6.0</checkstyle-plugin.version>
 		<checkstyle.version>0.0-SNAPSHOT</checkstyle.version>
 		<sevntu-checkstyle.version>1.44.1</sevntu-checkstyle.version>
 		<checkstyle.config.location>https://raw.githubusercontent.com/checkstyle/checkstyle/master/src/main/resources/google_checks.xml</checkstyle.config.location>
@@ -21,6 +21,11 @@
 	<build>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.21.0</version>
+			</plugin>
+			<plugin>
 	          <groupId>org.apache.maven.plugins</groupId>
 	          <artifactId>maven-checkstyle-plugin</artifactId>
 	          <version>${checkstyle-plugin.version}</version>
@@ -29,6 +34,16 @@
 					  <groupId>com.puppycrawl.tools</groupId>
 					  <artifactId>checkstyle</artifactId>
 					  <version>${checkstyle.version}</version>
+					  <exclusions>
+					    <exclusion>
+					      <groupId>org.apache.maven.doxia</groupId>
+					      <artifactId>doxia-core</artifactId>
+					    </exclusion>
+					    <exclusion>
+					      <groupId>org.apache.maven.doxia</groupId>
+					      <artifactId>doxia-module-xdoc</artifactId>
+					    </exclusion>
+					  </exclusions>
 					</dependency>
 					<dependency>
 						<groupId>com.github.sevntu-checkstyle</groupId>
