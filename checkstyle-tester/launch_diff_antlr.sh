@@ -224,15 +224,16 @@ mvn_package "master"
 
 echo "Checking out and Installing PR $1"
 
-git fetch $PULL_REMOTE
+#git fetch $PULL_REMOTE
 
-if [ ! `git rev-parse --verify $PULL_REMOTE/$1` ] ;
-then
-	echo "Branch $PULL_REMOTE/$1 doesn't exist"
-	exit 1
-fi
+# if [ ! `git rev-parse --verify $PULL_REMOTE/$1` ] ;
+# then
+# 	echo "Branch $PULL_REMOTE/$1 doesn't exist"
+# 	exit 1
+# fi
 
-git checkout $PULL_REMOTE/$1
+#git checkout $PULL_REMOTE/$1
+git checkout $1
 git clean -f -d
 
 mvn_package "patch"
@@ -278,7 +279,8 @@ echo "Base branch last commit SHA: $HASH<br />" >> $OUTPUT_FILE
 echo "Base branch last commit message: $MSG<br />" >> $OUTPUT_FILE
 echo "</h6>" >> $OUTPUT_FILE
 
-REMOTE="$PULL_REMOTE/$1"
+#REMOTE="$PULL_REMOTE/$1"
+REMOTE="$1"
 
 cd $CHECKSTYLE_DIR
 HASH=$(git rev-parse $REMOTE)
