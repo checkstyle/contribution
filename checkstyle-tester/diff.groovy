@@ -378,7 +378,7 @@ def cloneRepository(repoName, repoType, repoUrl, commitId, srcDir) {
                 // If commitId is a branch or tag, fetch more data and then reset
                 fetchAdditionalData(repoType, srcDestinationDir, commitId)
             }
-            def resetCmd = getResetCmd(repoType, commitId)
+            def resetCmd = getResetCmd(repoType, commitId, srcDestinationDir)
             println "Resetting $repoType sources to commit '$commitId'"
             executeCmd(resetCmd, new File("$srcDestinationDir"))
         }
@@ -791,14 +791,16 @@ def isWindows() {
     return System.properties['os.name'].toLowerCase().contains('windows')
 }
 
-def getResetCmd(repoType, commitId) {
+def getResetCmd(repoType, commitId, srcDestinationDir) {
     def resetCmd = ''
     switch (repoType) {
         case 'git':
             if (isGitSha(commitId)) {
                 resetCmd = "git reset --hard $commitId"
-            } else {
+            } else if (isTag(commitId, new File(srcDestinationDir))) {
                 resetCmd = "git reset --hard refs/tags/$commitId"
+            } else {
+                resetCmd = "git reset --hard origin/$commitId"
             }
             break
         default:
