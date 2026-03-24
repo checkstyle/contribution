@@ -12,8 +12,13 @@ jobs:
         description: "command to run"
         type: string
         default: ""
+      resource_class:
+        type: string
+        default: medium
+        description: CircleCI resource class (medium / medium+)
     docker:
       - image: << parameters.image-name >>
+    resource_class: << parameters.resource_class >>
     steps:
       - checkout
       - restore_cache:
@@ -60,14 +65,17 @@ workflows:
       - validate-with-maven-script:
           name: "checkstyle-tester (diff.groovy) on linux"
           image-name: *custom_img
+          resource_class: medium+
           command: "./.ci/validation.sh checkstyle-tester-diff-groovy-patch"
       - validate-with-maven-script:
           name: "checkstyle-tester (diff.groovy) on linux with base and patch configs"
           image-name: *custom_img
+          resource_class: medium+
           command: "./.ci/validation.sh checkstyle-tester-diff-groovy-base-patch"
       - validate-with-maven-script:
           name: "checkstyle-tester (diff.groovy) on linux with enabled patchOnly"
           image-name: *custom_img
+          resource_class: medium+
           command: "./.ci/validation.sh checkstyle-tester-diff-groovy-patch-only"
       - validate-with-maven-script:
           name: "codenarc validation for groovy files"
