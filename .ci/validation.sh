@@ -33,6 +33,7 @@ patch-diff-report-tool)
   ;;
 
 checkstyle-tester-diff-groovy-patch)
+  export MAVEN_OPTS="-Xmx4g"
   checkout_from https://github.com/checkstyle/checkstyle
   cd .ci-temp/checkstyle
   git checkout -b patch-branch
@@ -45,6 +46,7 @@ checkstyle-tester-diff-groovy-patch)
   ;;
 
 checkstyle-tester-diff-groovy-base-patch)
+  export MAVEN_OPTS="-Xmx4g"
   checkout_from https://github.com/checkstyle/checkstyle
   cd .ci-temp/checkstyle
   git checkout -b patch-branch
@@ -54,6 +56,7 @@ checkstyle-tester-diff-groovy-base-patch)
   ;;
 
 checkstyle-tester-diff-groovy-patch-only)
+  export MAVEN_OPTS="-Xmx4g"
   checkout_from https://github.com/checkstyle/checkstyle
   cd .ci-temp/checkstyle
   git checkout -b patch-branch
