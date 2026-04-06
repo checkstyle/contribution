@@ -1,0 +1,28 @@
+    <section name="Release 1.1.0">
+      <div class="releaseDate">XX.XX.XXXX</div>
+      <p>New:</p>
+        <ul>
+          <li>
+            Title 1.
+            Author: Author 1, Author 2, Author 3, Author 4, Author 5, Author 6, Author 7, Author 8,
+            Author 9, Author 10
+            <a href="https://github.com/checkstyle/checkstyle/issues/1">#1</a>
+          </li>
+        </ul>
+      <p>Bug fixes:</p>
+        <ul>
+          <li>
+            Title 2.
+            Author: Author 1
+            <a href="https://github.com/checkstyle/checkstyle/issues/2">#2</a>
+          </li>
+        </ul>
+      <p>Notes:</p>
+        <ul>
+          <li>
+            Title 3.
+            Author: Author 1
+            <a href="https://github.com/checkstyle/checkstyle/issues/3">#3</a>
+          </li>
+        </ul>
+    </section>
