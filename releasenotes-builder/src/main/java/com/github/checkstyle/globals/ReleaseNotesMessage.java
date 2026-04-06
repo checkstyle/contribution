@@ -55,6 +55,8 @@ public final class ReleaseNotesMessage {
     private final String githubEscapedTitle;
     /** Author. */
     private final String author;
+    /** Short Width Author. */
+    private final String shortWidthAuthor;
 
     /**
      * Constructs a release notes message for issue.
@@ -65,10 +67,11 @@ public final class ReleaseNotesMessage {
      */
     public ReleaseNotesMessage(int issueNumber, String issueTitle, String author) {
         issueNo = issueNumber;
-        title = getActualTitle(issueTitle);
+        title = normalizePunctuation(getActualTitle(issueTitle));
         shortWidthTitle = split(title);
         githubEscapedTitle = escapeGithubCharacters(title);
         this.author = author;
+        shortWidthAuthor = split("Author: " + author);
     }
 
     /**
@@ -79,10 +82,11 @@ public final class ReleaseNotesMessage {
      */
     public ReleaseNotesMessage(String title, String author) {
         issueNo = -1;
-        this.title = title;
-        shortWidthTitle = split(title);
-        githubEscapedTitle = escapeGithubCharacters(title);
+        this.title = normalizePunctuation(title);
+        shortWidthTitle = split(this.title);
+        githubEscapedTitle = escapeGithubCharacters(this.title);
         this.author = author;
+        shortWidthAuthor = split("Author: " + author);
     }
 
     /**
@@ -131,6 +135,15 @@ public final class ReleaseNotesMessage {
     }
 
     /**
+     * Returns the short width author.
+     *
+     * @return the short width author
+     */
+    public String getShortWidthAuthor() {
+        return shortWidthAuthor;
+    }
+
+    /**
      * Returns actual title of issue or pull request which is represented as an issue.
      *
      * @param issueTitle issue title.
@@ -155,17 +168,16 @@ public final class ReleaseNotesMessage {
      */
     // -@cs[CyclomaticComplexity|ExecutableStatementCount] Can't be split apart easily.
     private static String split(String str) {
-        final String indentedStr = TWELVE_SPACES + str;
-        final int length = indentedStr.length();
+        final int length = str.length();
         final StringBuilder sb = new StringBuilder(length);
         int index = 0;
         int splitStart = index;
-        int outPosition = 0;
+        int outPosition = TITLE_INDENTATION;
         int lastSpacePosition = -1;
         int lastSpaceOutPosition = -1;
 
         while (index < length) {
-            final char ch = indentedStr.charAt(index);
+            final char ch = str.charAt(index);
             final int charSize;
 
             if (ch == '>' || ch == '<' || ch == '&' || ch == '\'' || ch == '"') {
@@ -176,19 +188,18 @@ public final class ReleaseNotesMessage {
             }
 
             outPosition += charSize;
-
             if (outPosition > MAX_TITLE_LINE_SIZE) {
                 if (lastSpacePosition == -1) {
-                    sb.append(indentedStr, splitStart, index - 1);
+                    sb.append(str, splitStart, index - 1);
                     sb.append("-");
 
                     splitStart = index - 1;
-                    outPosition = 0;
+                    outPosition = TITLE_INDENTATION;
                 }
                 else {
-                    sb.append(indentedStr, splitStart, lastSpacePosition);
+                    sb.append(str, splitStart, lastSpacePosition);
                     splitStart = lastSpacePosition + 1;
-                    outPosition -= lastSpaceOutPosition - TITLE_INDENTATION;
+                    outPosition = TITLE_INDENTATION + (outPosition - lastSpaceOutPosition);
                 }
 
                 sb.append(System.lineSeparator());
@@ -210,7 +221,7 @@ public final class ReleaseNotesMessage {
         }
 
         if (splitStart != index) {
-            sb.append(indentedStr.substring(splitStart));
+            sb.append(str.substring(splitStart));
         }
 
         return sb.toString();
@@ -224,5 +235,22 @@ public final class ReleaseNotesMessage {
      */
     private static String escapeGithubCharacters(String str) {
         return ESCAPE.matcher(str).replaceAll("`$1`");
+    }
+
+    /**
+     * Normalizes punctuation at the end of the string.
+     *
+     * @param str string to normalize.
+     * @return normalized string.
+     */
+    private static String normalizePunctuation(String str) {
+        String result = str.stripTrailing();
+        if (result.endsWith(",") || result.endsWith(".")) {
+            result = result.replaceAll("[,.]+$", ".");
+        }
+        else {
+            result += ".";
+        }
+        return result;
     }
 }

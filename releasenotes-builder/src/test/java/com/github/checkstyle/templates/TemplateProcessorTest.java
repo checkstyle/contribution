@@ -173,6 +173,25 @@ public class TemplateProcessorTest extends AbstractReleaseNotesTestSupport {
     }
 
     @Test
+    public void testFormatting() throws Exception {
+        addCommit("Issue #1: Title 1..", "Author 1, Author 2, Author 3, Author 4, Author 5, "
+                + "Author 6, Author 7, Author 8, Author 9, Author 10");
+        addCommit("Issue #2: Title 2,.", "Author 1");
+        addCommit("Issue #3: Title 3...", "Author 1");
+        addIssue(1, CLOSED, "Title 1..", NEW_FEATURE);
+        addIssue(2, CLOSED, "Title 2,.", BUG);
+        addIssue(3, CLOSED, "Title 3...", MISC);
+
+        runMainContentGenerationAndAssertReturnCode(0,
+                "-releaseNumber", "1.1.0",
+                "-generateXdoc",
+                "-validateVersion"
+        );
+
+        assertFile("xdocFormatting.txt", MainProcess.XDOC_FILENAME);
+    }
+
+    @Test
     public void testGenerateOnlyXdoc() throws Exception {
         createAllIssues(BREAKING);
         createAllCommits();

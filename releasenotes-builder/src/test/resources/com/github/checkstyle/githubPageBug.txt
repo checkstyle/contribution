@@ -4,27 +4,27 @@ Checkstyle 1.0.1 - https://checkstyle.org/releasenotes.html#Release_1.0.1
 
 Bug fixes:
 
-  #1 - Mock issue title 1
-  #2 - Mock issue title 2
-  #3 - Mock issue title 3
-  #4 - Mock issue title 4
-  #5 - Mock issue title 5 ==`>` test
-  #6 - Mock issue title 6 L1234567890123456789012345678901234567890123456789012345678901234567890ooooooooooooooooooooooooooooooooooooooooooooooooong'"
-  #7 - Mock issue title 7 thisIssueTitleIsExactly87CharactersLongAndThenYouThe13ChrIndentation
-  #8 - Mock issue title 8 thisIssueTitleIsExactly100CharactersLongAndWeExpectItToGetWrappedDueToBeingTooLng
-  #9 - Mock issue title 9 escape `@` and `@``@``@``@``@`
-  #10 - Mock issue title 10 escape `<` `>` `&` `<``&``<``>``&``<``<`
-  #13 - Mock pull title 13
-  #14 - Mock issue title 14
-  #15 - Mock issue title 15
-  #16 - Mock issue title 16
+  #1 - Mock issue title 1.
+  #2 - Mock issue title 2.
+  #3 - Mock issue title 3.
+  #4 - Mock issue title 4.
+  #5 - Mock issue title 5 ==`>` test.
+  #6 - Mock issue title 6 L1234567890123456789012345678901234567890123456789012345678901234567890ooooooooooooooooooooooooooooooooooooooooooooooooong'".
+  #7 - Mock issue title 7 thisIssueTitleIsExactly87CharactersLongAndThenYouThe13ChrIndentation.
+  #8 - Mock issue title 8 thisIssueTitleIsExactly100CharactersLongAndWeExpectItToGetWrappedDueToBeingTooLng.
+  #9 - Mock issue title 9 escape `@` and `@``@``@``@``@`.
+  #10 - Mock issue title 10 escape `<` `>` `&` `<``&``<``>``&``<``<`.
+  #13 - Mock pull title 13.
+  #14 - Mock issue title 14.
+  #15 - Mock issue title 15.
+  #16 - Mock issue title 16.
 
 <details>
 <summary>Other Changes:</summary>
 <br/>
-  Issue 11: Mock issue title 11 missing # <br/>
-  Pull 12: Mock pull title 12 missing # <br/>
-  miscasmdifs324y23123sda!`@`.asd12 <br/>
-  Issue #asd: asd <br/>
-  .Issue #14: Mock issue title 14 <br/>
+  Issue 11: Mock issue title 11 missing #. <br/>
+  Pull 12: Mock pull title 12 missing #. <br/>
+  miscasmdifs324y23123sda!`@`.asd12. <br/>
+  Issue #asd: asd. <br/>
+  .Issue #14: Mock issue title 14. <br/>
 </details>
