@@ -77,7 +77,8 @@ public abstract class AbstractPathTestSupport {
         final String expected =
                 getFileContents(new File(getPath(expectedName)));
         final String actual = getFileContents(new File(getTempFolder(), actualName))
-                .replace(LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.US)),
+                .replace(LocalDate.now().format(
+                        DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.US)),
                         "XX.XX.XXXX");
         Assert.assertEquals("expected " + actualName, expected, actual);
     }
