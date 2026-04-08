@@ -173,6 +173,21 @@ public class TemplateProcessorTest extends AbstractReleaseNotesTestSupport {
     }
 
     @Test
+    public void testLongAuthorFormatting() throws Exception {
+        addCommit("Issue #1: Title 1..", "Author 1, Author 2, Author 3, Author 4, Author 5, "
+                + "Author 6, Author 7, Authorlooooooooongname, Author 9, Author 10");
+        addIssue(1, CLOSED, "Title 1..", NEW_FEATURE);
+
+        runMainContentGenerationAndAssertReturnCode(0,
+                "-releaseNumber", "1.1.0",
+                "-generateXdoc",
+                "-validateVersion"
+        );
+
+        assertFile("xdocLongAuthorFormatting.txt", MainProcess.XDOC_FILENAME);
+    }
+
+    @Test
     public void testFormatting() throws Exception {
         addCommit("Issue #1: Title 1..", "Author 1, Author 2, Author 3, Author 4, Author 5, "
                 + "Author 6, Author 7, Author 8, Author 9, Author 10");

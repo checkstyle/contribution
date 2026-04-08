@@ -45,6 +45,12 @@ public final class ReleaseNotesMessage {
     /** Pattern used to find things to escape in github. */
     private static final Pattern ESCAPE = Pattern.compile("([@<>&])");
 
+    /** Author prefix. */
+    private static final String AUTHOR_PREFIX = "Author: ";
+
+    /** Period. */
+    private static final String PERIOD = ".";
+
     /** Issue number. */
     private final int issueNo;
     /** Title. */
@@ -71,7 +77,7 @@ public final class ReleaseNotesMessage {
         shortWidthTitle = split(title);
         githubEscapedTitle = escapeGithubCharacters(title);
         this.author = author;
-        shortWidthAuthor = split("Author: " + author);
+        shortWidthAuthor = split(AUTHOR_PREFIX + author);
     }
 
     /**
@@ -86,7 +92,7 @@ public final class ReleaseNotesMessage {
         shortWidthTitle = split(this.title);
         githubEscapedTitle = escapeGithubCharacters(this.title);
         this.author = author;
-        shortWidthAuthor = split("Author: " + author);
+        shortWidthAuthor = split(AUTHOR_PREFIX + author);
     }
 
     /**
@@ -245,11 +251,11 @@ public final class ReleaseNotesMessage {
      */
     private static String normalizePunctuation(String str) {
         String result = str.stripTrailing();
-        if (result.endsWith(",") || result.endsWith(".")) {
-            result = result.replaceAll("[,.]+$", ".");
+        if (result.endsWith(",") || result.endsWith(PERIOD)) {
+            result = result.replaceAll("[,.]+$", PERIOD);
         }
         else {
-            result += ".";
+            result += PERIOD;
         }
         return result;
     }
