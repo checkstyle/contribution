@@ -541,6 +541,7 @@
     <module name="StaticVariableName">
       <property name="format" value="^(id)|([a-z][a-z0-9][a-zA-Z0-9]+)$"/>
     </module>
+    <module name="TypeBodyPadding"/>
     <module name="TypeName"/>
     <module name="IllegalIdentifierName"/>
     <module name="RecordComponentName"/>
