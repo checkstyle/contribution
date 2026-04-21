@@ -161,7 +161,7 @@ public final class TextTransform {
      */
     private void transform(Reader sourceReader, Writer destWriter, Locale outputLocale,
             String outputEncoding) throws IOException {
-        this.locale = outputLocale;
+        locale = outputLocale;
         encoding = outputEncoding;
 
         final BufferedReader input = new BufferedReader(sourceReader);
