@@ -65,6 +65,21 @@ public final class ReleaseNotesMessage {
     private final String shortWidthAuthor;
 
     /**
+     * Constructs a release notes message for commit.
+     *
+     * @param title commit title.
+     * @param author commit author.
+     */
+    public ReleaseNotesMessage(String title, String author) {
+        issueNo = -1;
+        this.title = normalizePunctuation(title);
+        shortWidthTitle = split(this.title);
+        githubEscapedTitle = escapeGithubCharacters(this.title);
+        this.author = author;
+        shortWidthAuthor = split(AUTHOR_PREFIX + author);
+    }
+
+    /**
      * Constructs a release notes message for issue.
      *
      * @param issueNumber issue number.
@@ -76,21 +91,6 @@ public final class ReleaseNotesMessage {
         title = normalizePunctuation(getActualTitle(issueTitle));
         shortWidthTitle = split(title);
         githubEscapedTitle = escapeGithubCharacters(title);
-        this.author = author;
-        shortWidthAuthor = split(AUTHOR_PREFIX + author);
-    }
-
-    /**
-     * Constructs a release notes message for commit.
-     *
-     * @param title commit title.
-     * @param author commit author.
-     */
-    public ReleaseNotesMessage(String title, String author) {
-        issueNo = -1;
-        this.title = normalizePunctuation(title);
-        shortWidthTitle = split(this.title);
-        githubEscapedTitle = escapeGithubCharacters(this.title);
         this.author = author;
         shortWidthAuthor = split(AUTHOR_PREFIX + author);
     }
