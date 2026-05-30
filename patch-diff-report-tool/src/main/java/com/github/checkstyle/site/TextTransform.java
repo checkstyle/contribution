@@ -82,6 +82,46 @@ public final class TextTransform {
     private String encoding;
 
     /**
+     * This is the method for doing all transforms of file.
+     *
+     * @param sourceReader
+     *            Reader
+     * @param destWriter
+     *            Writer
+     * @param outputLocale
+     *            String
+     * @param outputEncoding
+     *            String
+     * @throws IOException
+     *             if there is an error reading.
+     */
+    private void transform(Reader sourceReader, Writer destWriter, Locale outputLocale,
+            String outputEncoding) throws IOException {
+        this.locale = outputLocale;
+        encoding = outputEncoding;
+
+        final BufferedReader input = new BufferedReader(sourceReader);
+        final PrintWriter output = new PrintWriter(destWriter);
+        String line = "";
+
+        appendHeader(output);
+
+        int linenumber = 1;
+        while ((line = input.readLine()) != null) {
+            output.print("<a class=\"jxr_linenumber\" name=\"L" + linenumber + "\" " + "href=\"#L"
+                    + linenumber + END_TAG + linenumber + "</a>" + getLineWidth(linenumber));
+
+            output.println(syntaxHighlight(line));
+
+            ++linenumber;
+        }
+
+        appendFooter(output);
+
+        output.flush();
+    }
+
+    /**
      * This is the public method for doing all transforms of the file.
      *
      * @param sourceFile
@@ -143,46 +183,6 @@ public final class TextTransform {
                 }
             }
         }
-    }
-
-    /**
-     * This is the method for doing all transforms of file.
-     *
-     * @param sourceReader
-     *            Reader
-     * @param destWriter
-     *            Writer
-     * @param outputLocale
-     *            String
-     * @param outputEncoding
-     *            String
-     * @throws IOException
-     *             if there is an error reading.
-     */
-    private void transform(Reader sourceReader, Writer destWriter, Locale outputLocale,
-            String outputEncoding) throws IOException {
-        this.locale = outputLocale;
-        encoding = outputEncoding;
-
-        final BufferedReader input = new BufferedReader(sourceReader);
-        final PrintWriter output = new PrintWriter(destWriter);
-        String line = "";
-
-        appendHeader(output);
-
-        int linenumber = 1;
-        while ((line = input.readLine()) != null) {
-            output.print("<a class=\"jxr_linenumber\" name=\"L" + linenumber + "\" " + "href=\"#L"
-                    + linenumber + END_TAG + linenumber + "</a>" + getLineWidth(linenumber));
-
-            output.println(syntaxHighlight(line));
-
-            ++linenumber;
-        }
-
-        appendFooter(output);
-
-        output.flush();
     }
 
     /**
