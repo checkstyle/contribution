@@ -253,6 +253,9 @@
       <property name="tokens" value="LITERAL_DO"/>
       <property name="option" value="same"/>
     </module>
+    <module name="GoogleRightCurly">
+      <property name="severity" value="ignore"/>
+    </module>
 
     <!-- Class Design -->
     <module name="DesignForExtension">
