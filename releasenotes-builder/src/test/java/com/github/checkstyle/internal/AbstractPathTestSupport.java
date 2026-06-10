@@ -67,6 +67,16 @@ public abstract class AbstractPathTestSupport {
     }
 
     /**
+     * Asserts file does not exist.
+     *
+     * @param actualName Actual file path to check.
+     */
+    protected void assertFile(String actualName) {
+        Assert.assertFalse("file does not exist",
+            new File(temporaryFolder.getRoot(), actualName).exists());
+    }
+
+    /**
      * Asserts file equals the expected result.
      *
      * @param expectedName Expected file path to read.
@@ -81,16 +91,6 @@ public abstract class AbstractPathTestSupport {
                         DateTimeFormatter.ofPattern("dd.MM.yyyy", Locale.US)),
                         "XX.XX.XXXX");
         Assert.assertEquals("expected " + actualName, expected, actual);
-    }
-
-    /**
-     * Asserts file does not exist.
-     *
-     * @param actualName Actual file path to check.
-     */
-    protected void assertFile(String actualName) {
-        Assert.assertFalse("file does not exist",
-            new File(temporaryFolder.getRoot(), actualName).exists());
     }
 
     protected static String getFileContents(File file) throws IOException {
