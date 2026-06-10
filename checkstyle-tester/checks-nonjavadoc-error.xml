@@ -664,6 +664,7 @@
     <module name="WhitespaceAfter"/>
     <module name="WhitespaceAround"/>
     <module name="UnusedLocalVariable"/>
+    <module name="UnusedPrivateField"/>
 
   </module>
 
