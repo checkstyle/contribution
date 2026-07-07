@@ -48,16 +48,9 @@
         <module name="JavadocVariable">
         </module>
         
-        <!-- See http://checkstyle.sf.net/config_javadoc.html#JavadocStyle -->
-        <!-- Validates Javadoc comments to help ensure they are well formed. -->
-            <!-- <property name="scope" value="private"/> -->
-            <!-- <property name="excludeScope" value=""/> -->
-            <!-- <property name="checkFirstSentence" value="true"/> -->
-            <!-- <property name="checkEmptyJavadoc" value="false"/> -->
-            <!-- <property name="checkHtml" value="true"/> -->
-            <!-- <property name="tokens" value="INTERFACE_DEF, CLASS_DEF,
-                    METHOD_DEF, CTOR_DEF, VARIABLE_DEF"/> -->
-        <module name="JavadocStyle">
+        <!-- See http://checkstyle.sf.net/config_javadoc.html#SummaryJavadoc -->
+        <!-- Checks that a Javadoc summary sentence follows the configured format. -->
+        <module name="SummaryJavadoc">
         </module>
 
 
