@@ -1,7 +1,7 @@
 # CHECKSTYLE-TESTER
 
 checkstyle-tester is a tool for Checkstyle report generation over very
-[basic set of external projects](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.properties).
+[basic set of external projects][projects-to-test-on.prp.github].
 checkstyle-tester generates reports from violations printed from a supplied user
 config over the aforementioned projects. The generated reports are in HTML format.
 They can be viewed in any browser and can be posted online for others to view.
@@ -55,13 +55,14 @@ and patch branches (required if baseConfig and patchConfig are not specified).
 **listOfProjects** (l) - path to the file which contains the projects which sources
 will be analyzed by Checkstyle during report generation.
 
-**shortFilePaths** (s) - whether to save report file paths as a shorter version to prevent long paths.
+**shortFilePaths** (s) - whether to save report file paths as a shorter version
+to prevent long paths.
 This option is useful for Windows users where they are restricted to maximum directory depth
 (optional, default is false).
 
 **extraMvnRegressionOptions** (xm) - this option can be used to supply extra command line arguments
-to maven during the Checkstyle regression run.  For example, if you want to skip site generation, you
-would add `--extraMvnRegressionOptions "-Dmaven.site.skip=true"` to `diff.groovy` execution.
+to maven during the Checkstyle regression run.  For example, if you want to skip site generation,
+you would add `--extraMvnRegressionOptions "-Dmaven.site.skip=true"` to `diff.groovy` execution.
 
 **allowExcludes** (g) - this option tells `diff.groovy` to allow paths and files defined in the file
  specified for the `--listOfProjects (-l)` argument to be excluded from report generation
@@ -70,8 +71,10 @@ would add `--extraMvnRegressionOptions "-Dmaven.site.skip=true"` to `diff.groovy
 
 **useShallowClone** (h) - this option tells `diff.groovy` to use shallow clone for repositories
 defined in the file
-specified for the `--listOfProjects (-l)` argument. This option is a toggle (does not require an argument)
-and convenient for cases when internet is not stable and it is better to clone minimal required sources.
+specified for the `--listOfProjects (-l)` argument. This option is a toggle
+(does not require an argument)
+and convenient for cases when internet is not stable and it is better
+to clone minimal required sources.
 Shallow cloning cannot be used for projects that reference SHA commit and, by default,
 fallback to using normal cloning. ATTENTION: if you change tag/branch in config for project
 that previously cloned shallowly there will be error to checkout to new tag/branch
@@ -121,7 +124,8 @@ Report configuration [template][template_my_check] when both
 master branch and patch branch have same config (most cases like bugfixes, code enhancements, etc.).
 
 2) **Conditional** `Diff Regression patch config: {{URI to patch_config.xml}}`
-If you want to generate [Difference Report with Different Base and Patch Config](./README_MANUAL_EXECUTION.md#difference-report-with-different-base-and-patch-config)
+If you want to generate
+[Difference Report with Different Base and Patch Config][manual_execution_patch_config]
 (for split properties, change property types, add a new property, etc...) you must add this line.
 Should be used with `Diff Regression config:`
 
@@ -277,7 +281,7 @@ of the configuration files, you should use the
 file as a base**, and add the checks from `checkstyle-checks.xml` to it. Then `diff.groovy`
 should be run on all projects in `projects-to-test-on.properties`, using the `diff.groovy`
 script once for each configuration file.
-[See instructions above](https://github.com/checkstyle/contribution/tree/master/checkstyle-tester#basic-difference-report)
+[See instructions above][basic-difference-report]
 for "Basic Difference Report". You can also use our check regression script, found
 [here](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/multi_config_check_regression.groovy),
 to automate this process for you.
@@ -334,3 +338,6 @@ Windows users should use the `SET` command instead of the `export` command.
 [template_my_check]:https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/my_check.xml
 [for-github-action_prp]:https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/projects-to-test-on-for-github-action.properties
 [projects-to-test-on_prp]:https://raw.githubusercontent.com/checkstyle/contribution/master/checkstyle-tester/projects-to-test-on.properties
+[projects-to-test-on.prp.github]:https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/projects-to-test-on.properties
+[manual_execution_patch_config]:./README_MANUAL_EXECUTION.md#difference-report-with-different-base-and-patch-config
+[basic-difference-report]:https://github.com/checkstyle/contribution/tree/master/checkstyle-tester#basic-difference-report

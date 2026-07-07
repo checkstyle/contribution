@@ -22,8 +22,8 @@ Launch command for testing against all Checks to validate that there is no Excep
 
 Attention: this project by deafult use released version of Checkstyle and sevntu.checkstyle
 If you you need to use custom(snapshot) versons please update pom.xml to reference that versions
-([checkstyle version](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/pom.xml#L29),
-[sevntu.checkstyle version](https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/pom.xml#L34)),
+([checkstyle version][checkstyle.version],
+[sevntu.checkstyle version][sevntu.checkstyle.version]),
 and please make sure that
 custom(newly generated) versions are located in your local maven repo
 
@@ -95,3 +95,6 @@ target/site/checkstyle.html to target/site/index.html to let github.io open it b
 
 4) please make sure that at web site source links to violations are working as it
 is main part of report, just list of violations is not enough.
+
+[checkstyle.version]:https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/pom.xml#L29
+[sevntu.checkstyle.version]:https://github.com/checkstyle/contribution/blob/master/checkstyle-tester/pom.xml#L34
