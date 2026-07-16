@@ -41,6 +41,7 @@ import java.util.Locale;
  */
 // -@cs[ClassDataAbstractionCoupling] This class works with a lot of file formats.
 public final class TextTransform {
+
     /**
      * The stylesheet file name.
      */
@@ -322,4 +323,5 @@ public final class TextTransform {
         }
         return result;
     }
+
 }

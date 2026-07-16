@@ -35,6 +35,7 @@ import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 
 public abstract class AbstractTest {
+
     protected static final String VALID_BASE_REPORT_EMPTY = getPath("InputBaseReportEmpty.xml");
     protected static final String VALID_PATCH_REPORT_EMPTY = getPath("InputPatchReportEmpty.xml");
     protected static final String VALID_BASE_CONFIG = getPath("InputBaseConfig.xml");
@@ -131,4 +132,5 @@ public abstract class AbstractTest {
 
         return result.toString();
     }
+
 }

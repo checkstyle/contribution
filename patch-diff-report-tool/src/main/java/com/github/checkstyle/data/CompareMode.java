@@ -25,6 +25,7 @@ package com.github.checkstyle.data;
  * @author Richard Veach
  */
 public enum CompareMode {
+
     /**
      * Compare mode where violations are read from an XML file and file and violation attributes are
      * compared against each other.
@@ -32,4 +33,5 @@ public enum CompareMode {
     XML,
     /** Compare mode where raw files are read and compared against each other. */
     TEXT
+
 }

@@ -27,6 +27,7 @@ import java.nio.file.Path;
  * @author attatrol
  */
 public final class CliOptions {
+
     /**
      * Option to control which type of diff comparison to do.
      */

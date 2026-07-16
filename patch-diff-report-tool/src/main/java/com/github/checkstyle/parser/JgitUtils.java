@@ -36,6 +36,7 @@ import org.eclipse.jgit.diff.RawTextComparator;
  * @author Richard Veach
  */
 public final class JgitUtils {
+
     /** The cached difference algorithm to use for comparisons. */
     private static DiffAlgorithm diffAlgorithm;
 
@@ -244,4 +245,5 @@ public final class JgitUtils {
             return line;
         }
     }
+
 }

@@ -26,6 +26,7 @@ package com.github.checkstyle.site;
  *
  */
 class AnchorCounter {
+
     /**
      * Beginning literal for anchor links.
      */

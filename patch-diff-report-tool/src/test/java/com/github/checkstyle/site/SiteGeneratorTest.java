@@ -24,8 +24,10 @@ import org.junit.Test;
 import com.github.checkstyle.internal.AbstractTest;
 
 public class SiteGeneratorTest extends AbstractTest {
+
     @Test
     public void testConstructor() throws Exception {
         assertUtilsClassHasPrivateConstructor(SiteGenerator.class);
     }
+
 }

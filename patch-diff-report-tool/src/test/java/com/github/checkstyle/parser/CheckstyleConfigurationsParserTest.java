@@ -24,8 +24,10 @@ import org.junit.Test;
 import com.github.checkstyle.internal.AbstractTest;
 
 public class CheckstyleConfigurationsParserTest extends AbstractTest {
+
     @Test
     public void testConstructor() throws Exception {
         assertUtilsClassHasPrivateConstructor(CheckstyleConfigurationsParser.class);
     }
+
 }

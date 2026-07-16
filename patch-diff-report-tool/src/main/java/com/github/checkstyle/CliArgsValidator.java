@@ -150,4 +150,5 @@ public final class CliArgsValidator {
                     + options.getBaseReportPath());
         }
     }
+
 }

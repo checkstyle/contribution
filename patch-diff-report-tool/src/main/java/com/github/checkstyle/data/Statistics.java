@@ -461,4 +461,5 @@ public class Statistics {
             uniqueMessagesPatch++;
         }
     }
+
 }

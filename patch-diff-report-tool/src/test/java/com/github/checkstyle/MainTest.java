@@ -27,6 +27,7 @@ import org.junit.Test;
 import com.github.checkstyle.internal.AbstractTest;
 
 public class MainTest extends AbstractTest {
+
     private static final String VALID_BASE_REPORT = getPath("InputBaseReportDifferences.xml");
     private static final String VALID_PATCH_REPORT = getPath("InputPatchReportDifferences.xml");
 
@@ -215,4 +216,5 @@ public class MainTest extends AbstractTest {
     public void testConstructor() throws Exception {
         assertUtilsClassHasPrivateConstructor(Main.class);
     }
+
 }

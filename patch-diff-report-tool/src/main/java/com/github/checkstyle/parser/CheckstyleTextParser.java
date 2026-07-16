@@ -38,6 +38,7 @@ import com.github.checkstyle.parser.JgitUtils.JgitDifference;
  * @author Richard Veach
  */
 public final class CheckstyleTextParser {
+
     /**
      * Internal index of the base report file.
      */
@@ -353,4 +354,5 @@ public final class CheckstyleTextParser {
             return result;
         }
     }
+
 }
