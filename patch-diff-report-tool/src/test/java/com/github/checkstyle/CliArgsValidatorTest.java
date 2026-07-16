@@ -25,6 +25,7 @@ import org.junit.Test;
 import com.github.checkstyle.internal.AbstractTest;
 
 public class CliArgsValidatorTest extends AbstractTest {
+
     @Test
     public void testConstructor() throws Exception {
         assertUtilsClassHasPrivateConstructor(CliArgsValidator.class);
@@ -205,4 +206,5 @@ public class CliArgsValidatorTest extends AbstractTest {
             Assert.assertEquals("Base Report directory doesn't exist: test", exc.getMessage());
         }
     }
+
 }

@@ -122,4 +122,5 @@ public final class DiffReport {
         }
         statistics.incrementUniqueMessageCount(checkstyleRecord.getIndex());
     }
+
 }

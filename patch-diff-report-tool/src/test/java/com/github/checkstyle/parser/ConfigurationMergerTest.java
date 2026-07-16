@@ -24,8 +24,10 @@ import org.junit.Test;
 import com.github.checkstyle.internal.AbstractTest;
 
 public class ConfigurationMergerTest extends AbstractTest {
+
     @Test
     public void testConstructor() throws Exception {
         assertUtilsClassHasPrivateConstructor(ConfigurationMerger.class);
     }
+
 }

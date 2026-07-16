@@ -31,6 +31,7 @@ import javax.xml.stream.events.XMLEvent;
  * @author Richard Veach
  */
 public final class EmptyXmlEventReader implements XMLEventReader {
+
     @Override
     public Object next() {
         throw new NoSuchElementException();
@@ -69,4 +70,5 @@ public final class EmptyXmlEventReader implements XMLEventReader {
     @Override
     public void close() throws XMLStreamException {
     }
+
 }
