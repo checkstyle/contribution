@@ -32,6 +32,7 @@ import com.github.checkstyle.MainProcess;
 import com.github.checkstyle.internal.AbstractReleaseNotesTestSupport;
 
 public class TemplateProcessorTest extends AbstractReleaseNotesTestSupport {
+
     @Test
     public void testIssueCommitWithIssueNotFound() throws Exception {
         addCommit("Issue #1: Hello World", "CheckstyleUser");
@@ -354,4 +355,5 @@ public class TemplateProcessorTest extends AbstractReleaseNotesTestSupport {
         addCommit("Issue #15: Mock issue title 15\r", "Author 21");
         addCommit("Issue #16: Mock issue title 16\n", "Author 22");
     }
+
 }

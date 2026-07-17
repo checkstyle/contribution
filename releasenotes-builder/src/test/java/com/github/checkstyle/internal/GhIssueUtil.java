@@ -31,6 +31,7 @@ import org.kohsuke.github.GHIssueState;
 import org.kohsuke.github.GHLabel;
 
 public final class GhIssueUtil {
+
     private GhIssueUtil() {
     }
 
@@ -67,4 +68,5 @@ public final class GhIssueUtil {
             }
         };
     }
+
 }

@@ -49,4 +49,5 @@ public final class TwitterPublisher {
             .oAuthAccessToken(accessToken, accessTokenSecret).build();
         twitter.v1().tweets().updateStatus(post);
     }
+
 }

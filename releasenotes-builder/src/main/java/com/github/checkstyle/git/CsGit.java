@@ -40,6 +40,7 @@ import com.google.common.collect.Sets;
  * Class for Checkstyle's Git connection.
  */
 public final class CsGit {
+
     /** Private constructor. */
     private CsGit() {
     }
@@ -94,4 +95,5 @@ public final class CsGit {
         }
         return actualObjectId;
     }
+
 }

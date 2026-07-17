@@ -259,4 +259,5 @@ public final class ReleaseNotesMessage {
         }
         return result;
     }
+
 }
