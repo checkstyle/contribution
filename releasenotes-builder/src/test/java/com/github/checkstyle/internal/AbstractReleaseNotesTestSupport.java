@@ -281,4 +281,5 @@ public abstract class AbstractReleaseNotesTestSupport extends AbstractPathTestSu
     protected static String constructGithubIssueLink(int issueNumber) {
         return String.format("https://github.com/checkstyle/checkstyle/issues/%d", issueNumber);
     }
+
 }

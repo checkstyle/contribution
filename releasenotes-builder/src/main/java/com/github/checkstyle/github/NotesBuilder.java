@@ -303,4 +303,5 @@ public final class NotesBuilder {
             .filter(input -> Arrays.binarySearch(Constants.ISSUE_LABELS, input.getName()) >= 0)
             .collect(Collectors.toList());
     }
+
 }

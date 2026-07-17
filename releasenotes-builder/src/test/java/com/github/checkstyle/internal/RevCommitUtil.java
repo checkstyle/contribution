@@ -26,6 +26,7 @@ import java.util.Random;
 import org.eclipse.jgit.revwalk.RevCommit;
 
 public final class RevCommitUtil {
+
     private static final Random RANDOM = new Random();
 
     private RevCommitUtil() {
@@ -45,4 +46,5 @@ public final class RevCommitUtil {
                 Calendar.getInstance().getTime().getTime());
         return RevCommit.parse(commitData.getBytes(StandardCharsets.UTF_8));
     }
+
 }

@@ -28,6 +28,7 @@ import org.junit.Test;
 import com.github.checkstyle.internal.AbstractReleaseNotesTestSupport;
 
 public class MainTest extends AbstractReleaseNotesTestSupport {
+
     @Test
     public void test() {
         runMainAndAssertReturnCode(0);
@@ -413,4 +414,5 @@ public class MainTest extends AbstractReleaseNotesTestSupport {
         Assert.assertEquals("expected error output", "", systemErr.getLog());
         Assert.assertEquals("expected output", MSG_EXECUTION_SUCCEEDED, systemOut.getLog());
     }
+
 }

@@ -28,6 +28,7 @@ import org.kohsuke.github.GitHub;
  * Class for Checkstyle's GitHub connection.
  */
 public final class CsGitHub {
+
     /** Private constructor. */
     private CsGitHub() {
     }
@@ -52,4 +53,5 @@ public final class CsGitHub {
 
         return connection.getRepository(remoteRepoPath);
     }
+
 }

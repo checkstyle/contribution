@@ -268,4 +268,5 @@ public class CliProcessor {
         formatter.printHelp("\njava -jar releasenotes-builder-[version]-all.jar [options]",
             buildOptions());
     }
+
 }
