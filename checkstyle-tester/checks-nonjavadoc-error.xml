@@ -196,6 +196,7 @@
       <property name="javaFiveCompatibility" value="true"/>
     </module>
     <module name="MissingOverrideOnRecordAccessor"/>
+    <module name="OpenjdkAnnotationLocation"/>
     <module name="PackageAnnotation"/>
     <module name="SuppressWarnings">
         <property name="format" value="^((?!unchecked|deprecation|rawtypes).)*$"/>
