@@ -496,6 +496,7 @@
     <module name="UpperEll"/>
     <module name="HexLiteralCase"/>
     <module name="NumericalPrefixesInfixesSuffixesCharacterCase"/>
+    <module name="MultilineCommentLeadingAsteriskPresence"/>
 
     <!-- Modifiers -->
     <module name="ClassMemberImpliedModifier"/>
