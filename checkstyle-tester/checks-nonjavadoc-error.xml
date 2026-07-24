@@ -341,6 +341,7 @@
     <module name="PackageDeclaration"/>
     <module name="ParameterAssignment"/>
     <module name="PatternVariableAssignment"/>
+    <module name="RedundantThis"/>
     <module name="RequireThis"/>
     <!-- extra config for RequireThis module base of missed regression -->
     <module name="RequireThis">
