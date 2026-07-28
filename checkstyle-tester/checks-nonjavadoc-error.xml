@@ -628,6 +628,7 @@
       <property name="tokens" value="METHOD_REF"/>
       <property name="option" value="nl"/>
     </module>
+    <module name="OpenjdkMethodParameterAlignment"/>
     <module name="OperatorWrap">
       <property name="tokens" value="ASSIGN"/>
       <property name="tokens" value="DIV_ASSIGN"/>
