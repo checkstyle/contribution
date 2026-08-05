@@ -24,6 +24,7 @@
     <module name="JavadocMissingWhitespaceAfterAsterisk"/>
     <module name="JavadocLeadingAsteriskAlign"/>
     <module name="JavadocParagraph"/>
+    <module name="JavadocRegexp"/>
     <module name="JavadocTagContinuationIndentation"/>
     <module name="MissingDeprecated"/>
     <module name="NonEmptyAtclauseDescription"/>
