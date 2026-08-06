@@ -18,6 +18,7 @@
     <property name="tabWidth" value="4"/>
     <!-- All AbstractJavadocCheck children -->
     <module name="AtclauseOrder"/>
+    <module name="InappropriateJavadocBlockTagsOnPackage"/>
     <module name="JavadocBlockTagLocation"/>
     <module name="JavadocContentLocation"/>
     <module name="JavadocMissingLeadingAsterisk"/>
