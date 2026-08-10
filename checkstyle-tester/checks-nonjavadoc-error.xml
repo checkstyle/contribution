@@ -325,6 +325,7 @@
     <module name="WhenShouldBeUsed"/>
     <module name="MissingSwitchDefault"/>
     <module name="ModifiedControlVariable"/>
+    <module name="ModuleDirectiveOrder"/>
     <module name="MultipleStringLiterals"/>
     <module name="MultipleVariableDeclarations"/>
     <module name="NestedForDepth">
