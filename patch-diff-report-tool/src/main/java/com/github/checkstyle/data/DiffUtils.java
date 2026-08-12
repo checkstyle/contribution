@@ -36,11 +36,11 @@ public final class DiffUtils {
     /**
      * Creates difference between 2 sorted lists.
      *
+     * @param <T> the type of elements.
      * @param firstList
      *        the first list.
      * @param secondList
      *        the second list.
-     * @param <T> the type of elements.
      * @return the difference list.
      */
     public static <T extends Comparable<T>> List<T> produceDiff(
@@ -61,11 +61,11 @@ public final class DiffUtils {
     /**
      * Creates difference between 2 non-empty iterators.
      *
+     * @param <T> the type of elements.
      * @param firstIterator
      *        the first iterator.
      * @param secondIterator
      *        the second iterator.
-     * @param <T> the type of elements.
      * @return the difference list (always sorted).
      */
     private static <T extends Comparable<T>> List<T> produceDiff(

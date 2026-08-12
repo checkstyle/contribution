@@ -81,10 +81,10 @@ public final class CliOptions {
      *        path to the data, tested by checkstyle.
      * @param outputPath
      *        path to the result site.
-     * @param patchConfigPath
-     *        path to the configuration of the base report.
      * @param baseConfigPath
      *        path to the configuration of the patch report.
+     * @param patchConfigPath
+     *        path to the configuration of the base report.
      * @param shortFilePaths
      *           {@code true} if only short file names should be used with no paths.
      */
