@@ -100,10 +100,10 @@ public final class CheckstyleRecord implements Comparable<CheckstyleRecord> {
      *        record severity level.
      * @param source
      *        name of check that generated record.
-     * @param xref
-     *        external file reference.
      * @param message
      *        error message.
+     * @param xref
+     *        external file reference.
      */
     public CheckstyleRecord(int index, int line, int column,
             String severity, String source, String message, String xref) {
