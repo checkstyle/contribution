@@ -83,8 +83,8 @@ public final class NotesBuilder {
      * @param startRef start reference.
      * @param endRef end reference.
      * @return a map which represents release notes.
-     * @throws IOException if an I/O error occurs.
      * @throws GitAPIException if an error occurs when accessing Git API.
+     * @throws IOException if an I/O error occurs.
      * @noinspection UseOfSystemOutOrSystemErr
      * @noinspectionreason UseOfSystemOutOrSystemErr - used for CLI output
      */

@@ -100,8 +100,8 @@ public final class Main {
      *
      * @param cliOptions command line options.
      * @return result of NotesBuilder work.
-     * @throws IOException if an I/O error occurs.
      * @throws GitAPIException if an error occurs while accessing GitHub API.
+     * @throws IOException if an I/O error occurs.
      */
     private static Result runGithubNotesBuilder(CliOptions cliOptions)
             throws IOException, GitAPIException {

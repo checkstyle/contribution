@@ -52,8 +52,8 @@ public final class CsGit {
      * @param startRef start reference.
      * @param endRef end reference.
      * @return a list of commits.
-     * @throws IOException if I/O error occurs.
      * @throws GitAPIException if an error occurs when accessing Git API.
+     * @throws IOException if I/O error occurs.
      */
     public static Set<RevCommit> getCommitsBetweenReferences(String repoPath, String startRef,
             String endRef) throws IOException, GitAPIException {
