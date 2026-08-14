@@ -27,6 +27,7 @@
     <module name="JavadocParamOrder"/>
     <module name="JavadocRegexp"/>
     <module name="JavadocTagContinuationIndentation"/>
+    <module name="JavadocThrowsOrder"/>
     <module name="MissingDeprecated"/>
     <module name="NonEmptyAtclauseDescription"/>
     <module name="PreferCodeOrSnippetJavadocInlineTag"/>
