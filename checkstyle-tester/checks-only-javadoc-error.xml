@@ -28,6 +28,7 @@
     <module name="JavadocTagContinuationIndentation"/>
     <module name="MissingDeprecated"/>
     <module name="NonEmptyAtclauseDescription"/>
+    <module name="PreferCodeOrSnippetJavadocInlineTag"/>
     <module name="PreferLiteralJavadocInlineTag"/>
     <module name="RequireEmptyLineBeforeBlockTagGroup"/>
     <module name="SingleLineJavadoc"/>
