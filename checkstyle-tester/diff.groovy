@@ -729,8 +729,7 @@ def copyDir(source, destination) {
     Files.walkFileTree(sourceDir, new SimpleFileVisitor<Path>() {
         @Override
         FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-
-            if (dir.startsWith(destinationDir)) {
+            if (dir.startsWith(destinationDir) || dir.getFileName()?.toString() == '.git') {
                 return FileVisitResult.SKIP_SUBTREE
             }
             Path targetDir = destinationDir.resolve(sourceDir.relativize(dir))
