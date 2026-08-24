@@ -21,6 +21,7 @@
     <module name="InappropriateJavadocBlockTagsOnType"/>
     <module name="JavadocBlockTagLocation"/>
     <module name="JavadocContentLocation"/>
+    <module name="JavadocEndCommentDelimiter"/>
     <module name="JavadocMissingLeadingAsterisk"/>
     <module name="JavadocMissingWhitespaceAfterAsterisk"/>
     <module name="JavadocLeadingAsteriskAlign"/>
