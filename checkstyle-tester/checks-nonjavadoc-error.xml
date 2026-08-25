@@ -69,7 +69,6 @@
     <property name="requiredTranslations" value="de, fr, fi, es, pt, ja, tr, zh"/>
   </module>
   <module name="UniqueProperties"/>
-  <module name="UnnecessaryFullyQualifiedType"/>
   <module name="OrderedProperties"/>
 
   <!-- Regexp -->
@@ -423,6 +422,7 @@
       <property name="sortStaticImportsAlphabetically" value="true"/>
     </module>
     <module name="RedundantImport"/>
+    <module name="UnnecessaryFullyQualifiedType"/>
     <module name="UnusedImports"/>
 
     <!-- Javadoc Comments -->
