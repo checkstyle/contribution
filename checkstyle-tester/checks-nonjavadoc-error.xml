@@ -509,6 +509,7 @@
     <module name="ClassMemberImpliedModifier"/>
     <module name="ModifierOrder"/>
     <module name="RedundantModifier"/>
+    <module name="RedundantModifierCompactSource"/>
     <module name="InterfaceMemberImpliedModifier"/>
     <module name="AnnotatedDeclarationVisibility"/>
 
