@@ -97,7 +97,8 @@ public final class TextTransform {
      *             if there is an error reading.
      */
     private void transform(Reader sourceReader, Writer destWriter, Locale outputLocale,
-            String outputEncoding) throws IOException {
+            String outputEncoding)
+                    throws IOException {
         locale = outputLocale;
         encoding = outputEncoding;
 
@@ -139,7 +140,8 @@ public final class TextTransform {
      *             if there is an error reading the file.
      */
     public void transform(String sourceFile, String destFile, Locale outputLocale,
-            String inputEncoding, String outputEncoding) throws IOException {
+            String inputEncoding, String outputEncoding)
+                    throws IOException {
         final File dest = new File(destFile);
 
         fileName = dest.getName();

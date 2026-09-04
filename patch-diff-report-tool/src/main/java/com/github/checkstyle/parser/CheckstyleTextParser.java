@@ -122,7 +122,8 @@ public final class CheckstyleTextParser {
      *             if there is a problem accessing a file.
      */
     private static void parseDifference(DiffReport diffReport, StringListIterator baseReader,
-            Path baseReport, StringListIterator patchReader, Path patchReport) throws IOException {
+            Path baseReport, StringListIterator patchReader, Path patchReport)
+                    throws IOException {
         final int order = baseReader.peek().compareTo(patchReader.peek());
 
         if (order == 0) {
@@ -154,7 +155,8 @@ public final class CheckstyleTextParser {
      *             if there is a problem accessing a file.
      */
     private static void parseDifferenceFile(DiffReport diffReport, String filePath,
-            Path baseReport, Path patchReport) throws IOException {
+            Path baseReport, Path patchReport)
+                    throws IOException {
         final File baseFile = new File(baseReport.toFile(), filePath);
         final File patchFile = new File(patchReport.toFile(), filePath);
 

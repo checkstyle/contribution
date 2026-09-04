@@ -97,7 +97,8 @@ public final class FilesystemUtils {
      *         thrown on filesystem error.
      */
     public static void exportResource(String resourceName,
-            Path destination) throws IOException {
+            Path destination)
+                    throws IOException {
         try (InputStream in = FilesystemUtils.class
                 .getResourceAsStream(resourceName);
                 OutputStream out = Files.newOutputStream(destination)) {
