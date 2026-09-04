@@ -190,7 +190,8 @@ public final class CheckstyleConfigurationsParser {
      *         on internal StAX failure.
      */
     private static void processModuleTag(XMLEventReader reader, StartElement startElement,
-            ConfigurationModule parent) throws XMLStreamException {
+            ConfigurationModule parent)
+                    throws XMLStreamException {
         String childModuleName = null;
         final Iterator<Attribute> attributes = startElement
                 .getAttributes();

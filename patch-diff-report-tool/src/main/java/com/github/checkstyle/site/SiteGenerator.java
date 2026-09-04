@@ -81,7 +81,8 @@ public final class SiteGenerator {
      *         on failure to write site to disc.
      */
     public static void generate(DiffReport diffReport, MergedConfigurationModule diffConfiguration,
-            CliOptions options) throws IOException {
+            CliOptions options)
+                    throws IOException {
         // setup thymeleaf engine
         final TemplateEngine tplEngine = getTemplateEngine();
         // setup xreference generator
