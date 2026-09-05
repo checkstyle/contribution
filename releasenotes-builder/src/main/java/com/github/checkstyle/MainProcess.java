@@ -80,7 +80,7 @@ public final class MainProcess {
     public static List<String> runPostGenerationAndPublication(
             Multimap<String, ReleaseNotesMessage> releaseNotes, CliOptions cliOptions,
             boolean shouldRunPublication)
-            throws IOException, TemplateException {
+                    throws IOException, TemplateException {
         runPostGeneration(releaseNotes, cliOptions);
         final List<String> errors = new ArrayList<>();
         if (cliOptions.isValidateVersion()) {
@@ -205,7 +205,8 @@ public final class MainProcess {
     // -@cs[CyclomaticComplexity|NPathComplexity] This code is not complicated
     // and is better to keep in one method
     private static void runPostGeneration(Multimap<String, ReleaseNotesMessage> releaseNotes,
-            CliOptions cliOptions) throws IOException, TemplateException {
+            CliOptions cliOptions)
+                    throws IOException, TemplateException {
 
         final String remoteRepoPath = cliOptions.getRemoteRepoPath();
         final String releaseNumber = cliOptions.getReleaseNumber();

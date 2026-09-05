@@ -44,7 +44,8 @@ public final class TwitterPublisher {
      * @throws TwitterException if an error occurs while publishing.
      */
     public static void publish(String consumerKey, String consumerSecret,
-            String accessToken, String accessTokenSecret, String post) throws TwitterException {
+            String accessToken, String accessTokenSecret, String post)
+                    throws TwitterException {
         final Twitter twitter = Twitter.newBuilder().oAuthConsumer(consumerKey, consumerSecret)
             .oAuthAccessToken(accessToken, accessTokenSecret).build();
         twitter.v1().tweets().updateStatus(post);

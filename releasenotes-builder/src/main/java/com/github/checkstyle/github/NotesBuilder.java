@@ -89,8 +89,8 @@ public final class NotesBuilder {
      * @noinspectionreason UseOfSystemOutOrSystemErr - used for CLI output
      */
     public static Result buildResult(String localRepoPath, String authToken, String remoteRepoPath,
-                                     String startRef, String endRef) throws IOException,
-                                      GitAPIException {
+                                     String startRef, String endRef)
+            throws IOException, GitAPIException {
 
         final Result result = new Result();
 
@@ -134,7 +134,8 @@ public final class NotesBuilder {
                                              GHRepository remoteRepo,
                                              Set<RevCommit> commitsForRelease,
                                              Set<Integer> processedIssueNumbers, RevCommit commit,
-                                             CommitMessage commitMessage) throws IOException {
+                                             CommitMessage commitMessage)
+            throws IOException {
         if (commitMessage.isIssueOrPull()) {
             final int issueNo = commitMessage.getIssueNumber();
             if (!processedIssueNumbers.contains(issueNo)) {

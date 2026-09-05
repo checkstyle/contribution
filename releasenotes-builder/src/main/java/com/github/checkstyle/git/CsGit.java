@@ -56,7 +56,8 @@ public final class CsGit {
      * @throws IOException if I/O error occurs.
      */
     public static Set<RevCommit> getCommitsBetweenReferences(String repoPath, String startRef,
-            String endRef) throws IOException, GitAPIException {
+            String endRef)
+                    throws IOException, GitAPIException {
 
         final FileRepositoryBuilder builder = new FileRepositoryBuilder();
         final Path path = Paths.get(repoPath);
