@@ -71,7 +71,8 @@ public final class TemplateProcessor {
      * @throws TemplateException if an error occurs while generating freemarker template.
      */
     public static void generateWithFreemarker(Map<String, Object> variables, String outputFile,
-            String templateFileName, String defaultResource) throws IOException, TemplateException {
+            String templateFileName, String defaultResource)
+                    throws IOException, TemplateException {
 
         final Configuration configuration = new Configuration(Configuration.VERSION_2_3_22);
         configuration.setDefaultEncoding("UTF-8");
