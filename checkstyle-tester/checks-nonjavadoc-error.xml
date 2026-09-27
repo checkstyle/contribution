@@ -459,6 +459,7 @@
     <module name="SummaryJavadoc"/>
     -->
     <module name="MissingJavadocMethod"/>
+    <module name="MissingJavadocModule"/>
     <module name="MissingJavadocPackage"/>
     <module name="MissingJavadocType"/>
     <module name="WriteTag"/>
