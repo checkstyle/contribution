@@ -36,6 +36,7 @@
     <module name="JavadocSeeTagOrder"/>
     <module name="JavadocTagContinuationIndentation"/>
     <module name="JavadocThrowsOrder"/>
+    <module name="JavadocUtilizingTrailingSpace"/>
     <module name="MissingDeprecated"/>
     <module name="NonEmptyAtclauseDescription"/>
     <module name="PreferCodeOrSnippetJavadocInlineTag"/>
