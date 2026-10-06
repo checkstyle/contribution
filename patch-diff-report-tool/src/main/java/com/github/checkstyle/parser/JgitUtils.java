@@ -74,6 +74,7 @@ public final class JgitUtils {
      * @author Richard Veach
      */
     private static final class JgitDifferenceIterator implements Iterator<JgitDifference> {
+
         /** Initial position used to denote to do no more processing. */
         private static final int INITIAL_END_LINE = -2;
 
@@ -174,6 +175,7 @@ public final class JgitUtils {
                 }
             }
         }
+
     }
 
     /**
@@ -182,6 +184,7 @@ public final class JgitUtils {
      * @author Richard Veach
      */
     public static final class JgitDifference {
+
         /**
          * Index of the source.
          */
@@ -244,6 +247,7 @@ public final class JgitUtils {
         public String getLine() {
             return line;
         }
+
     }
 
 }

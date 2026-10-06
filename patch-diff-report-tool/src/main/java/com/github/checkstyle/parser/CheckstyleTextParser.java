@@ -288,6 +288,7 @@ public final class CheckstyleTextParser {
      * @author Richard Veach
      */
     private static final class StringListIterator implements Iterator<String> {
+
         /** The wrapped Iterator. */
         private final Iterator<String> iterator;
         /** The next item in the iterator, or {@code null} if to use {@link #iterator}. */
@@ -355,6 +356,7 @@ public final class CheckstyleTextParser {
 
             return result;
         }
+
     }
 
 }
