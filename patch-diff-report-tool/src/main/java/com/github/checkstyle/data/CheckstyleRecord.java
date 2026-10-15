@@ -230,8 +230,7 @@ public final class CheckstyleRecord implements Comparable<CheckstyleRecord> {
      * Properties index and xref are ignored.
      *
      * @param other
-     *        another CheckstyleRecord instance under comparison
-     *        with this instance.
+     *        another CheckstyleRecord instance under comparison with this instance.
      * @return 0 if the objects are equal, a negative integer if this record is before the specified
      *         record, or a positive integer if this record is after the specified record.
      */

@@ -212,8 +212,7 @@ public final class SiteGenerator {
      *
      * @param filename
      *        file name.
-     * @return shortened
-     *         file name.
+     * @return shortened file name.
      */
     private static String shortenFilename(String filename) {
         final String shortenedFilename;

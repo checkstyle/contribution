@@ -107,10 +107,8 @@ public final class CheckstyleReportsParser {
     }
 
     /**
-     * Parses input XML files: creates 2 parsers
-     * which process their XML files in rotation and try
-     * to write their results to the ParsedContent class
-     * inner map, where they are eagerly compared.
+     * Parses input XML files: creates 2 parsers which process their XML files in rotation and try
+     * to write their results to the ParsedContent class inner map, where they are eagerly compared.
      *
      * @param baseXml
      *        path to base XML file.

@@ -55,8 +55,7 @@ public abstract class AbstractPathTestSupport {
     /**
      * Returns canonical path for the file with the given file name.
      * The path is formed base on the root location.
-     * This implementation uses 'src/test/resources/'
-     * as a root location.
+     * This implementation uses 'src/test/resources/' as a root location.
      *
      * @param fileName file name.
      * @return canonical path for the file name.

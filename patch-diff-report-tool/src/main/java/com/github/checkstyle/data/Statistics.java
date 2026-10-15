@@ -421,8 +421,7 @@ public class Statistics {
     }
 
     /**
-     * Getter for all severity level names encountered during
-     * statistics generation.
+     * Getter for all severity level names encountered during statistics generation.
      *
      * @return severity level names.
      */
@@ -435,8 +434,7 @@ public class Statistics {
     }
 
     /**
-     * Getter for all module names encountered during
-     * statistics generation.
+     * Getter for all module names encountered during statistics generation.
      *
      * @return module names.
      */
