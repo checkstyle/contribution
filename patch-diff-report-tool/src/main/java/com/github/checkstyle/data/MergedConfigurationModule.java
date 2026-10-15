@@ -26,8 +26,7 @@ import java.util.Map;
 
 /**
  * Describes prepared for output merged "module" tags
- * which had the same name and the same location in the
- * tree structure of each configuration XML.
+ * which had the same name and the same location in the tree structure of each configuration XML.
  *
  * @author attatrol
  *
@@ -193,8 +192,7 @@ public final class MergedConfigurationModule {
     }
 
     /**
-     * Checks if properties from one source are a subset for
-     * properties from another source.
+     * Checks if properties from one source are a subset for properties from another source.
      *
      * @param properties
      *        subset properties.

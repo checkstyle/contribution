@@ -26,8 +26,7 @@ import java.util.Map;
 import com.github.checkstyle.data.MergedConfigurationModule;
 
 /**
- * Merges parsed configurations into
- * one single entity ready for easy output.
+ * Merges parsed configurations into one single entity ready for easy output.
  *
  * @author attatrol
  *

@@ -136,8 +136,7 @@ public final class CheckstyleConfigurationsParser {
      * Configuration XML has recursive tree structure
      * where module tags are nested into other module tags, also
      * duplicates of the same modules may be present in one configuration,
-     * so there are no other option but to parse configuration
-     * into the same tree structure.
+     * so there are no other option but to parse configuration into the same tree structure.
      *
      * @param reader
      *        StAX parser interface.

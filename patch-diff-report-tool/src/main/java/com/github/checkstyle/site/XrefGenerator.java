@@ -32,8 +32,7 @@ import org.apache.maven.jxr.pacman.FileManager;
 import org.apache.maven.jxr.pacman.PackageManager;
 
 /**
- * Constructor for cross reference HTMLs
- * from java source files. Wrapper around
+ * Constructor for cross reference HTMLs from java source files. Wrapper around
  * maven-jxr functional.
  *
  * @author attatrol

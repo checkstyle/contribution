@@ -215,8 +215,7 @@ public final class Main {
     }
 
     /**
-     * Generates a CliOptions instance from commandLine and checks it for
-     * validity.
+     * Generates a CliOptions instance from commandLine and checks it for validity.
      *
      * @param commandLine
      *        CLI arguments.
