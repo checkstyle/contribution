@@ -197,6 +197,7 @@
     </module>
     <module name="MissingOverrideOnRecordAccessor"/>
     <module name="OpenjdkAnnotationLocation"/>
+    <module name="OpenjdkLineWrapping"/>
     <module name="OpenjdkMethodThrowsAlignment"/>
     <module name="PackageAnnotation"/>
     <module name="SuppressWarnings">
